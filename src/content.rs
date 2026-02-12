@@ -1,6 +1,6 @@
 use std::ffi::OsStr;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
