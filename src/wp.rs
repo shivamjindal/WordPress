@@ -48,6 +48,43 @@ pub struct WpPost {
     pub tags: Vec<i64>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct WpCategory {
+    pub id: i64,
+    pub count: i64,
+    pub description: String,
+    pub link: String,
+    pub name: String,
+    pub slug: String,
+    pub taxonomy: String,
+    pub parent: i64,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct WpUser {
+    pub id: i64,
+    pub name: String,
+    pub url: String,
+    pub description: String,
+    pub link: String,
+    pub slug: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct WpType {
+    pub name: String,
+    pub slug: String,
+    pub description: String,
+    pub hierarchical: bool,
+    pub rest_base: String,
+    pub visibility: WpTypeVisibility,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct WpTypeVisibility {
+    pub public: bool,
+}
+
 pub fn wp_api_index(site: &content::SiteConfig) -> WpApiIndex {
     WpApiIndex {
         name: site.title.clone(),
@@ -102,6 +139,41 @@ pub fn post_to_wp_post(post: &content::Post, base_url: &str) -> WpPost {
         format: "standard".to_string(),
         categories: vec![1],
         tags: vec![],
+    }
+}
+
+pub fn default_category(base_url: &str, post_count: i64) -> WpCategory {
+    WpCategory {
+        id: 1,
+        count: post_count,
+        description: String::new(),
+        link: format!("{}/category/uncategorized/", base_url.trim_end_matches('/')),
+        name: "Uncategorized".to_string(),
+        slug: "uncategorized".to_string(),
+        taxonomy: "category".to_string(),
+        parent: 0,
+    }
+}
+
+pub fn demo_user(base_url: &str) -> WpUser {
+    WpUser {
+        id: 1,
+        name: "admin".to_string(),
+        url: base_url.to_string(),
+        description: String::new(),
+        link: format!("{}/author/admin/", base_url.trim_end_matches('/')),
+        slug: "admin".to_string(),
+    }
+}
+
+pub fn post_type() -> WpType {
+    WpType {
+        name: "post".to_string(),
+        slug: "post".to_string(),
+        description: "Post".to_string(),
+        hierarchical: false,
+        rest_base: "posts".to_string(),
+        visibility: WpTypeVisibility { public: true },
     }
 }
 

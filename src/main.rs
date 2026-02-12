@@ -48,6 +48,7 @@ struct WpQuery {
     p: Option<i64>,
     name: Option<String>,
     s: Option<String>,
+    rest_route: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -130,6 +131,15 @@ async fn main() -> Result<()> {
         .route("/wp-json/wp/v2/posts/", get(wp_json_posts))
         .route("/wp-json/wp/v2/posts/:id", get(wp_json_post_by_id))
         .route("/wp-json/wp/v2/posts/:id/", get(wp_json_post_by_id))
+        .route("/wp-json/wp/v2/categories", get(wp_json_categories))
+        .route("/wp-json/wp/v2/categories/", get(wp_json_categories))
+        .route("/wp-json/wp/v2/users/1", get(wp_json_user_1))
+        .route("/wp-json/wp/v2/users/1/", get(wp_json_user_1))
+        .route("/wp-json/wp/v2/types/post", get(wp_json_type_post))
+        .route("/wp-json/wp/v2/types/post/", get(wp_json_type_post))
+        .route("/wp-sitemap.xml", get(wp_sitemap_index))
+        .route("/wp-sitemap-posts-post-1.xml", get(wp_sitemap_posts))
+        .route("/wp-sitemap-posts-post-1.xml/", get(wp_sitemap_posts))
         .route("/wp-login.php", get(wp_login))
         .route("/wp-admin", get(wp_admin))
         .route("/wp-admin/", get(wp_admin))
@@ -159,7 +169,28 @@ async fn healthz() -> &'static str {
     "ok"
 }
 
-async fn index(State(state): State<AppState>, Query(q): Query<WpQuery>) -> Response {
+async fn index(
+    State(state): State<AppState>,
+    Host(host): Host,
+    Query(q): Query<WpQuery>,
+) -> Response {
+    // WordPress supports REST API via `?rest_route=/...` as well as `/wp-json/...`.
+    if let Some(rest_route) = q.rest_route.as_deref() {
+        // Normalize a few common cases.
+        let rest_route = rest_route.trim();
+        if rest_route == "/" {
+            return wp_json_index(State(state)).await.into_response();
+        }
+        if rest_route == "/wp/v2/posts" {
+            return wp_json_posts(State(state), Host(host.clone()), Query(q)).await;
+        }
+        if let Some(id) = rest_route.strip_prefix("/wp/v2/posts/") {
+            if let Ok(id) = id.parse::<i64>() {
+                return wp_json_post_by_id(State(state), Host(host.clone()), Path(id)).await;
+            }
+        }
+    }
+
     // WordPress also serves single posts via query string (e.g. /?p=1 or /?name=slug).
     if q.p.is_some() || q.name.is_some() {
         let slug = if let Some(name) = q.name.clone() {
@@ -357,6 +388,24 @@ async fn wp_json_post_by_id(
     Json(wp::post_to_wp_post(p, &base_url)).into_response()
 }
 
+async fn wp_json_categories(
+    State(state): State<AppState>,
+    Host(host): Host,
+) -> Json<Vec<wp::WpCategory>> {
+    let base_url = format!("http://{}", host);
+    let cat = wp::default_category(&base_url, state.posts.len() as i64);
+    Json(vec![cat])
+}
+
+async fn wp_json_user_1(Host(host): Host) -> Json<wp::WpUser> {
+    let base_url = format!("http://{}", host);
+    Json(wp::demo_user(&base_url))
+}
+
+async fn wp_json_type_post() -> Json<wp::WpType> {
+    Json(wp::post_type())
+}
+
 async fn feed(State(state): State<AppState>, Host(host): Host) -> Response {
     // Minimal RSS 2.0 feed, close to WordPress' shape.
     let base_url = format!("http://{}", host);
@@ -408,6 +457,63 @@ async fn feed(State(state): State<AppState>, Host(host): Host) -> Response {
         "application/rss+xml; charset=utf-8".parse().unwrap(),
     );
     (StatusCode::OK, headers, rss).into_response()
+}
+
+async fn wp_sitemap_index(Host(host): Host) -> Response {
+    let base_url = format!("http://{}", host);
+    let xml = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>{}/wp-sitemap-posts-post-1.xml</loc>
+  </sitemap>
+</sitemapindex>
+"#,
+        xml_escape(base_url.trim_end_matches('/'))
+    );
+    (
+        StatusCode::OK,
+        [(
+            axum::http::header::CONTENT_TYPE,
+            "application/xml; charset=utf-8",
+        )],
+        xml,
+    )
+        .into_response()
+}
+
+async fn wp_sitemap_posts(State(state): State<AppState>, Host(host): Host) -> Response {
+    let base_url = format!("http://{}", host);
+    let mut urls = String::new();
+    for p in state.posts.iter().take(2000) {
+        let link = format!("{}/{}/", base_url.trim_end_matches('/'), p.slug);
+        urls.push_str(&format!(
+            r#"  <url>
+    <loc>{}</loc>
+  </url>
+"#,
+            xml_escape(&link)
+        ));
+    }
+
+    let xml = format!(
+        r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{}
+</urlset>
+"#,
+        urls
+    );
+
+    (
+        StatusCode::OK,
+        [(
+            axum::http::header::CONTENT_TYPE,
+            "application/xml; charset=utf-8",
+        )],
+        xml,
+    )
+        .into_response()
 }
 
 async fn not_found(State(state): State<AppState>, uri: axum::http::Uri) -> Response {
