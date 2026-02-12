@@ -6,6 +6,7 @@ It serves:
 - Home page listing posts
 - Individual post pages by slug (e.g. `/hello-world/`)
 - Static assets at `/static/*`
+- WordPress-style routes and endpoints like `/?p=1`, `/wp-json/wp/v2/posts`, `/feed/`, and `/wp-sitemap.xml`
 
 ## Quickstart
 
@@ -19,6 +20,11 @@ Open:
 
 - `http://127.0.0.1:3000/`
 - `http://127.0.0.1:3000/hello-world/`
+- `http://127.0.0.1:3000/?p=1`
+- `http://127.0.0.1:3000/wp-json/wp/v2/posts`
+- `http://127.0.0.1:3000/feed/`
+- `http://127.0.0.1:3000/wp-sitemap.xml`
+- `http://127.0.0.1:3000/wp-admin/edit.php`
 
 ## Content
 
