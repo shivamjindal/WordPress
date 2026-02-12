@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ title }} · {{ site.title }}{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <h1>{{ title }}</h1>
+    <p class="muted">{{ description }}</p>
+  </section>
+
+  <section class="posts">
+    <h2>Posts</h2>
+
+    {% if posts.len() == 0 %}
+      <div class="card">
+        <p>No posts found.</p>
+      </div>
+    {% else %}
+      <div class="post_list">
+        {% for post in posts %}
+          <article class="card post_card">
+            <div class="post_meta">{{ post.date }}</div>
+            <h3 class="post_title">
+              <a href="/{{ post.slug }}/">{{ post.title }}</a>
+            </h3>
+            <p class="post_excerpt">{{ post.excerpt }}</p>
+            <div class="post_actions">
+              <a class="button" href="/{{ post.slug }}/">Read more</a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}
+

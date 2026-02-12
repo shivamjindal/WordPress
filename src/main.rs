@@ -13,7 +13,9 @@ use axum::http::{HeaderMap, StatusCode};
 use axum::response::Response;
 use axum::routing::get;
 use axum::{Json, Router};
+use chrono::Datelike;
 use clap::Parser;
+use serde::Deserialize;
 use tower_http::services::ServeDir;
 use tower_http::trace::TraceLayer;
 use tracing::Level;
@@ -43,7 +45,7 @@ struct AppState {
     posts: Arc<Vec<content::Post>>,
 }
 
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, Deserialize)]
 struct WpQuery {
     p: Option<i64>,
     name: Option<String>,
@@ -92,6 +94,15 @@ struct PostTemplate {
 struct NotFoundTemplate {
     site: SiteView,
     path: String,
+}
+
+#[derive(Template)]
+#[template(path = "archive.html")]
+struct ArchiveTemplate {
+    site: SiteView,
+    title: String,
+    description: String,
+    posts: Vec<PostListItemView>,
 }
 
 #[tokio::main]
@@ -145,7 +156,10 @@ async fn main() -> Result<()> {
         .route("/wp-admin/", get(wp_admin))
         .route("/wp-admin/admin-ajax.php", get(wp_admin_ajax))
         .route("/xmlrpc.php", get(xmlrpc_get))
-        .route("/:slug", get(post))
+        .route("/category/:category/", get(category_archive))
+        .route("/author/:author/", get(author_archive))
+        .route("/:year/:month/:day/:slug/", get(dated_post))
+        .route("/:slug", get(post_or_redirect))
         .route("/:slug/", get(post))
         .nest_service("/static", ServeDir::new("static"))
         // Keep these paths WordPress-compatible for assets, even if PHP isn't executed.
@@ -212,6 +226,43 @@ async fn index(
         }
     }
 
+    // WordPress search uses `/?s=term`.
+    if let Some(term) = q.s.as_deref() {
+        let term = term.trim();
+        let site = SiteView {
+            title: state.site.title.clone(),
+            tagline: state.site.tagline.clone(),
+        };
+        let posts = state
+            .posts
+            .iter()
+            .filter(|p| {
+                p.title
+                    .to_ascii_lowercase()
+                    .contains(&term.to_ascii_lowercase())
+                    || p.excerpt
+                        .to_ascii_lowercase()
+                        .contains(&term.to_ascii_lowercase())
+            })
+            .map(|p| PostListItemView {
+                title: p.title.clone(),
+                slug: p.slug.clone(),
+                date: p.date.format("%b %e, %Y").to_string(),
+                excerpt: p.excerpt.clone(),
+            })
+            .collect::<Vec<_>>();
+
+        let title = format!("Search Results for: {}", term);
+        let description = format!("Search on {}", state.site.title);
+        return ArchiveTemplate {
+            site,
+            title,
+            description,
+            posts,
+        }
+        .into_response();
+    }
+
     let site = SiteView {
         title: state.site.title.clone(),
         tagline: state.site.tagline.clone(),
@@ -229,6 +280,21 @@ async fn index(
         .collect();
 
     IndexTemplate { site, posts }.into_response()
+}
+
+async fn post_or_redirect(State(state): State<AppState>, Path(slug): Path<String>) -> Response {
+    // WordPress canonicalizes posts to a trailing-slash URL.
+    if state.posts.iter().any(|p| p.slug == slug) {
+        return (
+            StatusCode::MOVED_PERMANENTLY,
+            [(axum::http::header::LOCATION, format!("/{}/", slug))],
+            "",
+        )
+            .into_response();
+    }
+
+    // If it isn't a known post, treat it as a normal request (may 404).
+    post(State(state), Path(slug)).await
 }
 
 async fn wp_login(State(state): State<AppState>) -> Response {
@@ -338,6 +404,86 @@ async fn post(State(state): State<AppState>, Path(slug): Path<String>) -> Respon
     };
 
     PostTemplate { site, post }.into_response()
+}
+
+async fn dated_post(
+    State(state): State<AppState>,
+    Path((year, month, day, slug)): Path<(i32, u32, u32, String)>,
+) -> Response {
+    let Some((post_date, post_slug)) = state
+        .posts
+        .iter()
+        .find(|p| p.slug == slug)
+        .map(|p| (p.date, p.slug.clone()))
+    else {
+        return StatusCode::NOT_FOUND.into_response();
+    };
+
+    // If the date doesn't match, WordPress would typically redirect or 404; we 404.
+    if post_date.year() != year || post_date.month() != month || post_date.day() != day {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+
+    post(State(state), Path(post_slug)).await
+}
+
+async fn category_archive(State(state): State<AppState>, Path(category): Path<String>) -> Response {
+    // Only implement the default WP category "uncategorized" for now.
+    if category != "uncategorized" {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+
+    let site = SiteView {
+        title: state.site.title.clone(),
+        tagline: state.site.tagline.clone(),
+    };
+    let posts = state
+        .posts
+        .iter()
+        .map(|p| PostListItemView {
+            title: p.title.clone(),
+            slug: p.slug.clone(),
+            date: p.date.format("%b %e, %Y").to_string(),
+            excerpt: p.excerpt.clone(),
+        })
+        .collect::<Vec<_>>();
+
+    ArchiveTemplate {
+        site,
+        title: "Category: Uncategorized".to_string(),
+        description: "Default category archive".to_string(),
+        posts,
+    }
+    .into_response()
+}
+
+async fn author_archive(State(state): State<AppState>, Path(author): Path<String>) -> Response {
+    if author != "admin" {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+
+    let site = SiteView {
+        title: state.site.title.clone(),
+        tagline: state.site.tagline.clone(),
+    };
+    let posts = state
+        .posts
+        .iter()
+        .map(|p| PostListItemView {
+            title: p.title.clone(),
+            slug: p.slug.clone(),
+            date: p.date.format("%b %e, %Y").to_string(),
+            excerpt: p.excerpt.clone(),
+        })
+        .collect::<Vec<_>>();
+
+    ArchiveTemplate {
+        site,
+        title: "Author: admin".to_string(),
+        description: "Author archive".to_string(),
+        posts,
+    }
+    .into_response()
 }
 
 async fn wp_json_index(State(state): State<AppState>) -> Json<wp::WpApiIndex> {
