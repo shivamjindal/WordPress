@@ -56,7 +56,6 @@ struct PostListItemView {
 #[derive(Debug, Clone)]
 struct PostView {
     title: String,
-    slug: String,
     date: String,
     excerpt: String,
     content_html: String,
@@ -168,7 +167,6 @@ async fn post(State(state): State<AppState>, Path(slug): Path<String>) -> Respon
 
     let post = PostView {
         title: p.title.clone(),
-        slug: p.slug.clone(),
         date: p.date.format("%b %e, %Y").to_string(),
         excerpt: p.excerpt.clone(),
         content_html: p.content_html.clone(),
