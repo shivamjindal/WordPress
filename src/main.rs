@@ -154,6 +154,8 @@ async fn main() -> Result<()> {
         .route("/wp-login.php", get(wp_login))
         .route("/wp-admin", get(wp_admin))
         .route("/wp-admin/", get(wp_admin))
+        .route("/wp-admin/edit.php", get(wp_admin_edit_posts))
+        .route("/wp-admin/post-new.php", get(wp_admin_post_new))
         .route("/wp-admin/admin-ajax.php", get(wp_admin_ajax))
         .route("/xmlrpc.php", get(xmlrpc_get))
         .route("/category/:category/", get(category_archive))
@@ -352,6 +354,97 @@ async fn wp_admin() -> Response {
         <div class="card">
           <p>Try the public site:</p>
           <p><a class="button" href="/">View site</a></p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>"#,
+    )
+        .into_response()
+}
+
+async fn wp_admin_edit_posts(State(state): State<AppState>) -> Response {
+    let mut rows = String::new();
+    for p in state.posts.iter() {
+        rows.push_str(&format!(
+            r#"<tr>
+  <td><a href="/{}/">{}</a></td>
+  <td>{}</td>
+  <td><span class="code">{}</span></td>
+</tr>"#,
+            html_escape(&p.slug),
+            html_escape(&p.title),
+            html_escape(&p.date.format("%Y-%m-%d").to_string()),
+            html_escape(&p.slug)
+        ));
+    }
+
+    let html = format!(
+        r#"<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Posts ‹ RustPress</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <h1>Posts</h1>
+        <p class="muted">RustPress demo placeholder for <span class="code">/wp-admin/edit.php</span>.</p>
+      </section>
+      <section class="card">
+        <div class="post_actions">
+          <a class="button" href="/wp-admin/post-new.php">Add New</a>
+          <a class="button" href="/">View site</a>
+        </div>
+        <div style="overflow:auto; margin-top: 14px;">
+          <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding: 10px; border-bottom: 1px solid var(--border);">Title</th>
+                <th style="text-align:left; padding: 10px; border-bottom: 1px solid var(--border);">Date</th>
+                <th style="text-align:left; padding: 10px; border-bottom: 1px solid var(--border);">Slug</th>
+              </tr>
+            </thead>
+            <tbody>
+              {}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>"#,
+        rows
+    );
+
+    (StatusCode::OK, html).into_response()
+}
+
+async fn wp_admin_post_new() -> Response {
+    (
+        StatusCode::OK,
+        r#"<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add New Post ‹ RustPress</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <h1>Add New Post</h1>
+        <p class="muted">RustPress demo placeholder for <span class="code">/wp-admin/post-new.php</span>.</p>
+      </section>
+      <section class="card">
+        <p>To add a post in this Rust migration demo, create a Markdown file in <span class="code">content/posts/</span> (YAML frontmatter + Markdown body).</p>
+        <div class="post_actions">
+          <a class="button" href="/wp-admin/edit.php">Back to Posts</a>
+          <a class="button" href="/">View site</a>
         </div>
       </section>
     </main>
