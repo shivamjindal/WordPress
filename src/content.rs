@@ -14,18 +14,22 @@ pub struct SiteConfig {
 
 #[derive(Debug, Clone)]
 pub struct Post {
+    pub id: Option<i64>,
     pub title: String,
     pub slug: String,
     pub date: NaiveDate,
+    pub status: Option<String>,
     pub excerpt: String,
     pub content_html: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 struct Frontmatter {
+    id: Option<i64>,
     title: String,
     slug: Option<String>,
     date: NaiveDate,
+    status: Option<String>,
     excerpt: Option<String>,
 }
 
@@ -48,8 +52,8 @@ pub fn load_site(content_dir: &Path) -> Result<(SiteConfig, Vec<Post>)> {
 
 fn load_posts_from_dir(posts_dir: &Path) -> Result<Vec<Post>> {
     let mut posts = Vec::new();
-    let entries = fs::read_dir(posts_dir)
-        .with_context(|| format!("read_dir {}", posts_dir.display()))?;
+    let entries =
+        fs::read_dir(posts_dir).with_context(|| format!("read_dir {}", posts_dir.display()))?;
 
     for entry in entries {
         let entry = entry.context("read_dir entry")?;
@@ -90,9 +94,11 @@ fn load_post(path: &Path) -> Result<Post> {
     let content_html = markdown_to_html(&body_markdown);
 
     Ok(Post {
+        id: frontmatter.id,
         title,
         slug,
         date: frontmatter.date,
+        status: frontmatter.status.map(|s| s.trim().to_string()),
         excerpt,
         content_html,
     })
@@ -209,4 +215,3 @@ Body text
         assert!(body.contains("Body text"));
     }
 }
-
