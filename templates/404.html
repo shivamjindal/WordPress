@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Not Found · {{ site.title }}{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <h1>404</h1>
+    <p class="muted">No page found at <span class="code">{{ path }}</span>.</p>
+    <div class="post_actions">
+      <a class="button" href="/">Go home</a>
+    </div>
+  </section>
+{% endblock %}
+

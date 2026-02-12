@@ -1,0 +1,272 @@
+:root {
+  --bg: #f7f7f4;
+  --fg: #26251e;
+  --muted: rgba(38, 37, 30, 0.6);
+  --accent: #f54e00;
+  --card: #f2f1ed;
+  --card-01: #f0efeb;
+  --border: rgba(38, 37, 30, 0.12);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --max: 920px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14120b;
+    --fg: #edecec;
+    --muted: rgba(237, 236, 236, 0.6);
+    --accent: #f54e00;
+    --card: #1b1913;
+    --card-01: #1d1b15;
+    --border: rgba(237, 236, 236, 0.12);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.site_header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header_inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 2px 16px;
+  padding: 16px 20px;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 18px;
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 14px;
+  grid-column: 1 / -1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav a {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.nav a:hover {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.hero {
+  padding: 28px 0 18px;
+}
+
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: 44px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  margin: 26px 0 12px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.post_list {
+  display: grid;
+  gap: 12px;
+}
+
+.post_card {
+  background: linear-gradient(180deg, var(--card), var(--card-01));
+}
+
+.post_meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.post_title {
+  margin: 8px 0 6px;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.post_excerpt {
+  margin: 0;
+  color: var(--muted);
+}
+
+.post_actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--card));
+  color: var(--fg);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button:hover {
+  border-color: color-mix(in srgb, var(--accent) 75%, var(--border));
+  background: color-mix(in srgb, var(--accent) 16%, var(--card));
+  text-decoration: none;
+}
+
+.back_link {
+  display: inline-block;
+  margin: 20px 0 10px;
+}
+
+.post_header h1 {
+  margin: 0 0 8px;
+  font-size: 38px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.post_body {
+  margin: 14px 0 30px;
+  padding: 20px;
+}
+
+.prose {
+  max-width: 76ch;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  letter-spacing: -0.02em;
+}
+
+.prose p {
+  margin: 0.9em 0;
+}
+
+.prose a {
+  color: color-mix(in srgb, var(--accent) 85%, var(--fg));
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  padding: 0.15em 0.4em;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+}
+
+.prose pre {
+  overflow: auto;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+}
+
+.footer {
+  padding-bottom: 38px;
+}
+
+.footer_card {
+  margin-top: 30px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+}
+
+.footer_title {
+  font-weight: 800;
+}
+
+.footer_subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+

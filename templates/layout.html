@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{{ site.title }}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="site_header">
+      <div class="wrap header_inner">
+        <a class="brand" href="/">{{ site.title }}</a>
+        <div class="tagline">{{ site.tagline }}</div>
+        <nav class="nav">
+          <a href="/">Home</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="wrap footer">
+      <div class="footer_card">
+        <div class="footer_title">RustPress</div>
+        <div class="footer_subtitle">A small WordPress-like blog server written in Rust.</div>
+      </div>
+    </footer>
+  </body>
+</html>
+
