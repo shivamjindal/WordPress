@@ -133,6 +133,7 @@ async fn main() -> Result<()> {
         .route("/wp-login.php", get(wp_login))
         .route("/wp-admin", get(wp_admin))
         .route("/wp-admin/", get(wp_admin))
+        .route("/wp-admin/admin-ajax.php", get(wp_admin_ajax))
         .route("/xmlrpc.php", get(xmlrpc_get))
         .route("/:slug", get(post))
         .route("/:slug/", get(post))
@@ -140,7 +141,6 @@ async fn main() -> Result<()> {
         // Keep these paths WordPress-compatible for assets, even if PHP isn't executed.
         .nest_service("/wp-content", ServeDir::new("wp-content"))
         .nest_service("/wp-includes", ServeDir::new("wp-includes"))
-        .nest_service("/wp-admin", ServeDir::new("wp-admin"))
         .fallback(not_found)
         .with_state(state)
         .layer(TraceLayer::new_for_http());
@@ -262,6 +262,11 @@ async fn wp_admin() -> Response {
 </html>"#,
     )
         .into_response()
+}
+
+async fn wp_admin_ajax() -> Response {
+    // Many WordPress installations expect this endpoint to exist.
+    (StatusCode::OK, "0").into_response()
 }
 
 async fn robots_txt() -> Response {
