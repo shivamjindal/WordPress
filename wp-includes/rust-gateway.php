@@ -336,6 +336,9 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 			}
 			$headers[] = $header_name . ': ' . $value;
 		}
+		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
+			$headers[] = 'X-Forwarded-Host: ' . $_SERVER['HTTP_HOST'];
+		}
 
 		$context = stream_context_create(
 			array(

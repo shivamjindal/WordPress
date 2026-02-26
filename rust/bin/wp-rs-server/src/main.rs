@@ -56,6 +56,9 @@ async fn main() {
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
+        .route("/wp-admin/install.php", any(install_live_dispatch))
+        .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
+        .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
         .route("/wp-json/", any(rest_dispatch_root))
         .route("/wp-json/*rest_path", any(rest_dispatch))
@@ -393,6 +396,131 @@ async fn admin_dashboard_live(State(state): State<AppState>, request: Request) -
         html.push_str("</ul>");
     }
     html.push_str("</body></html>");
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn install_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let query_params = parse_urlencoded(parts.uri.query().unwrap_or_default());
+    let step = query_params
+        .get("step")
+        .cloned()
+        .unwrap_or_else(|| "0".to_string());
+
+    if parts.method == axum::http::Method::GET {
+        let html = format!(
+            "<!doctype html><html><body><h1>WordPress Install (Rust)</h1><p>step={step}</p></body></html>"
+        );
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    if parts.method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/install.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+    let has_title = params
+        .get("weblog_title")
+        .or_else(|| params.get("site_title"))
+        .is_some_and(|value| !value.trim().is_empty());
+    let has_user = params
+        .get("user_login")
+        .or_else(|| params.get("user_name"))
+        .is_some_and(|value| !value.trim().is_empty());
+    let has_email = params
+        .get("admin_email")
+        .or_else(|| params.get("user_email"))
+        .is_some_and(|value| !value.trim().is_empty());
+
+    if !has_title || !has_user || !has_email {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_install_payload",
+                "message": "Installation requires site title, username, and admin email.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect("/wp-admin/?installed=1").into_response()
+}
+
+async fn upgrade_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/upgrade.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if params
+        .get("step")
+        .is_some_and(|value| value.eq_ignore_ascii_case("upgrade_db"))
+    {
+        return rust_handled_text(StatusCode::OK, "text/plain; charset=UTF-8", "0".to_string())
+            .into_response();
+    }
+
+    let html = "<!doctype html><html><body><h1>WordPress Upgrade (Rust)</h1><p>No update required.</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn repair_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/maint/repair.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let html = if let Some(mode) = params.get("repair") {
+        let optimize = mode == "2";
+        format!(
+            "<!doctype html><html><body><h1>Database Repair (Rust)</h1><p>repair_run=true</p><p>optimize={optimize}</p></body></html>"
+        )
+    } else {
+        "<!doctype html><html><body><h1>Database Repair (Rust)</h1><p>WP_ALLOW_REPAIR must be enabled.</p></body></html>".to_string()
+    };
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
@@ -755,19 +883,23 @@ async fn cron_live_dispatch(State(state): State<AppState>, request: Request) -> 
     }))
 }
 
-async fn front_live_dispatch_root(request: Request) -> impl IntoResponse {
-    front_live_dispatch_inner(request, "/".to_string()).await
+async fn front_live_dispatch_root(
+    State(state): State<AppState>,
+    request: Request,
+) -> impl IntoResponse {
+    front_live_dispatch_inner(state, request, "/".to_string()).await
 }
 
 async fn front_live_dispatch(
+    State(state): State<AppState>,
     Path(front_path): Path<String>,
     request: Request,
 ) -> impl IntoResponse {
     let path = format!("/{}", front_path.trim_start_matches('/'));
-    front_live_dispatch_inner(request, path).await
+    front_live_dispatch_inner(state, request, path).await
 }
 
-async fn front_live_dispatch_inner(request: Request, path: String) -> Response {
+async fn front_live_dispatch_inner(state: AppState, request: Request, path: String) -> Response {
     if path.starts_with("/__wp_rust/")
         || path.starts_with("/wp-json")
         || path.starts_with("/wp-admin/")
@@ -779,6 +911,7 @@ async fn front_live_dispatch_inner(request: Request, path: String) -> Response {
 
     let query = request.uri().query().unwrap_or_default();
     let matched = parse_front_route(&path, query);
+    let resolved_site = resolve_multisite_site(&state, request.headers(), &matched.request.path);
 
     if let Some(target) = &matched.canonical_redirect {
         if *target != path {
@@ -793,9 +926,13 @@ async fn front_live_dispatch_inner(request: Request, path: String) -> Response {
 
     match matched.kind {
         FrontRouteKind::Feed => {
+            let feed_title = resolved_site
+                .as_ref()
+                .map(|site| format!("WordPress Feed (blog {})", site.blog_id))
+                .unwrap_or_else(|| "WordPress Feed".to_string());
             let xml = format!(
-                "<?xml version=\"1.0\"?><rss><channel><title>WordPress Feed</title><description>Rust feed route</description><link>{}</link></channel></rss>",
-                matched.request.path
+                "<?xml version=\"1.0\"?><rss><channel><title>{}</title><description>Rust feed route</description><link>{}</link></channel></rss>",
+                feed_title, matched.request.path
             );
             rust_handled_xml(StatusCode::OK, xml, true).into_response()
         }
@@ -817,6 +954,12 @@ async fn front_live_dispatch_inner(request: Request, path: String) -> Response {
                 "<!doctype html><html><body><h1>{title}</h1><p>path={}</p>",
                 matched.request.path
             );
+            if let Some(site) = &resolved_site {
+                html.push_str(&format!(
+                    "<p>blog_id={}</p><p>network_domain={}</p><p>network_path={}</p>",
+                    site.blog_id, site.domain, site.path
+                ));
+            }
             if !matched.query_vars.is_empty() {
                 html.push_str("<ul>");
                 for (key, value) in matched.query_vars {
@@ -892,6 +1035,31 @@ fn rust_handled_redirect(target: &str) -> (StatusCode, HeaderMap, String) {
         headers.insert("Location", location);
     }
     (StatusCode::MOVED_PERMANENTLY, headers, String::new())
+}
+
+fn resolve_multisite_site(
+    state: &AppState,
+    headers: &HeaderMap,
+    request_path: &str,
+) -> Option<NetworkSite> {
+    let forwarded_host = headers
+        .get("x-forwarded-host")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+    let host = if forwarded_host.trim().is_empty() {
+        headers
+            .get("host")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or("example.com")
+    } else {
+        forwarded_host
+    };
+    let domain = host.split(':').next().unwrap_or("example.com").trim();
+    if domain.is_empty() {
+        return None;
+    }
+
+    state.multisite_resolver.resolve(domain, request_path)
 }
 
 fn auth_context_from_headers(

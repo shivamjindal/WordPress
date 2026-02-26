@@ -5,6 +5,11 @@
  * @package WordPress
  * @subpackage Database
  */
+require_once dirname( __DIR__, 2 ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/maint/repair.php' ) ) {
+	exit;
+}
+
 define( 'WP_REPAIRING', true );
 
 require_once dirname( __DIR__, 2 ) . '/wp-load.php';
