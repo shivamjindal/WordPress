@@ -105,6 +105,7 @@ async fn main() {
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/export.php", any(export_live_dispatch))
+        .route("/wp-admin/import.php", any(import_live_dispatch))
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1263,6 +1264,43 @@ async fn export_live_dispatch(State(state): State<AppState>, request: Request) -
 
     let html = "<!doctype html><html><body><h1>Export (Rust)</h1><p>status=ready</p></body></html>"
         .to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn import_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/import.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_import = authenticated
+        && (capabilities.contains("import")
+            || capabilities.contains("install_plugins")
+            || capabilities.contains("manage_options"));
+    if !can_import {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "import capability is required for wp-admin/import.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let invalid = params.get("invalid").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Import (Rust)</h1><p>status=ready</p><p>invalid={invalid}</p></body></html>"
+    );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
