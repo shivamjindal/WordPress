@@ -7,6 +7,7 @@ responses against Rust gateway responses.
 
 - `baseline_routes.txt`: list of routes to capture for both runtimes.
 - `request_payloads.tsv`: request body fixtures used for POST route captures.
+- `migration-checklist.md`: production cutover release checklist.
 - `artifacts/php/`: captured normalized PHP responses.
 - `artifacts/rust/`: captured normalized Rust responses.
 - `artifacts/report/latest.diff`: latest generated parity report.
