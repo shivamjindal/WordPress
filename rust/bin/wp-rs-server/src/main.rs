@@ -47,6 +47,7 @@ async fn main() {
         .route("/__wp_rust/health", get(health))
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
+        .route("/wp-login.php", any(login_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
         .route("/wp-json/", any(rest_dispatch_root))
         .route("/wp-json/*rest_path", any(rest_dispatch))
@@ -177,6 +178,113 @@ async fn proxy_decision(Query(query): Query<ProxyDecisionQuery>) -> impl IntoRes
         plugin_compat_mode: settings.plugin_compat_mode,
     };
     rust_handled_json(response)
+}
+
+async fn login_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let now = unix_now();
+    let query_params = parse_urlencoded(parts.uri.query().unwrap_or_default());
+    let action = query_params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| "login".to_string());
+
+    if action == "logout" {
+        let mut headers = HeaderMap::new();
+        headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+        headers.insert(
+            "Location",
+            HeaderValue::from_static("/wp-login.php?loggedout=true"),
+        );
+        headers.append(
+            "Set-Cookie",
+            HeaderValue::from_static(
+                "wordpress_logged_in_rust=deleted; Path=/; HttpOnly; Max-Age=0",
+            ),
+        );
+        return (StatusCode::FOUND, headers, String::new()).into_response();
+    }
+
+    if parts.method == axum::http::Method::GET {
+        let mut html = "<!doctype html><html><body><h1>WordPress Login (Rust)</h1>".to_string();
+        if query_params.contains_key("loggedout") {
+            html.push_str("<p>You are now logged out.</p>");
+        }
+        html.push_str("</body></html>");
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    if parts.method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-login.php currently supports GET, POST, and logout action.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+
+    let username = params
+        .get("log")
+        .or_else(|| params.get("username"))
+        .map(String::as_str)
+        .unwrap_or_default()
+        .trim()
+        .to_string();
+    let password_present = params
+        .get("pwd")
+        .or_else(|| params.get("password"))
+        .is_some_and(|value| !value.trim().is_empty());
+
+    if username.is_empty() || !password_present {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_credentials",
+                "message": "Missing username or password in login request.",
+            }),
+        )
+        .into_response();
+    }
+
+    let user_id = params
+        .get("user_id")
+        .and_then(|value| value.parse::<u64>().ok())
+        .unwrap_or(1);
+    let expiration = now + 3_600;
+    let session_token = format!("rust-session-{user_id}");
+    let cookie_value = sign_auth_cookie(
+        user_id,
+        &username,
+        expiration,
+        &session_token,
+        AuthScheme::LoggedIn,
+        &state.auth_secrets,
+    );
+
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    headers.insert("Location", HeaderValue::from_static("/wp-admin/"));
+    if let Ok(cookie_header) = HeaderValue::from_str(&format!(
+        "wordpress_logged_in_rust={cookie_value}; Path=/; HttpOnly"
+    )) {
+        headers.append("Set-Cookie", cookie_header);
+    }
+
+    let body = format!(
+        "<!doctype html><html><body><h1>Login Success</h1><p>user={username}</p></body></html>"
+    );
+    (StatusCode::FOUND, headers, body).into_response()
 }
 
 async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
