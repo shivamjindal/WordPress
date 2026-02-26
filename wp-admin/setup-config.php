@@ -12,6 +12,11 @@
 /**
  * We are installing.
  */
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/setup-config.php' ) ) {
+	exit;
+}
+
 define( 'WP_INSTALLING', true );
 
 /**

@@ -7,3 +7,4 @@ POST	/wp-signup.php	application/x-www-form-urlencoded	user_login=tester
 POST	/wp-activate.php	application/x-www-form-urlencoded	key=abc123
 POST	/wp-comments-post.php	application/x-www-form-urlencoded	comment_post_ID=123&comment=hello
 POST	/wp-admin/install.php	application/x-www-form-urlencoded	weblog_title=Rust+Site&user_login=admin&admin_email=admin@example.com
+POST	/wp-admin/setup-config.php	application/x-www-form-urlencoded	dbname=wordpress&uname=wp_user&pwd=secret

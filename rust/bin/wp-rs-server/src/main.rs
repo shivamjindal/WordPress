@@ -60,6 +60,10 @@ async fn main() {
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-admin/install.php", any(install_live_dispatch))
+        .route(
+            "/wp-admin/setup-config.php",
+            any(setup_config_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -515,6 +519,65 @@ async fn install_live_dispatch(request: Request) -> Response {
     }
 
     rust_handled_redirect("/wp-admin/?installed=1").into_response()
+}
+
+async fn setup_config_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/setup-config.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let step = params
+        .get("step")
+        .cloned()
+        .unwrap_or_else(|| "0".to_string());
+    if method == axum::http::Method::POST {
+        let has_db_name = params
+            .get("dbname")
+            .is_some_and(|value| !value.trim().is_empty());
+        let has_db_user = params
+            .get("uname")
+            .or_else(|| params.get("dbuser"))
+            .is_some_and(|value| !value.trim().is_empty());
+        if !has_db_name || !has_db_user {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_db_config_payload",
+                    "message": "setup-config requires dbname and uname/dbuser fields.",
+                }),
+            )
+            .into_response();
+        }
+
+        return rust_handled_redirect("/wp-admin/install.php?step=2").into_response();
+    }
+
+    let html = format!(
+        "<!doctype html><html><body><h1>WordPress Setup Config (Rust)</h1><p>step={step}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn upgrade_live_dispatch(request: Request) -> Response {
