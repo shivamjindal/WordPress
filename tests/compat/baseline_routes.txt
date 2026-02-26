@@ -29,6 +29,7 @@ GET /wp-admin/options-writing.php
 GET /wp-admin/options-reading.php
 GET /wp-admin/options-discussion.php
 GET /wp-admin/options-media.php
+GET /wp-admin/options-permalink.php
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
 GET /wp-admin/maint/repair.php

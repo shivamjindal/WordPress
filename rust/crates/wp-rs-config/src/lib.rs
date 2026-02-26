@@ -191,6 +191,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/options-reading.php",
         "/wp-admin/options-discussion.php",
         "/wp-admin/options-media.php",
+        "/wp-admin/options-permalink.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",
@@ -395,6 +396,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/options-reading.php"));
         assert!(settings.should_route("/wp-admin/options-discussion.php"));
         assert!(settings.should_route("/wp-admin/options-media.php"));
+        assert!(settings.should_route("/wp-admin/options-permalink.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 

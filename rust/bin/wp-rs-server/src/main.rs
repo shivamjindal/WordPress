@@ -90,6 +90,10 @@ async fn main() {
             "/wp-admin/options-media.php",
             any(options_media_live_dispatch),
         )
+        .route(
+            "/wp-admin/options-permalink.php",
+            any(options_permalink_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -962,6 +966,53 @@ async fn options_media_live_dispatch(State(state): State<AppState>, request: Req
         .unwrap_or_else(|| "1".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Media Settings (Rust)</h1><p>thumbnail_size_w={thumbnail_size_w}</p><p>thumbnail_size_h={thumbnail_size_h}</p><p>medium_size_w={medium_size_w}</p><p>medium_size_h={medium_size_h}</p><p>large_size_w={large_size_w}</p><p>large_size_h={large_size_h}</p><p>uploads_use_yearmonth_folders={uploads_use_yearmonth_folders}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn options_permalink_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-permalink.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-permalink.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let permalink_structure = options
+        .get_option("permalink_structure")
+        .map(|value| value.to_string())
+        .unwrap_or_default();
+    let category_base = options
+        .get_option("category_base")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "category".to_string());
+    let tag_base = options
+        .get_option("tag_base")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "tag".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Permalink Settings (Rust)</h1><p>permalink_structure={permalink_structure}</p><p>category_base={category_base}</p><p>tag_base={tag_base}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
