@@ -16,7 +16,7 @@
  * @package WordPress
  */
 require_once __DIR__ . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-load.php' ) ) {
+if ( wp_rust_gateway_try_proxy( wp_rust_gateway_current_request_path( '/wp-load.php' ) ) ) {
 	exit;
 }
 

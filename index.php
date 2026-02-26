@@ -12,7 +12,7 @@
  * @var bool
  */
 require_once __DIR__ . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/index.php' ) ) {
+if ( wp_rust_gateway_try_proxy( wp_rust_gateway_current_request_path( '/index.php' ) ) ) {
 	exit;
 }
 

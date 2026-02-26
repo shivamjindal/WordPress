@@ -118,7 +118,7 @@ impl RustGatewaySettings {
     /// Returns true when a specific endpoint path should route through Rust.
     pub fn should_route(&self, endpoint: &str) -> bool {
         self.enabled
-            && (self.endpoint_allowlist.contains("*") || self.endpoint_allowlist.contains(endpoint))
+            && self.endpoint_allowed(endpoint)
             && self.plugin_mode_allows_endpoint(endpoint)
     }
 
@@ -142,6 +142,21 @@ impl RustGatewaySettings {
                     | "/xmlrpc.php"
                     | "/wp-cron.php"
             )
+    }
+
+    fn endpoint_allowed(&self, endpoint: &str) -> bool {
+        self.endpoint_allowlist.iter().any(|entry| {
+            if entry == "*" {
+                return true;
+            }
+
+            if let Some(prefix) = entry.strip_suffix('*') {
+                let normalized_prefix = prefix.trim_end_matches('/');
+                return !normalized_prefix.is_empty() && endpoint.starts_with(normalized_prefix);
+            }
+
+            entry == endpoint
+        })
     }
 
     fn apply_profile_overrides(&mut self) {
@@ -348,6 +363,17 @@ mod tests {
         assert!(settings.should_route("/wp-json/wp/v2/posts"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
         assert!(!settings.should_route("/wp-login.php"));
+    }
+
+    #[test]
+    fn endpoint_allowlist_supports_prefix_wildcards() {
+        let mut settings = RustGatewaySettings::default();
+        settings.enabled = true;
+        settings.plugin_compat_mode = "rust-only".to_string();
+        settings.endpoint_allowlist = ["/wp-json/*".to_string()].into_iter().collect();
+
+        assert!(settings.should_route("/wp-json/wp/v2/posts"));
+        assert!(!settings.should_route("/xmlrpc.php"));
     }
 
     #[test]

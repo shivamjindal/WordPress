@@ -137,6 +137,28 @@ if ( ! function_exists( 'wp_rust_gateway_parse_truthy' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_rust_gateway_current_request_path' ) ) {
+	/**
+	 * Returns normalized current request path.
+	 *
+	 * @param string $fallback Fallback endpoint.
+	 * @return string
+	 */
+	function wp_rust_gateway_current_request_path( $fallback = '/' ) {
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) $_SERVER['REQUEST_URI'] : '';
+		if ( '' === $request_uri ) {
+			return (string) $fallback;
+		}
+
+		$path = parse_url( $request_uri, PHP_URL_PATH );
+		if ( ! is_string( $path ) || '' === $path ) {
+			return (string) $fallback;
+		}
+
+		return '/' . ltrim( $path, '/' );
+	}
+}
+
 if ( ! function_exists( 'wp_rust_gateway_apply_profile_overrides' ) ) {
 	/**
 	 * Applies deployment profile defaults.
@@ -183,11 +205,44 @@ if ( ! function_exists( 'wp_rust_gateway_should_proxy' ) ) {
 			return false;
 		}
 
-		if ( in_array( '*', $settings['endpoint_allowlist'], true ) ) {
-			return true;
-		}
+		return wp_rust_gateway_endpoint_allowed( $endpoint, $settings['endpoint_allowlist'] );
+	}
+}
 
-		return in_array( $endpoint, $settings['endpoint_allowlist'], true );
+if ( ! function_exists( 'wp_rust_gateway_endpoint_allowed' ) ) {
+	/**
+	 * Checks whether endpoint matches allowlist entries.
+	 *
+	 * Supports:
+	 * - `*` (all)
+	 * - exact path entries (for example `/wp-login.php`)
+	 * - prefix wildcard entries (for example `/wp-json/*`)
+	 *
+	 * @param string   $endpoint Endpoint path.
+	 * @param string[] $allowlist Allowlist entries.
+	 * @return bool
+	 */
+	function wp_rust_gateway_endpoint_allowed( $endpoint, $allowlist ) {
+		foreach ( (array) $allowlist as $entry ) {
+			$entry = trim( (string) $entry );
+			if ( '' === $entry ) {
+				continue;
+			}
+			if ( '*' === $entry ) {
+				return true;
+			}
+			if ( '*' === substr( $entry, -1 ) ) {
+				$prefix = rtrim( substr( $entry, 0, -1 ), '/' );
+				if ( '' !== $prefix && 0 === strpos( $endpoint, $prefix ) ) {
+					return true;
+				}
+				continue;
+			}
+			if ( $endpoint === $entry ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
