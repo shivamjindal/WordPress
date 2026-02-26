@@ -1,9 +1,0 @@
-{
-  "body_preview": "<p>Your PHP installation appears to be missing the MySQL extension which is required by WordPress.</p>\n<p>Please check that the <code>mysqli</code> PHP extension is installed and enabled.</p>\n<p>If you are unsure what these terms mean you should probably contact your host. If you still need help you can always visit the <a href=\"https://wordpress.org/support/forums/\">WordPress support forums</a>.<",
-  "body_sha256": "dc30637bcfced9b48bce7c17f52c5f175cedd56f2e0894c1699e91b3886bc235",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-admin/admin-ajax.php?action=rest-nonce",
-  "set_cookie_count": 0,
-  "status_code": 200
-}

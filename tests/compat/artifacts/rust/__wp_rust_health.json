@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"component\":\"wp-rs-server\",\"seed_rest_routes\":3,\"status\":\"ok\"}",
-  "body_sha256": "2ee1543489f132d370510a352bf25802a3517c7d87a909b708f9b4ce0554d5e8",
-  "content_type": "",
-  "location": "",
-  "route": "/__wp_rust/health",
-  "set_cookie_count": 0,
-  "status_code": 200
-}

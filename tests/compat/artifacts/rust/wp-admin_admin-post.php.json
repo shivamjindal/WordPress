@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-admin/admin-post.php\"}",
-  "body_sha256": "318e9e2b7cb897c7f2edd17a65e592872874d2d376308edcbd9a04ea8b9afb8e",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-admin/admin-post.php",
-  "set_cookie_count": 0,
-  "status_code": 404
-}

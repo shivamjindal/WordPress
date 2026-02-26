@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-activate.php\"}",
-  "body_sha256": "fa9f52444d429313614a602c5cc80e4b7bf277ab5f445edc37e16dfa81467fdd",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-activate.php",
-  "set_cookie_count": 0,
-  "status_code": 404
-}

@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-mail.php\"}",
-  "body_sha256": "976504ea64434a8be306fd165790617ab4db652e5ca8126aa5aa07ab9d2475e6",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-mail.php",
-  "set_cookie_count": 0,
-  "status_code": 404
-}

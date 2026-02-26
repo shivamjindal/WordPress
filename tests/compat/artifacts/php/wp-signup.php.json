@@ -1,9 +1,0 @@
-{
-  "body_preview": "<!DOCTYPE html>\n<html dir='ltr'>\n<head>\n\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\t\t<title>Requirements Not Met</title>\n\t<style>\n\t\thtml {\n\t\t\tbackground: #f1f1f1;\n\t\t}\n\t\tbody {\n\t\t\tbackground: #fff;\n\t\t\tborder: 1px solid #ccd0d4;\n\t\t\tcolor: #444;\n\t\t\tfont-family: -apple-system, BlinkMacSystemFont, \"Sego",
-  "body_sha256": "b267babf5dfab6be68e0f2f4ba4397fe906e376d56447bd72dc13dd3e94f3755",
-  "content_type": "text/html; charset=UTF-8",
-  "location": "",
-  "route": "/wp-signup.php",
-  "set_cookie_count": 0,
-  "status_code": 500
-}

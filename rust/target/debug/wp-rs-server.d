@@ -1,1 +1,0 @@
-/workspace/rust/target/debug/wp-rs-server: /workspace/rust/bin/wp-rs-server/src/main.rs /workspace/rust/crates/wp-rs-config/src/lib.rs /workspace/rust/crates/wp-rs-http/src/lib.rs /workspace/rust/crates/wp-rs-rest/src/lib.rs

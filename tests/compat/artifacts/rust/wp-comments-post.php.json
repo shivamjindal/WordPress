@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-comments-post.php\"}",
-  "body_sha256": "9c812f1f1e43e9196bc842917a75a1343cb29d482ede53054eedd70899c90aec",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-comments-post.php",
-  "set_cookie_count": 0,
-  "status_code": 404
-}

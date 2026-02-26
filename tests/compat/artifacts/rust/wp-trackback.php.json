@@ -1,9 +1,0 @@
-{
-  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-trackback.php\"}",
-  "body_sha256": "a384789aa180d62ff5b0207fb54d024cd6fa109cc8c06ce8aa950cd9c9d5359b",
-  "content_type": "",
-  "location": "",
-  "route": "/wp-trackback.php",
-  "set_cookie_count": 0,
-  "status_code": 404
-}
