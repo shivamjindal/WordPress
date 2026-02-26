@@ -115,6 +115,10 @@ async fn main() {
             any(erase_personal_data_live_dispatch),
         )
         .route("/wp-admin/network.php", any(network_live_dispatch))
+        .route(
+            "/wp-admin/network/setup.php",
+            any(network_setup_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1495,6 +1499,10 @@ async fn network_live_dispatch(State(state): State<AppState>, request: Request) 
         "<!doctype html><html><body><h1>Network Setup (Rust)</h1><p>status=ready</p></body></html>"
             .to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_setup_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    network_live_dispatch(State(state), request).await
 }
 
 async fn upgrade_live_dispatch(request: Request) -> Response {
