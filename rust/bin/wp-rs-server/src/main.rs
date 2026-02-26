@@ -6,7 +6,7 @@ use std::time::Duration;
 use axum::body::{to_bytes, Bytes};
 use axum::extract::{Path, Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
-use axum::response::IntoResponse;
+use axum::response::{IntoResponse, Response};
 use axum::routing::{any, get};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
@@ -15,7 +15,7 @@ use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
 use wp_rs_config::RustGatewaySettings;
-use wp_rs_content::{extract_block_names, parse_front_route};
+use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::{MultisiteResolver, NetworkSite, OptionStore};
 use wp_rs_http::{
@@ -100,6 +100,8 @@ async fn main() {
             "/__wp_rust/internal/multisite-resolve",
             get(internal_multisite_resolve),
         )
+        .route("/", get(front_live_dispatch_root))
+        .route("/*front_path", get(front_live_dispatch))
         .fallback(not_found)
         .with_state(state);
 
@@ -334,6 +336,81 @@ async fn cron_live_dispatch(State(state): State<AppState>, request: Request) -> 
     }))
 }
 
+async fn front_live_dispatch_root(request: Request) -> impl IntoResponse {
+    front_live_dispatch_inner(request, "/".to_string()).await
+}
+
+async fn front_live_dispatch(
+    Path(front_path): Path<String>,
+    request: Request,
+) -> impl IntoResponse {
+    let path = format!("/{}", front_path.trim_start_matches('/'));
+    front_live_dispatch_inner(request, path).await
+}
+
+async fn front_live_dispatch_inner(request: Request, path: String) -> Response {
+    if path.starts_with("/__wp_rust/")
+        || path.starts_with("/wp-json")
+        || path.starts_with("/wp-admin/")
+        || path == "/xmlrpc.php"
+        || path == "/wp-cron.php"
+    {
+        return not_found(request).await.into_response();
+    }
+
+    let query = request.uri().query().unwrap_or_default();
+    let matched = parse_front_route(&path, query);
+
+    if let Some(target) = &matched.canonical_redirect {
+        if *target != path {
+            let redirect_target = if query.is_empty() {
+                target.clone()
+            } else {
+                format!("{target}?{query}")
+            };
+            return rust_handled_redirect(&redirect_target).into_response();
+        }
+    }
+
+    match matched.kind {
+        FrontRouteKind::Feed => {
+            let xml = format!(
+                "<?xml version=\"1.0\"?><rss><channel><title>WordPress Feed</title><description>Rust feed route</description><link>{}</link></channel></rss>",
+                matched.request.path
+            );
+            rust_handled_xml(StatusCode::OK, xml, true).into_response()
+        }
+        FrontRouteKind::NotFound => rust_handled_html(
+            StatusCode::NOT_FOUND,
+            "<!doctype html><html><body><h1>404 Not Found</h1></body></html>".to_string(),
+        )
+        .into_response(),
+        _ => {
+            let title = match matched.kind {
+                FrontRouteKind::Home => "Home",
+                FrontRouteKind::Single => "Single",
+                FrontRouteKind::Page => "Page",
+                FrontRouteKind::Archive => "Archive",
+                FrontRouteKind::Search => "Search",
+                FrontRouteKind::Feed | FrontRouteKind::NotFound => "Front",
+            };
+            let mut html = format!(
+                "<!doctype html><html><body><h1>{title}</h1><p>path={}</p>",
+                matched.request.path
+            );
+            if !matched.query_vars.is_empty() {
+                html.push_str("<ul>");
+                for (key, value) in matched.query_vars {
+                    html.push_str(&format!("<li>{key}={value}</li>"));
+                }
+                html.push_str("</ul>");
+            }
+            html.push_str("</body></html>");
+            rust_handled_html(StatusCode::OK, html).into_response()
+        }
+    }
+}
+
 async fn not_found(request: Request) -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,
@@ -372,6 +449,25 @@ fn rust_handled_xml(
         HeaderValue::from_static("text/xml; charset=UTF-8"),
     );
     (status, headers, body)
+}
+
+fn rust_handled_html(status: StatusCode, body: String) -> (StatusCode, HeaderMap, String) {
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("text/html; charset=UTF-8"),
+    );
+    (status, headers, body)
+}
+
+fn rust_handled_redirect(target: &str) -> (StatusCode, HeaderMap, String) {
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    if let Ok(location) = HeaderValue::from_str(target) {
+        headers.insert("Location", location);
+    }
+    (StatusCode::MOVED_PERMANENTLY, headers, String::new())
 }
 
 fn auth_context_from_headers(
