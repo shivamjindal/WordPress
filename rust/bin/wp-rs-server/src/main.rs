@@ -104,6 +104,7 @@ async fn main() {
         )
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
+        .route("/wp-admin/export.php", any(export_live_dispatch))
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1210,6 +1211,58 @@ async fn site_health_live_dispatch(State(state): State<AppState>, request: Reque
     let html = format!(
         "<!doctype html><html><body><h1>Site Health (Rust)</h1><p>tab={tab}</p><p>status=available</p></body></html>"
     );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn export_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/export.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_export = authenticated
+        && (capabilities.contains("export") || capabilities.contains("manage_options"));
+    if !can_export {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "export capability is required for wp-admin/export.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    if params.contains_key("download") {
+        let requested_content = params
+            .get("content")
+            .cloned()
+            .unwrap_or_else(|| "all".to_string());
+        let export_xml = format!(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\"><channel><title>WordPress Export (Rust)</title><exported_content>{requested_content}</exported_content></channel></rss>"
+        );
+        let mut response =
+            rust_handled_text(StatusCode::OK, "application/xml; charset=UTF-8", export_xml)
+                .into_response();
+        if let Ok(value) =
+            HeaderValue::from_str("attachment; filename=\"wordpress-rust-export.xml\"")
+        {
+            response.headers_mut().insert("Content-Disposition", value);
+        }
+        return response;
+    }
+
+    let html = "<!doctype html><html><body><h1>Export (Rust)</h1><p>status=ready</p></body></html>"
+        .to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 

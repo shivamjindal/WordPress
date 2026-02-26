@@ -196,6 +196,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/privacy-policy-guide.php",
         "/wp-admin/tools.php",
         "/wp-admin/site-health.php",
+        "/wp-admin/export.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",
@@ -405,6 +406,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/privacy-policy-guide.php"));
         assert!(settings.should_route("/wp-admin/tools.php"));
         assert!(settings.should_route("/wp-admin/site-health.php"));
+        assert!(settings.should_route("/wp-admin/export.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 

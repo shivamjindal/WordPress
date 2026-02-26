@@ -6,6 +6,11 @@
  * @subpackage Administration
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/export.php' ) ) {
+	exit;
+}
+
 /** Load WordPress Bootstrap */
 require_once __DIR__ . '/admin.php';
 
