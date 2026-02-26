@@ -63,4 +63,7 @@ else
   "${repo_root}/tools/compat-capture/diff.sh"
 fi
 
+echo "Generating latency summary..."
+"${repo_root}/tools/compat-capture/latency-report.sh" >/dev/null
+
 echo "Compatibility capture completed."

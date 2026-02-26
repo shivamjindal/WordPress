@@ -97,6 +97,7 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   content_type="$(awk -F': ' 'tolower($1)=="content-type"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   location_header="$(awk -F': ' 'tolower($1)=="location"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   rust_handled="$(awk -F': ' 'tolower($1)=="x-wp-rust-handled"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
+  rust_latency_ms="$(awk -F': ' 'tolower($1)=="x-wp-rust-latency-ms"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   set_cookie_count="$(awk 'tolower($1)=="set-cookie:"{count++} END{print count+0}' "${headers_file}")"
   body_sha256="$(sha256sum "${body_file}" | awk '{print $1}')"
 
@@ -105,6 +106,7 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   CONTENT_TYPE="${content_type}" \
   LOCATION_HEADER="${location_header}" \
   RUST_HANDLED="${rust_handled}" \
+  RUST_LATENCY_MS="${rust_latency_ms}" \
   SET_COOKIE_COUNT="${set_cookie_count}" \
   BODY_SHA256="${body_sha256}" \
   BODY_FILE="${body_file}" \
@@ -125,6 +127,8 @@ document = {
     "content_type": os.environ["CONTENT_TYPE"],
     "location": os.environ["LOCATION_HEADER"],
     "rust_handled": os.environ["RUST_HANDLED"],
+    "rust_latency_ms": int(os.environ["RUST_LATENCY_MS"]) if os.environ["RUST_LATENCY_MS"].isdigit() else None,
+    "rust_latency_header_present": bool(os.environ["RUST_LATENCY_MS"]),
     "set_cookie_count": int(os.environ["SET_COOKIE_COUNT"]),
     "body_sha256": os.environ["BODY_SHA256"],
     "body_preview": preview,

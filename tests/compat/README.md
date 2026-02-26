@@ -11,6 +11,7 @@ responses against Rust gateway responses.
 - `artifacts/php/`: captured normalized PHP responses.
 - `artifacts/rust/`: captured normalized Rust responses.
 - `artifacts/report/latest.diff`: latest generated parity report.
+- `artifacts/report/latest-latency.json`: latest latency summary report.
 - `seed/wordpress_seed.sql`: deterministic fixture data for `wp_options`.
 
 ## Workflow
@@ -29,6 +30,7 @@ You can still run individual steps manually:
 2. Run `tools/compat-capture/capture.sh php`
 3. Run `tools/compat-capture/capture.sh rust`
 4. Run `tools/compat-capture/diff.sh` (or `--strict`).
+5. Run `tools/compat-capture/latency-report.sh` for latency summary from latest captures.
 
 ## php-runtime compatibility checks
 
