@@ -1,5 +1,6 @@
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 
 use axum::extract::{Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
@@ -13,8 +14,12 @@ use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
 use wp_rs_config::RustGatewaySettings;
 use wp_rs_content::{extract_block_names, parse_front_route};
+use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::OptionStore;
-use wp_rs_http::detect_endpoint_kind;
+use wp_rs_http::{
+    core_xmlrpc_registry, detect_endpoint_kind, parse_xmlrpc_method_name, xmlrpc_fault_response,
+    xmlrpc_success_response,
+};
 use wp_rs_rest::{core_seed_routes, RestRequest};
 
 #[derive(Debug, Clone)]
@@ -22,6 +27,7 @@ struct AppState {
     options: Arc<Mutex<OptionStore>>,
     auth_secrets: AuthSecrets,
     nonce_service: NonceService,
+    cron_scheduler: Arc<Mutex<CronScheduler>>,
 }
 
 #[tokio::main]
@@ -66,6 +72,19 @@ async fn main() {
             "/__wp_rust/internal/admin-dispatch",
             get(internal_admin_dispatch),
         )
+        .route(
+            "/__wp_rust/internal/xmlrpc-contract",
+            get(internal_xmlrpc_contract),
+        )
+        .route(
+            "/__wp_rust/internal/xmlrpc-dispatch",
+            get(internal_xmlrpc_dispatch),
+        )
+        .route(
+            "/__wp_rust/internal/cron-schedule",
+            get(internal_cron_schedule),
+        )
+        .route("/__wp_rust/internal/cron-due", get(internal_cron_due))
         .fallback(not_found)
         .with_state(state);
 
@@ -153,10 +172,19 @@ fn build_app_state() -> AppState {
     options.set_option("siteurl", "http://localhost", true);
     options.set_option("recently_edited", "[]", false);
 
+    let mut scheduler = CronScheduler::default();
+    scheduler.schedule_event(CronEvent {
+        hook: "wp_version_check".to_string(),
+        timestamp: unix_now() + 60,
+        schedule: Some("twicedaily".to_string()),
+        args: vec![],
+    });
+
     AppState {
         options: Arc::new(Mutex::new(options)),
         auth_secrets: AuthSecrets::default(),
         nonce_service: NonceService::default(),
+        cron_scheduler: Arc::new(Mutex::new(scheduler)),
     }
 }
 
@@ -396,6 +424,136 @@ async fn internal_admin_dispatch(
 
     let result = registry.dispatch(&request);
     rust_handled_json(result)
+}
+
+async fn internal_xmlrpc_contract() -> impl IntoResponse {
+    let registry = core_xmlrpc_registry();
+    rust_handled_json(registry.methods().to_vec())
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalXmlRpcDispatchQuery {
+    method: Option<String>,
+    payload: Option<String>,
+    authenticated: Option<bool>,
+}
+
+async fn internal_xmlrpc_dispatch(
+    Query(query): Query<InternalXmlRpcDispatchQuery>,
+) -> impl IntoResponse {
+    let registry = core_xmlrpc_registry();
+    let authenticated = query.authenticated.unwrap_or(false);
+    let method_name = query.method.or_else(|| {
+        query
+            .payload
+            .and_then(|payload| parse_xmlrpc_method_name(&payload))
+    });
+
+    let Some(method_name) = method_name else {
+        return rust_handled_json(json!({
+            "status_code": 400,
+            "result": {
+                "success": false,
+                "fault_code": -32600,
+                "message": "Invalid XML-RPC request",
+                "method_name": "",
+            },
+            "xml": xmlrpc_fault_response(-32600, "Invalid XML-RPC request"),
+        }));
+    };
+
+    let result = registry.dispatch(&method_name, authenticated);
+    let xml = if result.success {
+        xmlrpc_success_response(&method_name)
+    } else {
+        xmlrpc_fault_response(result.fault_code.unwrap_or(-32603), &result.message)
+    };
+
+    rust_handled_json(json!({
+        "status_code": if result.success { 200 } else { 403 },
+        "result": result,
+        "xml": xml,
+    }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalCronScheduleQuery {
+    hook: Option<String>,
+    timestamp: Option<u64>,
+    schedule: Option<String>,
+    args: Option<String>,
+    query_string: Option<String>,
+}
+
+async fn internal_cron_schedule(
+    State(state): State<AppState>,
+    Query(query): Query<InternalCronScheduleQuery>,
+) -> impl IntoResponse {
+    let hook = query
+        .hook
+        .unwrap_or_else(|| "wp_scheduled_delete".to_string());
+    let timestamp = query.timestamp.unwrap_or_else(|| unix_now() + 60);
+    let schedule = query.schedule;
+    let args = query
+        .args
+        .unwrap_or_default()
+        .split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| value.to_string())
+        .collect::<Vec<_>>();
+    let doing_wp_cron = parse_doing_wp_cron(&query.query_string.unwrap_or_default());
+
+    let mut scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+    scheduler.schedule_event(CronEvent {
+        hook,
+        timestamp,
+        schedule,
+        args,
+    });
+
+    rust_handled_json(json!({
+        "scheduled": true,
+        "doing_wp_cron": doing_wp_cron,
+        "next_event_timestamp": scheduler.next_event_timestamp(),
+    }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalCronDueQuery {
+    now: Option<u64>,
+}
+
+async fn internal_cron_due(
+    State(state): State<AppState>,
+    Query(query): Query<InternalCronDueQuery>,
+) -> impl IntoResponse {
+    let now = query.now.unwrap_or_else(unix_now);
+    let mut scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+
+    let lock_acquired = scheduler.acquire_lock(Duration::from_secs(60));
+    if !lock_acquired {
+        return rust_handled_json(json!({
+            "lock_acquired": false,
+            "due_count": 0,
+            "events": [],
+        }));
+    }
+
+    let due = scheduler.due_events(now);
+    scheduler.release_lock();
+    rust_handled_json(json!({
+        "lock_acquired": true,
+        "due_count": due.len(),
+        "events": due,
+        "next_event_timestamp": scheduler.next_event_timestamp(),
+    }))
 }
 
 fn parse_auth_scheme(value: Option<&str>) -> Option<AuthScheme> {

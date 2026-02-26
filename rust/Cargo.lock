@@ -875,6 +875,9 @@ dependencies = [
 [[package]]
 name = "wp-rs-cron"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "wp-rs-db"
@@ -895,6 +898,9 @@ dependencies = [
 [[package]]
 name = "wp-rs-http"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "wp-rs-rest"
@@ -918,6 +924,7 @@ dependencies = [
  "wp-rs-auth",
  "wp-rs-config",
  "wp-rs-content",
+ "wp-rs-cron",
  "wp-rs-db",
  "wp-rs-http",
  "wp-rs-rest",
