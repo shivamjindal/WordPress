@@ -119,6 +119,12 @@ async fn main() {
             "/wp-admin/network/setup.php",
             any(network_setup_live_dispatch),
         )
+        .route("/wp-admin/network", any(network_index_live_dispatch))
+        .route("/wp-admin/network/", any(network_index_live_dispatch))
+        .route(
+            "/wp-admin/network/index.php",
+            any(network_index_live_dispatch),
+        )
         .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
@@ -1507,6 +1513,37 @@ async fn network_live_dispatch(State(state): State<AppState>, request: Request) 
 
 async fn network_setup_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
     network_live_dispatch(State(state), request).await
+}
+
+async fn network_index_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/index.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_manage_network = authenticated
+        && (capabilities.contains("manage_network") || capabilities.contains("manage_options"));
+    if !can_manage_network {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network capability is required for wp-admin/network/index.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let html = "<!doctype html><html><body><h1>Network Dashboard (Rust)</h1><p>status=ready</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn ms_delete_site_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
