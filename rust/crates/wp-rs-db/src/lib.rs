@@ -209,6 +209,13 @@ impl OptionStore {
         self.alloptions_cache = Some(autoloaded.clone());
         autoloaded
     }
+
+    pub fn snapshot(&self) -> HashMap<String, String> {
+        self.values
+            .iter()
+            .map(|(name, record)| (name.clone(), record.value.clone()))
+            .collect()
+    }
 }
 
 #[derive(Debug, Clone)]

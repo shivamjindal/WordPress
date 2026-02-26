@@ -1,6 +1,7 @@
 use std::net::SocketAddr;
+use std::sync::{Arc, Mutex};
 
-use axum::extract::{Query, Request};
+use axum::extract::{Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::IntoResponse;
 use axum::routing::get;
@@ -9,8 +10,14 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
 use wp_rs_config::RustGatewaySettings;
+use wp_rs_db::OptionStore;
 use wp_rs_http::detect_endpoint_kind;
 use wp_rs_rest::core_seed_routes;
+
+#[derive(Debug, Clone)]
+struct AppState {
+    options: Arc<Mutex<OptionStore>>,
+}
 
 #[tokio::main]
 async fn main() {
@@ -20,11 +27,15 @@ async fn main() {
         .parse()
         .expect("hardcoded listen address must parse");
 
+    let state = build_app_state();
+
     let app = Router::new()
         .route("/__wp_rust/health", get(health))
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
-        .fallback(not_found);
+        .route("/__wp_rust/internal/options", get(internal_options))
+        .fallback(not_found)
+        .with_state(state);
 
     info!("wp-rs-server listening on {address}");
 
@@ -100,4 +111,54 @@ fn rust_handled_json<T: Serialize>(value: T) -> (HeaderMap, Json<T>) {
     let mut headers = HeaderMap::new();
     headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
     (headers, Json(value))
+}
+
+fn build_app_state() -> AppState {
+    let mut options = OptionStore::default();
+    options.set_option("blogname", "WordPress", true);
+    options.set_option("blogdescription", "Just another WordPress site", true);
+    options.set_option("home", "http://localhost", true);
+    options.set_option("siteurl", "http://localhost", true);
+    options.set_option("recently_edited", "[]", false);
+
+    AppState {
+        options: Arc::new(Mutex::new(options)),
+    }
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalOptionsQuery {
+    option: Option<String>,
+    autoload_only: Option<bool>,
+}
+
+async fn internal_options(
+    State(state): State<AppState>,
+    Query(query): Query<InternalOptionsQuery>,
+) -> impl IntoResponse {
+    let mut options = state.options.lock().expect("options mutex poisoned");
+
+    if let Some(option_name) = query.option {
+        let value = options.get_option(&option_name);
+        return rust_handled_json(json!({
+            "scope": "single",
+            "option": option_name,
+            "found": value.is_some(),
+            "value": value,
+        }));
+    }
+
+    let autoload_only = query.autoload_only.unwrap_or(true);
+    let values = if autoload_only {
+        options.load_alloptions()
+    } else {
+        options.snapshot()
+    };
+
+    rust_handled_json(json!({
+        "scope": "bulk",
+        "autoload_only": autoload_only,
+        "count": values.len(),
+        "values": values,
+    }))
 }
