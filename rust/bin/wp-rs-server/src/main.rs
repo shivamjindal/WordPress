@@ -11,6 +11,7 @@ use serde_json::json;
 use tracing::{error, info};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
 use wp_rs_config::RustGatewaySettings;
+use wp_rs_content::{extract_block_names, parse_front_route};
 use wp_rs_db::OptionStore;
 use wp_rs_http::detect_endpoint_kind;
 use wp_rs_rest::core_seed_routes;
@@ -43,6 +44,11 @@ async fn main() {
             get(internal_auth_session),
         )
         .route("/__wp_rust/internal/nonce", get(internal_nonce))
+        .route(
+            "/__wp_rust/internal/content-route",
+            get(internal_content_route),
+        )
+        .route("/__wp_rust/internal/block-parse", get(internal_block_parse))
         .fallback(not_found)
         .with_state(state);
 
@@ -267,6 +273,35 @@ async fn internal_nonce(
         "token": token,
         "nonce": nonce,
         "valid": is_valid,
+    }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalContentRouteQuery {
+    path: Option<String>,
+    query: Option<String>,
+}
+
+async fn internal_content_route(
+    Query(query): Query<InternalContentRouteQuery>,
+) -> impl IntoResponse {
+    let path = query.path.unwrap_or_else(|| "/".to_string());
+    let query_string = query.query.unwrap_or_default();
+    let route = parse_front_route(&path, &query_string);
+    rust_handled_json(route)
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalBlockParseQuery {
+    content: Option<String>,
+}
+
+async fn internal_block_parse(Query(query): Query<InternalBlockParseQuery>) -> impl IntoResponse {
+    let content = query.content.unwrap_or_default();
+    let block_names = extract_block_names(&content);
+    rust_handled_json(json!({
+        "count": block_names.len(),
+        "blocks": block_names,
     }))
 }
 

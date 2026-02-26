@@ -911,6 +911,7 @@ dependencies = [
  "tracing-subscriber",
  "wp-rs-auth",
  "wp-rs-config",
+ "wp-rs-content",
  "wp-rs-db",
  "wp-rs-http",
  "wp-rs-rest",
