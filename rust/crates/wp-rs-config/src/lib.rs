@@ -134,14 +134,7 @@ impl RustGatewaySettings {
 
         endpoint.starts_with("/__wp_rust/")
             || endpoint.starts_with("/wp-json")
-            || matches!(
-                endpoint,
-                "/wp-admin/admin-ajax.php"
-                    | "/wp-admin/admin-post.php"
-                    | "/wp-admin/async-upload.php"
-                    | "/xmlrpc.php"
-                    | "/wp-cron.php"
-            )
+            || php_runtime_core_endpoints().contains(&endpoint)
     }
 
     fn endpoint_allowed(&self, endpoint: &str) -> bool {
@@ -175,6 +168,28 @@ impl RustGatewaySettings {
             self.plugin_compat_mode = "rust-only".to_string();
         }
     }
+}
+
+pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
+    &[
+        "/wp-login.php",
+        "/wp-signup.php",
+        "/wp-activate.php",
+        "/wp-comments-post.php",
+        "/wp-mail.php",
+        "/wp-trackback.php",
+        "/wp-links-opml.php",
+        "/wp-admin",
+        "/wp-admin/",
+        "/wp-admin/install.php",
+        "/wp-admin/upgrade.php",
+        "/wp-admin/maint/repair.php",
+        "/wp-admin/admin-ajax.php",
+        "/wp-admin/admin-post.php",
+        "/wp-admin/async-upload.php",
+        "/xmlrpc.php",
+        "/wp-cron.php",
+    ]
 }
 
 fn parse_truthy(value: &str) -> bool {
@@ -362,7 +377,8 @@ mod tests {
 
         assert!(settings.should_route("/wp-json/wp/v2/posts"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
-        assert!(!settings.should_route("/wp-login.php"));
+        assert!(settings.should_route("/wp-login.php"));
+        assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 
     #[test]

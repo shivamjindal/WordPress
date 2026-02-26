@@ -248,6 +248,33 @@ if ( ! function_exists( 'wp_rust_gateway_endpoint_allowed' ) ) {
 
 if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 	/**
+	 * Returns endpoint list allowed in php-runtime compatibility mode.
+	 *
+	 * @return string[]
+	 */
+	function wp_rust_gateway_php_runtime_core_endpoints() {
+		return array(
+			'/wp-login.php',
+			'/wp-signup.php',
+			'/wp-activate.php',
+			'/wp-comments-post.php',
+			'/wp-mail.php',
+			'/wp-trackback.php',
+			'/wp-links-opml.php',
+			'/wp-admin',
+			'/wp-admin/',
+			'/wp-admin/install.php',
+			'/wp-admin/upgrade.php',
+			'/wp-admin/maint/repair.php',
+			'/wp-admin/admin-ajax.php',
+			'/wp-admin/admin-post.php',
+			'/wp-admin/async-upload.php',
+			'/xmlrpc.php',
+			'/wp-cron.php',
+		);
+	}
+
+	/**
 	 * Enforces plugin compatibility mode endpoint restrictions.
 	 *
 	 * @param string     $endpoint Endpoint path.
@@ -268,17 +295,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			return true;
 		}
 
-		return in_array(
-			$endpoint,
-			array(
-				'/wp-admin/admin-ajax.php',
-				'/wp-admin/admin-post.php',
-				'/wp-admin/async-upload.php',
-				'/xmlrpc.php',
-				'/wp-cron.php',
-			),
-			true
-		);
+		return in_array( $endpoint, wp_rust_gateway_php_runtime_core_endpoints(), true );
 	}
 }
 

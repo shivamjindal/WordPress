@@ -60,3 +60,4 @@ GET /__wp_rust/echo
 GET /__wp_rust/maintenance
 GET /__wp_rust/internal/options?option=blogname
 GET /__wp_rust/internal/maintenance-status?upgrading=1
+GET /__wp_rust/internal/plugin-compat-matrix

@@ -14,7 +14,7 @@ use serde_json::json;
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
-use wp_rs_config::RustGatewaySettings;
+use wp_rs_config::{php_runtime_core_endpoints, RustGatewaySettings};
 use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::{MultisiteResolver, NetworkSite, OptionStore};
@@ -116,6 +116,10 @@ async fn main() {
         .route(
             "/__wp_rust/internal/maintenance-status",
             get(internal_maintenance_status),
+        )
+        .route(
+            "/__wp_rust/internal/plugin-compat-matrix",
+            get(internal_plugin_compat_matrix),
         )
         .route("/", get(front_live_dispatch_root))
         .route("/*front_path", get(front_live_dispatch))
@@ -1607,6 +1611,22 @@ async fn internal_maintenance_status(
         "stale": stale,
         "retry_after_secs": 600,
         "now": now,
+    }))
+}
+
+async fn internal_plugin_compat_matrix() -> impl IntoResponse {
+    let settings = RustGatewaySettings::from_env();
+    let core_endpoints = php_runtime_core_endpoints()
+        .iter()
+        .map(|endpoint| endpoint.to_string())
+        .collect::<Vec<_>>();
+
+    rust_handled_json(json!({
+        "plugin_compat_mode": settings.plugin_compat_mode,
+        "deployment_profile": settings.deployment_profile,
+        "endpoint_allowlist": settings.endpoint_allowlist,
+        "method_allowlist": settings.method_allowlist,
+        "php_runtime_core_endpoints": core_endpoints,
     }))
 }
 
