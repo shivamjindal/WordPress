@@ -18,6 +18,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 	 *     backend_url: string,
 	 *     timeout_ms: int,
 	 *     endpoint_allowlist: string[],
+	 *     method_allowlist: string[],
 	 *     plugin_compat_mode: string
 	 * }
 	 */
@@ -77,6 +78,26 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			$endpoint_allowlist = array( '/__wp_rust/health' );
 		}
 
+		$method_allowlist_raw = defined( 'WP_RUST_METHOD_ALLOWLIST' ) ? WP_RUST_METHOD_ALLOWLIST : '';
+		if ( ! $method_allowlist_raw ) {
+			$method_allowlist_env = getenv( 'WP_RUST_METHOD_ALLOWLIST' );
+			$method_allowlist_raw = false !== $method_allowlist_env ? $method_allowlist_env : 'GET,HEAD';
+		}
+		$method_allowlist = array_values(
+			array_filter(
+				array_map(
+					'strtoupper',
+					array_map(
+						'trim',
+						explode( ',', (string) $method_allowlist_raw )
+					)
+				)
+			)
+		);
+		if ( empty( $method_allowlist ) ) {
+			$method_allowlist = array( 'GET', 'HEAD' );
+		}
+
 		$plugin_compat_mode = defined( 'WP_RUST_PLUGIN_COMPAT_MODE' ) ? WP_RUST_PLUGIN_COMPAT_MODE : '';
 		if ( ! $plugin_compat_mode ) {
 			$compat_mode_env = getenv( 'WP_RUST_PLUGIN_COMPAT_MODE' );
@@ -89,6 +110,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			'backend_url'       => $backend_url,
 			'timeout_ms'        => $timeout_ms,
 			'endpoint_allowlist' => $endpoint_allowlist,
+			'method_allowlist'  => $method_allowlist,
 			'plugin_compat_mode' => trim( (string) $plugin_compat_mode ),
 		);
 	}
@@ -148,8 +170,7 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		}
 
 		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( $_SERVER['REQUEST_METHOD'] ) : 'GET';
-		if ( ! in_array( $request_method, array( 'GET', 'HEAD' ), true ) ) {
-			// Restrict to safe methods until request body replay is implemented.
+		if ( ! wp_rust_gateway_method_allowed( $request_method, $settings ) ) {
 			if ( empty( $settings['fallback_enabled'] ) ) {
 				wp_rust_gateway_hard_fail( 'unsupported_method', 502 );
 				return true;
@@ -159,11 +180,21 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : $endpoint;
 		$target_url  = $settings['backend_url'] . $request_uri;
+		$request_body = '';
+		if ( in_array( $request_method, array( 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
+			$request_body = file_get_contents( 'php://input' );
+			if ( false === $request_body ) {
+				$request_body = '';
+			}
+		}
 
 		$headers = array(
 			'X-WP-Rust-Gateway: 1',
 			'X-WP-Rust-Endpoint: ' . $endpoint,
 		);
+		if ( ! empty( $_SERVER['CONTENT_TYPE'] ) ) {
+			$headers[] = 'Content-Type: ' . $_SERVER['CONTENT_TYPE'];
+		}
 
 		foreach ( $_SERVER as $key => $value ) {
 			if ( 0 !== strpos( $key, 'HTTP_' ) ) {
@@ -182,6 +213,7 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 				'http' => array(
 					'method'        => $request_method,
 					'header'        => implode( "\r\n", $headers ),
+					'content'       => $request_body,
 					'ignore_errors' => true,
 					'timeout'       => max( 1, (float) $settings['timeout_ms'] / 1000 ),
 				),
@@ -241,6 +273,28 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		}
 
 		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_rust_gateway_method_allowed' ) ) {
+	/**
+	 * Checks whether an HTTP method is allowed for Rust proxying.
+	 *
+	 * @param string $method HTTP request method.
+	 * @param array|null $settings Optional settings override.
+	 * @return bool
+	 */
+	function wp_rust_gateway_method_allowed( $method, $settings = null ) {
+		if ( null === $settings ) {
+			$settings = wp_rust_gateway_get_settings();
+		}
+
+		$method = strtoupper( trim( (string) $method ) );
+		if ( '' === $method ) {
+			return false;
+		}
+
+		return in_array( $method, $settings['method_allowlist'], true ) || in_array( '*', $settings['method_allowlist'], true );
 	}
 }
 

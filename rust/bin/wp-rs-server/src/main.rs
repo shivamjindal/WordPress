@@ -140,6 +140,7 @@ struct ProxyDecisionResponse {
     fallback_enabled: bool,
     endpoint: String,
     should_route: bool,
+    method_allowlist: Vec<String>,
     backend_url: String,
     timeout_ms: u64,
     plugin_compat_mode: String,
@@ -152,6 +153,15 @@ async fn proxy_decision(Query(query): Query<ProxyDecisionQuery>) -> impl IntoRes
         fallback_enabled: settings.fallback_enabled,
         should_route: settings.should_route(&query.endpoint),
         endpoint: query.endpoint,
+        method_allowlist: {
+            let mut methods = settings
+                .method_allowlist
+                .iter()
+                .cloned()
+                .collect::<Vec<_>>();
+            methods.sort();
+            methods
+        },
         backend_url: settings.backend_url,
         timeout_ms: settings.timeout_ms,
         plugin_compat_mode: settings.plugin_compat_mode,

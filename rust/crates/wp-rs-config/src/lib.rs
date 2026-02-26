@@ -14,6 +14,8 @@ pub struct RustGatewaySettings {
     pub timeout_ms: u64,
     /// Endpoints allowed to route through Rust.
     pub endpoint_allowlist: HashSet<String>,
+    /// HTTP methods allowed for proxy routing.
+    pub method_allowlist: HashSet<String>,
     /// Compatibility mode for plugin/theme execution.
     pub plugin_compat_mode: String,
 }
@@ -21,12 +23,16 @@ pub struct RustGatewaySettings {
 impl Default for RustGatewaySettings {
     fn default() -> Self {
         let endpoint_allowlist = ["/__wp_rust/health".to_string()].into_iter().collect();
+        let method_allowlist = ["GET".to_string(), "HEAD".to_string()]
+            .into_iter()
+            .collect();
         Self {
             enabled: false,
             fallback_enabled: true,
             backend_url: "http://127.0.0.1:8088".to_string(),
             timeout_ms: 1_500,
             endpoint_allowlist,
+            method_allowlist,
             plugin_compat_mode: "php-runtime".to_string(),
         }
     }
@@ -76,6 +82,18 @@ impl RustGatewaySettings {
             }
         }
 
+        if let Ok(value) = env::var("WP_RUST_METHOD_ALLOWLIST") {
+            let parsed: HashSet<String> = value
+                .split(',')
+                .map(str::trim)
+                .filter(|entry| !entry.is_empty())
+                .map(|method| method.to_ascii_uppercase())
+                .collect();
+            if !parsed.is_empty() {
+                settings.method_allowlist = parsed;
+            }
+        }
+
         if let Ok(value) = env::var("WP_RUST_PLUGIN_COMPAT_MODE") {
             let trimmed = value.trim();
             if !trimmed.is_empty() {
@@ -90,6 +108,11 @@ impl RustGatewaySettings {
     pub fn should_route(&self, endpoint: &str) -> bool {
         self.enabled
             && (self.endpoint_allowlist.contains("*") || self.endpoint_allowlist.contains(endpoint))
+    }
+
+    pub fn allows_method(&self, method: &str) -> bool {
+        self.method_allowlist
+            .contains(&method.trim().to_ascii_uppercase())
     }
 }
 
@@ -234,6 +257,7 @@ mod tests {
         assert!(!settings.enabled);
         assert!(settings.fallback_enabled);
         assert!(settings.endpoint_allowlist.contains("/__wp_rust/health"));
+        assert!(settings.method_allowlist.contains("GET"));
         assert!(!settings.should_route("/wp-login.php"));
     }
 
@@ -244,6 +268,13 @@ mod tests {
         settings.endpoint_allowlist = ["*".to_string()].into_iter().collect();
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
+    }
+
+    #[test]
+    fn method_allowlist_enforces_uppercase_lookup() {
+        let settings = RustGatewaySettings::default();
+        assert!(settings.allows_method("get"));
+        assert!(!settings.allows_method("post"));
     }
 
     #[test]
