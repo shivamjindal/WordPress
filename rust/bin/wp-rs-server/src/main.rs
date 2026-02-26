@@ -191,6 +191,87 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
         .cloned()
         .unwrap_or_else(|| "login".to_string());
 
+    if action == "lostpassword" || action == "retrievepassword" {
+        if parts.method == axum::http::Method::POST {
+            let body_bytes = read_request_body(body).await;
+            let content_type = parts
+                .headers
+                .get("content-type")
+                .and_then(|value| value.to_str().ok())
+                .unwrap_or_default()
+                .to_ascii_lowercase();
+            let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+            let has_identity = params
+                .get("user_login")
+                .or_else(|| params.get("user_email"))
+                .is_some_and(|value| !value.trim().is_empty());
+
+            if !has_identity {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_identity",
+                        "message": "lostpassword requires user_login or user_email.",
+                    }),
+                )
+                .into_response();
+            }
+
+            return rust_handled_redirect("/wp-login.php?checkemail=confirm").into_response();
+        }
+
+        return rust_handled_html(
+            StatusCode::OK,
+            "<!doctype html><html><body><h1>Lost Password (Rust)</h1></body></html>".to_string(),
+        )
+        .into_response();
+    }
+
+    if action == "rp" || action == "resetpass" {
+        if parts.method == axum::http::Method::POST {
+            let body_bytes = read_request_body(body).await;
+            let content_type = parts
+                .headers
+                .get("content-type")
+                .and_then(|value| value.to_str().ok())
+                .unwrap_or_default()
+                .to_ascii_lowercase();
+            let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+            let has_reset_token = params
+                .get("key")
+                .or_else(|| query_params.get("key"))
+                .is_some_and(|value| !value.trim().is_empty());
+            let has_login = params
+                .get("login")
+                .or_else(|| query_params.get("login"))
+                .is_some_and(|value| !value.trim().is_empty());
+            let has_password = params
+                .get("pass1")
+                .or_else(|| params.get("password"))
+                .is_some_and(|value| !value.trim().is_empty());
+
+            if !has_reset_token || !has_login || !has_password {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_reset_payload",
+                        "message": "resetpass requires key, login, and pass1/password.",
+                    }),
+                )
+                .into_response();
+            }
+
+            return rust_handled_redirect("/wp-login.php?password=changed").into_response();
+        }
+
+        let key = query_params.get("key").cloned().unwrap_or_default();
+        let login = query_params.get("login").cloned().unwrap_or_default();
+        let html = format!(
+            "<!doctype html><html><body><h1>Reset Password (Rust)</h1><p>login={login}</p><p>key={key}</p></body></html>"
+        );
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
     if action == "logout" {
         let mut headers = HeaderMap::new();
         headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
