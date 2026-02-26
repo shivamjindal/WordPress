@@ -33,4 +33,4 @@ You can still run individual steps manually:
 
 Run `tools/compat-capture/php-runtime-contract.sh` to validate that:
 - migrated core endpoints are handled by Rust in `php-runtime` mode, and
-- representative plugin/theme file paths remain handled by PHP.
+- representative plugin/theme file paths remain handled by PHP (for both GET and POST probes).

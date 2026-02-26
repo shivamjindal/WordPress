@@ -59,9 +59,27 @@ wait_for_endpoint "${php_base_url}/wp-login.php"
 
 capture_headers() {
   local route="$1"
-  local header_file="$2"
-  local body_file="$3"
-  curl -sS -D "${header_file}" "${php_base_url}${route}" -o "${body_file}"
+  local method="$2"
+  local content_type="$3"
+  local payload="$4"
+  local header_file="$5"
+  local body_file="$6"
+
+  local curl_args=(
+    -sS
+    -X "${method}"
+    -D "${header_file}"
+    -o "${body_file}"
+  )
+
+  if [[ -n "${content_type}" ]]; then
+    curl_args+=( -H "Content-Type: ${content_type}" )
+  fi
+  if [[ -n "${payload}" ]]; then
+    curl_args+=( --data "${payload}" )
+  fi
+
+  curl "${curl_args[@]}" "${php_base_url}${route}"
 }
 
 rust_handled_header() {
@@ -72,11 +90,14 @@ rust_handled_header() {
 assert_rust_handled() {
   local route="$1"
   local expected="$2"
+  local method="${3:-GET}"
+  local content_type="${4:-}"
+  local payload="${5:-}"
   local header_file
   local body_file
   header_file="$(mktemp)"
   body_file="$(mktemp)"
-  capture_headers "${route}" "${header_file}" "${body_file}"
+  capture_headers "${route}" "${method}" "${content_type}" "${payload}" "${header_file}" "${body_file}"
   local handled
   handled="$(rust_handled_header "${header_file}")"
   rm -f "${header_file}" "${body_file}"
@@ -93,7 +114,10 @@ assert_rust_handled() {
 
 assert_rust_handled "/wp-login.php" "yes"
 assert_rust_handled "/wp-admin/install.php" "yes"
+assert_rust_handled "/wp-login.php" "yes" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
+assert_rust_handled "/wp-comments-post.php" "yes" "POST" "application/x-www-form-urlencoded" "comment_post_ID=123&comment=hello"
 assert_rust_handled "/wp-content/plugins/hello.php" "no"
+assert_rust_handled "/wp-content/plugins/hello.php" "no" "POST" "application/x-www-form-urlencoded" "foo=bar"
 assert_rust_handled "/wp-content/themes/twentytwentyfive/style.css" "no"
 
 echo "php-runtime compatibility contract checks passed."
