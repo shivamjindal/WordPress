@@ -271,6 +271,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/options-general.php',
 			'/wp-admin/options-writing.php',
 			'/wp-admin/options-reading.php',
+			'/wp-admin/options-discussion.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',
 			'/wp-admin/admin-ajax.php',

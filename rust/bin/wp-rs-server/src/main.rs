@@ -82,6 +82,10 @@ async fn main() {
             "/wp-admin/options-reading.php",
             any(options_reading_live_dispatch),
         )
+        .route(
+            "/wp-admin/options-discussion.php",
+            any(options_discussion_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -839,6 +843,61 @@ async fn options_reading_live_dispatch(
         .unwrap_or_else(|| "0".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Reading Settings (Rust)</h1><p>show_on_front={show_on_front}</p><p>posts_per_page={posts_per_page}</p><p>page_on_front={page_on_front}</p><p>page_for_posts={page_for_posts}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn options_discussion_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-discussion.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-discussion.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let default_pingback_flag = options
+        .get_option("default_pingback_flag")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1".to_string());
+    let default_ping_status = options
+        .get_option("default_ping_status")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "open".to_string());
+    let default_comment_status = options
+        .get_option("default_comment_status")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "open".to_string());
+    let comments_notify = options
+        .get_option("comments_notify")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1".to_string());
+    let moderation_notify = options
+        .get_option("moderation_notify")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Discussion Settings (Rust)</h1><p>default_pingback_flag={default_pingback_flag}</p><p>default_ping_status={default_ping_status}</p><p>default_comment_status={default_comment_status}</p><p>comments_notify={comments_notify}</p><p>moderation_notify={moderation_notify}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
