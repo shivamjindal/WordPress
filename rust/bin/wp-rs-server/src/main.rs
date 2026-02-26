@@ -78,6 +78,10 @@ async fn main() {
             "/wp-admin/options-writing.php",
             any(options_writing_live_dispatch),
         )
+        .route(
+            "/wp-admin/options-reading.php",
+            any(options_reading_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -784,6 +788,57 @@ async fn options_writing_live_dispatch(
         .unwrap_or_else(|| "0".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Writing Settings (Rust)</h1><p>default_category={default_category}</p><p>default_post_format={default_post_format}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn options_reading_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-reading.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-reading.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let show_on_front = options
+        .get_option("show_on_front")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "posts".to_string());
+    let posts_per_page = options
+        .get_option("posts_per_page")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "10".to_string());
+    let page_on_front = options
+        .get_option("page_on_front")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "0".to_string());
+    let page_for_posts = options
+        .get_option("page_for_posts")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "0".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Reading Settings (Rust)</h1><p>show_on_front={show_on_front}</p><p>posts_per_page={posts_per_page}</p><p>page_on_front={page_on_front}</p><p>page_for_posts={page_for_posts}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
