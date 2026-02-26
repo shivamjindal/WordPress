@@ -12,6 +12,7 @@ tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 wp-rs-config = { path = "../../crates/wp-rs-config" }
+wp-rs-auth = { path = "../../crates/wp-rs-auth" }
 wp-rs-db = { path = "../../crates/wp-rs-db" }
 wp-rs-http = { path = "../../crates/wp-rs-http" }
 wp-rs-rest = { path = "../../crates/wp-rs-rest" }

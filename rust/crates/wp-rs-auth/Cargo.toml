@@ -7,5 +7,6 @@ license.workspace = true
 [dependencies]
 base64 = "0.22.1"
 hmac = "0.12.1"
+serde.workspace = true
 sha2 = "0.10.9"
 thiserror.workspace = true

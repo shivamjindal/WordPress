@@ -4,6 +4,7 @@ use std::time::Duration;
 use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use base64::Engine;
 use hmac::{Hmac, Mac};
+use serde::Serialize;
 use sha2::Sha256;
 use thiserror::Error;
 
@@ -25,7 +26,7 @@ pub fn parse_cookie_header(cookie_header: &str) -> HashMap<String, String> {
         .collect()
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub enum AuthScheme {
     Auth,
     SecureAuth,
@@ -71,7 +72,7 @@ impl Default for AuthSecrets {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct AuthenticatedUser {
     pub user_id: u64,
     pub username: String,
