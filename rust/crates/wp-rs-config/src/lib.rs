@@ -6,6 +6,8 @@ use std::env;
 pub struct RustGatewaySettings {
     /// Whether Rust routing is enabled globally.
     pub enabled: bool,
+    /// Deployment profile controlling cutover defaults.
+    pub deployment_profile: String,
     /// Whether legacy PHP fallback is allowed if Rust fails.
     pub fallback_enabled: bool,
     /// Base URL where the Rust server is reachable from PHP.
@@ -28,6 +30,7 @@ impl Default for RustGatewaySettings {
             .collect();
         Self {
             enabled: false,
+            deployment_profile: "legacy-safe".to_string(),
             fallback_enabled: true,
             backend_url: "http://127.0.0.1:8088".to_string(),
             timeout_ms: 1_500,
@@ -51,6 +54,13 @@ impl RustGatewaySettings {
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_ENABLED") {
             settings.enabled = parse_truthy(&value);
+        }
+
+        if let Ok(value) = env::var("WP_RUST_DEPLOYMENT_PROFILE") {
+            let trimmed = value.trim();
+            if !trimmed.is_empty() {
+                settings.deployment_profile = trimmed.to_string();
+            }
         }
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_FALLBACK_ENABLED") {
@@ -101,6 +111,7 @@ impl RustGatewaySettings {
             }
         }
 
+        settings.apply_profile_overrides();
         settings
     }
 
@@ -113,6 +124,23 @@ impl RustGatewaySettings {
     pub fn allows_method(&self, method: &str) -> bool {
         self.method_allowlist
             .contains(&method.trim().to_ascii_uppercase())
+    }
+
+    fn apply_profile_overrides(&mut self) {
+        if !self
+            .deployment_profile
+            .eq_ignore_ascii_case("production-rust")
+        {
+            return;
+        }
+
+        self.enabled = true;
+        self.fallback_enabled = false;
+        self.endpoint_allowlist = ["*".to_string()].into_iter().collect();
+        self.method_allowlist = ["*".to_string()].into_iter().collect();
+        if self.plugin_compat_mode == "php-runtime" {
+            self.plugin_compat_mode = "rust-only".to_string();
+        }
     }
 }
 
@@ -255,6 +283,7 @@ mod tests {
     fn defaults_are_safe_and_conservative() {
         let settings = RustGatewaySettings::default();
         assert!(!settings.enabled);
+        assert_eq!(settings.deployment_profile, "legacy-safe");
         assert!(settings.fallback_enabled);
         assert!(settings.endpoint_allowlist.contains("/__wp_rust/health"));
         assert!(settings.method_allowlist.contains("GET"));
@@ -275,6 +304,19 @@ mod tests {
         let settings = RustGatewaySettings::default();
         assert!(settings.allows_method("get"));
         assert!(!settings.allows_method("post"));
+    }
+
+    #[test]
+    fn production_profile_forces_full_cutover() {
+        let mut settings = RustGatewaySettings::default();
+        settings.deployment_profile = "production-rust".to_string();
+        settings.apply_profile_overrides();
+
+        assert!(settings.enabled);
+        assert!(!settings.fallback_enabled);
+        assert!(settings.endpoint_allowlist.contains("*"));
+        assert!(settings.method_allowlist.contains("*"));
+        assert_eq!(settings.plugin_compat_mode, "rust-only");
     }
 
     #[test]

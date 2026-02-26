@@ -144,6 +144,7 @@ struct ProxyDecisionQuery {
 #[derive(Debug, Serialize)]
 struct ProxyDecisionResponse {
     enabled: bool,
+    deployment_profile: String,
     fallback_enabled: bool,
     endpoint: String,
     should_route: bool,
@@ -155,20 +156,20 @@ struct ProxyDecisionResponse {
 
 async fn proxy_decision(Query(query): Query<ProxyDecisionQuery>) -> impl IntoResponse {
     let settings = RustGatewaySettings::from_env();
+    let should_route = settings.should_route(&query.endpoint);
+    let mut methods = settings
+        .method_allowlist
+        .iter()
+        .cloned()
+        .collect::<Vec<_>>();
+    methods.sort();
     let response = ProxyDecisionResponse {
         enabled: settings.enabled,
+        deployment_profile: settings.deployment_profile.clone(),
         fallback_enabled: settings.fallback_enabled,
-        should_route: settings.should_route(&query.endpoint),
+        should_route,
         endpoint: query.endpoint,
-        method_allowlist: {
-            let mut methods = settings
-                .method_allowlist
-                .iter()
-                .cloned()
-                .collect::<Vec<_>>();
-            methods.sort();
-            methods
-        },
+        method_allowlist: methods,
         backend_url: settings.backend_url,
         timeout_ms: settings.timeout_ms,
         plugin_compat_mode: settings.plugin_compat_mode,

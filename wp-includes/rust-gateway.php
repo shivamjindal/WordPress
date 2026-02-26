@@ -14,6 +14,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 	 *
 	 * @return array{
 	 *     enabled: bool,
+	 *     deployment_profile: string,
 	 *     fallback_enabled: bool,
 	 *     backend_url: string,
 	 *     timeout_ms: int,
@@ -41,6 +42,12 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			if ( false !== $fallback_env ) {
 				$fallback_enabled = wp_rust_gateway_parse_truthy( $fallback_env );
 			}
+		}
+
+		$deployment_profile = defined( 'WP_RUST_DEPLOYMENT_PROFILE' ) ? WP_RUST_DEPLOYMENT_PROFILE : '';
+		if ( ! $deployment_profile ) {
+			$profile_env = getenv( 'WP_RUST_DEPLOYMENT_PROFILE' );
+			$deployment_profile = false !== $profile_env ? $profile_env : 'legacy-safe';
 		}
 
 		$backend_url = defined( 'WP_RUST_GATEWAY_BACKEND_URL' ) ? WP_RUST_GATEWAY_BACKEND_URL : '';
@@ -104,8 +111,9 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			$plugin_compat_mode = false !== $compat_mode_env ? $compat_mode_env : 'php-runtime';
 		}
 
-		return array(
+		$settings = array(
 			'enabled'           => $enabled,
+			'deployment_profile' => trim( (string) $deployment_profile ),
 			'fallback_enabled'  => $fallback_enabled,
 			'backend_url'       => $backend_url,
 			'timeout_ms'        => $timeout_ms,
@@ -113,6 +121,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			'method_allowlist'  => $method_allowlist,
 			'plugin_compat_mode' => trim( (string) $plugin_compat_mode ),
 		);
+		return wp_rust_gateway_apply_profile_overrides( $settings );
 	}
 }
 
@@ -125,6 +134,31 @@ if ( ! function_exists( 'wp_rust_gateway_parse_truthy' ) ) {
 	 */
 	function wp_rust_gateway_parse_truthy( $value ) {
 		return in_array( strtolower( trim( (string) $value ) ), array( '1', 'true', 'yes', 'on' ), true );
+	}
+}
+
+if ( ! function_exists( 'wp_rust_gateway_apply_profile_overrides' ) ) {
+	/**
+	 * Applies deployment profile defaults.
+	 *
+	 * @param array $settings Gateway settings.
+	 * @return array
+	 */
+	function wp_rust_gateway_apply_profile_overrides( $settings ) {
+		$profile = isset( $settings['deployment_profile'] ) ? strtolower( trim( (string) $settings['deployment_profile'] ) ) : 'legacy-safe';
+		if ( 'production-rust' !== $profile ) {
+			return $settings;
+		}
+
+		$settings['enabled'] = true;
+		$settings['fallback_enabled'] = false;
+		$settings['endpoint_allowlist'] = array( '*' );
+		$settings['method_allowlist'] = array( '*' );
+		if ( empty( $settings['plugin_compat_mode'] ) || 'php-runtime' === $settings['plugin_compat_mode'] ) {
+			$settings['plugin_compat_mode'] = 'rust-only';
+		}
+
+		return $settings;
 	}
 }
 
