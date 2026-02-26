@@ -5,53 +5,164 @@ use serde_json::Value;
 type ActionCallback = Box<dyn Fn(&[Value]) + Send + Sync + 'static>;
 type FilterCallback = Box<dyn Fn(Value, &[Value]) -> Value + Send + Sync + 'static>;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct HookId(u64);
+
+struct ActionRegistration {
+    id: HookId,
+    callback: ActionCallback,
+}
+
+struct FilterRegistration {
+    id: HookId,
+    callback: FilterCallback,
+}
+
 /// Minimal action/filter dispatcher for Rust migration scaffolding.
-#[derive(Default)]
 pub struct HookDispatcher {
-    actions: BTreeMap<String, BTreeMap<i32, Vec<ActionCallback>>>,
-    filters: BTreeMap<String, BTreeMap<i32, Vec<FilterCallback>>>,
+    actions: BTreeMap<String, BTreeMap<i32, Vec<ActionRegistration>>>,
+    filters: BTreeMap<String, BTreeMap<i32, Vec<FilterRegistration>>>,
+    current_stack: Vec<String>,
+    next_id: u64,
+}
+
+impl Default for HookDispatcher {
+    fn default() -> Self {
+        Self {
+            actions: BTreeMap::new(),
+            filters: BTreeMap::new(),
+            current_stack: Vec::new(),
+            next_id: 1,
+        }
+    }
 }
 
 impl HookDispatcher {
-    pub fn add_action(&mut self, name: impl Into<String>, priority: i32, callback: ActionCallback) {
+    pub fn add_action(
+        &mut self,
+        name: impl Into<String>,
+        priority: i32,
+        callback: ActionCallback,
+    ) -> HookId {
+        let id = self.allocate_id();
         self.actions
             .entry(name.into())
             .or_default()
             .entry(priority)
             .or_default()
-            .push(callback);
+            .push(ActionRegistration { id, callback });
+        id
     }
 
-    pub fn do_action(&self, name: &str, args: &[Value]) {
+    pub fn do_action(&mut self, name: &str, args: &[Value]) {
+        self.current_stack.push(name.to_string());
         if let Some(by_priority) = self.actions.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
-                    callback(args);
+                    (callback.callback)(args);
                 }
             }
         }
+        self.current_stack.pop();
     }
 
-    pub fn add_filter(&mut self, name: impl Into<String>, priority: i32, callback: FilterCallback) {
+    pub fn add_filter(
+        &mut self,
+        name: impl Into<String>,
+        priority: i32,
+        callback: FilterCallback,
+    ) -> HookId {
+        let id = self.allocate_id();
         self.filters
             .entry(name.into())
             .or_default()
             .entry(priority)
             .or_default()
-            .push(callback);
+            .push(FilterRegistration { id, callback });
+        id
     }
 
-    pub fn apply_filters(&self, name: &str, mut value: Value, args: &[Value]) -> Value {
+    pub fn apply_filters(&mut self, name: &str, mut value: Value, args: &[Value]) -> Value {
+        self.current_stack.push(name.to_string());
         if let Some(by_priority) = self.filters.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
-                    value = callback(value, args);
+                    value = (callback.callback)(value, args);
                 }
             }
         }
 
+        self.current_stack.pop();
         value
     }
+
+    pub fn remove_action(&mut self, name: &str, id: HookId) -> bool {
+        remove_registration(&mut self.actions, name, id)
+    }
+
+    pub fn remove_filter(&mut self, name: &str, id: HookId) -> bool {
+        remove_registration(&mut self.filters, name, id)
+    }
+
+    pub fn has_action(&self, name: &str) -> bool {
+        self.actions
+            .get(name)
+            .is_some_and(|by_priority| by_priority.values().any(|callbacks| !callbacks.is_empty()))
+    }
+
+    pub fn has_filter(&self, name: &str) -> bool {
+        self.filters
+            .get(name)
+            .is_some_and(|by_priority| by_priority.values().any(|callbacks| !callbacks.is_empty()))
+    }
+
+    pub fn current_hook(&self) -> Option<&str> {
+        self.current_stack.last().map(String::as_str)
+    }
+
+    pub fn doing_hook(&self, name: &str) -> bool {
+        self.current_stack.iter().any(|current| current == name)
+    }
+
+    fn allocate_id(&mut self) -> HookId {
+        let id = HookId(self.next_id);
+        self.next_id += 1;
+        id
+    }
+}
+
+trait HookRegistration {
+    fn id(&self) -> HookId;
+}
+
+impl HookRegistration for ActionRegistration {
+    fn id(&self) -> HookId {
+        self.id
+    }
+}
+
+impl HookRegistration for FilterRegistration {
+    fn id(&self) -> HookId {
+        self.id
+    }
+}
+
+fn remove_registration<T: HookRegistration>(
+    hooks: &mut BTreeMap<String, BTreeMap<i32, Vec<T>>>,
+    name: &str,
+    id: HookId,
+) -> bool {
+    let mut removed = false;
+    if let Some(by_priority) = hooks.get_mut(name) {
+        for callbacks in by_priority.values_mut() {
+            let previous_len = callbacks.len();
+            callbacks.retain(|registration| registration.id() != id);
+            if callbacks.len() != previous_len {
+                removed = true;
+            }
+        }
+    }
+    removed
 }
 
 #[cfg(test)]
@@ -80,5 +191,22 @@ mod tests {
 
         let result = dispatcher.apply_filters("sample", Value::String("value".to_string()), &[]);
         assert_eq!(result, Value::String("value-early-late".to_string()));
+    }
+
+    #[test]
+    fn remove_filter_prevents_callback_execution() {
+        let mut dispatcher = HookDispatcher::default();
+        let hook_id = dispatcher.add_filter(
+            "sample",
+            10,
+            Box::new(|value, _| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("{current}-changed"))
+            }),
+        );
+        assert!(dispatcher.remove_filter("sample", hook_id));
+
+        let result = dispatcher.apply_filters("sample", Value::String("value".to_string()), &[]);
+        assert_eq!(result, Value::String("value".to_string()));
     }
 }
