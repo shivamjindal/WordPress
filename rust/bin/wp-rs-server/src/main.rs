@@ -2,10 +2,10 @@ use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use axum::extract::{Query, Request, State};
+use axum::extract::{Path, Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::IntoResponse;
-use axum::routing::get;
+use axum::routing::{any, get};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -45,6 +45,9 @@ async fn main() {
         .route("/__wp_rust/health", get(health))
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
+        .route("/wp-json", any(rest_dispatch_root))
+        .route("/wp-json/", any(rest_dispatch_root))
+        .route("/wp-json/*rest_path", any(rest_dispatch))
         .route("/__wp_rust/internal/options", get(internal_options))
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
         .route(
@@ -156,6 +159,62 @@ async fn proxy_decision(Query(query): Query<ProxyDecisionQuery>) -> impl IntoRes
     rust_handled_json(response)
 }
 
+async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
+    rest_dispatch_inner(state, request, "/wp-json".to_string())
+}
+
+async fn rest_dispatch(
+    State(state): State<AppState>,
+    Path(rest_path): Path<String>,
+    request: Request,
+) -> impl IntoResponse {
+    let normalized = rest_path.trim_matches('/');
+    let route_path = if normalized.is_empty() {
+        "/wp-json".to_string()
+    } else {
+        format!("/wp-json/{normalized}")
+    };
+    rest_dispatch_inner(state, request, route_path)
+}
+
+fn rest_dispatch_inner(state: AppState, request: Request, route_path: String) -> impl IntoResponse {
+    let registry = core_seed_routes();
+    let headers = request.headers();
+
+    let cookie_header = headers
+        .get("cookie")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+    let authenticated_from_cookie =
+        resolve_current_user(cookie_header, unix_now(), &state.auth_secrets).is_some();
+    let authenticated_from_header = headers
+        .get("x-wp-rust-authenticated")
+        .and_then(|value| value.to_str().ok())
+        .is_some_and(|value| value.eq_ignore_ascii_case("true") || value == "1");
+
+    let mut rest_request = RestRequest::new(request.method().to_string(), route_path);
+    rest_request.authenticated = authenticated_from_cookie || authenticated_from_header;
+
+    if let Some(capability_header) = headers
+        .get("x-wp-rust-capabilities")
+        .and_then(|value| value.to_str().ok())
+    {
+        for capability in capability_header
+            .split(',')
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        {
+            rest_request.capabilities.insert(capability.to_string());
+        }
+    }
+
+    let result = registry.dispatch(&rest_request);
+    rust_handled_json_with_status(
+        StatusCode::from_u16(result.status_code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+        result,
+    )
+}
+
 async fn not_found(request: Request) -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,
@@ -171,6 +230,15 @@ fn rust_handled_json<T: Serialize>(value: T) -> (HeaderMap, Json<T>) {
     let mut headers = HeaderMap::new();
     headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
     (headers, Json(value))
+}
+
+fn rust_handled_json_with_status<T: Serialize>(
+    status: StatusCode,
+    value: T,
+) -> (StatusCode, HeaderMap, Json<T>) {
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    (status, headers, Json(value))
 }
 
 fn build_app_state() -> AppState {
