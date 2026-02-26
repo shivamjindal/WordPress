@@ -281,6 +281,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/export.php',
 			'/wp-admin/import.php',
 			'/wp-admin/export-personal-data.php',
+			'/wp-admin/erase-personal-data.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',
 			'/wp-admin/admin-ajax.php',

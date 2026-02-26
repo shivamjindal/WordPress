@@ -110,6 +110,10 @@ async fn main() {
             "/wp-admin/export-personal-data.php",
             any(export_personal_data_live_dispatch),
         )
+        .route(
+            "/wp-admin/erase-personal-data.php",
+            any(erase_personal_data_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1365,6 +1369,67 @@ async fn export_personal_data_live_dispatch(
     }
 
     let html = "<!doctype html><html><body><h1>Export Personal Data (Rust)</h1><p>status=ready</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn erase_personal_data_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/erase-personal-data.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let has_erase_caps = capabilities.contains("erase_others_personal_data")
+        && capabilities.contains("delete_users");
+    let can_erase_personal_data =
+        authenticated && (has_erase_caps || capabilities.contains("manage_options"));
+    if !can_erase_personal_data {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "erase_others_personal_data and delete_users capabilities are required for wp-admin/erase-personal-data.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+        let requested_identity = params
+            .get("username_or_email_for_privacy_request")
+            .cloned()
+            .unwrap_or_default();
+        return rust_handled_json_with_status(
+            StatusCode::OK,
+            json!({
+                "status": "erasure_request_registered",
+                "requester": requested_identity,
+            }),
+        )
+        .into_response();
+    }
+
+    let html = "<!doctype html><html><body><h1>Erase Personal Data (Rust)</h1><p>status=ready</p></body></html>".to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
