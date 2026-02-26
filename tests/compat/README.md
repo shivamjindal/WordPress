@@ -16,6 +16,10 @@ responses against Rust gateway responses.
 1. (Optional) run `tools/compat-capture/seed-db.sh` to reset fixture data.
 2. Run `tools/compat-capture/run.sh` for one-command capture + diff report.
 3. If you want strict parity checking, use `tools/compat-capture/run.sh --strict`.
+4. To compare with a Rust-cutover profile, use:
+   - `tools/compat-capture/run.sh --profile production-rust`
+   - combine with strict mode when needed:
+     `tools/compat-capture/run.sh --profile production-rust --strict`
 
 You can still run individual steps manually:
 

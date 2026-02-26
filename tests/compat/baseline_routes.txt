@@ -1,9 +1,16 @@
 # Core entrypoints.
 GET /
+GET /search?s=rust
+GET /feed
+GET /Admin
 GET /wp-login.php
+GET /wp-login.php?action=lostpassword
+GET /wp-login.php?action=rp&key=abc123&login=admin
 GET /wp-signup.php
 GET /wp-activate.php
+GET /wp-activate.php?key=abc123
 GET /wp-comments-post.php
+GET /wp-admin/
 GET /wp-cron.php?doing_wp_cron=1
 POST /xmlrpc.php
 GET /wp-mail.php
