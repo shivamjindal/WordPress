@@ -2,10 +2,12 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use std::time::Instant;
 
 use axum::body::{to_bytes, Bytes};
 use axum::extract::{Path, Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
+use axum::middleware::{self, Next};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{any, get};
 use axum::{Json, Router};
@@ -124,7 +126,8 @@ async fn main() {
         .route("/", get(front_live_dispatch_root))
         .route("/*front_path", get(front_live_dispatch))
         .fallback(not_found)
-        .with_state(state);
+        .with_state(state)
+        .layer(middleware::from_fn(latency_middleware));
 
     info!("wp-rs-server listening on {address}");
 
@@ -138,6 +141,26 @@ async fn main() {
     {
         error!("server failed: {error}");
     }
+}
+
+async fn latency_middleware(request: Request, next: Next) -> Response {
+    let method = request.method().to_string();
+    let path = request.uri().path().to_string();
+    let start = Instant::now();
+    let mut response = next.run(request).await;
+    let elapsed_ms = start.elapsed().as_millis();
+    if let Ok(value) = HeaderValue::from_str(&elapsed_ms.to_string()) {
+        response.headers_mut().insert("X-WP-Rust-Latency-Ms", value);
+    }
+
+    info!(
+        method = %method,
+        path = %path,
+        status = %response.status().as_u16(),
+        latency_ms = elapsed_ms,
+        "request handled"
+    );
+    response
 }
 
 async fn health() -> impl IntoResponse {
