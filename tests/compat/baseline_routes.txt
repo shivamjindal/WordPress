@@ -1,15 +1,41 @@
-/
-/wp-login.php
-/wp-signup.php
-/wp-activate.php
-/wp-comments-post.php
-/wp-cron.php?doing_wp_cron=1
-/xmlrpc.php
-/wp-mail.php
-/wp-trackback.php
-/wp-links-opml.php
-/wp-admin/admin-ajax.php?action=rest-nonce
-/wp-admin/admin-post.php
-/wp-admin/async-upload.php
-/__wp_rust/health
-/__wp_rust/echo
+# Core entrypoints.
+GET /
+GET /wp-login.php
+GET /wp-signup.php
+GET /wp-activate.php
+GET /wp-comments-post.php
+GET /wp-cron.php?doing_wp_cron=1
+POST /xmlrpc.php
+GET /wp-mail.php
+GET /wp-trackback.php
+GET /wp-links-opml.php
+GET /wp-admin/admin-ajax.php?action=rest-nonce
+GET /wp-admin/admin-post.php
+GET /wp-admin/async-upload.php
+
+# REST surface (top routes for contract baseline).
+GET /wp-json/
+GET /wp-json/wp/v2
+GET /wp-json/wp/v2/posts
+GET /wp-json/wp/v2/posts?per_page=1
+GET /wp-json/wp/v2/pages
+GET /wp-json/wp/v2/media
+GET /wp-json/wp/v2/users
+GET /wp-json/wp/v2/comments
+GET /wp-json/wp/v2/categories
+GET /wp-json/wp/v2/tags
+GET /wp-json/wp/v2/types
+GET /wp-json/wp/v2/statuses
+GET /wp-json/wp/v2/taxonomies
+GET /wp-json/wp/v2/search?search=hello
+GET /wp-json/wp/v2/settings
+GET /wp-json/wp/v2/themes
+GET /wp-json/wp/v2/plugins
+GET /wp-json/wp/v2/block-types
+GET /wp-json/wp/v2/block-directory/search?term=gallery
+GET /wp-json/oembed/1.0/embed?url=https://wordpress.org
+
+# Rust internal gateway diagnostics.
+GET /__wp_rust/health
+GET /__wp_rust/echo
+GET /__wp_rust/internal/options?option=blogname

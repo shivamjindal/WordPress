@@ -8,13 +8,18 @@ responses against Rust gateway responses.
 - `baseline_routes.txt`: list of routes to capture for both runtimes.
 - `artifacts/php/`: captured normalized PHP responses.
 - `artifacts/rust/`: captured normalized Rust responses.
+- `artifacts/report/latest.diff`: latest generated parity report.
+- `seed/wordpress_seed.sql`: deterministic fixture data for `wp_options`.
 
 ## Workflow
+
+1. (Optional) run `tools/compat-capture/seed-db.sh` to reset fixture data.
+2. Run `tools/compat-capture/run.sh` for one-command capture + diff report.
+3. If you want strict parity checking, use `tools/compat-capture/run.sh --strict`.
+
+You can still run individual steps manually:
 
 1. Start legacy PHP server and Rust server.
 2. Run `tools/compat-capture/capture.sh php`
 3. Run `tools/compat-capture/capture.sh rust`
-4. Run `tools/compat-capture/diff.sh`
-
-The diff command prints route-level mismatches and exits non-zero when parity
-checks fail.
+4. Run `tools/compat-capture/diff.sh` (or `--strict`).

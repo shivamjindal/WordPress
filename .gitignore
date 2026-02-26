@@ -1,3 +1,4 @@
 rust/target/
 tests/compat/artifacts/php/*.json
 tests/compat/artifacts/rust/*.json
+tests/compat/artifacts/report/*.diff
