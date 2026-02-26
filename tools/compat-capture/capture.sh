@@ -24,11 +24,34 @@ esac
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 routes_file="${repo_root}/tests/compat/baseline_routes.txt"
+payloads_file="${repo_root}/tests/compat/request_payloads.tsv"
 output_dir="${repo_root}/tests/compat/artifacts/${target}"
 
 mkdir -p "${output_dir}"
 
 echo "Capturing ${target} responses from ${base_url}"
+
+lookup_request_payload() {
+  local request_method="$1"
+  local request_path="$2"
+
+  if [[ ! -f "${payloads_file}" ]]; then
+    return 1
+  fi
+
+  awk -F'\t' -v method="${request_method}" -v path="${request_path}" '
+    $0 !~ /^#/ && NF >= 4 && $1 == method && $2 == path {
+      print $3 "\t" $4
+      found = 1
+      exit
+    }
+    END {
+      if (!found) {
+        exit 1
+      }
+    }
+  ' "${payloads_file}"
+}
 
 while IFS= read -r route || [[ -n "${route}" ]]; do
   entry="$(echo "${route}" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
@@ -48,8 +71,29 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   url="${base_url}${path}"
   headers_file="$(mktemp)"
   body_file="$(mktemp)"
+  request_content_type=""
+  request_body=""
+  if payload_entry="$(lookup_request_payload "${method}" "${path}" 2>/dev/null)"; then
+    request_content_type="${payload_entry%%$'\t'*}"
+    request_body="${payload_entry#*$'\t'}"
+  fi
 
-  status_code="$(curl -sS -X "${method}" -o "${body_file}" -D "${headers_file}" -w "%{http_code}" "${url}" || true)"
+  curl_args=(
+    -sS
+    -X "${method}"
+    -o "${body_file}"
+    -D "${headers_file}"
+    -w "%{http_code}"
+  )
+
+  if [[ -n "${request_content_type}" ]]; then
+    curl_args+=( -H "Content-Type: ${request_content_type}" )
+  fi
+  if [[ -n "${request_body}" ]]; then
+    curl_args+=( --data "${request_body}" )
+  fi
+
+  status_code="$(curl "${curl_args[@]}" "${url}" || true)"
   content_type="$(awk 'BEGIN{IGNORECASE=1} /^Content-Type:/{sub(/\r$/, "", $0); print substr($0, 15); exit}' "${headers_file}")"
   location_header="$(awk 'BEGIN{IGNORECASE=1} /^Location:/{sub(/\r$/, "", $0); print substr($0, 11); exit}' "${headers_file}")"
   rust_handled="$(awk 'BEGIN{IGNORECASE=1} /^X-WP-Rust-Handled:/{sub(/\r$/, "", $0); print substr($0, 20); exit}' "${headers_file}")"

@@ -6,10 +6,16 @@ GET /Admin
 GET /wp-login.php
 GET /wp-login.php?action=lostpassword
 GET /wp-login.php?action=rp&key=abc123&login=admin
+POST /wp-login.php
+POST /wp-login.php?action=lostpassword
+POST /wp-login.php?action=resetpass
 GET /wp-signup.php
+POST /wp-signup.php
 GET /wp-activate.php
 GET /wp-activate.php?key=abc123
+POST /wp-activate.php
 GET /wp-comments-post.php
+POST /wp-comments-post.php
 GET /wp-admin/
 GET /wp-cron.php?doing_wp_cron=1
 POST /xmlrpc.php

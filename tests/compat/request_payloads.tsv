@@ -1,0 +1,8 @@
+# METHOD<TAB>PATH<TAB>CONTENT_TYPE<TAB>BODY
+POST	/xmlrpc.php	text/xml	<?xml version="1.0"?><methodCall><methodName>demo.sayHello</methodName></methodCall>
+POST	/wp-login.php	application/x-www-form-urlencoded	log=admin&pwd=secret
+POST	/wp-login.php?action=lostpassword	application/x-www-form-urlencoded	user_login=admin
+POST	/wp-login.php?action=resetpass	application/x-www-form-urlencoded	key=abc123&login=admin&pass1=newpass
+POST	/wp-signup.php	application/x-www-form-urlencoded	user_login=tester
+POST	/wp-activate.php	application/x-www-form-urlencoded	key=abc123
+POST	/wp-comments-post.php	application/x-www-form-urlencoded	comment_post_ID=123&comment=hello
