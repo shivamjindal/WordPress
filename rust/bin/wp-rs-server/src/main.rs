@@ -86,6 +86,10 @@ async fn main() {
             "/wp-admin/options-discussion.php",
             any(options_discussion_live_dispatch),
         )
+        .route(
+            "/wp-admin/options-media.php",
+            any(options_media_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -898,6 +902,66 @@ async fn options_discussion_live_dispatch(
         .unwrap_or_else(|| "1".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Discussion Settings (Rust)</h1><p>default_pingback_flag={default_pingback_flag}</p><p>default_ping_status={default_ping_status}</p><p>default_comment_status={default_comment_status}</p><p>comments_notify={comments_notify}</p><p>moderation_notify={moderation_notify}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn options_media_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-media.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-media.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let thumbnail_size_w = options
+        .get_option("thumbnail_size_w")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "150".to_string());
+    let thumbnail_size_h = options
+        .get_option("thumbnail_size_h")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "150".to_string());
+    let medium_size_w = options
+        .get_option("medium_size_w")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "300".to_string());
+    let medium_size_h = options
+        .get_option("medium_size_h")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "300".to_string());
+    let large_size_w = options
+        .get_option("large_size_w")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1024".to_string());
+    let large_size_h = options
+        .get_option("large_size_h")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1024".to_string());
+    let uploads_use_yearmonth_folders = options
+        .get_option("uploads_use_yearmonth_folders")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Media Settings (Rust)</h1><p>thumbnail_size_w={thumbnail_size_w}</p><p>thumbnail_size_h={thumbnail_size_h}</p><p>medium_size_w={medium_size_w}</p><p>medium_size_h={medium_size_h}</p><p>large_size_w={large_size_w}</p><p>large_size_h={large_size_h}</p><p>uploads_use_yearmonth_folders={uploads_use_yearmonth_folders}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
