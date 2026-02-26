@@ -408,6 +408,11 @@ function wp_maintenance() {
 		die();
 	}
 
+	require_once ABSPATH . WPINC . '/rust-gateway.php';
+	if ( function_exists( 'wp_rust_gateway_try_proxy' ) && wp_rust_gateway_try_proxy( '/__wp_rust/maintenance' ) ) {
+		die();
+	}
+
 	require_once ABSPATH . WPINC . '/functions.php';
 	wp_load_translations_early();
 

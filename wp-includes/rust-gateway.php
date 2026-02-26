@@ -308,7 +308,11 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		}
 
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : $endpoint;
-		$target_url  = $settings['backend_url'] . $request_uri;
+		$proxy_uri   = $request_uri;
+		if ( 0 === strpos( $endpoint, '/__wp_rust/' ) ) {
+			$proxy_uri = $endpoint;
+		}
+		$target_url  = $settings['backend_url'] . $proxy_uri;
 		$request_body = '';
 		if ( in_array( $request_method, array( 'POST', 'PUT', 'PATCH', 'DELETE' ), true ) ) {
 			$request_body = file_get_contents( 'php://input' );
@@ -378,7 +382,8 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 			}
 		}
 
-		if ( ! $handled_by_rust || $status_code >= 500 || 404 === $status_code || 501 === $status_code ) {
+		$maintenance_response = '/__wp_rust/maintenance' === $endpoint && 503 === $status_code;
+		if ( ! $handled_by_rust || ( $status_code >= 500 && ! $maintenance_response ) || 404 === $status_code || 501 === $status_code ) {
 			if ( empty( $settings['fallback_enabled'] ) ) {
 				wp_rust_gateway_hard_fail( 'rust_unhandled', 502 );
 				return true;

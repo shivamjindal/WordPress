@@ -57,4 +57,6 @@ GET /wp-json/oembed/1.0/embed?url=https://wordpress.org
 # Rust internal gateway diagnostics.
 GET /__wp_rust/health
 GET /__wp_rust/echo
+GET /__wp_rust/maintenance
 GET /__wp_rust/internal/options?option=blogname
+GET /__wp_rust/internal/maintenance-status?upgrading=1

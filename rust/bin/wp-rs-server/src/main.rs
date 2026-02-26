@@ -47,6 +47,7 @@ async fn main() {
         .route("/__wp_rust/health", get(health))
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
+        .route("/__wp_rust/maintenance", any(maintenance_live_dispatch))
         .route("/wp-login.php", any(login_live_dispatch))
         .route("/wp-signup.php", any(signup_live_dispatch))
         .route("/wp-activate.php", any(activate_live_dispatch))
@@ -111,6 +112,10 @@ async fn main() {
         .route(
             "/__wp_rust/internal/multisite-resolve",
             get(internal_multisite_resolve),
+        )
+        .route(
+            "/__wp_rust/internal/maintenance-status",
+            get(internal_maintenance_status),
         )
         .route("/", get(front_live_dispatch_root))
         .route("/*front_path", get(front_live_dispatch))
@@ -189,6 +194,23 @@ async fn proxy_decision(Query(query): Query<ProxyDecisionQuery>) -> impl IntoRes
         plugin_compat_mode: settings.plugin_compat_mode,
     };
     rust_handled_json(response)
+}
+
+async fn maintenance_live_dispatch() -> Response {
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("text/html; charset=UTF-8"),
+    );
+    headers.insert("Retry-After", HeaderValue::from_static("600"));
+
+    (
+        StatusCode::SERVICE_UNAVAILABLE,
+        headers,
+        "<!doctype html><html><body><h1>Maintenance</h1><p>Briefly unavailable for scheduled maintenance. Check back in a minute.</p></body></html>".to_string(),
+    )
+        .into_response()
 }
 
 async fn login_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
@@ -1557,6 +1579,34 @@ async fn internal_multisite_resolve(
         "domain": domain,
         "path": path,
         "resolved": resolved,
+    }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalMaintenanceStatusQuery {
+    upgrading: Option<u64>,
+}
+
+async fn internal_maintenance_status(
+    Query(query): Query<InternalMaintenanceStatusQuery>,
+) -> impl IntoResponse {
+    let now = unix_now();
+    let upgrading = query.upgrading.unwrap_or(0);
+    let age_secs = if upgrading > 0 {
+        now.saturating_sub(upgrading)
+    } else {
+        0
+    };
+    let stale = upgrading > 0 && age_secs >= 600;
+    let active = upgrading > 0 && !stale;
+
+    rust_handled_json(json!({
+        "active": active,
+        "upgrading": if upgrading > 0 { Some(upgrading) } else { None::<u64> },
+        "age_secs": age_secs,
+        "stale": stale,
+        "retry_after_secs": 600,
+        "now": now,
     }))
 }
 
