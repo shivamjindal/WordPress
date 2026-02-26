@@ -200,6 +200,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/import.php",
         "/wp-admin/export-personal-data.php",
         "/wp-admin/erase-personal-data.php",
+        "/wp-admin/network.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",
@@ -413,6 +414,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/import.php"));
         assert!(settings.should_route("/wp-admin/export-personal-data.php"));
         assert!(settings.should_route("/wp-admin/erase-personal-data.php"));
+        assert!(settings.should_route("/wp-admin/network.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 
