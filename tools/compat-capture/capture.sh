@@ -98,6 +98,7 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   location_header="$(awk -F': ' 'tolower($1)=="location"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   rust_handled="$(awk -F': ' 'tolower($1)=="x-wp-rust-handled"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   rust_latency_ms="$(awk -F': ' 'tolower($1)=="x-wp-rust-latency-ms"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
+  rust_latency_us="$(awk -F': ' 'tolower($1)=="x-wp-rust-latency-micros"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
   set_cookie_count="$(awk 'tolower($1)=="set-cookie:"{count++} END{print count+0}' "${headers_file}")"
   body_sha256="$(sha256sum "${body_file}" | awk '{print $1}')"
 
@@ -107,6 +108,7 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   LOCATION_HEADER="${location_header}" \
   RUST_HANDLED="${rust_handled}" \
   RUST_LATENCY_MS="${rust_latency_ms}" \
+  RUST_LATENCY_US="${rust_latency_us}" \
   SET_COOKIE_COUNT="${set_cookie_count}" \
   BODY_SHA256="${body_sha256}" \
   BODY_FILE="${body_file}" \
@@ -128,7 +130,8 @@ document = {
     "location": os.environ["LOCATION_HEADER"],
     "rust_handled": os.environ["RUST_HANDLED"],
     "rust_latency_ms": int(os.environ["RUST_LATENCY_MS"]) if os.environ["RUST_LATENCY_MS"].isdigit() else None,
-    "rust_latency_header_present": bool(os.environ["RUST_LATENCY_MS"]),
+    "rust_latency_us": int(os.environ["RUST_LATENCY_US"]) if os.environ["RUST_LATENCY_US"].isdigit() else None,
+    "rust_latency_header_present": bool(os.environ["RUST_LATENCY_MS"] or os.environ["RUST_LATENCY_US"]),
     "set_cookie_count": int(os.environ["SET_COOKIE_COUNT"]),
     "body_sha256": os.environ["BODY_SHA256"],
     "body_preview": preview,

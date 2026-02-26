@@ -148,9 +148,16 @@ async fn latency_middleware(request: Request, next: Next) -> Response {
     let path = request.uri().path().to_string();
     let start = Instant::now();
     let mut response = next.run(request).await;
-    let elapsed_ms = start.elapsed().as_millis();
+    let elapsed = start.elapsed();
+    let elapsed_ms = elapsed.as_millis();
+    let elapsed_us = elapsed.as_micros();
     if let Ok(value) = HeaderValue::from_str(&elapsed_ms.to_string()) {
         response.headers_mut().insert("X-WP-Rust-Latency-Ms", value);
+    }
+    if let Ok(value) = HeaderValue::from_str(&elapsed_us.to_string()) {
+        response
+            .headers_mut()
+            .insert("X-WP-Rust-Latency-Micros", value);
     }
 
     info!(
@@ -158,6 +165,7 @@ async fn latency_middleware(request: Request, next: Next) -> Response {
         path = %path,
         status = %response.status().as_u16(),
         latency_ms = elapsed_ms,
+        latency_us = elapsed_us,
         "request handled"
     );
     response

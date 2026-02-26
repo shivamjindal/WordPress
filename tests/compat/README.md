@@ -30,7 +30,7 @@ You can still run individual steps manually:
 2. Run `tools/compat-capture/capture.sh php`
 3. Run `tools/compat-capture/capture.sh rust`
 4. Run `tools/compat-capture/diff.sh` (or `--strict`).
-5. Run `tools/compat-capture/latency-report.sh` for latency summary from latest captures.
+5. Run `tools/compat-capture/latency-report.sh` for latency summary from latest captures (ms + µs aggregates).
 
 ## php-runtime compatibility checks
 
