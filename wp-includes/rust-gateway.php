@@ -179,11 +179,51 @@ if ( ! function_exists( 'wp_rust_gateway_should_proxy' ) ) {
 			return false;
 		}
 
+		if ( ! wp_rust_gateway_plugin_mode_allows_endpoint( $endpoint, $settings ) ) {
+			return false;
+		}
+
 		if ( in_array( '*', $settings['endpoint_allowlist'], true ) ) {
 			return true;
 		}
 
 		return in_array( $endpoint, $settings['endpoint_allowlist'], true );
+	}
+}
+
+if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
+	/**
+	 * Enforces plugin compatibility mode endpoint restrictions.
+	 *
+	 * @param string     $endpoint Endpoint path.
+	 * @param array|null $settings Optional settings override.
+	 * @return bool
+	 */
+	function wp_rust_gateway_plugin_mode_allows_endpoint( $endpoint, $settings = null ) {
+		if ( null === $settings ) {
+			$settings = wp_rust_gateway_get_settings();
+		}
+
+		$mode = isset( $settings['plugin_compat_mode'] ) ? strtolower( trim( (string) $settings['plugin_compat_mode'] ) ) : 'php-runtime';
+		if ( 'php-runtime' !== $mode ) {
+			return true;
+		}
+
+		if ( 0 === strpos( $endpoint, '/__wp_rust/' ) || 0 === strpos( $endpoint, '/wp-json' ) ) {
+			return true;
+		}
+
+		return in_array(
+			$endpoint,
+			array(
+				'/wp-admin/admin-ajax.php',
+				'/wp-admin/admin-post.php',
+				'/wp-admin/async-upload.php',
+				'/xmlrpc.php',
+				'/wp-cron.php',
+			),
+			true
+		);
 	}
 }
 

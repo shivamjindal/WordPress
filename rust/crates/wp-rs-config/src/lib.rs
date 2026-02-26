@@ -119,11 +119,29 @@ impl RustGatewaySettings {
     pub fn should_route(&self, endpoint: &str) -> bool {
         self.enabled
             && (self.endpoint_allowlist.contains("*") || self.endpoint_allowlist.contains(endpoint))
+            && self.plugin_mode_allows_endpoint(endpoint)
     }
 
     pub fn allows_method(&self, method: &str) -> bool {
         self.method_allowlist
             .contains(&method.trim().to_ascii_uppercase())
+    }
+
+    fn plugin_mode_allows_endpoint(&self, endpoint: &str) -> bool {
+        if !self.plugin_compat_mode.eq_ignore_ascii_case("php-runtime") {
+            return true;
+        }
+
+        endpoint.starts_with("/__wp_rust/")
+            || endpoint.starts_with("/wp-json")
+            || matches!(
+                endpoint,
+                "/wp-admin/admin-ajax.php"
+                    | "/wp-admin/admin-post.php"
+                    | "/wp-admin/async-upload.php"
+                    | "/xmlrpc.php"
+                    | "/wp-cron.php"
+            )
     }
 
     fn apply_profile_overrides(&mut self) {
@@ -294,6 +312,7 @@ mod tests {
     fn should_route_supports_wildcard() {
         let mut settings = RustGatewaySettings::default();
         settings.enabled = true;
+        settings.plugin_compat_mode = "rust-only".to_string();
         settings.endpoint_allowlist = ["*".to_string()].into_iter().collect();
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
@@ -317,6 +336,18 @@ mod tests {
         assert!(settings.endpoint_allowlist.contains("*"));
         assert!(settings.method_allowlist.contains("*"));
         assert_eq!(settings.plugin_compat_mode, "rust-only");
+    }
+
+    #[test]
+    fn php_runtime_profile_restricts_non_core_endpoints() {
+        let mut settings = RustGatewaySettings::default();
+        settings.enabled = true;
+        settings.endpoint_allowlist = ["*".to_string()].into_iter().collect();
+        settings.plugin_compat_mode = "php-runtime".to_string();
+
+        assert!(settings.should_route("/wp-json/wp/v2/posts"));
+        assert!(settings.should_route("/wp-admin/admin-ajax.php"));
+        assert!(!settings.should_route("/wp-login.php"));
     }
 
     #[test]
