@@ -344,6 +344,8 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 					'header'        => implode( "\r\n", $headers ),
 					'content'       => $request_body,
 					'ignore_errors' => true,
+					'follow_location' => 0,
+					'max_redirects' => 0,
 					'timeout'       => max( 1, (float) $settings['timeout_ms'] / 1000 ),
 				),
 			)

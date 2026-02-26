@@ -48,6 +48,8 @@ async fn main() {
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
         .route("/wp-login.php", any(login_live_dispatch))
+        .route("/wp-admin", get(admin_dashboard_live))
+        .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-json", any(rest_dispatch_root))
         .route("/wp-json/", any(rest_dispatch_root))
         .route("/wp-json/*rest_path", any(rest_dispatch))
@@ -285,6 +287,26 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
         "<!doctype html><html><body><h1>Login Success</h1><p>user={username}</p></body></html>"
     );
     (StatusCode::FOUND, headers, body).into_response()
+}
+
+async fn admin_dashboard_live(State(state): State<AppState>, request: Request) -> Response {
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+
+    if !authenticated {
+        return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2F").into_response();
+    }
+
+    let mut html = "<!doctype html><html><body><h1>WordPress Admin (Rust)</h1>".to_string();
+    if !capabilities.is_empty() {
+        html.push_str("<ul>");
+        for capability in capabilities {
+            html.push_str(&format!("<li>{capability}</li>"));
+        }
+        html.push_str("</ul>");
+    }
+    html.push_str("</body></html>");
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
