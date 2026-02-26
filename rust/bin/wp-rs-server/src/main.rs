@@ -1,7 +1,9 @@
+use std::collections::{BTreeMap, BTreeSet};
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
+use axum::body::{to_bytes, Bytes};
 use axum::extract::{Path, Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::response::IntoResponse;
@@ -48,6 +50,11 @@ async fn main() {
         .route("/wp-json", any(rest_dispatch_root))
         .route("/wp-json/", any(rest_dispatch_root))
         .route("/wp-json/*rest_path", any(rest_dispatch))
+        .route("/wp-admin/admin-ajax.php", any(admin_ajax_dispatch))
+        .route("/wp-admin/admin-post.php", any(admin_post_dispatch))
+        .route("/wp-admin/async-upload.php", any(async_upload_dispatch))
+        .route("/xmlrpc.php", any(xmlrpc_live_dispatch))
+        .route("/wp-cron.php", any(cron_live_dispatch))
         .route("/__wp_rust/internal/options", get(internal_options))
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
         .route(
@@ -190,39 +197,140 @@ async fn rest_dispatch(
 fn rest_dispatch_inner(state: AppState, request: Request, route_path: String) -> impl IntoResponse {
     let registry = core_seed_routes();
     let headers = request.headers();
-
-    let cookie_header = headers
-        .get("cookie")
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or_default();
-    let authenticated_from_cookie =
-        resolve_current_user(cookie_header, unix_now(), &state.auth_secrets).is_some();
-    let authenticated_from_header = headers
-        .get("x-wp-rust-authenticated")
-        .and_then(|value| value.to_str().ok())
-        .is_some_and(|value| value.eq_ignore_ascii_case("true") || value == "1");
+    let (authenticated, capabilities) = auth_context_from_headers(headers, &state.auth_secrets);
 
     let mut rest_request = RestRequest::new(request.method().to_string(), route_path);
-    rest_request.authenticated = authenticated_from_cookie || authenticated_from_header;
-
-    if let Some(capability_header) = headers
-        .get("x-wp-rust-capabilities")
-        .and_then(|value| value.to_str().ok())
-    {
-        for capability in capability_header
-            .split(',')
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-        {
-            rest_request.capabilities.insert(capability.to_string());
-        }
-    }
+    rest_request.authenticated = authenticated;
+    rest_request.capabilities = capabilities;
 
     let result = registry.dispatch(&rest_request);
     rust_handled_json_with_status(
         StatusCode::from_u16(result.status_code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
         result,
     )
+}
+
+async fn admin_ajax_dispatch(State(state): State<AppState>, request: Request) -> impl IntoResponse {
+    admin_dispatch_inner(state, request, AdminSurface::Ajax).await
+}
+
+async fn admin_post_dispatch(State(state): State<AppState>, request: Request) -> impl IntoResponse {
+    admin_dispatch_inner(state, request, AdminSurface::AdminPost).await
+}
+
+async fn async_upload_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> impl IntoResponse {
+    admin_dispatch_inner(state, request, AdminSurface::AsyncUpload).await
+}
+
+async fn admin_dispatch_inner(
+    state: AppState,
+    request: Request,
+    surface: AdminSurface,
+) -> impl IntoResponse {
+    let registry = core_admin_actions();
+    let (parts, body) = request.into_parts();
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+
+    let action = params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| match surface {
+            AdminSurface::AsyncUpload => "upload-attachment".to_string(),
+            _ => String::new(),
+        });
+
+    let nonce_present = params
+        .get("_ajax_nonce")
+        .or_else(|| params.get("_wpnonce"))
+        .is_some_and(|value| !value.trim().is_empty());
+
+    let mut admin_request = AdminRequest::new(surface, action);
+    admin_request.authenticated = authenticated;
+    admin_request.capabilities = capabilities;
+    admin_request.nonce_present = nonce_present;
+
+    let result = registry.dispatch(&admin_request);
+    rust_handled_json_with_status(
+        StatusCode::from_u16(result.status_code).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+        result,
+    )
+}
+
+async fn xmlrpc_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> impl IntoResponse {
+    let registry = core_xmlrpc_registry();
+    let (parts, body) = request.into_parts();
+    let body_bytes = read_request_body(body).await;
+    let payload = String::from_utf8_lossy(&body_bytes).to_string();
+    let method_name = parse_xmlrpc_method_name(&payload);
+    let (authenticated, _) = auth_context_from_headers(&parts.headers, &state.auth_secrets);
+
+    let (result, status_code, xml_body) = match method_name {
+        Some(method_name) => {
+            let result = registry.dispatch(&method_name, authenticated);
+            let xml_body = if result.success {
+                xmlrpc_success_response(&method_name)
+            } else {
+                xmlrpc_fault_response(result.fault_code.unwrap_or(-32603), &result.message)
+            };
+            let status = StatusCode::from_u16(if result.success { 200 } else { 403 })
+                .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+            (result, status, xml_body)
+        }
+        None => (
+            registry.dispatch("", false),
+            StatusCode::BAD_REQUEST,
+            xmlrpc_fault_response(-32600, "Invalid XML-RPC request"),
+        ),
+    };
+
+    rust_handled_xml(status_code, xml_body, result.success)
+}
+
+async fn cron_live_dispatch(State(state): State<AppState>, request: Request) -> impl IntoResponse {
+    let now = unix_now();
+    let query_string = request.uri().query().unwrap_or_default();
+    let doing_wp_cron = parse_doing_wp_cron(query_string);
+
+    let mut scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+
+    let lock_acquired = scheduler.acquire_lock(Duration::from_secs(60));
+    if !lock_acquired {
+        return rust_handled_json(json!({
+            "running": false,
+            "lock_acquired": false,
+            "due_count": 0,
+            "doing_wp_cron": doing_wp_cron,
+        }));
+    }
+
+    let due = scheduler.due_events(now);
+    scheduler.release_lock();
+    rust_handled_json(json!({
+        "running": true,
+        "lock_acquired": true,
+        "due_count": due.len(),
+        "events": due,
+        "doing_wp_cron": doing_wp_cron,
+        "next_event_timestamp": scheduler.next_event_timestamp(),
+    }))
 }
 
 async fn not_found(request: Request) -> impl IntoResponse {
@@ -249,6 +357,90 @@ fn rust_handled_json_with_status<T: Serialize>(
     let mut headers = HeaderMap::new();
     headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
     (status, headers, Json(value))
+}
+
+fn rust_handled_xml(
+    status: StatusCode,
+    body: String,
+    _success: bool,
+) -> (StatusCode, HeaderMap, String) {
+    let mut headers = HeaderMap::new();
+    headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_static("text/xml; charset=UTF-8"),
+    );
+    (status, headers, body)
+}
+
+fn auth_context_from_headers(
+    headers: &HeaderMap,
+    auth_secrets: &AuthSecrets,
+) -> (bool, BTreeSet<String>) {
+    let cookie_header = headers
+        .get("cookie")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+    let authenticated_from_cookie =
+        resolve_current_user(cookie_header, unix_now(), auth_secrets).is_some();
+    let authenticated_from_header = headers
+        .get("x-wp-rust-authenticated")
+        .and_then(|value| value.to_str().ok())
+        .is_some_and(|value| value.eq_ignore_ascii_case("true") || value == "1");
+
+    let mut capabilities = BTreeSet::new();
+    if let Some(capability_header) = headers
+        .get("x-wp-rust-capabilities")
+        .and_then(|value| value.to_str().ok())
+    {
+        for capability in capability_header
+            .split(',')
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        {
+            capabilities.insert(capability.to_string());
+        }
+    }
+
+    (
+        authenticated_from_cookie || authenticated_from_header,
+        capabilities,
+    )
+}
+
+fn merged_params(
+    uri_query: Option<&str>,
+    body_bytes: &Bytes,
+    content_type: &str,
+) -> BTreeMap<String, String> {
+    let mut params = parse_urlencoded(uri_query.unwrap_or_default());
+    if content_type.contains("application/x-www-form-urlencoded") {
+        let body = String::from_utf8_lossy(body_bytes);
+        for (key, value) in parse_urlencoded(&body) {
+            params.insert(key, value);
+        }
+    }
+    params
+}
+
+fn parse_urlencoded(raw: &str) -> BTreeMap<String, String> {
+    raw.split('&')
+        .filter_map(|entry| {
+            let mut parts = entry.splitn(2, '=');
+            let key = parts.next()?.trim();
+            if key.is_empty() {
+                return None;
+            }
+            let value = parts.next().unwrap_or_default().trim();
+            Some((key.to_string(), value.to_string()))
+        })
+        .collect()
+}
+
+async fn read_request_body(body: axum::body::Body) -> Bytes {
+    to_bytes(body, 1024 * 1024)
+        .await
+        .unwrap_or_else(|_| Bytes::new())
 }
 
 fn build_app_state() -> AppState {
