@@ -864,6 +864,9 @@ dependencies = [
 [[package]]
 name = "wp-rs-content"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "wp-rs-cron"
