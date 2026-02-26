@@ -59,6 +59,7 @@ async fn main() {
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
+        .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
         .route("/wp-admin/install.php", any(install_live_dispatch))
         .route(
             "/wp-admin/setup-config.php",
@@ -463,6 +464,26 @@ async fn admin_dashboard_live(State(state): State<AppState>, request: Request) -
     }
     html.push_str("</body></html>");
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn admin_bootstrap_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !authenticated {
+        return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fadmin.php")
+            .into_response();
+    }
+
+    rust_handled_json(json!({
+        "component": "admin-bootstrap",
+        "authenticated": true,
+        "capabilities": capabilities,
+        "message": "Rust admin bootstrap compatibility shim loaded.",
+    }))
+    .into_response()
 }
 
 async fn install_live_dispatch(request: Request) -> Response {

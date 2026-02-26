@@ -181,6 +181,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-links-opml.php",
         "/wp-admin",
         "/wp-admin/",
+        "/wp-admin/admin.php",
         "/wp-admin/install.php",
         "/wp-admin/setup-config.php",
         "/wp-admin/install-helper.php",
@@ -381,6 +382,7 @@ mod tests {
         assert!(settings.should_route("/wp-json/wp/v2/posts"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
         assert!(settings.should_route("/wp-login.php"));
+        assert!(settings.should_route("/wp-admin/admin.php"));
         assert!(settings.should_route("/wp-admin/setup-config.php"));
         assert!(settings.should_route("/wp-admin/options.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));

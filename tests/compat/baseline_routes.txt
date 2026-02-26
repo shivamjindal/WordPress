@@ -17,6 +17,7 @@ POST /wp-activate.php
 GET /wp-comments-post.php
 POST /wp-comments-post.php
 GET /wp-admin/
+GET /wp-admin/admin.php
 GET /wp-admin/install.php
 POST /wp-admin/install.php
 GET /wp-admin/setup-config.php
