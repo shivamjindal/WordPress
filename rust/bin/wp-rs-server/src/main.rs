@@ -9,6 +9,7 @@ use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
+use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
 use wp_rs_config::RustGatewaySettings;
 use wp_rs_content::{extract_block_names, parse_front_route};
@@ -56,6 +57,14 @@ async fn main() {
         .route(
             "/__wp_rust/internal/rest-dispatch",
             get(internal_rest_dispatch),
+        )
+        .route(
+            "/__wp_rust/internal/admin-contract",
+            get(internal_admin_contract),
+        )
+        .route(
+            "/__wp_rust/internal/admin-dispatch",
+            get(internal_admin_dispatch),
         )
         .fallback(not_found)
         .with_state(state);
@@ -352,6 +361,43 @@ async fn internal_rest_dispatch(
     rust_handled_json(result)
 }
 
+async fn internal_admin_contract() -> impl IntoResponse {
+    let registry = core_admin_actions();
+    rust_handled_json(registry.contract_map())
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalAdminDispatchQuery {
+    surface: Option<String>,
+    action: Option<String>,
+    authenticated: Option<bool>,
+    nonce_present: Option<bool>,
+    capabilities: Option<String>,
+}
+
+async fn internal_admin_dispatch(
+    Query(query): Query<InternalAdminDispatchQuery>,
+) -> impl IntoResponse {
+    let registry = core_admin_actions();
+    let surface = parse_admin_surface(query.surface.as_deref()).unwrap_or(AdminSurface::Ajax);
+    let mut request = AdminRequest::new(surface, query.action.unwrap_or_default());
+    request.authenticated = query.authenticated.unwrap_or(false);
+    request.nonce_present = query.nonce_present.unwrap_or(false);
+
+    if let Some(capabilities) = query.capabilities {
+        for capability in capabilities
+            .split(',')
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        {
+            request.capabilities.insert(capability.to_string());
+        }
+    }
+
+    let result = registry.dispatch(&request);
+    rust_handled_json(result)
+}
+
 fn parse_auth_scheme(value: Option<&str>) -> Option<AuthScheme> {
     match value
         .unwrap_or_default()
@@ -362,6 +408,20 @@ fn parse_auth_scheme(value: Option<&str>) -> Option<AuthScheme> {
         "auth" => Some(AuthScheme::Auth),
         "secure_auth" | "secure" => Some(AuthScheme::SecureAuth),
         "logged_in" | "loggedin" => Some(AuthScheme::LoggedIn),
+        _ => None,
+    }
+}
+
+fn parse_admin_surface(value: Option<&str>) -> Option<AdminSurface> {
+    match value
+        .unwrap_or_default()
+        .trim()
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "ajax" | "admin-ajax" => Some(AdminSurface::Ajax),
+        "admin-post" | "post" => Some(AdminSurface::AdminPost),
+        "async-upload" | "upload" => Some(AdminSurface::AsyncUpload),
         _ => None,
     }
 }

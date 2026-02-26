@@ -914,6 +914,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "wp-rs-admin",
  "wp-rs-auth",
  "wp-rs-config",
  "wp-rs-content",
