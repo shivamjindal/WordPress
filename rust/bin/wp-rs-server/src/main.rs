@@ -70,6 +70,10 @@ async fn main() {
             any(install_helper_live_dispatch),
         )
         .route("/wp-admin/options.php", any(options_live_dispatch))
+        .route(
+            "/wp-admin/options-general.php",
+            any(options_general_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -692,6 +696,49 @@ async fn options_live_dispatch(State(state): State<AppState>, request: Request) 
         "/wp-admin/options-general.php?settings-updated=true&updated_count={updated_count}"
     );
     rust_handled_redirect(&target).into_response()
+}
+
+async fn options_general_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-general.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-general.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let blogname = options
+        .get_option("blogname")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "WordPress".to_string());
+    let blogdescription = options
+        .get_option("blogdescription")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "Just another WordPress site".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>General Settings (Rust)</h1><p>blogname={blogname}</p><p>blogdescription={blogdescription}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn upgrade_live_dispatch(request: Request) -> Response {
