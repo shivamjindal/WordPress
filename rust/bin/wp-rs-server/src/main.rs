@@ -119,6 +119,10 @@ async fn main() {
             "/wp-admin/network/setup.php",
             any(network_setup_live_dispatch),
         )
+        .route(
+            "/wp-admin/ms-delete-site.php",
+            any(ms_delete_site_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1503,6 +1507,73 @@ async fn network_live_dispatch(State(state): State<AppState>, request: Request) 
 
 async fn network_setup_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
     network_live_dispatch(State(state), request).await
+}
+
+async fn ms_delete_site_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/ms-delete-site.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_delete_site = authenticated
+        && (capabilities.contains("delete_site") || capabilities.contains("manage_options"));
+    if !can_delete_site {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "delete_site capability is required for wp-admin/ms-delete-site.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if let Some(hash) = params.get("h") {
+        if hash == "confirm-rust-delete" {
+            let html = "<!doctype html><html><body><h1>Delete Site (Rust)</h1><p>site_deleted=true</p></body></html>".to_string();
+            return rust_handled_html(StatusCode::OK, html).into_response();
+        }
+        let html = "<!doctype html><html><body><h1>Delete Site (Rust)</h1><p>error=stale_link</p></body></html>".to_string();
+        return rust_handled_html(StatusCode::BAD_REQUEST, html).into_response();
+    }
+
+    if method == axum::http::Method::POST
+        && params
+            .get("action")
+            .is_some_and(|value| value == "deleteblog")
+        && params
+            .get("confirmdelete")
+            .is_some_and(|value| value == "1")
+    {
+        let html = "<!doctype html><html><body><h1>Delete Site (Rust)</h1><p>delete_request=queued</p></body></html>".to_string();
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    let html = "<!doctype html><html><body><h1>Delete Site (Rust)</h1><p>status=confirm_required</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn upgrade_live_dispatch(request: Request) -> Response {

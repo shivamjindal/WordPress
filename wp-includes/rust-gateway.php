@@ -284,6 +284,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/erase-personal-data.php',
 			'/wp-admin/network.php',
 			'/wp-admin/network/setup.php',
+			'/wp-admin/ms-delete-site.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',
 			'/wp-admin/admin-ajax.php',
