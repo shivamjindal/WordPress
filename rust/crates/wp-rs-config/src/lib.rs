@@ -183,6 +183,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/",
         "/wp-admin/install.php",
         "/wp-admin/setup-config.php",
+        "/wp-admin/install-helper.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",

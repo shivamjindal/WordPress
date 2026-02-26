@@ -64,6 +64,10 @@ async fn main() {
             "/wp-admin/setup-config.php",
             any(setup_config_live_dispatch),
         )
+        .route(
+            "/wp-admin/install-helper.php",
+            any(install_helper_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -578,6 +582,26 @@ async fn setup_config_live_dispatch(request: Request) -> Response {
         "<!doctype html><html><body><h1>WordPress Setup Config (Rust)</h1><p>step={step}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn install_helper_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/install-helper.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_json(json!({
+        "component": "install-helper",
+        "status": "available",
+        "message": "Rust install-helper compatibility shim loaded.",
+    }))
+    .into_response()
 }
 
 async fn upgrade_live_dispatch(request: Request) -> Response {

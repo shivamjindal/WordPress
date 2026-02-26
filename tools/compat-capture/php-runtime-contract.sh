@@ -115,6 +115,7 @@ assert_rust_handled() {
 assert_rust_handled "/wp-login.php" "yes"
 assert_rust_handled "/wp-admin/install.php" "yes"
 assert_rust_handled "/wp-admin/setup-config.php" "yes"
+assert_rust_handled "/wp-admin/install-helper.php" "yes"
 assert_rust_handled "/wp-login.php" "yes" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
 assert_rust_handled "/wp-comments-post.php" "yes" "POST" "application/x-www-form-urlencoded" "comment_post_ID=123&comment=hello"
 assert_rust_handled "/wp-admin/setup-config.php" "yes" "POST" "application/x-www-form-urlencoded" "dbname=wordpress&uname=wp_user&pwd=secret"

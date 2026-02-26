@@ -36,6 +36,11 @@
  * @subpackage Plugin
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/install-helper.php' ) ) {
+	exit;
+}
+
 /** Load WordPress Bootstrap */
 require_once dirname( __DIR__ ) . '/wp-load.php';
 
