@@ -37,9 +37,9 @@ struct AppState {
 async fn main() {
     tracing_subscriber::fmt().with_env_filter("info").init();
 
-    let address: SocketAddr = "127.0.0.1:8088"
-        .parse()
-        .expect("hardcoded listen address must parse");
+    let listen_addr =
+        std::env::var("WP_RUST_SERVER_LISTEN").unwrap_or_else(|_| "127.0.0.1:8088".to_string());
+    let address: SocketAddr = listen_addr.parse().expect("listen address must parse");
 
     let state = build_app_state();
 

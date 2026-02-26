@@ -94,10 +94,10 @@ while IFS= read -r route || [[ -n "${route}" ]]; do
   fi
 
   status_code="$(curl "${curl_args[@]}" "${url}" || true)"
-  content_type="$(awk 'BEGIN{IGNORECASE=1} /^Content-Type:/{sub(/\r$/, "", $0); print substr($0, 15); exit}' "${headers_file}")"
-  location_header="$(awk 'BEGIN{IGNORECASE=1} /^Location:/{sub(/\r$/, "", $0); print substr($0, 11); exit}' "${headers_file}")"
-  rust_handled="$(awk 'BEGIN{IGNORECASE=1} /^X-WP-Rust-Handled:/{sub(/\r$/, "", $0); print substr($0, 20); exit}' "${headers_file}")"
-  set_cookie_count="$(awk 'BEGIN{IGNORECASE=1} /^Set-Cookie:/{count++} END{print count+0}' "${headers_file}")"
+  content_type="$(awk -F': ' 'tolower($1)=="content-type"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
+  location_header="$(awk -F': ' 'tolower($1)=="location"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
+  rust_handled="$(awk -F': ' 'tolower($1)=="x-wp-rust-handled"{sub(/\r$/, "", $2); print $2; exit}' "${headers_file}")"
+  set_cookie_count="$(awk 'tolower($1)=="set-cookie:"{count++} END{print count+0}' "${headers_file}")"
   body_sha256="$(sha256sum "${body_file}" | awk '{print $1}')"
 
   STATUS_CODE="${status_code}" \

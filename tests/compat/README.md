@@ -28,3 +28,9 @@ You can still run individual steps manually:
 2. Run `tools/compat-capture/capture.sh php`
 3. Run `tools/compat-capture/capture.sh rust`
 4. Run `tools/compat-capture/diff.sh` (or `--strict`).
+
+## php-runtime compatibility checks
+
+Run `tools/compat-capture/php-runtime-contract.sh` to validate that:
+- migrated core endpoints are handled by Rust in `php-runtime` mode, and
+- representative plugin/theme file paths remain handled by PHP.
