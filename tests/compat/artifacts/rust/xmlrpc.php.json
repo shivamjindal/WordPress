@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/xmlrpc.php\"}",
+  "body_sha256": "b1447c7a23ce348c83d945158a668cdd619207fbc0b70996f7fcba20a7605b38",
+  "content_type": "",
+  "location": "",
+  "route": "/xmlrpc.php",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

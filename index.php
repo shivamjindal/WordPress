@@ -11,6 +11,11 @@
  *
  * @var bool
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/index.php' ) ) {
+	exit;
+}
+
 define( 'WP_USE_THEMES', true );
 
 /** Loads the WordPress Environment and Template */

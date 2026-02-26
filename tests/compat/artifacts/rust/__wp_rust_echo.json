@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"endpoint_kind\":\"unknown\",\"method\":\"GET\",\"path\":\"/__wp_rust/echo\",\"query\":\"\"}",
+  "body_sha256": "330ddae7c5b3b86d5137cea1aa89adee2ef4430f17c41862764d6fe58ce5ddf0",
+  "content_type": "",
+  "location": "",
+  "route": "/__wp_rust/echo",
+  "set_cookie_count": 0,
+  "status_code": 200
+}

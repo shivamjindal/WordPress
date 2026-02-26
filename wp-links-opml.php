@@ -11,6 +11,10 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-links-opml.php' ) ) {
+	exit;
+}
 
 require_once __DIR__ . '/wp-load.php';
 

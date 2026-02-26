@@ -1,0 +1,15 @@
+/
+/wp-login.php
+/wp-signup.php
+/wp-activate.php
+/wp-comments-post.php
+/wp-cron.php?doing_wp_cron=1
+/xmlrpc.php
+/wp-mail.php
+/wp-trackback.php
+/wp-links-opml.php
+/wp-admin/admin-ajax.php?action=rest-nonce
+/wp-admin/admin-post.php
+/wp-admin/async-upload.php
+/__wp_rust/health
+/__wp_rust/echo

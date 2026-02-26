@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/\"}",
+  "body_sha256": "fee67ebe83f77dc1c9f300dde79cad8166b337397f52d8e0baa8936e70d041f6",
+  "content_type": "",
+  "location": "",
+  "route": "/",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-admin/async-upload.php\"}",
+  "body_sha256": "e925055ed70b0c4fb3d1403787f20d1cd9bb38092ed7007f751c38f764a4534d",
+  "content_type": "",
+  "location": "",
+  "route": "/wp-admin/async-upload.php",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

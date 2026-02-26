@@ -15,6 +15,10 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-load.php' ) ) {
+	exit;
+}
 
 /** Define ABSPATH as this file's directory */
 if ( ! defined( 'ABSPATH' ) ) {

@@ -18,6 +18,11 @@ if ( ! defined( 'WP_ADMIN' ) ) {
 	define( 'WP_ADMIN', true );
 }
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/admin-ajax.php' ) ) {
+	exit;
+}
+
 /** Load WordPress Bootstrap */
 require_once dirname( __DIR__ ) . '/wp-load.php';
 

@@ -89,6 +89,17 @@ define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
+/**
+ * Optional: Rust migration gateway settings.
+ *
+ * These values are no-ops until the PHP entrypoint gateway is enabled.
+ * Keep disabled by default for a safe legacy-first bootstrap.
+ */
+define( 'WP_RUST_GATEWAY_ENABLED', false );
+define( 'WP_RUST_GATEWAY_BACKEND_URL', 'http://127.0.0.1:8088' );
+define( 'WP_RUST_GATEWAY_TIMEOUT_MS', 1500 );
+define( 'WP_RUST_ENDPOINT_ALLOWLIST', '/__wp_rust/health' );
+
 
 
 /* That's all, stop editing! Happy publishing. */

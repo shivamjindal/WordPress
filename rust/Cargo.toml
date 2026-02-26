@@ -1,0 +1,31 @@
+[workspace]
+members = [
+    "bin/wp-rs-server",
+    "crates/wp-rs-config",
+    "crates/wp-rs-http",
+    "crates/wp-rs-hooks",
+    "crates/wp-rs-db",
+    "crates/wp-rs-auth",
+    "crates/wp-rs-rest",
+    "crates/wp-rs-admin",
+    "crates/wp-rs-content",
+    "crates/wp-rs-cron",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0-or-later"
+authors = ["WordPress Rust Migration"]
+repository = "https://wordpress.org"
+
+[workspace.dependencies]
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+axum = "0.7"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

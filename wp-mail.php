@@ -6,6 +6,10 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-mail.php' ) ) {
+	exit;
+}
 
 /** Make sure that the WordPress bootstrap has run before continuing. */
 require __DIR__ . '/wp-load.php';

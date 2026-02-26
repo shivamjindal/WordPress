@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-admin/admin-ajax.php\"}",
+  "body_sha256": "3067d90779f5d9f3482c52eb2e545ca1d7f83691983aa4a24bbc900635795b77",
+  "content_type": "",
+  "location": "",
+  "route": "/wp-admin/admin-ajax.php?action=rest-nonce",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

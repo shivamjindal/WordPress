@@ -7,6 +7,10 @@
  * @package WordPress
  * @subpackage Trackbacks
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-trackback.php' ) ) {
+	exit;
+}
 
 if ( empty( $wp ) ) {
 	require_once __DIR__ . '/wp-load.php';

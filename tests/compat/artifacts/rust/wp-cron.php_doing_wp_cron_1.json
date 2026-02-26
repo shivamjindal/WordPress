@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-cron.php\"}",
+  "body_sha256": "290861518acc15c1f8a031da7780d6083d474f5461a0649b8df3ea39a09dec44",
+  "content_type": "",
+  "location": "",
+  "route": "/wp-cron.php?doing_wp_cron=1",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

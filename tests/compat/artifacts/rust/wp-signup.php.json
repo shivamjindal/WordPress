@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-signup.php\"}",
+  "body_sha256": "2bce10b0927cb288dfd8441f16fa32be9b2f60c4392604046c685e0419f150d5",
+  "content_type": "",
+  "location": "",
+  "route": "/wp-signup.php",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

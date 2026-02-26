@@ -1,0 +1,9 @@
+{
+  "body_preview": "{\"error\":\"not_found\",\"message\":\"Route is not implemented in wp-rs-server yet.\",\"path\":\"/wp-login.php\"}",
+  "body_sha256": "04c5357620985634292f208d09ccc0b26e98fc8046ddd46f6e43d053846a271e",
+  "content_type": "",
+  "location": "",
+  "route": "/wp-login.php",
+  "set_cookie_count": 0,
+  "status_code": 404
+}

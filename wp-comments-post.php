@@ -4,6 +4,10 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-comments-post.php' ) ) {
+	exit;
+}
 
 if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
 	$protocol = $_SERVER['SERVER_PROTOCOL'];

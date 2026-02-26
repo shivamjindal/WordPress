@@ -4,6 +4,10 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/xmlrpc.php' ) ) {
+	exit;
+}
 
 /**
  * Whether this is an XML-RPC Request.
