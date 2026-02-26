@@ -102,6 +102,7 @@ async fn main() {
             "/wp-admin/privacy-policy-guide.php",
             any(privacy_policy_guide_live_dispatch),
         )
+        .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1120,6 +1121,45 @@ async fn privacy_policy_guide_live_dispatch(
         .unwrap_or_else(|| "0".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Privacy Policy Guide (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>guide_mode=direct</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn site_health_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/site-health.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view_site_health = authenticated
+        && (capabilities.contains("view_site_health_checks")
+            || capabilities.contains("manage_options"));
+    if !can_view_site_health {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "view_site_health_checks capability is required for wp-admin/site-health.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let tab = params
+        .get("tab")
+        .cloned()
+        .unwrap_or_else(|| "status".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Site Health (Rust)</h1><p>tab={tab}</p><p>status=available</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

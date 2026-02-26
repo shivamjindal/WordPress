@@ -33,6 +33,8 @@ GET /wp-admin/options-permalink.php
 GET /wp-admin/options-privacy.php
 GET /wp-admin/options-privacy.php?tab=policyguide
 GET /wp-admin/privacy-policy-guide.php
+GET /wp-admin/site-health.php
+GET /wp-admin/site-health.php?tab=debug
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
 GET /wp-admin/maint/repair.php
