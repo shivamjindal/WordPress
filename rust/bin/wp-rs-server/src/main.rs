@@ -14,7 +14,7 @@ use wp_rs_config::RustGatewaySettings;
 use wp_rs_content::{extract_block_names, parse_front_route};
 use wp_rs_db::OptionStore;
 use wp_rs_http::detect_endpoint_kind;
-use wp_rs_rest::core_seed_routes;
+use wp_rs_rest::{core_seed_routes, RestRequest};
 
 #[derive(Debug, Clone)]
 struct AppState {
@@ -49,6 +49,14 @@ async fn main() {
             get(internal_content_route),
         )
         .route("/__wp_rust/internal/block-parse", get(internal_block_parse))
+        .route(
+            "/__wp_rust/internal/rest-contract",
+            get(internal_rest_contract),
+        )
+        .route(
+            "/__wp_rust/internal/rest-dispatch",
+            get(internal_rest_dispatch),
+        )
         .fallback(not_found)
         .with_state(state);
 
@@ -303,6 +311,45 @@ async fn internal_block_parse(Query(query): Query<InternalBlockParseQuery>) -> i
         "count": block_names.len(),
         "blocks": block_names,
     }))
+}
+
+async fn internal_rest_contract() -> impl IntoResponse {
+    let registry = core_seed_routes();
+    rust_handled_json(registry.contract_document())
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalRestDispatchQuery {
+    method: Option<String>,
+    path: Option<String>,
+    authenticated: Option<bool>,
+    capabilities: Option<String>,
+}
+
+async fn internal_rest_dispatch(
+    Query(query): Query<InternalRestDispatchQuery>,
+) -> impl IntoResponse {
+    let registry = core_seed_routes();
+    let mut request = RestRequest::new(
+        query.method.unwrap_or_else(|| "GET".to_string()),
+        query
+            .path
+            .unwrap_or_else(|| "/wp-json/wp/v2/posts".to_string()),
+    );
+    request.authenticated = query.authenticated.unwrap_or(false);
+
+    if let Some(capabilities) = query.capabilities {
+        for capability in capabilities
+            .split(',')
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        {
+            request.capabilities.insert(capability.to_string());
+        }
+    }
+
+    let result = registry.dispatch(&request);
+    rust_handled_json(result)
 }
 
 fn parse_auth_scheme(value: Option<&str>) -> Option<AuthScheme> {
