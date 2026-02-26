@@ -6,12 +6,16 @@ use std::env;
 pub struct RustGatewaySettings {
     /// Whether Rust routing is enabled globally.
     pub enabled: bool,
+    /// Whether legacy PHP fallback is allowed if Rust fails.
+    pub fallback_enabled: bool,
     /// Base URL where the Rust server is reachable from PHP.
     pub backend_url: String,
     /// Timeout for proxy requests in milliseconds.
     pub timeout_ms: u64,
     /// Endpoints allowed to route through Rust.
     pub endpoint_allowlist: HashSet<String>,
+    /// Compatibility mode for plugin/theme execution.
+    pub plugin_compat_mode: String,
 }
 
 impl Default for RustGatewaySettings {
@@ -19,9 +23,11 @@ impl Default for RustGatewaySettings {
         let endpoint_allowlist = ["/__wp_rust/health".to_string()].into_iter().collect();
         Self {
             enabled: false,
+            fallback_enabled: true,
             backend_url: "http://127.0.0.1:8088".to_string(),
             timeout_ms: 1_500,
             endpoint_allowlist,
+            plugin_compat_mode: "php-runtime".to_string(),
         }
     }
 }
@@ -39,6 +45,10 @@ impl RustGatewaySettings {
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_ENABLED") {
             settings.enabled = parse_truthy(&value);
+        }
+
+        if let Ok(value) = env::var("WP_RUST_GATEWAY_FALLBACK_ENABLED") {
+            settings.fallback_enabled = parse_truthy(&value);
         }
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_BACKEND_URL") {
@@ -63,6 +73,13 @@ impl RustGatewaySettings {
                 .collect();
             if !parsed.is_empty() {
                 settings.endpoint_allowlist = parsed;
+            }
+        }
+
+        if let Ok(value) = env::var("WP_RUST_PLUGIN_COMPAT_MODE") {
+            let trimmed = value.trim();
+            if !trimmed.is_empty() {
+                settings.plugin_compat_mode = trimmed.to_string();
             }
         }
 
@@ -215,6 +232,7 @@ mod tests {
     fn defaults_are_safe_and_conservative() {
         let settings = RustGatewaySettings::default();
         assert!(!settings.enabled);
+        assert!(settings.fallback_enabled);
         assert!(settings.endpoint_allowlist.contains("/__wp_rust/health"));
         assert!(!settings.should_route("/wp-login.php"));
     }

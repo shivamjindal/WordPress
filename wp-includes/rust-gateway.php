@@ -14,28 +14,45 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 	 *
 	 * @return array{
 	 *     enabled: bool,
+	 *     fallback_enabled: bool,
 	 *     backend_url: string,
 	 *     timeout_ms: int,
-	 *     endpoint_allowlist: string[]
+	 *     endpoint_allowlist: string[],
+	 *     plugin_compat_mode: string
 	 * }
 	 */
 	function wp_rust_gateway_get_settings() {
 		$enabled = false;
 		if ( defined( 'WP_RUST_GATEWAY_ENABLED' ) ) {
 			$enabled = (bool) WP_RUST_GATEWAY_ENABLED;
-		} elseif ( getenv( 'WP_RUST_GATEWAY_ENABLED' ) ) {
-			$enabled = wp_rust_gateway_parse_truthy( getenv( 'WP_RUST_GATEWAY_ENABLED' ) );
+		} else {
+			$enabled_env = getenv( 'WP_RUST_GATEWAY_ENABLED' );
+			if ( false !== $enabled_env ) {
+				$enabled = wp_rust_gateway_parse_truthy( $enabled_env );
+			}
+		}
+
+		$fallback_enabled = true;
+		if ( defined( 'WP_RUST_GATEWAY_FALLBACK_ENABLED' ) ) {
+			$fallback_enabled = (bool) WP_RUST_GATEWAY_FALLBACK_ENABLED;
+		} else {
+			$fallback_env = getenv( 'WP_RUST_GATEWAY_FALLBACK_ENABLED' );
+			if ( false !== $fallback_env ) {
+				$fallback_enabled = wp_rust_gateway_parse_truthy( $fallback_env );
+			}
 		}
 
 		$backend_url = defined( 'WP_RUST_GATEWAY_BACKEND_URL' ) ? WP_RUST_GATEWAY_BACKEND_URL : '';
 		if ( ! $backend_url ) {
-			$backend_url = getenv( 'WP_RUST_GATEWAY_BACKEND_URL' ) ? getenv( 'WP_RUST_GATEWAY_BACKEND_URL' ) : 'http://127.0.0.1:8088';
+			$backend_env = getenv( 'WP_RUST_GATEWAY_BACKEND_URL' );
+			$backend_url = false !== $backend_env ? $backend_env : 'http://127.0.0.1:8088';
 		}
 		$backend_url = rtrim( trim( $backend_url ), '/' );
 
 		$timeout_ms = defined( 'WP_RUST_GATEWAY_TIMEOUT_MS' ) ? (int) WP_RUST_GATEWAY_TIMEOUT_MS : 0;
 		if ( $timeout_ms <= 0 ) {
-			$timeout_ms = (int) ( getenv( 'WP_RUST_GATEWAY_TIMEOUT_MS' ) ? getenv( 'WP_RUST_GATEWAY_TIMEOUT_MS' ) : 1500 );
+			$timeout_env = getenv( 'WP_RUST_GATEWAY_TIMEOUT_MS' );
+			$timeout_ms = (int) ( false !== $timeout_env ? $timeout_env : 1500 );
 		}
 		if ( $timeout_ms <= 0 ) {
 			$timeout_ms = 1500;
@@ -43,7 +60,8 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 
 		$allowlist_raw = defined( 'WP_RUST_ENDPOINT_ALLOWLIST' ) ? WP_RUST_ENDPOINT_ALLOWLIST : '';
 		if ( ! $allowlist_raw ) {
-			$allowlist_raw = getenv( 'WP_RUST_ENDPOINT_ALLOWLIST' ) ? getenv( 'WP_RUST_ENDPOINT_ALLOWLIST' ) : '/__wp_rust/health';
+			$allowlist_env = getenv( 'WP_RUST_ENDPOINT_ALLOWLIST' );
+			$allowlist_raw = false !== $allowlist_env ? $allowlist_env : '/__wp_rust/health';
 		}
 
 		$endpoint_allowlist = array_values(
@@ -59,11 +77,19 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 			$endpoint_allowlist = array( '/__wp_rust/health' );
 		}
 
+		$plugin_compat_mode = defined( 'WP_RUST_PLUGIN_COMPAT_MODE' ) ? WP_RUST_PLUGIN_COMPAT_MODE : '';
+		if ( ! $plugin_compat_mode ) {
+			$compat_mode_env = getenv( 'WP_RUST_PLUGIN_COMPAT_MODE' );
+			$plugin_compat_mode = false !== $compat_mode_env ? $compat_mode_env : 'php-runtime';
+		}
+
 		return array(
 			'enabled'           => $enabled,
+			'fallback_enabled'  => $fallback_enabled,
 			'backend_url'       => $backend_url,
 			'timeout_ms'        => $timeout_ms,
 			'endpoint_allowlist' => $endpoint_allowlist,
+			'plugin_compat_mode' => trim( (string) $plugin_compat_mode ),
 		);
 	}
 }
@@ -124,6 +150,10 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( $_SERVER['REQUEST_METHOD'] ) : 'GET';
 		if ( ! in_array( $request_method, array( 'GET', 'HEAD' ), true ) ) {
 			// Restrict to safe methods until request body replay is implemented.
+			if ( empty( $settings['fallback_enabled'] ) ) {
+				wp_rust_gateway_hard_fail( 'unsupported_method', 502 );
+				return true;
+			}
 			return false;
 		}
 
@@ -162,6 +192,10 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		$response_headers = isset( $http_response_header ) ? $http_response_header : array(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		if ( false === $response_body && empty( $response_headers ) ) {
+			if ( empty( $settings['fallback_enabled'] ) ) {
+				wp_rust_gateway_hard_fail( 'rust_unavailable', 502 );
+				return true;
+			}
 			return false;
 		}
 
@@ -179,6 +213,10 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		}
 
 		if ( ! $handled_by_rust || $status_code >= 500 || 404 === $status_code || 501 === $status_code ) {
+			if ( empty( $settings['fallback_enabled'] ) ) {
+				wp_rust_gateway_hard_fail( 'rust_unhandled', 502 );
+				return true;
+			}
 			return false;
 		}
 
@@ -203,5 +241,24 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		}
 
 		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_rust_gateway_hard_fail' ) ) {
+	/**
+	 * Emits deterministic failure when Rust cutover disallows PHP fallback.
+	 *
+	 * @param string $error_code Error code.
+	 * @param int    $status_code HTTP status code.
+	 * @return void
+	 */
+	function wp_rust_gateway_hard_fail( $error_code, $status_code ) {
+		http_response_code( (int) $status_code );
+		header( 'Content-Type: application/json; charset=utf-8', true );
+		echo json_encode(
+			array(
+				'error' => (string) $error_code,
+			)
+		); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
