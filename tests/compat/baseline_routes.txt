@@ -31,6 +31,8 @@ GET /wp-admin/options-discussion.php
 GET /wp-admin/options-media.php
 GET /wp-admin/options-permalink.php
 GET /wp-admin/options-privacy.php
+GET /wp-admin/options-privacy.php?tab=policyguide
+GET /wp-admin/privacy-policy-guide.php
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
 GET /wp-admin/maint/repair.php

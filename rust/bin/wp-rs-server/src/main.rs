@@ -98,6 +98,10 @@ async fn main() {
             "/wp-admin/options-privacy.php",
             any(options_privacy_live_dispatch),
         )
+        .route(
+            "/wp-admin/privacy-policy-guide.php",
+            any(privacy_policy_guide_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -1052,6 +1056,11 @@ async fn options_privacy_live_dispatch(
         .into_response();
     }
 
+    let query_params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let show_policy_guide = query_params
+        .get("tab")
+        .is_some_and(|value| value.eq_ignore_ascii_case("policyguide"));
+
     let options = state.options.lock().expect("options mutex poisoned");
     let privacy_page_id = options
         .get_option("wp_page_for_privacy_policy")
@@ -1061,8 +1070,56 @@ async fn options_privacy_live_dispatch(
         .get_option("blog_public")
         .map(|value| value.to_string())
         .unwrap_or_else(|| "1".to_string());
+    let html = if show_policy_guide {
+        format!(
+            "<!doctype html><html><body><h1>Privacy Policy Guide (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>guide_mode=tab</p></body></html>"
+        )
+    } else {
+        format!(
+            "<!doctype html><html><body><h1>Privacy Settings (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>blog_public={blog_public}</p></body></html>"
+        )
+    };
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn privacy_policy_guide_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/privacy-policy-guide.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_manage_privacy = authenticated
+        && (capabilities.contains("manage_privacy_options")
+            || capabilities.contains("manage_options"));
+    if !can_manage_privacy {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_privacy_options capability is required for wp-admin/privacy-policy-guide.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let privacy_page_id = options
+        .get_option("wp_page_for_privacy_policy")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "0".to_string());
     let html = format!(
-        "<!doctype html><html><body><h1>Privacy Settings (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>blog_public={blog_public}</p></body></html>"
+        "<!doctype html><html><body><h1>Privacy Policy Guide (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>guide_mode=direct</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
