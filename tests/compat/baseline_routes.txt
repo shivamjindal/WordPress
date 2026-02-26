@@ -25,6 +25,7 @@ POST /wp-admin/setup-config.php
 GET /wp-admin/install-helper.php
 GET /wp-admin/options.php
 GET /wp-admin/options-general.php
+GET /wp-admin/options-writing.php
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
 GET /wp-admin/maint/repair.php

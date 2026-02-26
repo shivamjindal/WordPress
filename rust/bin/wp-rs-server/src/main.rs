@@ -74,6 +74,10 @@ async fn main() {
             "/wp-admin/options-general.php",
             any(options_general_live_dispatch),
         )
+        .route(
+            "/wp-admin/options-writing.php",
+            any(options_writing_live_dispatch),
+        )
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
         .route("/wp-json", any(rest_dispatch_root))
@@ -737,6 +741,49 @@ async fn options_general_live_dispatch(
         .unwrap_or_else(|| "Just another WordPress site".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>General Settings (Rust)</h1><p>blogname={blogname}</p><p>blogdescription={blogdescription}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn options_writing_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/options-writing.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !(authenticated && capabilities.contains("manage_options")) {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_options capability is required for wp-admin/options-writing.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let options = state.options.lock().expect("options mutex poisoned");
+    let default_category = options
+        .get_option("default_category")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "1".to_string());
+    let default_post_format = options
+        .get_option("default_post_format")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "0".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Writing Settings (Rust)</h1><p>default_category={default_category}</p><p>default_post_format={default_post_format}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
