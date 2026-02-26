@@ -194,6 +194,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/options-permalink.php",
         "/wp-admin/options-privacy.php",
         "/wp-admin/privacy-policy-guide.php",
+        "/wp-admin/tools.php",
         "/wp-admin/site-health.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
@@ -402,6 +403,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/options-permalink.php"));
         assert!(settings.should_route("/wp-admin/options-privacy.php"));
         assert!(settings.should_route("/wp-admin/privacy-policy-guide.php"));
+        assert!(settings.should_route("/wp-admin/tools.php"));
         assert!(settings.should_route("/wp-admin/site-health.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }

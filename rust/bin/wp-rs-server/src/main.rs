@@ -102,6 +102,7 @@ async fn main() {
             "/wp-admin/privacy-policy-guide.php",
             any(privacy_policy_guide_live_dispatch),
         )
+        .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
@@ -1122,6 +1123,54 @@ async fn privacy_policy_guide_live_dispatch(
     let html = format!(
         "<!doctype html><html><body><h1>Privacy Policy Guide (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>guide_mode=direct</p></body></html>"
     );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn tools_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/tools.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_access_tools = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("import"));
+    if !can_access_tools {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/tools.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    if params.contains_key("wp-privacy-policy-guide") {
+        return rust_handled_redirect("/wp-admin/options-privacy.php?tab=policyguide")
+            .into_response();
+    }
+
+    if let Some(page) = params.get("page") {
+        if page == "export_personal_data" {
+            return rust_handled_redirect("/wp-admin/export-personal-data.php").into_response();
+        }
+        if page == "remove_personal_data" {
+            return rust_handled_redirect("/wp-admin/erase-personal-data.php").into_response();
+        }
+    }
+
+    let html = "<!doctype html><html><body><h1>Tools (Rust)</h1><p>status=available</p><p>converter=categories-tags</p></body></html>".to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 

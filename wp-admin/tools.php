@@ -6,6 +6,11 @@
  * @subpackage Administration
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/tools.php' ) ) {
+	exit;
+}
+
 if ( isset( $_GET['page'] ) && ! empty( $_POST ) ) {
 	// Ensure POST-ing to `tools.php?page=export_personal_data` and `tools.php?page=remove_personal_data`
 	// continues to work after creating the new files for exporting and erasing of personal data.
