@@ -48,6 +48,8 @@ async fn main() {
         .route("/__wp_rust/echo", get(echo))
         .route("/__wp_rust/proxy-decision", get(proxy_decision))
         .route("/wp-login.php", any(login_live_dispatch))
+        .route("/wp-signup.php", any(signup_live_dispatch))
+        .route("/wp-activate.php", any(activate_live_dispatch))
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-json", any(rest_dispatch_root))
@@ -388,6 +390,108 @@ async fn admin_dashboard_live(State(state): State<AppState>, request: Request) -
     }
     html.push_str("</body></html>");
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn signup_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    if parts.method == axum::http::Method::GET {
+        let html = "<!doctype html><html><body><h1>Sign Up (Rust)</h1></body></html>".to_string();
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    if parts.method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-signup.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+    let has_identity = params
+        .get("user_login")
+        .or_else(|| params.get("user_email"))
+        .is_some_and(|value| !value.trim().is_empty());
+    if !has_identity {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "missing_signup_identity",
+                "message": "Provide user_login or user_email for signup.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect("/wp-signup.php?checkemail=registered").into_response()
+}
+
+async fn activate_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let query = parse_urlencoded(parts.uri.query().unwrap_or_default());
+    let key_from_query = query.get("key").cloned();
+
+    if parts.method == axum::http::Method::GET {
+        let activation_state = if key_from_query
+            .as_deref()
+            .is_some_and(|value| !value.is_empty())
+        {
+            "ready"
+        } else {
+            "missing_key"
+        };
+        let html = format!(
+            "<!doctype html><html><body><h1>Activate Account (Rust)</h1><p>state={activation_state}</p></body></html>"
+        );
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    if parts.method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-activate.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+    let key = params
+        .get("key")
+        .cloned()
+        .or(key_from_query)
+        .unwrap_or_default();
+    if key.trim().is_empty() {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "missing_activation_key",
+                "message": "Provide activation key to continue.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect("/wp-login.php?checkemail=activated").into_response()
 }
 
 async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
