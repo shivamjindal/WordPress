@@ -53,6 +53,9 @@ GET /wp-admin/network/setup.php
 POST /wp-admin/network/setup.php
 GET /wp-admin/network/
 GET /wp-admin/network/index.php
+GET /wp-admin/network/sites.php
+GET /wp-admin/network/sites.php?action=confirm&action2=deleteblog&id=2
+POST /wp-admin/network/sites.php
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php

@@ -13,3 +13,4 @@ POST	/wp-admin/erase-personal-data.php	application/x-www-form-urlencoded	usernam
 POST	/wp-admin/network.php	application/x-www-form-urlencoded	sitename=Rust+Network&email=admin%40example.com&subdomain_install=0
 POST	/wp-admin/network/setup.php	application/x-www-form-urlencoded	sitename=Rust+Network&email=admin%40example.com&subdomain_install=0
 POST	/wp-admin/ms-delete-site.php	application/x-www-form-urlencoded	action=deleteblog&confirmdelete=1
+POST	/wp-admin/network/sites.php	application/x-www-form-urlencoded	action=allblogs&site_ids=2

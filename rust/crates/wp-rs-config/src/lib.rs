@@ -204,6 +204,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/network/setup.php",
         "/wp-admin/ms-delete-site.php",
         "/wp-admin/network/index.php",
+        "/wp-admin/network/sites.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",
@@ -421,6 +422,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/network/setup.php"));
         assert!(settings.should_route("/wp-admin/ms-delete-site.php"));
         assert!(settings.should_route("/wp-admin/network/index.php"));
+        assert!(settings.should_route("/wp-admin/network/sites.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 

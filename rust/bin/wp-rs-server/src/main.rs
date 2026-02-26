@@ -126,6 +126,10 @@ async fn main() {
             any(network_index_live_dispatch),
         )
         .route(
+            "/wp-admin/network/sites.php",
+            any(network_sites_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -1543,6 +1547,71 @@ async fn network_index_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let html = "<!doctype html><html><body><h1>Network Dashboard (Rust)</h1><p>status=ready</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_sites_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/sites.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_sites = authenticated
+        && (capabilities.contains("manage_sites")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_manage_sites {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_sites capability is required for wp-admin/network/sites.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if params.get("action").is_some_and(|value| value == "confirm") {
+        let action2 = params.get("action2").cloned().unwrap_or_default();
+        let site_id = params.get("id").cloned().unwrap_or_default();
+        let html = format!(
+            "<!doctype html><html><body><h1>Network Sites Confirm (Rust)</h1><p>action2={action2}</p><p>id={site_id}</p></body></html>"
+        );
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    if method == axum::http::Method::POST || params.contains_key("action") {
+        let action = params.get("action").cloned().unwrap_or_default();
+        let target = format!("/wp-admin/network/sites.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let html =
+        "<!doctype html><html><body><h1>Network Sites (Rust)</h1><p>status=ready</p></body></html>"
+            .to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
