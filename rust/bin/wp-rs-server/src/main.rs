@@ -50,6 +50,10 @@ async fn main() {
         .route("/wp-login.php", any(login_live_dispatch))
         .route("/wp-signup.php", any(signup_live_dispatch))
         .route("/wp-activate.php", any(activate_live_dispatch))
+        .route("/wp-comments-post.php", any(comments_post_live_dispatch))
+        .route("/wp-mail.php", any(mail_live_dispatch))
+        .route("/wp-trackback.php", any(trackback_live_dispatch))
+        .route("/wp-links-opml.php", any(links_opml_live_dispatch))
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-json", any(rest_dispatch_root))
@@ -494,6 +498,106 @@ async fn activate_live_dispatch(request: Request) -> Response {
     rust_handled_redirect("/wp-login.php?checkemail=activated").into_response()
 }
 
+async fn comments_post_live_dispatch(request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    if parts.method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-comments-post.php currently supports POST only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body_bytes = read_request_body(body).await;
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
+    let comment_post_id = params.get("comment_post_ID").cloned().unwrap_or_default();
+    let has_comment_body = params
+        .get("comment")
+        .is_some_and(|value| !value.trim().is_empty());
+
+    if comment_post_id.trim().is_empty() || !has_comment_body {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_comment_payload",
+                "message": "comment_post_ID and comment are required.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect(&format!("/?p={comment_post_id}#comment-rust")).into_response()
+}
+
+async fn mail_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-mail.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_json(json!({
+        "processed": false,
+        "message": "wp-mail processing scaffolded in Rust; mailbox polling not yet implemented.",
+    }))
+    .into_response()
+}
+
+async fn trackback_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::POST {
+        return rust_handled_text(
+            StatusCode::OK,
+            "text/plain; charset=UTF-8",
+            "0\nRust trackback endpoint ready.\n".to_string(),
+        )
+        .into_response();
+    }
+
+    rust_handled_text(
+        StatusCode::OK,
+        "text/plain; charset=UTF-8",
+        "0\nRust trackback accepted.\n".to_string(),
+    )
+    .into_response()
+}
+
+async fn links_opml_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-links-opml.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let opml = r#"<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head><title>WordPress Links (Rust)</title></head>
+  <body>
+    <outline text="WordPress.org" title="WordPress.org" type="link" xmlUrl="https://wordpress.org/news/feed/" htmlUrl="https://wordpress.org/"/>
+  </body>
+</opml>"#
+        .to_string();
+    rust_handled_text(StatusCode::OK, "text/xml; charset=UTF-8", opml).into_response()
+}
+
 async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
     rest_dispatch_inner(state, request, "/wp-json".to_string())
 }
@@ -767,12 +871,17 @@ fn rust_handled_xml(
 }
 
 fn rust_handled_html(status: StatusCode, body: String) -> (StatusCode, HeaderMap, String) {
+    rust_handled_text(status, "text/html; charset=UTF-8", body)
+}
+
+fn rust_handled_text(
+    status: StatusCode,
+    content_type: &'static str,
+    body: String,
+) -> (StatusCode, HeaderMap, String) {
     let mut headers = HeaderMap::new();
     headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
-    headers.insert(
-        "Content-Type",
-        HeaderValue::from_static("text/html; charset=UTF-8"),
-    );
+    headers.insert("Content-Type", HeaderValue::from_static(content_type));
     (status, headers, body)
 }
 
