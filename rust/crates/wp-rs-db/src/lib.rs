@@ -278,6 +278,43 @@ impl ObjectCache {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NetworkSite {
+    pub blog_id: u64,
+    pub domain: String,
+    pub path: String,
+    pub is_public: bool,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct MultisiteResolver {
+    sites: Vec<NetworkSite>,
+}
+
+impl MultisiteResolver {
+    pub fn register_site(&mut self, site: NetworkSite) {
+        self.sites.push(site);
+        self.sites
+            .sort_by(|left, right| right.path.len().cmp(&left.path.len()));
+    }
+
+    pub fn resolve(&self, domain: &str, request_path: &str) -> Option<NetworkSite> {
+        let normalized_path = if request_path.starts_with('/') {
+            request_path.to_string()
+        } else {
+            format!("/{request_path}")
+        };
+
+        self.sites
+            .iter()
+            .find(|site| {
+                site.domain.eq_ignore_ascii_case(domain)
+                    && normalized_path.starts_with(site.path.as_str())
+            })
+            .cloned()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -332,5 +369,27 @@ mod tests {
         );
         assert!(cache.delete("post_1", "posts"));
         assert_eq!(cache.get("post_1", "posts"), None);
+    }
+
+    #[test]
+    fn resolves_multisite_by_domain_and_path() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 1,
+            domain: "example.com".to_string(),
+            path: "/".to_string(),
+            is_public: true,
+        });
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "/blog/".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blog/hello-world")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 2);
     }
 }

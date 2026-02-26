@@ -15,7 +15,7 @@ use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets
 use wp_rs_config::RustGatewaySettings;
 use wp_rs_content::{extract_block_names, parse_front_route};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
-use wp_rs_db::OptionStore;
+use wp_rs_db::{MultisiteResolver, NetworkSite, OptionStore};
 use wp_rs_http::{
     core_xmlrpc_registry, detect_endpoint_kind, parse_xmlrpc_method_name, xmlrpc_fault_response,
     xmlrpc_success_response,
@@ -28,6 +28,7 @@ struct AppState {
     auth_secrets: AuthSecrets,
     nonce_service: NonceService,
     cron_scheduler: Arc<Mutex<CronScheduler>>,
+    multisite_resolver: MultisiteResolver,
 }
 
 #[tokio::main]
@@ -85,6 +86,10 @@ async fn main() {
             get(internal_cron_schedule),
         )
         .route("/__wp_rust/internal/cron-due", get(internal_cron_due))
+        .route(
+            "/__wp_rust/internal/multisite-resolve",
+            get(internal_multisite_resolve),
+        )
         .fallback(not_found)
         .with_state(state);
 
@@ -180,11 +185,26 @@ fn build_app_state() -> AppState {
         args: vec![],
     });
 
+    let mut multisite_resolver = MultisiteResolver::default();
+    multisite_resolver.register_site(NetworkSite {
+        blog_id: 1,
+        domain: "example.com".to_string(),
+        path: "/".to_string(),
+        is_public: true,
+    });
+    multisite_resolver.register_site(NetworkSite {
+        blog_id: 2,
+        domain: "example.com".to_string(),
+        path: "/blog/".to_string(),
+        is_public: true,
+    });
+
     AppState {
         options: Arc::new(Mutex::new(options)),
         auth_secrets: AuthSecrets::default(),
         nonce_service: NonceService::default(),
         cron_scheduler: Arc::new(Mutex::new(scheduler)),
+        multisite_resolver,
     }
 }
 
@@ -553,6 +573,27 @@ async fn internal_cron_due(
         "due_count": due.len(),
         "events": due,
         "next_event_timestamp": scheduler.next_event_timestamp(),
+    }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalMultisiteResolveQuery {
+    domain: Option<String>,
+    path: Option<String>,
+}
+
+async fn internal_multisite_resolve(
+    State(state): State<AppState>,
+    Query(query): Query<InternalMultisiteResolveQuery>,
+) -> impl IntoResponse {
+    let domain = query.domain.unwrap_or_else(|| "example.com".to_string());
+    let path = query.path.unwrap_or_else(|| "/".to_string());
+    let resolved = state.multisite_resolver.resolve(&domain, &path);
+
+    rust_handled_json(json!({
+        "domain": domain,
+        "path": path,
+        "resolved": resolved,
     }))
 }
 
