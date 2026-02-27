@@ -1130,6 +1130,26 @@ async fn main() {
             any(js_dist_annotations_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/api-fetch.min.asset.php",
+            any(js_dist_api_fetch_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/autop.min.asset.php",
+            any(js_dist_autop_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/base-styles.min.asset.php",
+            any(js_dist_base_styles_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/blob.min.asset.php",
+            any(js_dist_blob_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/block-directory.min.asset.php",
+            any(js_dist_block_directory_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11014,6 +11034,26 @@ async fn js_dist_a11y_min_asset_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn js_dist_annotations_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_api_fetch_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_autop_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_base_styles_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_blob_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_block_directory_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

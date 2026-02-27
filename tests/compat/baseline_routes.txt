@@ -306,6 +306,11 @@ GET /wp-includes/css/dist/index.php
 GET /wp-includes/css/dist/registry.php
 GET /wp-includes/js/dist/a11y.min.asset.php
 GET /wp-includes/js/dist/annotations.min.asset.php
+GET /wp-includes/js/dist/api-fetch.min.asset.php
+GET /wp-includes/js/dist/autop.min.asset.php
+GET /wp-includes/js/dist/base-styles.min.asset.php
+GET /wp-includes/js/dist/blob.min.asset.php
+GET /wp-includes/js/dist/block-directory.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
