@@ -11,6 +11,13 @@
 
 declare( strict_types = 1 );
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/abilities-api/class-wp-abilities-registry.php' );
+if ( '/wp-includes/abilities-api/class-wp-abilities-registry.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Manages the registration and lookup of abilities.
  *

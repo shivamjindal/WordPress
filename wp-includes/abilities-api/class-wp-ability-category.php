@@ -11,6 +11,13 @@
 
 declare( strict_types = 1 );
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/abilities-api/class-wp-ability-category.php' );
+if ( '/wp-includes/abilities-api/class-wp-ability-category.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Encapsulates the properties and methods related to a specific ability category.
  *

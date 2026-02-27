@@ -582,6 +582,26 @@ async fn main() {
             any(abilities_include_live_dispatch),
         )
         .route(
+            "/wp-includes/abilities-api/class-wp-abilities-registry.php",
+            any(abilities_api_class_wp_abilities_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/abilities-api/class-wp-ability-categories-registry.php",
+            any(abilities_api_class_wp_ability_categories_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/abilities-api/class-wp-ability-category.php",
+            any(abilities_api_class_wp_ability_category_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/abilities-api/class-wp-ability.php",
+            any(abilities_api_class_wp_ability_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/abilities/class-wp-settings-abilities.php",
+            any(abilities_class_wp_settings_abilities_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -9860,6 +9880,34 @@ async fn abilities_api_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn abilities_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_api_class_wp_abilities_registry_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_api_class_wp_ability_categories_registry_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_api_class_wp_ability_category_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_api_class_wp_ability_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_class_wp_settings_abilities_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

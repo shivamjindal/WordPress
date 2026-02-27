@@ -169,6 +169,11 @@ GET /wp-includes/block-template-utils.php
 GET /wp-includes/block-template.php
 GET /wp-includes/abilities-api.php
 GET /wp-includes/abilities.php
+GET /wp-includes/abilities-api/class-wp-abilities-registry.php
+GET /wp-includes/abilities-api/class-wp-ability-categories-registry.php
+GET /wp-includes/abilities-api/class-wp-ability-category.php
+GET /wp-includes/abilities-api/class-wp-ability.php
+GET /wp-includes/abilities/class-wp-settings-abilities.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
