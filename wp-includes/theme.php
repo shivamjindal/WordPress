@@ -6,6 +6,12 @@
  * @subpackage Theme
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/theme.php' ) === '/wp-includes/theme.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/theme.php' ) ) {
+	exit;
+}
+
 /**
  * Returns an array of WP_Theme objects based on the arguments.
  *

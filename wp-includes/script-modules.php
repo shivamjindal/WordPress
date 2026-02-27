@@ -8,6 +8,12 @@
  * @subpackage Script Modules
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/script-modules.php' ) === '/wp-includes/script-modules.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/script-modules.php' ) ) {
+	exit;
+}
+
 /**
  * Retrieves the main WP_Script_Modules instance.
  *

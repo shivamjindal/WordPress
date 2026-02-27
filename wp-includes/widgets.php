@@ -18,6 +18,12 @@
  * @since 2.2.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/widgets.php' ) === '/wp-includes/widgets.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/widgets.php' ) ) {
+	exit;
+}
+
 //
 // Global Variables.
 //

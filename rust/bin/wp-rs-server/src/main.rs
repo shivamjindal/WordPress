@@ -60,6 +60,35 @@ async fn main() {
         .route("/wp-includes/load.php", any(load_include_live_dispatch))
         .route("/wp-includes/vars.php", any(vars_include_live_dispatch))
         .route("/wp-includes/update.php", any(update_include_live_dispatch))
+        .route("/wp-includes/theme.php", any(theme_include_live_dispatch))
+        .route(
+            "/wp-includes/template.php",
+            any(template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/taxonomy.php",
+            any(taxonomy_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/shortcodes.php",
+            any(shortcodes_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets.php",
+            any(widgets_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/style-engine.php",
+            any(style_engine_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps.php",
+            any(sitemaps_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/script-modules.php",
+            any(script_modules_include_live_dispatch),
+        )
         .route(
             "/wp-includes/version.php",
             any(version_include_live_dispatch),
@@ -6808,6 +6837,38 @@ async fn vars_include_live_dispatch(_request: Request) -> Response {
 
 async fn update_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
+}
+
+async fn theme_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn taxonomy_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn shortcodes_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn style_engine_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
 }
 
 async fn version_include_live_dispatch(_request: Request) -> Response {

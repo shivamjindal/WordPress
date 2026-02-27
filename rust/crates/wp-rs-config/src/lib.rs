@@ -190,6 +190,14 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/load.php",
         "/wp-includes/vars.php",
         "/wp-includes/update.php",
+        "/wp-includes/theme.php",
+        "/wp-includes/template.php",
+        "/wp-includes/taxonomy.php",
+        "/wp-includes/shortcodes.php",
+        "/wp-includes/widgets.php",
+        "/wp-includes/style-engine.php",
+        "/wp-includes/sitemaps.php",
+        "/wp-includes/script-modules.php",
         "/wp-includes/version.php",
         "/wp-includes/wp-diff.php",
         "/wp-includes/view-transitions.php",
@@ -533,6 +541,14 @@ mod tests {
         assert!(settings.should_route("/wp-includes/load.php"));
         assert!(settings.should_route("/wp-includes/vars.php"));
         assert!(settings.should_route("/wp-includes/update.php"));
+        assert!(settings.should_route("/wp-includes/theme.php"));
+        assert!(settings.should_route("/wp-includes/template.php"));
+        assert!(settings.should_route("/wp-includes/taxonomy.php"));
+        assert!(settings.should_route("/wp-includes/shortcodes.php"));
+        assert!(settings.should_route("/wp-includes/widgets.php"));
+        assert!(settings.should_route("/wp-includes/style-engine.php"));
+        assert!(settings.should_route("/wp-includes/sitemaps.php"));
+        assert!(settings.should_route("/wp-includes/script-modules.php"));
         assert!(settings.should_route("/wp-includes/version.php"));
         assert!(settings.should_route("/wp-includes/wp-diff.php"));
         assert!(settings.should_route("/wp-includes/view-transitions.php"));

@@ -10,6 +10,12 @@
  * @since 6.1.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/style-engine.php' ) === '/wp-includes/style-engine.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/style-engine.php' ) ) {
+	exit;
+}
+
 /**
  * Global public interface method to generate styles from a single style object,
  * e.g. the value of a block's attributes.style object or the top level styles in theme.json.
