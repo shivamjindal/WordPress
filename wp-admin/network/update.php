@@ -7,6 +7,11 @@
  * @since 3.1.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/network/update.php' ) ) {
+	exit;
+}
+
 if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'update-selected', 'activate-plugin', 'update-selected-themes' ), true ) ) {
 	define( 'IFRAME_REQUEST', true );
 }
