@@ -189,6 +189,11 @@ GET /wp-includes/block-patterns/query-offset-posts.php
 GET /wp-includes/block-patterns/query-small-posts.php
 GET /wp-includes/block-patterns/query-standard-posts.php
 GET /wp-includes/block-patterns/social-links-shared-background-color.php
+GET /wp-includes/blocks/accordion-item.php
+GET /wp-includes/blocks/accordion.php
+GET /wp-includes/blocks/archives.php
+GET /wp-includes/blocks/avatar.php
+GET /wp-includes/blocks/block.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

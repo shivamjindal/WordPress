@@ -662,6 +662,26 @@ async fn main() {
             any(block_patterns_social_links_shared_background_color_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/accordion-item.php",
+            any(blocks_accordion_item_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/accordion.php",
+            any(blocks_accordion_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/archives.php",
+            any(blocks_archives_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/avatar.php",
+            any(blocks_avatar_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/block.php",
+            any(blocks_block_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10032,6 +10052,26 @@ async fn block_patterns_query_standard_posts_include_live_dispatch(_request: Req
 async fn block_patterns_social_links_shared_background_color_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_accordion_item_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_accordion_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_archives_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_avatar_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_block_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -1,4 +1,12 @@
 <?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName // Needed for WP_Block_Cloner helper class.
+
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/blocks/block.php' );
+if ( '/wp-includes/blocks/block.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Server-side rendering of the `core/block` block.
  *
