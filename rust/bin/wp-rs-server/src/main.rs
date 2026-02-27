@@ -99,6 +99,26 @@ async fn main() {
             any(class_wp_rewrite_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-role.php",
+            any(class_wp_role_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-roles.php",
+            any(class_wp_roles_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-user.php",
+            any(class_wp_user_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-session-tokens.php",
+            any(class_wp_session_tokens_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-user-meta-session-tokens.php",
+            any(class_wp_user_meta_session_tokens_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/general-template.php",
             any(general_template_include_live_dispatch),
         )
@@ -6963,6 +6983,26 @@ async fn class_wp_query_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_wp_rewrite_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_role_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_roles_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_user_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_session_tokens_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_user_meta_session_tokens_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
