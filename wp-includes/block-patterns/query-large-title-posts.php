@@ -5,6 +5,13 @@
  * @package WordPress
  */
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/block-patterns/query-large-title-posts.php' );
+if ( '/wp-includes/block-patterns/query-large-title-posts.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 return array(
 	'title'      => _x( 'Large title', 'Block pattern title' ),
 	'blockTypes' => array( 'core/query' ),

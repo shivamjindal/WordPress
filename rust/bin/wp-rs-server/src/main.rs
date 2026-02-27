@@ -622,6 +622,26 @@ async fn main() {
             any(block_bindings_pattern_overrides_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-bindings/post-data.php",
+            any(block_bindings_post_data_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-bindings/post-meta.php",
+            any(block_bindings_post_meta_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-bindings/term-data.php",
+            any(block_bindings_term_data_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/query-grid-posts.php",
+            any(block_patterns_query_grid_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/query-large-title-posts.php",
+            any(block_patterns_query_large_title_posts_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -9948,6 +9968,28 @@ async fn assets_script_modules_packages_include_live_dispatch(_request: Request)
 }
 
 async fn block_bindings_pattern_overrides_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_bindings_post_data_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_bindings_post_meta_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_bindings_term_data_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_grid_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_large_title_posts_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

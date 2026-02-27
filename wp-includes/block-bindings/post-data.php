@@ -7,6 +7,13 @@
  * @subpackage Block Bindings
  */
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/block-bindings/post-data.php' );
+if ( '/wp-includes/block-bindings/post-data.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Gets value for Post Data source.
  *
