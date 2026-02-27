@@ -114,6 +114,9 @@ assert_rust_handled() {
 
 assert_rust_handled "/" "yes"
 assert_rust_handled "/index.php" "yes"
+assert_rust_handled "/search?s=rust" "yes"
+assert_rust_handled "/feed" "yes"
+assert_rust_handled "/Admin" "yes"
 assert_rust_handled "/wp-blog-header.php" "yes"
 assert_rust_handled "/wp-load.php" "yes"
 assert_rust_handled "/wp-login.php" "yes"
