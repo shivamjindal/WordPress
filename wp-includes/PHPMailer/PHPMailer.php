@@ -21,6 +21,13 @@
 
 namespace PHPMailer\PHPMailer;
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/PHPMailer/PHPMailer.php' );
+if ( '/wp-includes/PHPMailer/PHPMailer.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * PHPMailer - PHP email creation and transport class.
  *

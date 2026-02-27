@@ -1048,6 +1048,26 @@ async fn main() {
             any(ixr_class_value_include_live_dispatch),
         )
         .route(
+            "/wp-includes/PHPMailer/DSNConfigurator.php",
+            any(phpmailer_dsn_configurator_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/PHPMailer/Exception.php",
+            any(phpmailer_exception_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/PHPMailer/OAuth.php",
+            any(phpmailer_oauth_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/PHPMailer/OAuthTokenProvider.php",
+            any(phpmailer_oauth_token_provider_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/PHPMailer/PHPMailer.php",
+            any(phpmailer_phpmailer_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9722,6 +9742,26 @@ async fn ixr_class_server_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn ixr_class_value_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_dsn_configurator_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_oauth_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_oauth_token_provider_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_phpmailer_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

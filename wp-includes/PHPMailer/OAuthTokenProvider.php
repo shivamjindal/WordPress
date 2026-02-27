@@ -21,6 +21,13 @@
 
 namespace PHPMailer\PHPMailer;
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/PHPMailer/OAuthTokenProvider.php' );
+if ( '/wp-includes/PHPMailer/OAuthTokenProvider.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * OAuthTokenProvider - OAuth2 token provider interface.
  * Provides base64 encoded OAuth2 auth strings for SMTP authentication.

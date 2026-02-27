@@ -287,6 +287,11 @@ GET /wp-includes/IXR/class-IXR-message.php
 GET /wp-includes/IXR/class-IXR-request.php
 GET /wp-includes/IXR/class-IXR-server.php
 GET /wp-includes/IXR/class-IXR-value.php
+GET /wp-includes/PHPMailer/DSNConfigurator.php
+GET /wp-includes/PHPMailer/Exception.php
+GET /wp-includes/PHPMailer/OAuth.php
+GET /wp-includes/PHPMailer/OAuthTokenProvider.php
+GET /wp-includes/PHPMailer/PHPMailer.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

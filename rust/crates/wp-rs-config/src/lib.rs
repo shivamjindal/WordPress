@@ -454,6 +454,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/IXR/class-IXR-request.php",
         "/wp-includes/IXR/class-IXR-server.php",
         "/wp-includes/IXR/class-IXR-value.php",
+        "/wp-includes/PHPMailer/DSNConfigurator.php",
+        "/wp-includes/PHPMailer/Exception.php",
+        "/wp-includes/PHPMailer/OAuth.php",
+        "/wp-includes/PHPMailer/OAuthTokenProvider.php",
+        "/wp-includes/PHPMailer/PHPMailer.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1172,6 +1177,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-request.php"));
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-server.php"));
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-value.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/DSNConfigurator.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/Exception.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/OAuth.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/OAuthTokenProvider.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/PHPMailer.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
