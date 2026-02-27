@@ -1350,6 +1350,26 @@ async fn main() {
             any(js_dist_script_modules_lazy_editor_index_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/react-refresh-entry.min.asset.php",
+            any(js_dist_react_refresh_entry_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/wordcount.min.asset.php",
+            any(js_dist_wordcount_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/rich-text.min.asset.php",
+            any(js_dist_rich_text_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/undo-manager.min.asset.php",
+            any(js_dist_undo_manager_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/plugins.min.asset.php",
+            any(js_dist_plugins_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11474,6 +11494,28 @@ async fn js_dist_html_entities_min_asset_include_live_dispatch(_request: Request
 async fn js_dist_script_modules_lazy_editor_index_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_react_refresh_entry_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_wordcount_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_rich_text_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_undo_manager_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_plugins_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
