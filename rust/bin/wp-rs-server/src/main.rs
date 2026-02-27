@@ -279,6 +279,26 @@ async fn main() {
             any(class_requests_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-simplepie.php",
+            any(class_simplepie_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-smtp.php",
+            any(class_smtp_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-snoopy.php",
+            any(class_snoopy_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-walker-category-dropdown.php",
+            any(class_walker_category_dropdown_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-walker-category.php",
+            any(class_walker_category_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7697,6 +7717,26 @@ async fn class_pop3_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_requests_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_simplepie_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_smtp_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_snoopy_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_category_dropdown_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_category_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

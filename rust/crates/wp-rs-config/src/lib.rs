@@ -249,6 +249,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-phpmailer.php",
         "/wp-includes/class-pop3.php",
         "/wp-includes/class-requests.php",
+        "/wp-includes/class-simplepie.php",
+        "/wp-includes/class-smtp.php",
+        "/wp-includes/class-snoopy.php",
+        "/wp-includes/class-walker-category-dropdown.php",
+        "/wp-includes/class-walker-category.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -763,6 +768,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-phpmailer.php"));
         assert!(settings.should_route("/wp-includes/class-pop3.php"));
         assert!(settings.should_route("/wp-includes/class-requests.php"));
+        assert!(settings.should_route("/wp-includes/class-simplepie.php"));
+        assert!(settings.should_route("/wp-includes/class-smtp.php"));
+        assert!(settings.should_route("/wp-includes/class-snoopy.php"));
+        assert!(settings.should_route("/wp-includes/class-walker-category-dropdown.php"));
+        assert!(settings.should_route("/wp-includes/class-walker-category.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

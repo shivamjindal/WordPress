@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-snoopy.php' ) === '/wp-includes/class-snoopy.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-snoopy.php' ) ) {
+	exit;
+}
+
 /**
  * Deprecated. Use WP_HTTP (http.php) instead.
  */

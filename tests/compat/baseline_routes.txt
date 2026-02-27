@@ -82,6 +82,11 @@ GET /wp-includes/class-phpass.php
 GET /wp-includes/class-phpmailer.php
 GET /wp-includes/class-pop3.php
 GET /wp-includes/class-requests.php
+GET /wp-includes/class-simplepie.php
+GET /wp-includes/class-smtp.php
+GET /wp-includes/class-snoopy.php
+GET /wp-includes/class-walker-category-dropdown.php
+GET /wp-includes/class-walker-category.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php
