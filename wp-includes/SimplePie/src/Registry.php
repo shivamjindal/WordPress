@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 namespace SimplePie;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/src/Registry.php' );
+if ( '/wp-includes/SimplePie/src/Registry.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use InvalidArgumentException;
 use SimplePie\Content\Type\Sniffer;
 use SimplePie\Parse\Date;

@@ -1616,6 +1616,26 @@ async fn main() {
             any(simple_pie_src_rating_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/RegistryAware.php",
+            any(simple_pie_src_registry_aware_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Registry.php",
+            any(simple_pie_src_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Restriction.php",
+            any(simple_pie_src_restriction_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Sanitize.php",
+            any(simple_pie_src_sanitize_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/SimplePie.php",
+            any(simple_pie_src_simple_pie_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10996,6 +11016,26 @@ async fn simple_pie_src_parser_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn simple_pie_src_rating_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_registry_aware_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_restriction_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_sanitize_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_simple_pie_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

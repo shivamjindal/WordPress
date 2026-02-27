@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 namespace SimplePie;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/src/Sanitize.php' );
+if ( '/wp-includes/SimplePie/src/Sanitize.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use DOMDocument;
 use DOMXPath;
 use InvalidArgumentException;

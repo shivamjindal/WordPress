@@ -596,6 +596,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/Parse/Date.php",
         "/wp-includes/SimplePie/src/Parser.php",
         "/wp-includes/SimplePie/src/Rating.php",
+        "/wp-includes/SimplePie/src/RegistryAware.php",
+        "/wp-includes/SimplePie/src/Registry.php",
+        "/wp-includes/SimplePie/src/Restriction.php",
+        "/wp-includes/SimplePie/src/Sanitize.php",
+        "/wp-includes/SimplePie/src/SimplePie.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1468,6 +1473,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/Parse/Date.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Parser.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Rating.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/RegistryAware.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Registry.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Restriction.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Sanitize.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/SimplePie.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));
