@@ -108,6 +108,7 @@ async fn main() {
         .route("/wp-admin/credits.php", any(credits_live_dispatch))
         .route("/wp-admin/contribute.php", any(contribute_live_dispatch))
         .route("/wp-admin/freedoms.php", any(freedoms_live_dispatch))
+        .route("/wp-admin/privacy.php", any(privacy_live_dispatch))
         .route(
             "/wp-admin/plugin-install.php",
             any(plugin_install_live_dispatch),
@@ -1397,6 +1398,10 @@ async fn freedoms_live_dispatch(State(state): State<AppState>, request: Request)
         }
     }
     admin_information_page_live_dispatch(state, request, "Freedoms (Rust)").await
+}
+
+async fn privacy_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    admin_information_page_live_dispatch(state, request, "Privacy (Rust)").await
 }
 
 async fn admin_information_page_live_dispatch(

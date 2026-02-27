@@ -44,6 +44,7 @@ GET /wp-admin/credits.php
 GET /wp-admin/contribute.php
 GET /wp-admin/freedoms.php
 GET /wp-admin/freedoms.php?privacy-notice=1
+GET /wp-admin/privacy.php
 GET /wp-admin/plugin-install.php
 GET /wp-admin/plugin-install.php?tab=plugin-information
 POST /wp-admin/plugin-install.php
