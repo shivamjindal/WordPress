@@ -58,6 +58,12 @@ async fn main() {
         .route("/wp-trackback.php", any(trackback_live_dispatch))
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
         .route("/wp-includes/load.php", any(load_include_live_dispatch))
+        .route("/wp-includes/vars.php", any(vars_include_live_dispatch))
+        .route("/wp-includes/update.php", any(update_include_live_dispatch))
+        .route(
+            "/wp-includes/version.php",
+            any(version_include_live_dispatch),
+        )
         .route(
             "/wp-includes/wp-diff.php",
             any(wp_diff_include_live_dispatch),
@@ -6793,6 +6799,18 @@ async fn links_opml_live_dispatch(request: Request) -> Response {
 }
 
 async fn load_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn vars_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn update_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn version_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -188,6 +188,9 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-trackback.php",
         "/wp-links-opml.php",
         "/wp-includes/load.php",
+        "/wp-includes/vars.php",
+        "/wp-includes/update.php",
+        "/wp-includes/version.php",
         "/wp-includes/wp-diff.php",
         "/wp-includes/view-transitions.php",
         "/wp-includes/js/tinymce/wp-tinymce.php",
@@ -528,6 +531,9 @@ mod tests {
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-includes/load.php"));
+        assert!(settings.should_route("/wp-includes/vars.php"));
+        assert!(settings.should_route("/wp-includes/update.php"));
+        assert!(settings.should_route("/wp-includes/version.php"));
         assert!(settings.should_route("/wp-includes/wp-diff.php"));
         assert!(settings.should_route("/wp-includes/view-transitions.php"));
         assert!(settings.should_route("/wp-includes/js/tinymce/wp-tinymce.php"));

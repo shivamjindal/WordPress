@@ -21,6 +21,9 @@ POST /wp-activate.php
 GET /wp-comments-post.php
 POST /wp-comments-post.php
 GET /wp-includes/load.php
+GET /wp-includes/vars.php
+GET /wp-includes/update.php
+GET /wp-includes/version.php
 GET /wp-includes/wp-diff.php
 GET /wp-includes/view-transitions.php
 GET /wp-includes/js/tinymce/wp-tinymce.php?c=1
