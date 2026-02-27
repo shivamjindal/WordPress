@@ -1148,6 +1148,26 @@ async fn main() {
             any(requests_src_exception_http_status404_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Exception/Http/Status405.php",
+            any(requests_src_exception_http_status405_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status406.php",
+            any(requests_src_exception_http_status406_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status407.php",
+            any(requests_src_exception_http_status407_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status408.php",
+            any(requests_src_exception_http_status408_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status409.php",
+            any(requests_src_exception_http_status409_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9938,6 +9958,36 @@ async fn requests_src_exception_http_status403_include_live_dispatch(
 }
 
 async fn requests_src_exception_http_status404_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status405_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status406_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status407_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status408_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status409_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
