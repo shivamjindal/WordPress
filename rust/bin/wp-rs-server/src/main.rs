@@ -1310,6 +1310,26 @@ async fn main() {
             any(js_dist_keycodes_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/interactivity-router/full-page.min.asset.php",
+            any(js_dist_script_modules_interactivity_router_full_page_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/interactivity-router/index.min.asset.php",
+            any(js_dist_script_modules_interactivity_router_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/edit-site-init/index.min.asset.php",
+            any(js_dist_script_modules_edit_site_init_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/url.min.asset.php",
+            any(js_dist_url_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/preferences.min.asset.php",
+            any(js_dist_preferences_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11384,6 +11404,32 @@ async fn js_dist_nux_min_asset_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn js_dist_keycodes_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_interactivity_router_full_page_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_interactivity_router_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_edit_site_init_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_url_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_preferences_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
