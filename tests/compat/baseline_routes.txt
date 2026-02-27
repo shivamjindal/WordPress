@@ -184,6 +184,11 @@ GET /wp-includes/block-bindings/post-meta.php
 GET /wp-includes/block-bindings/term-data.php
 GET /wp-includes/block-patterns/query-grid-posts.php
 GET /wp-includes/block-patterns/query-large-title-posts.php
+GET /wp-includes/block-patterns/query-medium-posts.php
+GET /wp-includes/block-patterns/query-offset-posts.php
+GET /wp-includes/block-patterns/query-small-posts.php
+GET /wp-includes/block-patterns/query-standard-posts.php
+GET /wp-includes/block-patterns/social-links-shared-background-color.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

@@ -7,6 +7,13 @@
  * @deprecated 6.7.0 This pattern is deprecated. Please use the Social Links block instead.
  */
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/block-patterns/social-links-shared-background-color.php' );
+if ( '/wp-includes/block-patterns/social-links-shared-background-color.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 return array(
 	'title'         => _x( 'Social links with a shared background color', 'Block pattern title' ),
 	'categories'    => array( 'buttons' ),

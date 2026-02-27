@@ -351,6 +351,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-bindings/term-data.php",
         "/wp-includes/block-patterns/query-grid-posts.php",
         "/wp-includes/block-patterns/query-large-title-posts.php",
+        "/wp-includes/block-patterns/query-medium-posts.php",
+        "/wp-includes/block-patterns/query-offset-posts.php",
+        "/wp-includes/block-patterns/query-small-posts.php",
+        "/wp-includes/block-patterns/query-standard-posts.php",
+        "/wp-includes/block-patterns/social-links-shared-background-color.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1237,6 +1242,12 @@ mod tests {
         assert!(settings.should_route("/wp-includes/block-bindings/term-data.php"));
         assert!(settings.should_route("/wp-includes/block-patterns/query-grid-posts.php"));
         assert!(settings.should_route("/wp-includes/block-patterns/query-large-title-posts.php"));
+        assert!(settings.should_route("/wp-includes/block-patterns/query-medium-posts.php"));
+        assert!(settings.should_route("/wp-includes/block-patterns/query-offset-posts.php"));
+        assert!(settings.should_route("/wp-includes/block-patterns/query-small-posts.php"));
+        assert!(settings.should_route("/wp-includes/block-patterns/query-standard-posts.php"));
+        assert!(settings
+            .should_route("/wp-includes/block-patterns/social-links-shared-background-color.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

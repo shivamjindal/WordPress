@@ -642,6 +642,26 @@ async fn main() {
             any(block_patterns_query_large_title_posts_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-patterns/query-medium-posts.php",
+            any(block_patterns_query_medium_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/query-offset-posts.php",
+            any(block_patterns_query_offset_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/query-small-posts.php",
+            any(block_patterns_query_small_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/query-standard-posts.php",
+            any(block_patterns_query_standard_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns/social-links-shared-background-color.php",
+            any(block_patterns_social_links_shared_background_color_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -9988,6 +10008,28 @@ async fn block_patterns_query_grid_posts_include_live_dispatch(_request: Request
 }
 
 async fn block_patterns_query_large_title_posts_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_medium_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_offset_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_small_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_query_standard_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_social_links_shared_background_color_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
