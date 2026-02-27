@@ -341,6 +341,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/abilities-api/class-wp-ability-category.php",
         "/wp-includes/abilities-api/class-wp-ability.php",
         "/wp-includes/abilities/class-wp-settings-abilities.php",
+        "/wp-includes/assets/script-loader-packages.min.php",
+        "/wp-includes/assets/script-loader-packages.php",
+        "/wp-includes/assets/script-modules-packages.min.php",
+        "/wp-includes/assets/script-modules-packages.php",
+        "/wp-includes/block-bindings/pattern-overrides.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1217,6 +1222,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/abilities-api/class-wp-ability-category.php"));
         assert!(settings.should_route("/wp-includes/abilities-api/class-wp-ability.php"));
         assert!(settings.should_route("/wp-includes/abilities/class-wp-settings-abilities.php"));
+        assert!(settings.should_route("/wp-includes/assets/script-loader-packages.min.php"));
+        assert!(settings.should_route("/wp-includes/assets/script-loader-packages.php"));
+        assert!(settings.should_route("/wp-includes/assets/script-modules-packages.min.php"));
+        assert!(settings.should_route("/wp-includes/assets/script-modules-packages.php"));
+        assert!(settings.should_route("/wp-includes/block-bindings/pattern-overrides.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

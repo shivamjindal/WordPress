@@ -174,6 +174,11 @@ GET /wp-includes/abilities-api/class-wp-ability-categories-registry.php
 GET /wp-includes/abilities-api/class-wp-ability-category.php
 GET /wp-includes/abilities-api/class-wp-ability.php
 GET /wp-includes/abilities/class-wp-settings-abilities.php
+GET /wp-includes/assets/script-loader-packages.min.php
+GET /wp-includes/assets/script-loader-packages.php
+GET /wp-includes/assets/script-modules-packages.min.php
+GET /wp-includes/assets/script-modules-packages.php
+GET /wp-includes/block-bindings/pattern-overrides.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

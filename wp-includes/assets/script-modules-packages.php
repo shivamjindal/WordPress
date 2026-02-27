@@ -1,4 +1,13 @@
-<?php return array(
+<?php
+
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/assets/script-modules-packages.php' );
+if ( '/wp-includes/assets/script-modules-packages.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
+return array(
   'a11y/index.js' => array(
     'dependencies' => array(
       

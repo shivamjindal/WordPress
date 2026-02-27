@@ -602,6 +602,26 @@ async fn main() {
             any(abilities_class_wp_settings_abilities_include_live_dispatch),
         )
         .route(
+            "/wp-includes/assets/script-loader-packages.min.php",
+            any(assets_script_loader_packages_min_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/assets/script-loader-packages.php",
+            any(assets_script_loader_packages_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/assets/script-modules-packages.min.php",
+            any(assets_script_modules_packages_min_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/assets/script-modules-packages.php",
+            any(assets_script_modules_packages_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-bindings/pattern-overrides.php",
+            any(block_bindings_pattern_overrides_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -9908,6 +9928,26 @@ async fn abilities_api_class_wp_ability_include_live_dispatch(_request: Request)
 async fn abilities_class_wp_settings_abilities_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn assets_script_loader_packages_min_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn assets_script_loader_packages_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn assets_script_modules_packages_min_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn assets_script_modules_packages_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_bindings_pattern_overrides_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
