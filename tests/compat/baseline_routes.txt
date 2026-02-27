@@ -93,6 +93,12 @@ POST /wp-admin/widgets-form-blocks.php
 GET /wp-admin/nav-menus.php
 GET /wp-admin/nav-menus.php?menu=2
 POST /wp-admin/nav-menus.php
+GET /wp-admin/font-library.php
+POST /wp-admin/font-library.php
+GET /wp-admin/customize.php?url=https://example.com&return=%2Fwp-admin%2Fthemes.php
+POST /wp-admin/customize.php
+GET /wp-admin/authorize-application.php?app_name=Rust+App&app_id=rust-app-1
+POST /wp-admin/authorize-application.php
 GET /wp-admin/site-editor.php
 GET /wp-admin/site-editor.php?postType=wp_navigation&postId=2
 GET /wp-admin/site-editor.php?path=/wp_global_styles

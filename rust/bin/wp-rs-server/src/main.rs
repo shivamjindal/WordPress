@@ -177,6 +177,15 @@ async fn main() {
             any(widgets_form_blocks_live_dispatch),
         )
         .route("/wp-admin/nav-menus.php", any(nav_menus_live_dispatch))
+        .route(
+            "/wp-admin/font-library.php",
+            any(font_library_live_dispatch),
+        )
+        .route("/wp-admin/customize.php", any(customize_live_dispatch))
+        .route(
+            "/wp-admin/authorize-application.php",
+            any(authorize_application_live_dispatch),
+        )
         .route("/wp-admin/site-editor.php", any(site_editor_live_dispatch))
         .route("/wp-admin/press-this.php", any(press_this_live_dispatch))
         .route("/wp-admin/term.php", any(term_live_dispatch))
@@ -2516,6 +2525,196 @@ async fn nav_menus_live_dispatch(State(state): State<AppState>, request: Request
     let updated_action = params.get("updated_action").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Navigation Menus (Rust)</h1><p>action={action}</p><p>menu={menu}</p><p>updated_action={updated_action}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn font_library_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/font-library.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_manage_fonts = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_manage_fonts {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/font-library.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    if request.method() == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/font-library.php?updated=true").into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Font Library (Rust)</h1><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn customize_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/customize.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_customize = authenticated
+        && (capabilities.contains("customize")
+            || capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options"));
+    if !can_customize {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "customize capability is required for wp-admin/customize.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        let return_url = params.get("return").cloned().unwrap_or_default();
+        if !return_url.trim().is_empty() {
+            return rust_handled_redirect(&return_url).into_response();
+        }
+        return rust_handled_redirect("/wp-admin/customize.php?saved=true").into_response();
+    }
+
+    let url = params.get("url").cloned().unwrap_or_default();
+    let return_url = params.get("return").cloned().unwrap_or_default();
+    let autofocus = params.get("autofocus").cloned().unwrap_or_default();
+    let changeset_uuid = params.get("changeset_uuid").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Customizer (Rust)</h1><p>url={url}</p><p>return={return_url}</p><p>autofocus={autofocus}</p><p>changeset_uuid={changeset_uuid}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn authorize_application_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/authorize-application.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_authorize = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("edit_users"));
+    if !can_authorize {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for wp-admin/authorize-application.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST
+        && params
+            .get("action")
+            .is_some_and(|value| value == "authorize_application_password")
+    {
+        let reject = params.get("reject").cloned().unwrap_or_default();
+        let approve = params.get("approve").cloned().unwrap_or_default();
+        let success_url = params.get("success_url").cloned().unwrap_or_default();
+        let reject_url = params.get("reject_url").cloned().unwrap_or_default();
+
+        if !reject.is_empty() {
+            if !reject_url.trim().is_empty() {
+                return rust_handled_redirect(&reject_url).into_response();
+            }
+            return rust_handled_redirect("/wp-admin/").into_response();
+        }
+        if !approve.is_empty() {
+            if !success_url.trim().is_empty() {
+                let target =
+                    format!("{success_url}?site_url=http%3A%2F%2Flocalhost&user_login=admin&password=rust-app-pass");
+                return rust_handled_redirect(&target).into_response();
+            }
+            return rust_handled_html(
+                StatusCode::OK,
+                "<!doctype html><html><body><h1>Application Password Authorized (Rust)</h1><p>password=rust-app-pass</p></body></html>".to_string(),
+            )
+            .into_response();
+        }
+    }
+
+    let app_name = params.get("app_name").cloned().unwrap_or_default();
+    let app_id = params.get("app_id").cloned().unwrap_or_default();
+    let success_url = params.get("success_url").cloned().unwrap_or_default();
+    let reject_url = params.get("reject_url").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Authorize Application (Rust)</h1><p>app_name={app_name}</p><p>app_id={app_id}</p><p>success_url={success_url}</p><p>reject_url={reject_url}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

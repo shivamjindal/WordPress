@@ -22,6 +22,9 @@ POST	/wp-admin/widgets.php	application/x-www-form-urlencoded	action=save-sidebar
 POST	/wp-admin/widgets-form.php	application/x-www-form-urlencoded	savewidget=1&widget-id=text-1&sidebar=sidebar-1
 POST	/wp-admin/widgets-form-blocks.php	application/x-www-form-urlencoded	sidebar=sidebar-1&widget-id=text-1
 POST	/wp-admin/nav-menus.php	application/x-www-form-urlencoded	action=update&menu=2
+POST	/wp-admin/font-library.php	application/x-www-form-urlencoded	action=save-font&font=Inter
+POST	/wp-admin/customize.php	application/x-www-form-urlencoded	return=%2Fwp-admin%2Fthemes.php
+POST	/wp-admin/authorize-application.php	application/x-www-form-urlencoded	action=authorize_application_password&app_name=Rust+App&app_id=rust-app-1&success_url=https%3A%2F%2Fexample.com%2Fcallback&approve=1
 POST	/wp-admin/site-editor.php	application/x-www-form-urlencoded	action=save&postType=wp_navigation&postId=2
 POST	/wp-admin/press-this.php	application/x-www-form-urlencoded	action=save&u=https%3A%2F%2Fexample.com&t=Rust+Press+This
 POST	/wp-admin/term.php?tag_ID=1&taxonomy=category	application/x-www-form-urlencoded	name=Rust+Category&slug=rust-category

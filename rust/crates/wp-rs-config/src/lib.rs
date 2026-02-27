@@ -224,6 +224,9 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/widgets-form.php",
         "/wp-admin/widgets-form-blocks.php",
         "/wp-admin/nav-menus.php",
+        "/wp-admin/font-library.php",
+        "/wp-admin/customize.php",
+        "/wp-admin/authorize-application.php",
         "/wp-admin/site-editor.php",
         "/wp-admin/press-this.php",
         "/wp-admin/term.php",
@@ -526,6 +529,9 @@ mod tests {
         assert!(settings.should_route("/wp-admin/widgets-form.php"));
         assert!(settings.should_route("/wp-admin/widgets-form-blocks.php"));
         assert!(settings.should_route("/wp-admin/nav-menus.php"));
+        assert!(settings.should_route("/wp-admin/font-library.php"));
+        assert!(settings.should_route("/wp-admin/customize.php"));
+        assert!(settings.should_route("/wp-admin/authorize-application.php"));
         assert!(settings.should_route("/wp-admin/site-editor.php"));
         assert!(settings.should_route("/wp-admin/press-this.php"));
         assert!(settings.should_route("/wp-admin/term.php"));
