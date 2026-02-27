@@ -1250,6 +1250,26 @@ async fn main() {
             any(js_dist_dom_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/primitives.min.asset.php",
+            any(js_dist_primitives_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/keyboard-shortcuts.min.asset.php",
+            any(js_dist_keyboard_shortcuts_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/media-utils.min.asset.php",
+            any(js_dist_media_utils_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/redux-routine.min.asset.php",
+            any(js_dist_redux_routine_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/private-apis.min.asset.php",
+            any(js_dist_private_apis_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11264,6 +11284,26 @@ async fn js_dist_format_library_min_asset_include_live_dispatch(_request: Reques
 }
 
 async fn js_dist_dom_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_primitives_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_keyboard_shortcuts_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_media_utils_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_redux_routine_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_private_apis_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

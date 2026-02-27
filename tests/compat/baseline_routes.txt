@@ -336,6 +336,11 @@ GET /wp-includes/js/dist/viewport.min.asset.php
 GET /wp-includes/js/dist/preferences-persistence.min.asset.php
 GET /wp-includes/js/dist/format-library.min.asset.php
 GET /wp-includes/js/dist/dom.min.asset.php
+GET /wp-includes/js/dist/primitives.min.asset.php
+GET /wp-includes/js/dist/keyboard-shortcuts.min.asset.php
+GET /wp-includes/js/dist/media-utils.min.asset.php
+GET /wp-includes/js/dist/redux-routine.min.asset.php
+GET /wp-includes/js/dist/private-apis.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
