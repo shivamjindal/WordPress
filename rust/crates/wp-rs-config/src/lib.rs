@@ -601,6 +601,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/Restriction.php",
         "/wp-includes/SimplePie/src/Sanitize.php",
         "/wp-includes/SimplePie/src/SimplePie.php",
+        "/wp-includes/SimplePie/src/Source.php",
+        "/wp-includes/SimplePie/src/XML/Declaration/Parser.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1478,6 +1480,8 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/SimplePie.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Source.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/XML/Declaration/Parser.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));

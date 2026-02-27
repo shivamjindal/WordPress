@@ -683,6 +683,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/SimplePie/src/Restriction.php',
 			'/wp-includes/SimplePie/src/Sanitize.php',
 			'/wp-includes/SimplePie/src/SimplePie.php',
+			'/wp-includes/SimplePie/src/Source.php',
+			'/wp-includes/SimplePie/src/XML/Declaration/Parser.php',
 			'/wp-includes/SimplePie/library/SimplePie/Restriction.php',
 			'/wp-includes/SimplePie/library/SimplePie/Sanitize.php',
 			'/wp-includes/SimplePie/library/SimplePie/Source.php',

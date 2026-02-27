@@ -1636,6 +1636,14 @@ async fn main() {
             any(simple_pie_src_simple_pie_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/Source.php",
+            any(simple_pie_src_source_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/XML/Declaration/Parser.php",
+            any(simple_pie_src_xml_declaration_parser_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -11036,6 +11044,16 @@ async fn simple_pie_src_sanitize_include_live_dispatch(_request: Request) -> Res
 }
 
 async fn simple_pie_src_simple_pie_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_source_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_xml_declaration_parser_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
