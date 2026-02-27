@@ -962,6 +962,26 @@ async fn main() {
             any(blocks_tag_cloud_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/template-part.php",
+            any(blocks_template_part_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/term-count.php",
+            any(blocks_term_count_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/term-description.php",
+            any(blocks_term_description_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/term-name.php",
+            any(blocks_term_name_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/term-template.php",
+            any(blocks_term_template_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10632,6 +10652,26 @@ async fn blocks_social_link_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn blocks_tag_cloud_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_template_part_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_term_count_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_term_description_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_term_name_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_term_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

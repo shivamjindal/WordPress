@@ -1,4 +1,12 @@
 <?php
+
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/blocks/term-template.php' );
+if ( '/wp-includes/blocks/term-template.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Server-side rendering of the `core/term-template` block.
  *
