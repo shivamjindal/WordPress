@@ -438,6 +438,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/blocks/term-template.php",
         "/wp-includes/blocks/video.php",
         "/wp-includes/blocks/widget-group.php",
+        "/wp-includes/build/pages/font-library/page.php",
+        "/wp-includes/build/pages/font-library/page-wp-admin.php",
+        "/wp-includes/build/pages/site-editor/page.php",
+        "/wp-includes/build/pages/site-editor/page-wp-admin.php",
+        "/wp-includes/build/routes/font-list/content.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1412,6 +1417,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/blocks/term-template.php"));
         assert!(settings.should_route("/wp-includes/blocks/video.php"));
         assert!(settings.should_route("/wp-includes/blocks/widget-group.php"));
+        assert!(settings.should_route("/wp-includes/build/pages/font-library/page.php"));
+        assert!(settings.should_route("/wp-includes/build/pages/font-library/page-wp-admin.php"));
+        assert!(settings.should_route("/wp-includes/build/pages/site-editor/page.php"));
+        assert!(settings.should_route("/wp-includes/build/pages/site-editor/page-wp-admin.php"));
+        assert!(settings.should_route("/wp-includes/build/routes/font-list/content.min.asset.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

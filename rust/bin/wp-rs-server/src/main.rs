@@ -990,6 +990,26 @@ async fn main() {
             any(blocks_widget_group_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/pages/font-library/page.php",
+            any(build_pages_font_library_page_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/pages/font-library/page-wp-admin.php",
+            any(build_pages_font_library_page_wp_admin_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/pages/site-editor/page.php",
+            any(build_pages_site_editor_page_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/pages/site-editor/page-wp-admin.php",
+            any(build_pages_site_editor_page_wp_admin_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/font-list/content.min.asset.php",
+            any(build_routes_font_list_content_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10688,6 +10708,32 @@ async fn blocks_video_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_widget_group_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_pages_font_library_page_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_pages_font_library_page_wp_admin_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_pages_site_editor_page_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_pages_site_editor_page_wp_admin_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_font_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
