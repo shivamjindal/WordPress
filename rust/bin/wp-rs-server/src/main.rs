@@ -1436,6 +1436,26 @@ async fn main() {
             any(simple_pie_library_simple_pie_misc_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/library/SimplePie/Net/IPv6.php",
+            any(simple_pie_library_simple_pie_net_ipv6_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Parse/Date.php",
+            any(simple_pie_library_simple_pie_parse_date_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Parser.php",
+            any(simple_pie_library_simple_pie_parser_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Rating.php",
+            any(simple_pie_library_simple_pie_rating_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Registry.php",
+            any(simple_pie_library_simple_pie_registry_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10606,6 +10626,32 @@ async fn simple_pie_library_simple_pie_locator_include_live_dispatch(
 }
 
 async fn simple_pie_library_simple_pie_misc_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_net_ipv6_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_parse_date_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_parser_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_rating_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_registry_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

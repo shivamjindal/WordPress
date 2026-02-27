@@ -384,6 +384,11 @@ GET /wp-includes/SimplePie/library/SimplePie/IRI.php
 GET /wp-includes/SimplePie/library/SimplePie/Item.php
 GET /wp-includes/SimplePie/library/SimplePie/Locator.php
 GET /wp-includes/SimplePie/library/SimplePie/Misc.php
+GET /wp-includes/SimplePie/library/SimplePie/Net/IPv6.php
+GET /wp-includes/SimplePie/library/SimplePie/Parse/Date.php
+GET /wp-includes/SimplePie/library/SimplePie/Parser.php
+GET /wp-includes/SimplePie/library/SimplePie/Rating.php
+GET /wp-includes/SimplePie/library/SimplePie/Registry.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php
