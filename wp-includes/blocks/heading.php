@@ -1,4 +1,12 @@
 <?php
+
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/blocks/heading.php' );
+if ( '/wp-includes/blocks/heading.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Appending the wp-block-heading to before rendering the stored `core/heading` block contents.
  *

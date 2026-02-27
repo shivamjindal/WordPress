@@ -381,6 +381,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/blocks/file.php",
         "/wp-includes/blocks/footnotes.php",
         "/wp-includes/blocks/gallery.php",
+        "/wp-includes/blocks/heading.php",
+        "/wp-includes/blocks/home-link.php",
+        "/wp-includes/blocks/image.php",
+        "/wp-includes/blocks/index.php",
+        "/wp-includes/blocks/latest-comments.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1298,6 +1303,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/blocks/file.php"));
         assert!(settings.should_route("/wp-includes/blocks/footnotes.php"));
         assert!(settings.should_route("/wp-includes/blocks/gallery.php"));
+        assert!(settings.should_route("/wp-includes/blocks/heading.php"));
+        assert!(settings.should_route("/wp-includes/blocks/home-link.php"));
+        assert!(settings.should_route("/wp-includes/blocks/image.php"));
+        assert!(settings.should_route("/wp-includes/blocks/index.php"));
+        assert!(settings.should_route("/wp-includes/blocks/latest-comments.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

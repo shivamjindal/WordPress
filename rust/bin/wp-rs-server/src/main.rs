@@ -762,6 +762,26 @@ async fn main() {
             any(blocks_gallery_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/heading.php",
+            any(blocks_heading_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/home-link.php",
+            any(blocks_home_link_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/image.php",
+            any(blocks_image_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/index.php",
+            any(blocks_index_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/latest-comments.php",
+            any(blocks_latest_comments_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10232,6 +10252,26 @@ async fn blocks_footnotes_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_gallery_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_heading_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_home_link_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_image_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_index_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_latest_comments_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
