@@ -8,6 +8,12 @@
  * @subpackage Dependencies
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-dependency.php' ) === '/wp-includes/class-wp-dependency.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-dependency.php' ) ) {
+	exit;
+}
+
 /**
  * Class _WP_Dependency
  *

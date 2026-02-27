@@ -219,6 +219,26 @@ async fn main() {
             any(class_wp_widget_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-scripts.php",
+            any(class_wp_scripts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-styles.php",
+            any(class_wp_styles_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-dependencies.php",
+            any(class_wp_dependencies_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-dependency.php",
+            any(class_wp_dependency_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-script-modules.php",
+            any(class_wp_script_modules_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-comment.php",
             any(class_wp_comment_include_live_dispatch),
         )
@@ -7243,6 +7263,26 @@ async fn class_wp_theme_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_wp_widget_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_scripts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_styles_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_dependencies_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
