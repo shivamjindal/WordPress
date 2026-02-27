@@ -190,6 +190,9 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/load.php",
         "/wp-includes/vars.php",
         "/wp-includes/update.php",
+        "/wp-includes/wp-db.php",
+        "/wp-includes/utf8.php",
+        "/wp-includes/user.php",
         "/wp-includes/theme.php",
         "/wp-includes/template.php",
         "/wp-includes/taxonomy.php",
@@ -541,6 +544,9 @@ mod tests {
         assert!(settings.should_route("/wp-includes/load.php"));
         assert!(settings.should_route("/wp-includes/vars.php"));
         assert!(settings.should_route("/wp-includes/update.php"));
+        assert!(settings.should_route("/wp-includes/wp-db.php"));
+        assert!(settings.should_route("/wp-includes/utf8.php"));
+        assert!(settings.should_route("/wp-includes/user.php"));
         assert!(settings.should_route("/wp-includes/theme.php"));
         assert!(settings.should_route("/wp-includes/template.php"));
         assert!(settings.should_route("/wp-includes/taxonomy.php"));

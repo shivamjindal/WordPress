@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/utf8.php' ) === '/wp-includes/utf8.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/utf8.php' ) ) {
+	exit;
+}
+
 if ( extension_loaded( 'mbstring' ) ) :
 	/**
 	 * Determines if a given byte string represents a valid UTF-8 encoding.

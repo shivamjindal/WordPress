@@ -6,6 +6,12 @@
  * @subpackage Users
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/user.php' ) === '/wp-includes/user.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/user.php' ) ) {
+	exit;
+}
+
 /**
  * Authenticates and logs a user in with 'remember' capability.
  *

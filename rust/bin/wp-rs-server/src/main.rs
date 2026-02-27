@@ -60,6 +60,9 @@ async fn main() {
         .route("/wp-includes/load.php", any(load_include_live_dispatch))
         .route("/wp-includes/vars.php", any(vars_include_live_dispatch))
         .route("/wp-includes/update.php", any(update_include_live_dispatch))
+        .route("/wp-includes/wp-db.php", any(wp_db_include_live_dispatch))
+        .route("/wp-includes/utf8.php", any(utf8_include_live_dispatch))
+        .route("/wp-includes/user.php", any(user_include_live_dispatch))
         .route("/wp-includes/theme.php", any(theme_include_live_dispatch))
         .route(
             "/wp-includes/template.php",
@@ -6837,6 +6840,18 @@ async fn vars_include_live_dispatch(_request: Request) -> Response {
 
 async fn update_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
+}
+
+async fn wp_db_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn utf8_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn user_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
 }
 
 async fn theme_include_live_dispatch(_request: Request) -> Response {
