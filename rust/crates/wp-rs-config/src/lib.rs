@@ -556,6 +556,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/library/SimplePie/Parser.php",
         "/wp-includes/SimplePie/library/SimplePie/Rating.php",
         "/wp-includes/SimplePie/library/SimplePie/Registry.php",
+        "/wp-includes/SimplePie/library/SimplePie.php",
+        "/wp-includes/SimplePie/src/Author.php",
+        "/wp-includes/SimplePie/src/Cache/Base.php",
+        "/wp-includes/SimplePie/src/Cache/BaseDataCache.php",
+        "/wp-includes/SimplePie/src/Cache/CallableNameFilter.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1388,6 +1393,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Parser.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Rating.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Registry.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Author.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Base.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/BaseDataCache.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/CallableNameFilter.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));
