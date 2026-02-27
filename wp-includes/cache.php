@@ -8,6 +8,12 @@
  * @subpackage Cache
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/cache.php' ) === '/wp-includes/cache.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/cache.php' ) ) {
+	exit;
+}
+
 /** WP_Object_Cache class */
 require_once ABSPATH . WPINC . '/class-wp-object-cache.php';
 

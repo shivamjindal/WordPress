@@ -6,6 +6,12 @@
  * @subpackage Bookmark
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/bookmark.php' ) === '/wp-includes/bookmark.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/bookmark.php' ) ) {
+	exit;
+}
+
 /**
  * Retrieves bookmark data.
  *

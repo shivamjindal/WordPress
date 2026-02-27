@@ -6,6 +6,12 @@
  * @subpackage Template
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/bookmark-template.php' ) === '/wp-includes/bookmark-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/bookmark-template.php' ) ) {
+	exit;
+}
+
 /**
  * The formatted output of a list of bookmarks.
  *

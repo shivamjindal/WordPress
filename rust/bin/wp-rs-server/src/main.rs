@@ -239,6 +239,23 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/bookmark-template.php",
+            any(bookmark_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/bookmark.php",
+            any(bookmark_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/cache-compat.php",
+            any(cache_compat_include_live_dispatch),
+        )
+        .route("/wp-includes/cache.php", any(cache_include_live_dispatch))
+        .route(
+            "/wp-includes/canonical.php",
+            any(canonical_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-bindings.php",
             any(block_bindings_include_live_dispatch),
         )
@@ -7583,6 +7600,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn bookmark_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn bookmark_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn cache_compat_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn cache_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn canonical_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

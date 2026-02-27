@@ -8,6 +8,12 @@
  * @subpackage Cache
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/cache-compat.php' ) === '/wp-includes/cache-compat.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/cache-compat.php' ) ) {
+	exit;
+}
+
 if ( ! function_exists( 'wp_cache_add_multiple' ) ) :
 	/**
 	 * Adds multiple values to the cache in one call, if the cache keys don't already exist.

@@ -72,6 +72,11 @@ GET /wp-includes/class-wp-styles.php
 GET /wp-includes/class-wp-dependencies.php
 GET /wp-includes/class-wp-dependency.php
 GET /wp-includes/class-wp-script-modules.php
+GET /wp-includes/bookmark-template.php
+GET /wp-includes/bookmark.php
+GET /wp-includes/cache-compat.php
+GET /wp-includes/cache.php
+GET /wp-includes/canonical.php
 GET /wp-includes/block-bindings.php
 GET /wp-includes/block-editor.php
 GET /wp-includes/block-patterns.php

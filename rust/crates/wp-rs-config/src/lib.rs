@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/bookmark-template.php",
+        "/wp-includes/bookmark.php",
+        "/wp-includes/cache-compat.php",
+        "/wp-includes/cache.php",
+        "/wp-includes/canonical.php",
         "/wp-includes/block-bindings.php",
         "/wp-includes/block-editor.php",
         "/wp-includes/block-patterns.php",
@@ -733,6 +738,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/bookmark-template.php"));
+        assert!(settings.should_route("/wp-includes/bookmark.php"));
+        assert!(settings.should_route("/wp-includes/cache-compat.php"));
+        assert!(settings.should_route("/wp-includes/cache.php"));
+        assert!(settings.should_route("/wp-includes/canonical.php"));
         assert!(settings.should_route("/wp-includes/block-bindings.php"));
         assert!(settings.should_route("/wp-includes/block-editor.php"));
         assert!(settings.should_route("/wp-includes/block-patterns.php"));

@@ -9,6 +9,12 @@
  * @since 2.3.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/canonical.php' ) === '/wp-includes/canonical.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/canonical.php' ) ) {
+	exit;
+}
+
 /**
  * Redirects incoming links to the proper URL based on the site url.
  *
