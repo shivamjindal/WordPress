@@ -219,6 +219,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-site-query.php",
         "/wp-includes/class-wp-post-type.php",
         "/wp-includes/class-wp-post.php",
+        "/wp-includes/class-wp-error.php",
+        "/wp-includes/class-wp-http.php",
+        "/wp-includes/class-wp-http-cookie.php",
+        "/wp-includes/class-wp-http-encoding.php",
+        "/wp-includes/class-wp-http-response.php",
         "/wp-includes/general-template.php",
         "/wp-includes/link-template.php",
         "/wp-includes/default-filters.php",
@@ -608,6 +613,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-site-query.php"));
         assert!(settings.should_route("/wp-includes/class-wp-post-type.php"));
         assert!(settings.should_route("/wp-includes/class-wp-post.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-error.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-http.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-http-cookie.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-http-encoding.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-http-response.php"));
         assert!(settings.should_route("/wp-includes/general-template.php"));
         assert!(settings.should_route("/wp-includes/link-template.php"));
         assert!(settings.should_route("/wp-includes/default-filters.php"));

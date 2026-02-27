@@ -52,6 +52,11 @@ GET /wp-includes/class-wp-network-query.php
 GET /wp-includes/class-wp-site-query.php
 GET /wp-includes/class-wp-post-type.php
 GET /wp-includes/class-wp-post.php
+GET /wp-includes/class-wp-error.php
+GET /wp-includes/class-wp-http.php
+GET /wp-includes/class-wp-http-cookie.php
+GET /wp-includes/class-wp-http-encoding.php
+GET /wp-includes/class-wp-http-response.php
 GET /wp-includes/general-template.php
 GET /wp-includes/link-template.php
 GET /wp-includes/default-filters.php

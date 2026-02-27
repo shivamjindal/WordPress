@@ -159,6 +159,26 @@ async fn main() {
             any(class_wp_post_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-error.php",
+            any(class_wp_error_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http.php",
+            any(class_wp_http_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-cookie.php",
+            any(class_wp_http_cookie_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-encoding.php",
+            any(class_wp_http_encoding_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-response.php",
+            any(class_wp_http_response_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/general-template.php",
             any(general_template_include_live_dispatch),
         )
@@ -7083,6 +7103,26 @@ async fn class_wp_post_type_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn class_wp_post_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_error_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_wp_http_cookie_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_encoding_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_response_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
