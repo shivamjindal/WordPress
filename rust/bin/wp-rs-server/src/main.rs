@@ -782,6 +782,26 @@ async fn main() {
             any(blocks_latest_comments_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/latest-posts.php",
+            any(blocks_latest_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/legacy-widget.php",
+            any(blocks_legacy_widget_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/list.php",
+            any(blocks_list_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/loginout.php",
+            any(blocks_loginout_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/media-text.php",
+            any(blocks_media_text_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10272,6 +10292,26 @@ async fn blocks_index_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_latest_comments_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_latest_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_legacy_widget_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_list_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_loginout_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_media_text_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -219,6 +219,11 @@ GET /wp-includes/blocks/home-link.php
 GET /wp-includes/blocks/image.php
 GET /wp-includes/blocks/index.php
 GET /wp-includes/blocks/latest-comments.php
+GET /wp-includes/blocks/latest-posts.php
+GET /wp-includes/blocks/legacy-widget.php
+GET /wp-includes/blocks/list.php
+GET /wp-includes/blocks/loginout.php
+GET /wp-includes/blocks/media-text.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

@@ -386,6 +386,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/blocks/image.php",
         "/wp-includes/blocks/index.php",
         "/wp-includes/blocks/latest-comments.php",
+        "/wp-includes/blocks/latest-posts.php",
+        "/wp-includes/blocks/legacy-widget.php",
+        "/wp-includes/blocks/list.php",
+        "/wp-includes/blocks/loginout.php",
+        "/wp-includes/blocks/media-text.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1308,6 +1313,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/blocks/image.php"));
         assert!(settings.should_route("/wp-includes/blocks/index.php"));
         assert!(settings.should_route("/wp-includes/blocks/latest-comments.php"));
+        assert!(settings.should_route("/wp-includes/blocks/latest-posts.php"));
+        assert!(settings.should_route("/wp-includes/blocks/legacy-widget.php"));
+        assert!(settings.should_route("/wp-includes/blocks/list.php"));
+        assert!(settings.should_route("/wp-includes/blocks/loginout.php"));
+        assert!(settings.should_route("/wp-includes/blocks/media-text.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
