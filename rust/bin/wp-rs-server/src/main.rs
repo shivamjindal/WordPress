@@ -1162,6 +1162,26 @@ async fn main() {
             any(class_wp_internal_pointers_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-links-list-table.php",
+            any(class_wp_links_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-list-table-compat.php",
+            any(class_wp_list_table_compat_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-list-table.php",
+            any(class_wp_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-media-list-table.php",
+            any(class_wp_media_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-ms-sites-list-table.php",
+            any(class_wp_ms_sites_list_table_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2222,6 +2242,26 @@ async fn class_wp_importer_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn class_wp_internal_pointers_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_links_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_list_table_compat_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_media_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_ms_sites_list_table_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

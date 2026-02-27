@@ -7,6 +7,13 @@
  * @since 3.1.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-list-table.php' );
+if ( '/wp-admin/includes/class-wp-list-table.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Base class for displaying a list of items in an ajaxified HTML table.
  *

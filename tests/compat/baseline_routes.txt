@@ -319,6 +319,11 @@ GET /wp-admin/includes/class-wp-filesystem-ftpsockets.php
 GET /wp-admin/includes/class-wp-filesystem-ssh2.php
 GET /wp-admin/includes/class-wp-importer.php
 GET /wp-admin/includes/class-wp-internal-pointers.php
+GET /wp-admin/includes/class-wp-links-list-table.php
+GET /wp-admin/includes/class-wp-list-table-compat.php
+GET /wp-admin/includes/class-wp-list-table.php
+GET /wp-admin/includes/class-wp-media-list-table.php
+GET /wp-admin/includes/class-wp-ms-sites-list-table.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php
