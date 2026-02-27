@@ -984,6 +984,26 @@ async fn main() {
             any(id3_module_audio_flac_include_live_dispatch),
         )
         .route(
+            "/wp-includes/ID3/module.audio.mp3.php",
+            any(id3_module_audio_mp3_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.audio.ogg.php",
+            any(id3_module_audio_ogg_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.tag.apetag.php",
+            any(id3_module_tag_apetag_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.tag.id3v1.php",
+            any(id3_module_tag_id3v1_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.tag.id3v2.php",
+            any(id3_module_tag_id3v2_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9594,6 +9614,26 @@ async fn id3_module_audio_dts_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn id3_module_audio_flac_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_audio_mp3_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_audio_ogg_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_tag_apetag_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_tag_id3v1_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_tag_id3v2_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

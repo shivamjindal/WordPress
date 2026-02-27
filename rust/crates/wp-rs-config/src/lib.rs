@@ -438,6 +438,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/ID3/module.audio.ac3.php",
         "/wp-includes/ID3/module.audio.dts.php",
         "/wp-includes/ID3/module.audio.flac.php",
+        "/wp-includes/ID3/module.audio.mp3.php",
+        "/wp-includes/ID3/module.audio.ogg.php",
+        "/wp-includes/ID3/module.tag.apetag.php",
+        "/wp-includes/ID3/module.tag.id3v1.php",
+        "/wp-includes/ID3/module.tag.id3v2.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1140,6 +1145,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/ID3/module.audio.ac3.php"));
         assert!(settings.should_route("/wp-includes/ID3/module.audio.dts.php"));
         assert!(settings.should_route("/wp-includes/ID3/module.audio.flac.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.audio.mp3.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.audio.ogg.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.tag.apetag.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.tag.id3v1.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.tag.id3v2.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
