@@ -17,6 +17,8 @@ POST	/wp-admin/theme-editor.php	application/x-www-form-urlencoded	action=update&
 POST	/wp-admin/plugins.php	application/x-www-form-urlencoded	action=activate-selected&checked=hello.php
 POST	/wp-admin/themes.php	application/x-www-form-urlencoded	action=enable-auto-update&stylesheet=twentytwentyfive
 POST	/wp-admin/users.php	application/x-www-form-urlencoded	action=delete&users=2
+POST	/wp-admin/upload.php	application/x-www-form-urlencoded	action=delete&media=1
+POST	/wp-admin/media-new.php	application/x-www-form-urlencoded	html-upload=1&post_id=0
 POST	/wp-admin/setup-config.php	application/x-www-form-urlencoded	dbname=wordpress&uname=wp_user&pwd=secret
 POST	/wp-admin/update.php?action=update-selected	application/x-www-form-urlencoded	checked=hello.php
 POST	/wp-admin/update-core.php?action=do-plugin-upgrade	application/x-www-form-urlencoded	checked=hello.php

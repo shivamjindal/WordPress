@@ -70,6 +70,11 @@ POST /wp-admin/themes.php
 GET /wp-admin/users.php
 GET /wp-admin/users.php?action=delete&id=2
 POST /wp-admin/users.php
+GET /wp-admin/upload.php
+GET /wp-admin/upload.php?posted=1
+POST /wp-admin/upload.php
+GET /wp-admin/media-new.php
+POST /wp-admin/media-new.php
 GET /wp-admin/tools.php
 GET /wp-admin/tools.php?wp-privacy-policy-guide=1
 GET /wp-admin/tools.php?page=export_personal_data

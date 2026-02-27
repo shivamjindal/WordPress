@@ -130,6 +130,8 @@ async fn main() {
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
+        .route("/wp-admin/upload.php", any(upload_live_dispatch))
+        .route("/wp-admin/media-new.php", any(media_new_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/export.php", any(export_live_dispatch))
@@ -1932,6 +1934,131 @@ async fn users_live_dispatch(State(state): State<AppState>, request: Request) ->
     let search = params.get("s").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Users (Rust)</h1><p>action={action}</p><p>role={role}</p><p>search={search}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn upload_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/upload.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_media = authenticated
+        && (capabilities.contains("upload_files")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_manage_media {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "upload_files capability is required for wp-admin/upload.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        let action = params
+            .get("action")
+            .or_else(|| params.get("doaction"))
+            .cloned()
+            .unwrap_or_default();
+        let target = if action.is_empty() {
+            "/wp-admin/upload.php?posted=1".to_string()
+        } else {
+            format!("/wp-admin/upload.php?updated_action={action}")
+        };
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let posted = params.get("posted").cloned().unwrap_or_default();
+    let attached = params.get("attached").cloned().unwrap_or_default();
+    let detached = params.get("detach").cloned().unwrap_or_default();
+    let deleted = params.get("deleted").cloned().unwrap_or_default();
+    let trashed = params.get("trashed").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Media Library (Rust)</h1><p>posted={posted}</p><p>attached={attached}</p><p>detach={detached}</p><p>deleted={deleted}</p><p>trashed={trashed}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn media_new_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/media-new.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_upload = authenticated
+        && (capabilities.contains("upload_files")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_upload {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "upload_files capability is required for wp-admin/media-new.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/upload.php?posted=1").into_response();
+    }
+
+    let post_id = params.get("post_id").cloned().unwrap_or_default();
+    let browser_uploader = params.get("browser-uploader").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Upload New Media (Rust)</h1><p>post_id={post_id}</p><p>browser_uploader={browser_uploader}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

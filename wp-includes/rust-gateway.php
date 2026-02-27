@@ -292,6 +292,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/plugins.php',
 			'/wp-admin/themes.php',
 			'/wp-admin/users.php',
+			'/wp-admin/upload.php',
+			'/wp-admin/media-new.php',
 			'/wp-admin/tools.php',
 			'/wp-admin/site-health.php',
 			'/wp-admin/export.php',
