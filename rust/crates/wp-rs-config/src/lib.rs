@@ -508,6 +508,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/js/dist/media-utils.min.asset.php",
         "/wp-includes/js/dist/redux-routine.min.asset.php",
         "/wp-includes/js/dist/private-apis.min.asset.php",
+        "/wp-includes/js/dist/hooks.min.asset.php",
+        "/wp-includes/js/dist/dom-ready.min.asset.php",
+        "/wp-includes/js/dist/priority-queue.min.asset.php",
+        "/wp-includes/js/dist/server-side-render.min.asset.php",
+        "/wp-includes/js/dist/reusable-blocks.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1570,6 +1575,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/js/dist/media-utils.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/redux-routine.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/private-apis.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/hooks.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/dom-ready.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/priority-queue.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/server-side-render.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/reusable-blocks.min.asset.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

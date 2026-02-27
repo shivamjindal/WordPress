@@ -1270,6 +1270,26 @@ async fn main() {
             any(js_dist_private_apis_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/hooks.min.asset.php",
+            any(js_dist_hooks_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/dom-ready.min.asset.php",
+            any(js_dist_dom_ready_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/priority-queue.min.asset.php",
+            any(js_dist_priority_queue_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/server-side-render.min.asset.php",
+            any(js_dist_server_side_render_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/reusable-blocks.min.asset.php",
+            any(js_dist_reusable_blocks_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11304,6 +11324,26 @@ async fn js_dist_redux_routine_min_asset_include_live_dispatch(_request: Request
 }
 
 async fn js_dist_private_apis_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_hooks_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_dom_ready_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_priority_queue_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_server_side_render_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_reusable_blocks_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
