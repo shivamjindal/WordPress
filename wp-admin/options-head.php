@@ -8,6 +8,12 @@
  * @subpackage Administration
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/options-head.php' );
+if ( '/wp-admin/options-head.php' === $rust_gateway_request_path && wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 // Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );

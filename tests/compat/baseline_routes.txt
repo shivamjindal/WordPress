@@ -28,6 +28,12 @@ GET /wp-admin/load-scripts.php?load=common,utils
 GET /wp-admin/load-styles.php?load=dashicons,common
 GET /wp-admin/custom-background.php
 GET /wp-admin/custom-header.php
+GET /wp-admin/admin-functions.php
+GET /wp-admin/options-head.php
+GET /wp-admin/menu.php
+GET /wp-admin/menu-header.php
+GET /wp-admin/admin-header.php
+GET /wp-admin/admin-footer.php
 GET /wp-admin/user/admin.php
 GET /wp-admin/user/index.php
 GET /wp-admin/user/profile.php

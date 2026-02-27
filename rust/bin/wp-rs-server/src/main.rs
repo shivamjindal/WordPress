@@ -82,6 +82,27 @@ async fn main() {
             any(custom_header_live_dispatch),
         )
         .route(
+            "/wp-admin/admin-functions.php",
+            any(admin_functions_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/options-head.php",
+            any(options_head_include_live_dispatch),
+        )
+        .route("/wp-admin/menu.php", any(menu_include_live_dispatch))
+        .route(
+            "/wp-admin/menu-header.php",
+            any(menu_header_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/admin-header.php",
+            any(admin_header_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/admin-footer.php",
+            any(admin_footer_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -916,6 +937,30 @@ async fn custom_background_live_dispatch(_request: Request) -> Response {
 }
 
 async fn custom_header_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn admin_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn options_head_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn menu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn menu_header_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn admin_header_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn admin_footer_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
 }
 

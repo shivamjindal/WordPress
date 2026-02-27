@@ -195,6 +195,12 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/load-styles.php",
         "/wp-admin/custom-background.php",
         "/wp-admin/custom-header.php",
+        "/wp-admin/admin-functions.php",
+        "/wp-admin/options-head.php",
+        "/wp-admin/menu.php",
+        "/wp-admin/menu-header.php",
+        "/wp-admin/admin-header.php",
+        "/wp-admin/admin-footer.php",
         "/wp-admin/user/admin.php",
         "/wp-admin/user/index.php",
         "/wp-admin/user/profile.php",
@@ -514,6 +520,12 @@ mod tests {
         assert!(settings.should_route("/wp-admin/load-styles.php"));
         assert!(settings.should_route("/wp-admin/custom-background.php"));
         assert!(settings.should_route("/wp-admin/custom-header.php"));
+        assert!(settings.should_route("/wp-admin/admin-functions.php"));
+        assert!(settings.should_route("/wp-admin/options-head.php"));
+        assert!(settings.should_route("/wp-admin/menu.php"));
+        assert!(settings.should_route("/wp-admin/menu-header.php"));
+        assert!(settings.should_route("/wp-admin/admin-header.php"));
+        assert!(settings.should_route("/wp-admin/admin-footer.php"));
         assert!(settings.should_route("/wp-admin/user/admin.php"));
         assert!(settings.should_route("/wp-admin/user/index.php"));
         assert!(settings.should_route("/wp-admin/user/profile.php"));
