@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-block-supports.php",
+            any(class_wp_block_supports_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-template.php",
+            any(class_wp_block_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-type.php",
+            any(class_wp_block_type_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-classic-to-block-menu-converter.php",
+            any(class_wp_classic_to_block_menu_converter_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-duotone.php",
+            any(class_wp_duotone_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-block-pattern-categories-registry.php",
             any(class_wp_block_pattern_categories_registry_include_live_dispatch),
         )
@@ -7423,6 +7443,28 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_supports_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_type_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_classic_to_block_menu_converter_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_duotone_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

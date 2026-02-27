@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-block-supports.php",
+        "/wp-includes/class-wp-block-template.php",
+        "/wp-includes/class-wp-block-type.php",
+        "/wp-includes/class-wp-classic-to-block-menu-converter.php",
+        "/wp-includes/class-wp-duotone.php",
         "/wp-includes/class-wp-block-pattern-categories-registry.php",
         "/wp-includes/class-wp-block-patterns-registry.php",
         "/wp-includes/class-wp-block-styles-registry.php",
@@ -693,6 +698,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-supports.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-template.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-type.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-classic-to-block-menu-converter.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-duotone.php"));
         assert!(
             settings.should_route("/wp-includes/class-wp-block-pattern-categories-registry.php")
         );
