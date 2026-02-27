@@ -92,6 +92,11 @@ GET /wp-includes/class-walker-nav-menu.php
 GET /wp-includes/class-walker-page-dropdown.php
 GET /wp-includes/class-walker-page.php
 GET /wp-includes/class-wpdb.php
+GET /wp-includes/class.wp-dependencies.php
+GET /wp-includes/class.wp-scripts.php
+GET /wp-includes/class.wp-styles.php
+GET /wp-includes/compat-utf8.php
+GET /wp-includes/cron.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

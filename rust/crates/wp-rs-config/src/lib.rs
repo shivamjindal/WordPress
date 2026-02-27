@@ -259,6 +259,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-walker-page-dropdown.php",
         "/wp-includes/class-walker-page.php",
         "/wp-includes/class-wpdb.php",
+        "/wp-includes/class.wp-dependencies.php",
+        "/wp-includes/class.wp-scripts.php",
+        "/wp-includes/class.wp-styles.php",
+        "/wp-includes/compat-utf8.php",
+        "/wp-includes/cron.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -783,6 +788,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-walker-page-dropdown.php"));
         assert!(settings.should_route("/wp-includes/class-walker-page.php"));
         assert!(settings.should_route("/wp-includes/class-wpdb.php"));
+        assert!(settings.should_route("/wp-includes/class.wp-dependencies.php"));
+        assert!(settings.should_route("/wp-includes/class.wp-scripts.php"));
+        assert!(settings.should_route("/wp-includes/class.wp-styles.php"));
+        assert!(settings.should_route("/wp-includes/compat-utf8.php"));
+        assert!(settings.should_route("/wp-includes/cron.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

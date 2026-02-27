@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/compat-utf8.php' ) === '/wp-includes/compat-utf8.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/compat-utf8.php' ) ) {
+	exit;
+}
+
 /**
  * Finds spans of valid and invalid UTF-8 bytes in a given string.
  *

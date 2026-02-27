@@ -319,6 +319,23 @@ async fn main() {
             any(class_wpdb_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class.wp-dependencies.php",
+            any(class_dot_wp_dependencies_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class.wp-scripts.php",
+            any(class_dot_wp_scripts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class.wp-styles.php",
+            any(class_dot_wp_styles_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/compat-utf8.php",
+            any(compat_utf8_include_live_dispatch),
+        )
+        .route("/wp-includes/cron.php", any(cron_include_live_dispatch))
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7777,6 +7794,26 @@ async fn class_walker_page_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn class_wpdb_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_dot_wp_dependencies_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_dot_wp_scripts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_dot_wp_styles_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn compat_utf8_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn cron_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
