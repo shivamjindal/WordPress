@@ -179,6 +179,26 @@ async fn main() {
             any(class_wp_http_response_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-locale.php",
+            any(class_wp_locale_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-locale-switcher.php",
+            any(class_wp_locale_switcher_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-matchesmapregex.php",
+            any(class_wp_matchesmapregex_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-list-util.php",
+            any(class_wp_list_util_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-metadata-lazyloader.php",
+            any(class_wp_metadata_lazyloader_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/general-template.php",
             any(general_template_include_live_dispatch),
         )
@@ -7123,6 +7143,26 @@ async fn class_wp_http_encoding_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn class_wp_http_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_locale_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_locale_switcher_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_matchesmapregex_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_list_util_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_metadata_lazyloader_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
