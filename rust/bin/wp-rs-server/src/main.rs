@@ -1456,6 +1456,26 @@ async fn main() {
             any(simple_pie_library_simple_pie_registry_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
+            any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
+            any(simple_pie_library_simple_pie_sanitize_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Source.php",
+            any(simple_pie_library_simple_pie_source_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/XML/Declaration/Parser.php",
+            any(simple_pie_library_simple_pie_xml_declaration_parser_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/gzdecode.php",
+            any(simple_pie_library_simple_pie_gzdecode_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10650,6 +10670,34 @@ async fn simple_pie_library_simple_pie_rating_include_live_dispatch(_request: Re
 }
 
 async fn simple_pie_library_simple_pie_registry_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_restriction_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_sanitize_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_source_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_xml_declaration_parser_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_gzdecode_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

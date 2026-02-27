@@ -389,6 +389,11 @@ GET /wp-includes/SimplePie/library/SimplePie/Parse/Date.php
 GET /wp-includes/SimplePie/library/SimplePie/Parser.php
 GET /wp-includes/SimplePie/library/SimplePie/Rating.php
 GET /wp-includes/SimplePie/library/SimplePie/Registry.php
+GET /wp-includes/SimplePie/library/SimplePie/Restriction.php
+GET /wp-includes/SimplePie/library/SimplePie/Sanitize.php
+GET /wp-includes/SimplePie/library/SimplePie/Source.php
+GET /wp-includes/SimplePie/library/SimplePie/XML/Declaration/Parser.php
+GET /wp-includes/SimplePie/library/SimplePie/gzdecode.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php
