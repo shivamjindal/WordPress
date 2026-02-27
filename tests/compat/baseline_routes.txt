@@ -178,6 +178,8 @@ GET /wp-admin/erase-personal-data.php
 POST /wp-admin/erase-personal-data.php
 GET /wp-admin/network.php
 POST /wp-admin/network.php
+GET /wp-admin/network/admin.php
+POST /wp-admin/network/admin.php
 GET /wp-admin/network/setup.php
 POST /wp-admin/network/setup.php
 GET /wp-admin/network/

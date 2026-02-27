@@ -239,6 +239,10 @@ async fn main() {
         )
         .route("/wp-admin/network.php", any(network_live_dispatch))
         .route(
+            "/wp-admin/network/admin.php",
+            any(network_admin_bootstrap_live_dispatch),
+        )
+        .route(
             "/wp-admin/network/setup.php",
             any(network_setup_live_dispatch),
         )
@@ -4418,6 +4422,53 @@ async fn network_live_dispatch(State(state): State<AppState>, request: Request) 
         "<!doctype html><html><body><h1>Network Setup (Rust)</h1><p>status=ready</p></body></html>"
             .to_string();
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_admin_bootstrap_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/admin.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !authenticated {
+        return rust_handled_redirect(
+            "/wp-login.php?redirect_to=%2Fwp-admin%2Fnetwork%2Fadmin.php",
+        )
+        .into_response();
+    }
+
+    let can_access_network_admin = capabilities.contains("manage_network")
+        || capabilities.contains("manage_sites")
+        || capabilities.contains("manage_options");
+    if !can_access_network_admin {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network capability is required for wp-admin/network/admin.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_json(json!({
+        "component": "network-admin-bootstrap",
+        "authenticated": true,
+        "capabilities": capabilities,
+        "message": "Rust network-admin bootstrap compatibility shim loaded.",
+    }))
+    .into_response()
 }
 
 async fn network_setup_live_dispatch(State(state): State<AppState>, request: Request) -> Response {

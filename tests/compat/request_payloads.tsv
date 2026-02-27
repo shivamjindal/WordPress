@@ -49,6 +49,7 @@ POST	/wp-admin/update-core.php?action=do-plugin-upgrade	application/x-www-form-u
 POST	/wp-admin/export-personal-data.php	application/x-www-form-urlencoded	username_or_email_for_privacy_request=person%40example.com&action=add_request
 POST	/wp-admin/erase-personal-data.php	application/x-www-form-urlencoded	username_or_email_for_privacy_request=person%40example.com&action=add_request
 POST	/wp-admin/network.php	application/x-www-form-urlencoded	sitename=Rust+Network&email=admin%40example.com&subdomain_install=0
+POST	/wp-admin/network/admin.php	application/x-www-form-urlencoded	action=network-bootstrap
 POST	/wp-admin/network/setup.php	application/x-www-form-urlencoded	sitename=Rust+Network&email=admin%40example.com&subdomain_install=0
 POST	/wp-admin/ms-delete-site.php	application/x-www-form-urlencoded	action=deleteblog&confirmdelete=1
 POST	/wp-admin/network/sites.php	application/x-www-form-urlencoded	action=allblogs&site_ids=2
