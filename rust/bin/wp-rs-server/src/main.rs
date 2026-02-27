@@ -126,6 +126,9 @@ async fn main() {
             "/wp-admin/theme-editor.php",
             any(theme_editor_live_dispatch),
         )
+        .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
+        .route("/wp-admin/themes.php", any(themes_live_dispatch))
+        .route("/wp-admin/users.php", any(users_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/export.php", any(export_live_dispatch))
@@ -1680,6 +1683,186 @@ async fn theme_editor_live_dispatch(State(state): State<AppState>, request: Requ
     let updated = params.get("updated").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Theme Editor (Rust)</h1><p>theme={theme}</p><p>file={file}</p><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn plugins_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/plugins.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_plugins = authenticated
+        && (capabilities.contains("activate_plugins")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network_plugins")
+            || capabilities.contains("manage_network"));
+    if !can_manage_plugins {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "activate_plugins capability is required for wp-admin/plugins.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/plugins.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let plugin = params.get("plugin").cloned().unwrap_or_default();
+    let status = params.get("plugin_status").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Plugins (Rust)</h1><p>action={action}</p><p>plugin={plugin}</p><p>plugin_status={status}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn themes_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/themes.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_themes = authenticated
+        && (capabilities.contains("switch_themes")
+            || capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network_themes")
+            || capabilities.contains("manage_network"));
+    if !can_manage_themes {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "switch_themes capability is required for wp-admin/themes.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if !action.is_empty() {
+        let target = format!("/wp-admin/themes.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let activated = params.get("activated").cloned().unwrap_or_default();
+    let resumed = params.get("resumed").cloned().unwrap_or_default();
+    let deleted = params.get("deleted").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Themes (Rust)</h1><p>activated={activated}</p><p>resumed={resumed}</p><p>deleted={deleted}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn users_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/users.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_list_users = authenticated
+        && (capabilities.contains("list_users")
+            || capabilities.contains("edit_users")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network_users")
+            || capabilities.contains("manage_network"));
+    if !can_list_users {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "list_users capability is required for wp-admin/users.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/users.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let role = params.get("role").cloned().unwrap_or_default();
+    let search = params.get("s").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Users (Rust)</h1><p>action={action}</p><p>role={role}</p><p>search={search}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

@@ -58,6 +58,15 @@ POST /wp-admin/theme-install.php
 GET /wp-admin/theme-editor.php
 GET /wp-admin/theme-editor.php?theme=twentytwentyfive&file=style.css
 POST /wp-admin/theme-editor.php
+GET /wp-admin/plugins.php
+GET /wp-admin/plugins.php?action=activate&plugin=hello.php
+POST /wp-admin/plugins.php
+GET /wp-admin/themes.php
+GET /wp-admin/themes.php?action=activate&stylesheet=twentytwentyfive
+POST /wp-admin/themes.php
+GET /wp-admin/users.php
+GET /wp-admin/users.php?action=delete&id=2
+POST /wp-admin/users.php
 GET /wp-admin/tools.php
 GET /wp-admin/tools.php?wp-privacy-policy-guide=1
 GET /wp-admin/tools.php?page=export_personal_data
