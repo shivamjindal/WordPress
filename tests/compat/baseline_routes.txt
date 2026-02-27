@@ -1,5 +1,8 @@
 # Core entrypoints.
 GET /
+GET /index.php
+GET /wp-blog-header.php
+GET /wp-load.php
 GET /search?s=rust
 GET /feed
 GET /Admin

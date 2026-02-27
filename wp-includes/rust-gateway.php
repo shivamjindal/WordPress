@@ -254,6 +254,10 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 	 */
 	function wp_rust_gateway_php_runtime_core_endpoints() {
 		return array(
+			'/',
+			'/index.php',
+			'/wp-blog-header.php',
+			'/wp-load.php',
 			'/wp-login.php',
 			'/wp-signup.php',
 			'/wp-activate.php',

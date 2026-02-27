@@ -112,6 +112,10 @@ assert_rust_handled() {
   fi
 }
 
+assert_rust_handled "/" "yes"
+assert_rust_handled "/index.php" "yes"
+assert_rust_handled "/wp-blog-header.php" "yes"
+assert_rust_handled "/wp-load.php" "yes"
 assert_rust_handled "/wp-login.php" "yes"
 assert_rust_handled "/wp-admin/install.php" "yes"
 assert_rust_handled "/wp-admin/setup-config.php" "yes"

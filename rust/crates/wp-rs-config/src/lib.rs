@@ -172,6 +172,10 @@ impl RustGatewaySettings {
 
 pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
     &[
+        "/",
+        "/index.php",
+        "/wp-blog-header.php",
+        "/wp-load.php",
         "/wp-login.php",
         "/wp-signup.php",
         "/wp-activate.php",
@@ -488,6 +492,10 @@ mod tests {
         settings.plugin_compat_mode = "php-runtime".to_string();
 
         assert!(settings.should_route("/wp-json/wp/v2/posts"));
+        assert!(settings.should_route("/"));
+        assert!(settings.should_route("/index.php"));
+        assert!(settings.should_route("/wp-blog-header.php"));
+        assert!(settings.should_route("/wp-load.php"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-includes/js/tinymce/wp-tinymce.php"));
