@@ -448,6 +448,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/build/routes/home/route.min.asset.php",
         "/wp-includes/build/routes/index.php",
         "/wp-includes/build/routes/navigation-edit/content.min.asset.php",
+        "/wp-includes/build/routes/navigation-edit/route.min.asset.php",
+        "/wp-includes/build/routes/navigation-list/content.min.asset.php",
+        "/wp-includes/build/routes/navigation-list/route.min.asset.php",
+        "/wp-includes/build/routes/navigation/route.min.asset.php",
+        "/wp-includes/build/routes/pattern-list/content.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1433,6 +1438,18 @@ mod tests {
         assert!(settings.should_route("/wp-includes/build/routes/index.php"));
         assert!(settings
             .should_route("/wp-includes/build/routes/navigation-edit/content.min.asset.php"));
+        assert!(
+            settings.should_route("/wp-includes/build/routes/navigation-edit/route.min.asset.php")
+        );
+        assert!(settings
+            .should_route("/wp-includes/build/routes/navigation-list/content.min.asset.php"));
+        assert!(
+            settings.should_route("/wp-includes/build/routes/navigation-list/route.min.asset.php")
+        );
+        assert!(settings.should_route("/wp-includes/build/routes/navigation/route.min.asset.php"));
+        assert!(
+            settings.should_route("/wp-includes/build/routes/pattern-list/content.min.asset.php")
+        );
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
