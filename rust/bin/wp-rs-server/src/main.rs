@@ -139,6 +139,26 @@ async fn main() {
             any(class_wp_term_query_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-comment-query.php",
+            any(class_wp_comment_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-network-query.php",
+            any(class_wp_network_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-site-query.php",
+            any(class_wp_site_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-post-type.php",
+            any(class_wp_post_type_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-post.php",
+            any(class_wp_post_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/general-template.php",
             any(general_template_include_live_dispatch),
         )
@@ -7043,6 +7063,26 @@ async fn class_wp_tax_query_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn class_wp_term_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_comment_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_network_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_site_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_post_type_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_post_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
