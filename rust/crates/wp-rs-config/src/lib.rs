@@ -200,6 +200,10 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/credits.php",
         "/wp-admin/contribute.php",
         "/wp-admin/freedoms.php",
+        "/wp-admin/plugin-install.php",
+        "/wp-admin/plugin-editor.php",
+        "/wp-admin/theme-install.php",
+        "/wp-admin/theme-editor.php",
         "/wp-admin/tools.php",
         "/wp-admin/site-health.php",
         "/wp-admin/export.php",
@@ -450,6 +454,10 @@ mod tests {
         assert!(settings.should_route("/wp-admin/credits.php"));
         assert!(settings.should_route("/wp-admin/contribute.php"));
         assert!(settings.should_route("/wp-admin/freedoms.php"));
+        assert!(settings.should_route("/wp-admin/plugin-install.php"));
+        assert!(settings.should_route("/wp-admin/plugin-editor.php"));
+        assert!(settings.should_route("/wp-admin/theme-install.php"));
+        assert!(settings.should_route("/wp-admin/theme-editor.php"));
         assert!(settings.should_route("/wp-admin/tools.php"));
         assert!(settings.should_route("/wp-admin/site-health.php"));
         assert!(settings.should_route("/wp-admin/export.php"));

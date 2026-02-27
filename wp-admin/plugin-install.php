@@ -5,6 +5,12 @@
  * @package WordPress
  * @subpackage Administration
  */
+
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/plugin-install.php' ) ) {
+	exit;
+}
+
 // TODO: Route this page via a specific iframe handler instead of the do_action below.
 if ( ! defined( 'IFRAME_REQUEST' ) && isset( $_GET['tab'] ) && ( 'plugin-information' === $_GET['tab'] ) ) {
 	define( 'IFRAME_REQUEST', true );
