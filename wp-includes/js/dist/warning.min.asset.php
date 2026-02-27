@@ -1,1 +1,8 @@
-<?php return array('dependencies' => array(), 'version' => '36fdbdc984d93aee8a97');
+<?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/js/dist/warning.min.asset.php' );
+if ( '/wp-includes/js/dist/warning.min.asset.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+return array('dependencies' => array(), 'version' => '36fdbdc984d93aee8a97');

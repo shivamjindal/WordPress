@@ -1390,6 +1390,26 @@ async fn main() {
             any(js_dist_script_modules_route_index_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/style-engine.min.asset.php",
+            any(js_dist_style_engine_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/notices.min.asset.php",
+            any(js_dist_notices_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/abilities/index.min.asset.php",
+            any(js_dist_script_modules_abilities_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/is-shallow-equal.min.asset.php",
+            any(js_dist_is_shallow_equal_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/warning.min.asset.php",
+            any(js_dist_warning_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11560,6 +11580,28 @@ async fn js_dist_edit_site_min_asset_include_live_dispatch(_request: Request) ->
 async fn js_dist_script_modules_route_index_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_style_engine_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_notices_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_abilities_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_is_shallow_equal_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_warning_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
