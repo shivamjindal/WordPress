@@ -1050,6 +1050,26 @@ async fn main() {
             any(build_routes_pattern_list_content_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes/pattern-list/route.min.asset.php",
+            any(build_routes_pattern_list_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/pattern/route.min.asset.php",
+            any(build_routes_pattern_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/post-edit/route.min.asset.php",
+            any(build_routes_post_edit_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/post-list/content.min.asset.php",
+            any(build_routes_post_list_content_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/post-list/route.min.asset.php",
+            any(build_routes_post_list_route_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10828,6 +10848,34 @@ async fn build_routes_navigation_route_min_asset_include_live_dispatch(
 }
 
 async fn build_routes_pattern_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_pattern_list_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_pattern_route_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_post_edit_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_post_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_post_list_route_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
