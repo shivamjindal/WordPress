@@ -201,6 +201,12 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
+        "/wp-admin/edit-form-blocks.php",
+        "/wp-admin/edit-form-advanced.php",
+        "/wp-admin/edit-form-comment.php",
+        "/wp-admin/edit-link-form.php",
+        "/wp-admin/edit-tag-form.php",
+        "/wp-admin/link-parse-opml.php",
         "/wp-admin/user/admin.php",
         "/wp-admin/user/index.php",
         "/wp-admin/user/profile.php",
@@ -526,6 +532,12 @@ mod tests {
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
+        assert!(settings.should_route("/wp-admin/edit-form-blocks.php"));
+        assert!(settings.should_route("/wp-admin/edit-form-advanced.php"));
+        assert!(settings.should_route("/wp-admin/edit-form-comment.php"));
+        assert!(settings.should_route("/wp-admin/edit-link-form.php"));
+        assert!(settings.should_route("/wp-admin/edit-tag-form.php"));
+        assert!(settings.should_route("/wp-admin/link-parse-opml.php"));
         assert!(settings.should_route("/wp-admin/user/admin.php"));
         assert!(settings.should_route("/wp-admin/user/index.php"));
         assert!(settings.should_route("/wp-admin/user/profile.php"));

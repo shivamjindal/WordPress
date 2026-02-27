@@ -103,6 +103,30 @@ async fn main() {
             any(admin_footer_include_live_dispatch),
         )
         .route(
+            "/wp-admin/edit-form-blocks.php",
+            any(edit_form_blocks_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/edit-form-advanced.php",
+            any(edit_form_advanced_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/edit-form-comment.php",
+            any(edit_form_comment_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/edit-link-form.php",
+            any(edit_link_form_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/edit-tag-form.php",
+            any(edit_tag_form_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/link-parse-opml.php",
+            any(link_parse_opml_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -932,6 +956,10 @@ fn legacy_admin_include_guard_response() -> Response {
     .into_response()
 }
 
+fn legacy_admin_include_empty_response() -> Response {
+    rust_handled_text(StatusCode::OK, "text/plain; charset=UTF-8", String::new()).into_response()
+}
+
 async fn custom_background_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
 }
@@ -962,6 +990,30 @@ async fn admin_header_include_live_dispatch(_request: Request) -> Response {
 
 async fn admin_footer_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
+}
+
+async fn edit_form_blocks_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn edit_form_advanced_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn edit_form_comment_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn edit_link_form_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn edit_tag_form_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn link_parse_opml_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
 }
 
 async fn user_admin_bootstrap_live_dispatch(

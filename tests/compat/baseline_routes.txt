@@ -34,6 +34,12 @@ GET /wp-admin/menu.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php
+GET /wp-admin/edit-form-blocks.php
+GET /wp-admin/edit-form-advanced.php
+GET /wp-admin/edit-form-comment.php
+GET /wp-admin/edit-link-form.php
+GET /wp-admin/edit-tag-form.php
+GET /wp-admin/link-parse-opml.php
 GET /wp-admin/user/admin.php
 GET /wp-admin/user/index.php
 GET /wp-admin/user/profile.php
