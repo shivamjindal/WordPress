@@ -7,6 +7,12 @@
  * @since 4.4.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-walker-page.php' ) === '/wp-includes/class-walker-page.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-walker-page.php' ) ) {
+	exit;
+}
+
 /**
  * Core walker class used to create an HTML list of pages.
  *

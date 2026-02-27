@@ -9,6 +9,12 @@
  * @since 0.71
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wpdb.php' ) === '/wp-includes/class-wpdb.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wpdb.php' ) ) {
+	exit;
+}
+
 /**
  * @since 0.71
  */

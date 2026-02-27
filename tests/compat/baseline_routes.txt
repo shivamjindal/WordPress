@@ -87,6 +87,11 @@ GET /wp-includes/class-smtp.php
 GET /wp-includes/class-snoopy.php
 GET /wp-includes/class-walker-category-dropdown.php
 GET /wp-includes/class-walker-category.php
+GET /wp-includes/class-walker-comment.php
+GET /wp-includes/class-walker-nav-menu.php
+GET /wp-includes/class-walker-page-dropdown.php
+GET /wp-includes/class-walker-page.php
+GET /wp-includes/class-wpdb.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

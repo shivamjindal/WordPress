@@ -299,6 +299,26 @@ async fn main() {
             any(class_walker_category_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-walker-comment.php",
+            any(class_walker_comment_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-walker-nav-menu.php",
+            any(class_walker_nav_menu_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-walker-page-dropdown.php",
+            any(class_walker_page_dropdown_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-walker-page.php",
+            any(class_walker_page_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wpdb.php",
+            any(class_wpdb_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7737,6 +7757,26 @@ async fn class_walker_category_dropdown_include_live_dispatch(_request: Request)
 }
 
 async fn class_walker_category_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_comment_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_nav_menu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_page_dropdown_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_page_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wpdb_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
