@@ -566,6 +566,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/Cache/File.php",
         "/wp-includes/SimplePie/src/Cache/Memcache.php",
         "/wp-includes/SimplePie/src/Cache/Memcached.php",
+        "/wp-includes/SimplePie/src/Cache/MySQL.php",
+        "/wp-includes/SimplePie/src/Cache/NameFilter.php",
+        "/wp-includes/SimplePie/src/Cache/Psr16.php",
+        "/wp-includes/SimplePie/src/Cache/Redis.php",
+        "/wp-includes/SimplePie/src/Cache.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1408,6 +1413,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/File.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Memcache.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Memcached.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/MySQL.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/NameFilter.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Psr16.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Redis.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));

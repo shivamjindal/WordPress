@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 namespace SimplePie\Cache;
 
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/src/Cache/NameFilter.php' );
+if ( '/wp-includes/SimplePie/src/Cache/NameFilter.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Interface for creating a cache filename
  */

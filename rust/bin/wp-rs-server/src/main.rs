@@ -1496,6 +1496,26 @@ async fn main() {
             any(simple_pie_src_cache_memcached_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/Cache/MySQL.php",
+            any(simple_pie_src_cache_mysql_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Cache/NameFilter.php",
+            any(simple_pie_src_cache_name_filter_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Cache/Psr16.php",
+            any(simple_pie_src_cache_psr16_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Cache/Redis.php",
+            any(simple_pie_src_cache_redis_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Cache.php",
+            any(simple_pie_src_cache_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10754,6 +10774,26 @@ async fn simple_pie_src_cache_memcache_include_live_dispatch(_request: Request) 
 }
 
 async fn simple_pie_src_cache_memcached_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_cache_mysql_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_cache_name_filter_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_cache_psr16_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_cache_redis_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_cache_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
