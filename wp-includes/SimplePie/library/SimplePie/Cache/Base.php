@@ -5,6 +5,13 @@
 
 declare(strict_types=1);
 
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/library/SimplePie/Cache/Base.php' );
+if ( '/wp-includes/SimplePie/library/SimplePie/Cache/Base.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use SimplePie\Cache\Base;
 
 interface_exists('SimplePie\Cache\Base');

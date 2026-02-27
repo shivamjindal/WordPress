@@ -359,6 +359,11 @@ GET /wp-includes/Requests/src/Transport.php
 GET /wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php
 GET /wp-includes/Requests/src/Utility/FilteredIterator.php
 GET /wp-includes/Requests/src/Utility/InputValidator.php
+GET /wp-includes/SimplePie/autoloader.php
+GET /wp-includes/SimplePie/library/SimplePie/Author.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/Base.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/DB.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/File.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

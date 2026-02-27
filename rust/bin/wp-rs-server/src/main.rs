@@ -1336,6 +1336,26 @@ async fn main() {
             any(requests_src_utility_input_validator_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/autoloader.php",
+            any(simple_pie_autoloader_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Author.php",
+            any(simple_pie_library_simple_pie_author_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/Base.php",
+            any(simple_pie_library_simple_pie_cache_base_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/DB.php",
+            any(simple_pie_library_simple_pie_cache_db_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/File.php",
+            any(simple_pie_library_simple_pie_cache_file_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10374,6 +10394,32 @@ async fn requests_src_utility_filtered_iterator_include_live_dispatch(
 }
 
 async fn requests_src_utility_input_validator_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_autoloader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_author_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_base_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_db_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_file_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
