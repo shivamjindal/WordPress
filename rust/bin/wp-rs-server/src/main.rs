@@ -219,6 +219,26 @@ async fn main() {
             any(class_wp_widget_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-comment.php",
+            any(class_wp_comment_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-term.php",
+            any(class_wp_term_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-user-request.php",
+            any(class_wp_user_request_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-application-passwords.php",
+            any(class_wp_application_passwords_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-plugin-dependencies.php",
+            any(class_wp_plugin_dependencies_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-locale.php",
             any(class_wp_locale_include_live_dispatch),
         )
@@ -7223,6 +7243,26 @@ async fn class_wp_theme_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_wp_widget_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_comment_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_term_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_user_request_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_application_passwords_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_plugin_dependencies_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
