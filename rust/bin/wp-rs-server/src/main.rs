@@ -862,6 +862,26 @@ async fn main() {
             any(blocks_post_excerpt_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/post-featured-image.php",
+            any(blocks_post_featured_image_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-navigation-link.php",
+            any(blocks_post_navigation_link_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-template.php",
+            any(blocks_post_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-terms.php",
+            any(blocks_post_terms_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-time-to-read.php",
+            any(blocks_post_time_to_read_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10432,6 +10452,26 @@ async fn blocks_post_date_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_post_excerpt_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_featured_image_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_navigation_link_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_terms_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_time_to_read_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
