@@ -1576,6 +1576,26 @@ async fn main() {
             any(simple_pie_src_http_psr7_response_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/HTTP/RawTextResponse.php",
+            any(simple_pie_src_http_raw_text_response_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/HTTP/Response.php",
+            any(simple_pie_src_http_response_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/IRI.php",
+            any(simple_pie_src_iri_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Item.php",
+            any(simple_pie_src_item_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Locator.php",
+            any(simple_pie_src_locator_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10914,6 +10934,28 @@ async fn simple_pie_src_http_psr18_client_include_live_dispatch(_request: Reques
 }
 
 async fn simple_pie_src_http_psr7_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_raw_text_response_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_iri_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_item_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_locator_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

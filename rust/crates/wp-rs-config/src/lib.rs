@@ -586,6 +586,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/HTTP/Parser.php",
         "/wp-includes/SimplePie/src/HTTP/Psr18Client.php",
         "/wp-includes/SimplePie/src/HTTP/Psr7Response.php",
+        "/wp-includes/SimplePie/src/HTTP/RawTextResponse.php",
+        "/wp-includes/SimplePie/src/HTTP/Response.php",
+        "/wp-includes/SimplePie/src/IRI.php",
+        "/wp-includes/SimplePie/src/Item.php",
+        "/wp-includes/SimplePie/src/Locator.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1448,6 +1453,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/HTTP/Parser.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/HTTP/Psr18Client.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/HTTP/Psr7Response.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/HTTP/RawTextResponse.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/HTTP/Response.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/IRI.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Item.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Locator.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));
