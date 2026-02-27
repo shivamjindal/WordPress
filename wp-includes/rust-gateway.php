@@ -518,6 +518,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/blocks/term-description.php',
 			'/wp-includes/blocks/term-name.php',
 			'/wp-includes/blocks/term-template.php',
+			'/wp-includes/blocks/video.php',
+			'/wp-includes/blocks/widget-group.php',
 			'/wp-includes/admin-bar.php',
 			'/wp-includes/atomlib.php',
 			'/wp-includes/author-template.php',

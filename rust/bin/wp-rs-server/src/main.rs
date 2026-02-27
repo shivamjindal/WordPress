@@ -982,6 +982,14 @@ async fn main() {
             any(blocks_term_template_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/video.php",
+            any(blocks_video_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/widget-group.php",
+            any(blocks_widget_group_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10672,6 +10680,14 @@ async fn blocks_term_name_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_term_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_video_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_widget_group_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

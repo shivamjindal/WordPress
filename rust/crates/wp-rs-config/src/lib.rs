@@ -436,6 +436,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/blocks/term-description.php",
         "/wp-includes/blocks/term-name.php",
         "/wp-includes/blocks/term-template.php",
+        "/wp-includes/blocks/video.php",
+        "/wp-includes/blocks/widget-group.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1408,6 +1410,8 @@ mod tests {
         assert!(settings.should_route("/wp-includes/blocks/term-description.php"));
         assert!(settings.should_route("/wp-includes/blocks/term-name.php"));
         assert!(settings.should_route("/wp-includes/blocks/term-template.php"));
+        assert!(settings.should_route("/wp-includes/blocks/video.php"));
+        assert!(settings.should_route("/wp-includes/blocks/widget-group.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
