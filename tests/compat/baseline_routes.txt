@@ -424,6 +424,11 @@ GET /wp-includes/SimplePie/src/HTTP/Response.php
 GET /wp-includes/SimplePie/src/IRI.php
 GET /wp-includes/SimplePie/src/Item.php
 GET /wp-includes/SimplePie/src/Locator.php
+GET /wp-includes/SimplePie/src/Misc.php
+GET /wp-includes/SimplePie/src/Net/IPv6.php
+GET /wp-includes/SimplePie/src/Parse/Date.php
+GET /wp-includes/SimplePie/src/Parser.php
+GET /wp-includes/SimplePie/src/Rating.php
 GET /wp-includes/SimplePie/library/SimplePie/Restriction.php
 GET /wp-includes/SimplePie/library/SimplePie/Sanitize.php
 GET /wp-includes/SimplePie/library/SimplePie/Source.php

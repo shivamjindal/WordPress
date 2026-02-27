@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 namespace SimplePie\Net;
 
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/src/Net/IPv6.php' );
+if ( '/wp-includes/SimplePie/src/Net/IPv6.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Class to validate and to work with IPv6 addresses.
  *

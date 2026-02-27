@@ -1596,6 +1596,26 @@ async fn main() {
             any(simple_pie_src_locator_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/Misc.php",
+            any(simple_pie_src_misc_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Net/IPv6.php",
+            any(simple_pie_src_net_ipv6_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Parse/Date.php",
+            any(simple_pie_src_parse_date_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Parser.php",
+            any(simple_pie_src_parser_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Rating.php",
+            any(simple_pie_src_rating_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10956,6 +10976,26 @@ async fn simple_pie_src_item_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn simple_pie_src_locator_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_misc_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_net_ipv6_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_parse_date_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_parser_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_rating_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
