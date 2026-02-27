@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-image-editor.php",
+            any(class_wp_image_editor_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-image-editor-gd.php",
+            any(class_wp_image_editor_gd_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-image-editor-imagick.php",
+            any(class_wp_image_editor_imagick_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-exception.php",
+            any(class_wp_exception_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-fatal-error-handler.php",
+            any(class_wp_fatal_error_handler_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-admin-bar.php",
             any(class_wp_admin_bar_include_live_dispatch),
         )
@@ -7303,6 +7323,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_image_editor_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_image_editor_gd_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_image_editor_imagick_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_fatal_error_handler_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

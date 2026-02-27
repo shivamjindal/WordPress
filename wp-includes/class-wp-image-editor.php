@@ -6,6 +6,12 @@
  * @subpackage Image_Editor
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-image-editor.php' ) === '/wp-includes/class-wp-image-editor.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-image-editor.php' ) ) {
+	exit;
+}
+
 /**
  * Base image editor class from which implementations extend
  *
