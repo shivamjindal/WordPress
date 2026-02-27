@@ -266,6 +266,11 @@ GET /wp-includes/ID3/getid3.php
 GET /wp-includes/ID3/module.audio-video.asf.php
 GET /wp-includes/ID3/module.audio-video.flv.php
 GET /wp-includes/ID3/module.audio-video.matroska.php
+GET /wp-includes/ID3/module.audio-video.quicktime.php
+GET /wp-includes/ID3/module.audio-video.riff.php
+GET /wp-includes/ID3/module.audio.ac3.php
+GET /wp-includes/ID3/module.audio.dts.php
+GET /wp-includes/ID3/module.audio.flac.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

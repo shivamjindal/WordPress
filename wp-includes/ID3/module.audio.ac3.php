@@ -14,6 +14,13 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/ID3/module.audio.ac3.php' );
+if ( '/wp-includes/ID3/module.audio.ac3.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
 	exit;
 }
