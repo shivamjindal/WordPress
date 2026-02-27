@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-token-map.php' ) === '/wp-includes/class-wp-token-map.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-token-map.php' ) ) {
+	exit;
+}
+
 /**
  * Class for efficiently looking up and mapping string keys to string values, with limits.
  *

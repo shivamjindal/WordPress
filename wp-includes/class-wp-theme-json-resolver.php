@@ -7,6 +7,12 @@
  * @since 5.8.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-theme-json-resolver.php' ) === '/wp-includes/class-wp-theme-json-resolver.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-theme-json-resolver.php' ) ) {
+	exit;
+}
+
 /**
  * Class that abstracts the processing of the different data sources
  * for site-level config and offers an API to work with them.

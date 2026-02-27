@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-theme-json-data.php",
+            any(class_wp_theme_json_data_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-theme-json-resolver.php",
+            any(class_wp_theme_json_resolver_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-token-map.php",
+            any(class_wp_token_map_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-url-pattern-prefixer.php",
+            any(class_wp_url_pattern_prefixer_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-walker.php",
+            any(class_wp_walker_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-simplepie-file.php",
             any(class_wp_simplepie_file_include_live_dispatch),
         )
@@ -7523,6 +7543,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_theme_json_data_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_theme_json_resolver_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_token_map_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_url_pattern_prefixer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_walker_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

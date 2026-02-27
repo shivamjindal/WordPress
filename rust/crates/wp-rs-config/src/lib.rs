@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-theme-json-data.php",
+        "/wp-includes/class-wp-theme-json-resolver.php",
+        "/wp-includes/class-wp-token-map.php",
+        "/wp-includes/class-wp-url-pattern-prefixer.php",
+        "/wp-includes/class-wp-walker.php",
         "/wp-includes/class-wp-simplepie-file.php",
         "/wp-includes/class-wp-simplepie-sanitize-kses.php",
         "/wp-includes/class-wp-speculation-rules.php",
@@ -718,6 +723,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-theme-json-data.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-theme-json-resolver.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-token-map.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-url-pattern-prefixer.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-walker.php"));
         assert!(settings.should_route("/wp-includes/class-wp-simplepie-file.php"));
         assert!(settings.should_route("/wp-includes/class-wp-simplepie-sanitize-kses.php"));
         assert!(settings.should_route("/wp-includes/class-wp-speculation-rules.php"));
