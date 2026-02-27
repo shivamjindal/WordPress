@@ -242,6 +242,10 @@ async fn main() {
         .route("/wp-admin/media-new.php", any(media_new_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
+        .route(
+            "/wp-admin/site-health-info.php",
+            any(site_health_info_live_dispatch),
+        )
         .route("/wp-admin/export.php", any(export_live_dispatch))
         .route("/wp-admin/import.php", any(import_live_dispatch))
         .route(
@@ -4181,6 +4185,10 @@ async fn site_health_live_dispatch(State(state): State<AppState>, request: Reque
         "<!doctype html><html><body><h1>Site Health (Rust)</h1><p>tab={tab}</p><p>status=available</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn site_health_info_live_dispatch(_request: Request) -> Response {
+    rust_handled_text(StatusCode::OK, "text/plain; charset=UTF-8", String::new()).into_response()
 }
 
 async fn export_live_dispatch(State(state): State<AppState>, request: Request) -> Response {

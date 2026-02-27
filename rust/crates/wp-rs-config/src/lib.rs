@@ -266,6 +266,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/media-new.php",
         "/wp-admin/tools.php",
         "/wp-admin/site-health.php",
+        "/wp-admin/site-health-info.php",
         "/wp-admin/export.php",
         "/wp-admin/import.php",
         "/wp-admin/export-personal-data.php",
@@ -582,6 +583,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/media-new.php"));
         assert!(settings.should_route("/wp-admin/tools.php"));
         assert!(settings.should_route("/wp-admin/site-health.php"));
+        assert!(settings.should_route("/wp-admin/site-health-info.php"));
         assert!(settings.should_route("/wp-admin/export.php"));
         assert!(settings.should_route("/wp-admin/import.php"));
         assert!(settings.should_route("/wp-admin/export-personal-data.php"));

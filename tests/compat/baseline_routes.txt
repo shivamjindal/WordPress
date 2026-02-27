@@ -175,6 +175,7 @@ GET /wp-admin/tools.php?page=export_personal_data
 GET /wp-admin/tools.php?page=remove_personal_data
 GET /wp-admin/site-health.php
 GET /wp-admin/site-health.php?tab=debug
+GET /wp-admin/site-health-info.php
 GET /wp-admin/export.php
 GET /wp-admin/export.php?download=true&content=all
 GET /wp-admin/import.php

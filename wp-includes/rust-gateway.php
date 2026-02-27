@@ -348,6 +348,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/media-new.php',
 			'/wp-admin/tools.php',
 			'/wp-admin/site-health.php',
+			'/wp-admin/site-health-info.php',
 			'/wp-admin/export.php',
 			'/wp-admin/import.php',
 			'/wp-admin/export-personal-data.php',
