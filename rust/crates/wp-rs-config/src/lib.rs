@@ -481,6 +481,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-wp-debug-data.php",
         "/wp-admin/includes/class-wp-filesystem-base.php",
         "/wp-admin/includes/class-wp-filesystem-direct.php",
+        "/wp-admin/includes/class-wp-filesystem-ftpext.php",
+        "/wp-admin/includes/class-wp-filesystem-ftpsockets.php",
+        "/wp-admin/includes/class-wp-filesystem-ssh2.php",
+        "/wp-admin/includes/class-wp-importer.php",
+        "/wp-admin/includes/class-wp-internal-pointers.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1101,6 +1106,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-wp-debug-data.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-base.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-direct.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-ftpext.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-ftpsockets.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-ssh2.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-importer.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-internal-pointers.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

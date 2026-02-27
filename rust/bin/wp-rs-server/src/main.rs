@@ -1142,6 +1142,26 @@ async fn main() {
             any(class_wp_filesystem_direct_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-filesystem-ftpext.php",
+            any(class_wp_filesystem_ftpext_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-filesystem-ftpsockets.php",
+            any(class_wp_filesystem_ftpsockets_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-filesystem-ssh2.php",
+            any(class_wp_filesystem_ssh2_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-importer.php",
+            any(class_wp_importer_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-internal-pointers.php",
+            any(class_wp_internal_pointers_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2182,6 +2202,26 @@ async fn class_wp_filesystem_base_include_live_dispatch(_request: Request) -> Re
 }
 
 async fn class_wp_filesystem_direct_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_filesystem_ftpext_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_filesystem_ftpsockets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_filesystem_ssh2_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_importer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_internal_pointers_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
