@@ -16,6 +16,12 @@
  * @subpackage mail_fetch
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-pop3.php' ) === '/wp-includes/class-pop3.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-pop3.php' ) ) {
+	exit;
+}
+
 class POP3 {
     var $ERROR      = '';       //  Error string.
 

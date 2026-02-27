@@ -259,6 +259,26 @@ async fn main() {
             any(class_json_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-oembed.php",
+            any(class_oembed_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-phpass.php",
+            any(class_phpass_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-phpmailer.php",
+            any(class_phpmailer_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-pop3.php",
+            any(class_pop3_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-requests.php",
+            any(class_requests_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7657,6 +7677,26 @@ async fn class_http_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_json_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_oembed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_phpass_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_phpmailer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_pop3_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_requests_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

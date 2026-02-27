@@ -77,6 +77,11 @@ GET /wp-includes/class-avif-info.php
 GET /wp-includes/class-feed.php
 GET /wp-includes/class-http.php
 GET /wp-includes/class-json.php
+GET /wp-includes/class-oembed.php
+GET /wp-includes/class-phpass.php
+GET /wp-includes/class-phpmailer.php
+GET /wp-includes/class-pop3.php
+GET /wp-includes/class-requests.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

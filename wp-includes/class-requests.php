@@ -11,6 +11,12 @@
  * @deprecated 6.2.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-requests.php' ) === '/wp-includes/class-requests.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-requests.php' ) ) {
+	exit;
+}
+
 /*
  * Integrators who cannot yet upgrade to the PSR-4 class names can silence deprecations
  * by defining a `REQUESTS_SILENCE_PSR0_DEPRECATIONS` constant and setting it to `true`.
