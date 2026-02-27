@@ -6,6 +6,12 @@
  * @subpackage Rewrite
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/rewrite.php' ) === '/wp-includes/rewrite.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/rewrite.php' ) ) {
+	exit;
+}
+
 /**
  * Endpoint mask that matches nothing.
  *

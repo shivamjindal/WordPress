@@ -142,6 +142,11 @@ GET /wp-includes/post-template.php
 GET /wp-includes/post-thumbnail-template.php
 GET /wp-includes/query.php
 GET /wp-includes/registration-functions.php
+GET /wp-includes/registration.php
+GET /wp-includes/rest-api.php
+GET /wp-includes/revision.php
+GET /wp-includes/rewrite.php
+GET /wp-includes/robots-template.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

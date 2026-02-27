@@ -483,6 +483,26 @@ async fn main() {
             any(registration_functions_include_live_dispatch),
         )
         .route(
+            "/wp-includes/registration.php",
+            any(registration_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api.php",
+            any(rest_api_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/revision.php",
+            any(revision_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rewrite.php",
+            any(rewrite_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/robots-template.php",
+            any(robots_template_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -8141,6 +8161,26 @@ async fn query_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn registration_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn registration_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn revision_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rewrite_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn robots_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

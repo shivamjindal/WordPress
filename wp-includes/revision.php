@@ -6,6 +6,12 @@
  * @subpackage Post_Revisions
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/revision.php' ) === '/wp-includes/revision.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/revision.php' ) ) {
+	exit;
+}
+
 /**
  * Determines which fields of posts are to be saved in revisions.
  *
