@@ -11,6 +11,12 @@
  * @see pluggable.php
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/pluggable-deprecated.php' ) === '/wp-includes/pluggable-deprecated.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/pluggable-deprecated.php' ) ) {
+	exit;
+}
+
 /*
  * Deprecated functions come here to die.
  */

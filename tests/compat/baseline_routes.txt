@@ -132,6 +132,11 @@ GET /wp-includes/ms-files.php
 GET /wp-includes/ms-functions.php
 GET /wp-includes/ms-load.php
 GET /wp-includes/ms-network.php
+GET /wp-includes/ms-settings.php
+GET /wp-includes/ms-site.php
+GET /wp-includes/nav-menu-template.php
+GET /wp-includes/nav-menu.php
+GET /wp-includes/pluggable-deprecated.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

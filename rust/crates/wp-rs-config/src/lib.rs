@@ -299,6 +299,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/ms-functions.php",
         "/wp-includes/ms-load.php",
         "/wp-includes/ms-network.php",
+        "/wp-includes/ms-settings.php",
+        "/wp-includes/ms-site.php",
+        "/wp-includes/nav-menu-template.php",
+        "/wp-includes/nav-menu.php",
+        "/wp-includes/pluggable-deprecated.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -863,6 +868,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/ms-functions.php"));
         assert!(settings.should_route("/wp-includes/ms-load.php"));
         assert!(settings.should_route("/wp-includes/ms-network.php"));
+        assert!(settings.should_route("/wp-includes/ms-settings.php"));
+        assert!(settings.should_route("/wp-includes/ms-site.php"));
+        assert!(settings.should_route("/wp-includes/nav-menu-template.php"));
+        assert!(settings.should_route("/wp-includes/nav-menu.php"));
+        assert!(settings.should_route("/wp-includes/pluggable-deprecated.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));
