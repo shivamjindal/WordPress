@@ -327,6 +327,11 @@ GET /wp-includes/Requests/src/Exception/Http/Status416.php
 GET /wp-includes/Requests/src/Exception/Http/Status417.php
 GET /wp-includes/Requests/src/Exception/Http/Status418.php
 GET /wp-includes/Requests/src/Exception/Http/Status428.php
+GET /wp-includes/Requests/src/Exception/Http/Status429.php
+GET /wp-includes/Requests/src/Exception/Http/Status431.php
+GET /wp-includes/Requests/src/Exception/Http/Status500.php
+GET /wp-includes/Requests/src/Exception/Http/Status501.php
+GET /wp-includes/Requests/src/Exception/Http/Status502.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php
