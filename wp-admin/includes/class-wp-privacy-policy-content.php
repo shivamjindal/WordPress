@@ -6,6 +6,12 @@
  * @subpackage Administration
  * @since 4.9.6
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-privacy-policy-content.php' );
+if ( '/wp-admin/includes/class-wp-privacy-policy-content.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 #[AllowDynamicProperties]
 final class WP_Privacy_Policy_Content {

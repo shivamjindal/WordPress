@@ -1202,6 +1202,26 @@ async fn main() {
             any(class_wp_post_comments_list_table_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-posts-list-table.php",
+            any(class_wp_posts_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-privacy-data-export-requests-list-table.php",
+            any(class_wp_privacy_data_export_requests_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-privacy-data-removal-requests-list-table.php",
+            any(class_wp_privacy_data_removal_requests_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-privacy-policy-content.php",
+            any(class_wp_privacy_policy_content_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-privacy-requests-table.php",
+            any(class_wp_privacy_requests_table_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2302,6 +2322,30 @@ async fn class_wp_plugins_list_table_include_live_dispatch(_request: Request) ->
 }
 
 async fn class_wp_post_comments_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_posts_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_privacy_data_export_requests_list_table_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_privacy_data_removal_requests_list_table_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_privacy_policy_content_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_privacy_requests_table_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
