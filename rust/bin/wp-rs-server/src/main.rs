@@ -1062,6 +1062,26 @@ async fn main() {
             any(class_ftp_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-language-pack-upgrader-skin.php",
+            any(class_language_pack_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-language-pack-upgrader.php",
+            any(class_language_pack_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-pclzip.php",
+            any(class_pclzip_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-plugin-installer-skin.php",
+            any(class_plugin_installer_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-plugin-upgrader-skin.php",
+            any(class_plugin_upgrader_skin_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2020,6 +2040,26 @@ async fn class_ftp_sockets_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn class_ftp_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_language_pack_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_language_pack_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_pclzip_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_plugin_installer_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_plugin_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

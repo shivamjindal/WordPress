@@ -461,6 +461,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-ftp-pure.php",
         "/wp-admin/includes/class-ftp-sockets.php",
         "/wp-admin/includes/class-ftp.php",
+        "/wp-admin/includes/class-language-pack-upgrader-skin.php",
+        "/wp-admin/includes/class-language-pack-upgrader.php",
+        "/wp-admin/includes/class-pclzip.php",
+        "/wp-admin/includes/class-plugin-installer-skin.php",
+        "/wp-admin/includes/class-plugin-upgrader-skin.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1060,6 +1065,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-ftp-pure.php"));
         assert!(settings.should_route("/wp-admin/includes/class-ftp-sockets.php"));
         assert!(settings.should_route("/wp-admin/includes/class-ftp.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-language-pack-upgrader-skin.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-language-pack-upgrader.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-pclzip.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-plugin-installer-skin.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-plugin-upgrader-skin.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
