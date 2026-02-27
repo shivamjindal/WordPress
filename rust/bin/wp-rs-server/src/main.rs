@@ -902,6 +902,26 @@ async fn main() {
             any(blocks_query_pagination_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/query-pagination-previous.php",
+            any(blocks_query_pagination_previous_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/query.php",
+            any(blocks_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/query-title.php",
+            any(blocks_query_title_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/query-total.php",
+            any(blocks_query_total_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/read-more.php",
+            any(blocks_read_more_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10512,6 +10532,26 @@ async fn blocks_query_pagination_numbers_include_live_dispatch(_request: Request
 }
 
 async fn blocks_query_pagination_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_query_pagination_previous_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_query_title_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_query_total_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_read_more_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
