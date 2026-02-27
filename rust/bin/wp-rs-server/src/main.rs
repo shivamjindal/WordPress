@@ -1288,6 +1288,26 @@ async fn main() {
             any(requests_src_proxy_http_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Proxy.php",
+            any(requests_src_proxy_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Requests.php",
+            any(requests_src_requests_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Response/Headers.php",
+            any(requests_src_response_headers_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Response.php",
+            any(requests_src_response_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Session.php",
+            any(requests_src_session_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10274,6 +10294,26 @@ async fn requests_src_port_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn requests_src_proxy_http_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_proxy_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_requests_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_response_headers_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_session_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -347,6 +347,11 @@ GET /wp-includes/Requests/src/Ipv6.php
 GET /wp-includes/Requests/src/Iri.php
 GET /wp-includes/Requests/src/Port.php
 GET /wp-includes/Requests/src/Proxy/Http.php
+GET /wp-includes/Requests/src/Proxy.php
+GET /wp-includes/Requests/src/Requests.php
+GET /wp-includes/Requests/src/Response/Headers.php
+GET /wp-includes/Requests/src/Response.php
+GET /wp-includes/Requests/src/Session.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

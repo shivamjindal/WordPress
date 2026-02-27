@@ -11,6 +11,13 @@
 
 namespace WpOrg\Requests;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Requests/src/Requests.php' );
+if ( '/wp-includes/Requests/src/Requests.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use WpOrg\Requests\Auth\Basic;
 use WpOrg\Requests\Capability;
 use WpOrg\Requests\Cookie\Jar;
