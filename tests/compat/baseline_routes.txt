@@ -209,6 +209,11 @@ GET /wp-includes/blocks/comments-pagination-previous.php
 GET /wp-includes/blocks/comments-pagination.php
 GET /wp-includes/blocks/comments-title.php
 GET /wp-includes/blocks/comments.php
+GET /wp-includes/blocks/comment-template.php
+GET /wp-includes/blocks/cover.php
+GET /wp-includes/blocks/file.php
+GET /wp-includes/blocks/footnotes.php
+GET /wp-includes/blocks/gallery.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
