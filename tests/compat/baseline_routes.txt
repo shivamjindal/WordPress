@@ -57,6 +57,11 @@ GET /wp-includes/class-wp-http.php
 GET /wp-includes/class-wp-http-cookie.php
 GET /wp-includes/class-wp-http-encoding.php
 GET /wp-includes/class-wp-http-response.php
+GET /wp-includes/class-wp-http-curl.php
+GET /wp-includes/class-wp-http-streams.php
+GET /wp-includes/class-wp-http-proxy.php
+GET /wp-includes/class-wp-http-requests-hooks.php
+GET /wp-includes/class-wp-http-requests-response.php
 GET /wp-includes/class-wp-locale.php
 GET /wp-includes/class-wp-locale-switcher.php
 GET /wp-includes/class-wp-matchesmapregex.php

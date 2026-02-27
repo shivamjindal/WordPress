@@ -179,6 +179,26 @@ async fn main() {
             any(class_wp_http_response_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-http-curl.php",
+            any(class_wp_http_curl_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-streams.php",
+            any(class_wp_http_streams_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-proxy.php",
+            any(class_wp_http_proxy_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-requests-hooks.php",
+            any(class_wp_http_requests_hooks_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-requests-response.php",
+            any(class_wp_http_requests_response_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-locale.php",
             any(class_wp_locale_include_live_dispatch),
         )
@@ -7143,6 +7163,26 @@ async fn class_wp_http_encoding_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn class_wp_http_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_curl_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_streams_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_proxy_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_requests_hooks_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_requests_response_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
