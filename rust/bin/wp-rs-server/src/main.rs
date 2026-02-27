@@ -1070,6 +1070,26 @@ async fn main() {
             any(build_routes_post_list_route_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes/post-new/route.min.asset.php",
+            any(build_routes_post_new_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/post/route.min.asset.php",
+            any(build_routes_post_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/registry.php",
+            any(build_routes_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/styles/content.min.asset.php",
+            any(build_routes_styles_content_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/styles/route.min.asset.php",
+            any(build_routes_styles_route_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10878,6 +10898,30 @@ async fn build_routes_post_list_content_min_asset_include_live_dispatch(
 async fn build_routes_post_list_route_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_post_new_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_post_route_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_styles_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_styles_route_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
