@@ -1248,6 +1248,26 @@ async fn main() {
             any(requests_src_exception_http_status_unknown_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Exception/InvalidArgument.php",
+            any(requests_src_exception_invalid_argument_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Transport/Curl.php",
+            any(requests_src_exception_transport_curl_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Transport.php",
+            any(requests_src_exception_transport_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/HookManager.php",
+            any(requests_src_hook_manager_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Hooks.php",
+            any(requests_src_hooks_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10190,6 +10210,30 @@ async fn requests_src_exception_http_status511_include_live_dispatch(
 async fn requests_src_exception_http_status_unknown_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_invalid_argument_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_transport_curl_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_transport_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_hook_manager_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_hooks_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

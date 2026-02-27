@@ -337,6 +337,11 @@ GET /wp-includes/Requests/src/Exception/Http/Status504.php
 GET /wp-includes/Requests/src/Exception/Http/Status505.php
 GET /wp-includes/Requests/src/Exception/Http/Status511.php
 GET /wp-includes/Requests/src/Exception/Http/StatusUnknown.php
+GET /wp-includes/Requests/src/Exception/InvalidArgument.php
+GET /wp-includes/Requests/src/Exception/Transport/Curl.php
+GET /wp-includes/Requests/src/Exception/Transport.php
+GET /wp-includes/Requests/src/HookManager.php
+GET /wp-includes/Requests/src/Hooks.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

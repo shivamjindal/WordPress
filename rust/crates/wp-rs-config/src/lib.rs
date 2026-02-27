@@ -504,6 +504,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/src/Exception/Http/Status505.php",
         "/wp-includes/Requests/src/Exception/Http/Status511.php",
         "/wp-includes/Requests/src/Exception/Http/StatusUnknown.php",
+        "/wp-includes/Requests/src/Exception/InvalidArgument.php",
+        "/wp-includes/Requests/src/Exception/Transport/Curl.php",
+        "/wp-includes/Requests/src/Exception/Transport.php",
+        "/wp-includes/Requests/src/HookManager.php",
+        "/wp-includes/Requests/src/Hooks.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1272,6 +1277,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status505.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status511.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/StatusUnknown.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/InvalidArgument.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Transport/Curl.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Transport.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/HookManager.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Hooks.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

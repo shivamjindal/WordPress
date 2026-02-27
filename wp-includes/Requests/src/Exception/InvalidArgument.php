@@ -2,6 +2,13 @@
 
 namespace WpOrg\Requests\Exception;
 
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Requests/src/Exception/InvalidArgument.php' );
+if ( '/wp-includes/Requests/src/Exception/InvalidArgument.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use InvalidArgumentException;
 
 /**
