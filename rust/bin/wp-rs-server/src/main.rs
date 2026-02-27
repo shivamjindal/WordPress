@@ -1108,6 +1108,26 @@ async fn main() {
             any(requests_src_exception_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Exception/ArgumentCount.php",
+            any(requests_src_exception_argument_count_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http.php",
+            any(requests_src_exception_http_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status304.php",
+            any(requests_src_exception_http_status304_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status305.php",
+            any(requests_src_exception_http_status305_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception/Http/Status306.php",
+            any(requests_src_exception_http_status306_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9842,6 +9862,34 @@ async fn requests_src_cookie_jar_include_live_dispatch(_request: Request) -> Res
 }
 
 async fn requests_src_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_argument_count_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status304_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status305_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_http_status306_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
