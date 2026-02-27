@@ -25,6 +25,7 @@ POST	/wp-admin/comment.php	application/x-www-form-urlencoded	action=editcomment&
 POST	/wp-admin/link-manager.php	application/x-www-form-urlencoded	action=delete&linkcheck=1
 POST	/wp-admin/link-add.php	application/x-www-form-urlencoded	action=add&link_name=Rust+Link&link_url=https%3A%2F%2Fexample.com
 POST	/wp-admin/link.php	application/x-www-form-urlencoded	action=save&link_id=1&link_name=Rust+Link
+POST	/wp-admin/media-upload.php	application/x-www-form-urlencoded	post_id=1&type=image&tab=type
 POST	/wp-admin/upload.php	application/x-www-form-urlencoded	action=delete&media=1
 POST	/wp-admin/media-new.php	application/x-www-form-urlencoded	html-upload=1&post_id=0
 POST	/wp-admin/setup-config.php	application/x-www-form-urlencoded	dbname=wordpress&uname=wp_user&pwd=secret

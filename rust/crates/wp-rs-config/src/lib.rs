@@ -218,6 +218,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/link-manager.php",
         "/wp-admin/link-add.php",
         "/wp-admin/link.php",
+        "/wp-admin/media.php",
+        "/wp-admin/media-upload.php",
         "/wp-admin/upload.php",
         "/wp-admin/media-new.php",
         "/wp-admin/tools.php",
@@ -489,6 +491,8 @@ mod tests {
         assert!(settings.should_route("/wp-admin/link-manager.php"));
         assert!(settings.should_route("/wp-admin/link-add.php"));
         assert!(settings.should_route("/wp-admin/link.php"));
+        assert!(settings.should_route("/wp-admin/media.php"));
+        assert!(settings.should_route("/wp-admin/media-upload.php"));
         assert!(settings.should_route("/wp-admin/upload.php"));
         assert!(settings.should_route("/wp-admin/media-new.php"));
         assert!(settings.should_route("/wp-admin/tools.php"));

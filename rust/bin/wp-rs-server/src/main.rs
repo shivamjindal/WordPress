@@ -144,6 +144,11 @@ async fn main() {
         )
         .route("/wp-admin/link-add.php", any(link_add_live_dispatch))
         .route("/wp-admin/link.php", any(link_live_dispatch))
+        .route("/wp-admin/media.php", any(media_live_dispatch))
+        .route(
+            "/wp-admin/media-upload.php",
+            any(media_upload_live_dispatch),
+        )
         .route("/wp-admin/upload.php", any(upload_live_dispatch))
         .route("/wp-admin/media-new.php", any(media_new_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
@@ -2474,6 +2479,126 @@ async fn link_live_dispatch(State(state): State<AppState>, request: Request) -> 
     }
 
     rust_handled_redirect("/wp-admin/link-manager.php").into_response()
+}
+
+async fn media_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/media.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_media = authenticated
+        && (capabilities.contains("upload_files")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_manage_media {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "upload_files capability is required for wp-admin/media.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    let attachment_id = params.get("attachment_id").cloned().unwrap_or_default();
+    if (action == "editattachment" || action == "edit") && !attachment_id.is_empty() {
+        let target = format!("/wp-admin/upload.php?item={attachment_id}&error=deprecated");
+        return rust_handled_redirect(&target).into_response();
+    }
+    rust_handled_redirect("/wp-admin/upload.php?error=deprecated").into_response()
+}
+
+async fn media_upload_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/media-upload.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_upload = authenticated
+        && (capabilities.contains("upload_files")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_upload {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "upload_files capability is required for wp-admin/media-upload.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/media-new.php?posted=1").into_response();
+    }
+
+    let tab = params
+        .get("tab")
+        .cloned()
+        .unwrap_or_else(|| "type".to_string());
+    let media_type = params
+        .get("type")
+        .cloned()
+        .unwrap_or_else(|| "file".to_string());
+    let inline = params
+        .get("inline")
+        .cloned()
+        .unwrap_or_else(|| "0".to_string());
+    let post_id = params.get("post_id").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Media Upload (Rust)</h1><p>tab={tab}</p><p>type={media_type}</p><p>inline={inline}</p><p>post_id={post_id}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn upload_live_dispatch(State(state): State<AppState>, request: Request) -> Response {

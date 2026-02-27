@@ -94,6 +94,11 @@ GET /wp-admin/link-add.php?cat_id=1
 POST /wp-admin/link-add.php
 GET /wp-admin/link.php?action=edit&link_id=1
 POST /wp-admin/link.php
+GET /wp-admin/media.php
+GET /wp-admin/media.php?action=editattachment&attachment_id=1
+GET /wp-admin/media-upload.php
+GET /wp-admin/media-upload.php?tab=library&type=image
+POST /wp-admin/media-upload.php
 GET /wp-admin/upload.php
 GET /wp-admin/upload.php?posted=1
 POST /wp-admin/upload.php

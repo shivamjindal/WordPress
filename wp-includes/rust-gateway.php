@@ -300,6 +300,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/link-manager.php',
 			'/wp-admin/link-add.php',
 			'/wp-admin/link.php',
+			'/wp-admin/media.php',
+			'/wp-admin/media-upload.php',
 			'/wp-admin/upload.php',
 			'/wp-admin/media-new.php',
 			'/wp-admin/tools.php',
