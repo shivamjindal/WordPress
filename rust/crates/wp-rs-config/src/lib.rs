@@ -229,6 +229,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-http-proxy.php",
         "/wp-includes/class-wp-http-requests-hooks.php",
         "/wp-includes/class-wp-http-requests-response.php",
+        "/wp-includes/class-wp-network.php",
+        "/wp-includes/class-wp-site.php",
+        "/wp-includes/class-wp-taxonomy.php",
+        "/wp-includes/class-wp-theme.php",
+        "/wp-includes/class-wp-widget.php",
         "/wp-includes/class-wp-locale.php",
         "/wp-includes/class-wp-locale-switcher.php",
         "/wp-includes/class-wp-matchesmapregex.php",
@@ -633,6 +638,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-http-proxy.php"));
         assert!(settings.should_route("/wp-includes/class-wp-http-requests-hooks.php"));
         assert!(settings.should_route("/wp-includes/class-wp-http-requests-response.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-network.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-site.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-taxonomy.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-theme.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-widget.php"));
         assert!(settings.should_route("/wp-includes/class-wp-locale.php"));
         assert!(settings.should_route("/wp-includes/class-wp-locale-switcher.php"));
         assert!(settings.should_route("/wp-includes/class-wp-matchesmapregex.php"));
