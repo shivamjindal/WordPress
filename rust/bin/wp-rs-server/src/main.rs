@@ -150,6 +150,10 @@ async fn main() {
             any(network_site_new_live_dispatch),
         )
         .route(
+            "/wp-admin/network/site-info.php",
+            any(network_site_info_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -2049,6 +2053,91 @@ async fn network_site_new_live_dispatch(
     let site_id = params.get("id").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Add Site (Rust)</h1><p>update={update}</p><p>id={site_id}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_site_info_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/site-info.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_sites = authenticated
+        && (capabilities.contains("manage_sites")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_manage_sites {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_sites capability is required for wp-admin/network/site-info.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let site_id = params
+        .get("id")
+        .and_then(|value| value.trim().parse::<u64>().ok())
+        .unwrap_or_default();
+    if site_id == 0 {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_site_id",
+                "message": "site-info.php requires a valid id query parameter.",
+            }),
+        )
+        .into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        let action = params.get("action").cloned().unwrap_or_default();
+        if action != "update-site" {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_site_info_action",
+                    "message": "site-info.php requires action=update-site for POST requests.",
+                }),
+            )
+            .into_response();
+        }
+        let target = format!("/wp-admin/network/site-info.php?update=updated&id={site_id}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let update = params.get("update").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Edit Site (Rust)</h1><p>id={site_id}</p><p>update={update}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
