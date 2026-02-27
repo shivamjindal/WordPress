@@ -1230,6 +1230,26 @@ async fn main() {
             any(js_dist_i18n_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/shortcode.min.asset.php",
+            any(js_dist_shortcode_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/viewport.min.asset.php",
+            any(js_dist_viewport_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/preferences-persistence.min.asset.php",
+            any(js_dist_preferences_persistence_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/format-library.min.asset.php",
+            any(js_dist_format_library_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/dom.min.asset.php",
+            any(js_dist_dom_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11222,6 +11242,28 @@ async fn js_dist_widgets_min_asset_include_live_dispatch(_request: Request) -> R
 }
 
 async fn js_dist_i18n_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_shortcode_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_viewport_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_preferences_persistence_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_format_library_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_dom_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

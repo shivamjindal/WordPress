@@ -498,6 +498,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/js/dist/theme.min.asset.php",
         "/wp-includes/js/dist/widgets.min.asset.php",
         "/wp-includes/js/dist/i18n.min.asset.php",
+        "/wp-includes/js/dist/shortcode.min.asset.php",
+        "/wp-includes/js/dist/viewport.min.asset.php",
+        "/wp-includes/js/dist/preferences-persistence.min.asset.php",
+        "/wp-includes/js/dist/format-library.min.asset.php",
+        "/wp-includes/js/dist/dom.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1550,6 +1555,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/js/dist/theme.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/widgets.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/i18n.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/shortcode.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/viewport.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/preferences-persistence.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/format-library.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/dom.min.asset.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
