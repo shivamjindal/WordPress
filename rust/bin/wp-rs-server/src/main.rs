@@ -1556,6 +1556,26 @@ async fn main() {
             any(simple_pie_src_http_client_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/HTTP/ClientException.php",
+            any(simple_pie_src_http_client_exception_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/HTTP/FileClient.php",
+            any(simple_pie_src_http_file_client_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/HTTP/Parser.php",
+            any(simple_pie_src_http_parser_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/HTTP/Psr18Client.php",
+            any(simple_pie_src_http_psr18_client_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/HTTP/Psr7Response.php",
+            any(simple_pie_src_http_psr7_response_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10874,6 +10894,26 @@ async fn simple_pie_src_gzdecode_include_live_dispatch(_request: Request) -> Res
 }
 
 async fn simple_pie_src_http_client_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_client_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_file_client_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_parser_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_psr18_client_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_http_psr7_response_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
