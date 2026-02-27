@@ -942,6 +942,26 @@ async fn main() {
             any(blocks_shortcode_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/site-logo.php",
+            any(blocks_site_logo_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/site-tagline.php",
+            any(blocks_site_tagline_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/site-title.php",
+            any(blocks_site_title_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/social-link.php",
+            any(blocks_social_link_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/tag-cloud.php",
+            any(blocks_tag_cloud_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10592,6 +10612,26 @@ async fn blocks_search_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_shortcode_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_site_logo_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_site_tagline_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_site_title_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_social_link_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_tag_cloud_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

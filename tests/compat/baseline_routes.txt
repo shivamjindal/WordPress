@@ -259,6 +259,11 @@ GET /wp-includes/blocks/require-static-blocks.php
 GET /wp-includes/blocks/rss.php
 GET /wp-includes/blocks/search.php
 GET /wp-includes/blocks/shortcode.php
+GET /wp-includes/blocks/site-logo.php
+GET /wp-includes/blocks/site-tagline.php
+GET /wp-includes/blocks/site-title.php
+GET /wp-includes/blocks/social-link.php
+GET /wp-includes/blocks/tag-cloud.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
