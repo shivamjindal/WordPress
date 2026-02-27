@@ -7,6 +7,12 @@
  * @since 5.9.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-theme-json-schema.php' ) === '/wp-includes/class-wp-theme-json-schema.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-theme-json-schema.php' ) ) {
+	exit;
+}
+
 /**
  * Class that migrates a given theme.json structure to the latest schema.
  *

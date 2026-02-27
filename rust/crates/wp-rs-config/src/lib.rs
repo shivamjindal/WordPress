@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-xmlrpc-server.php",
+        "/wp-includes/class-wp-widget-factory.php",
+        "/wp-includes/class-wp-theme-json.php",
+        "/wp-includes/class-wp-theme-json-schema.php",
+        "/wp-includes/class-wp-textdomain-registry.php",
         "/wp-includes/class-wp-image-editor.php",
         "/wp-includes/class-wp-image-editor-gd.php",
         "/wp-includes/class-wp-image-editor-imagick.php",
@@ -668,6 +673,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-xmlrpc-server.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-widget-factory.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-theme-json.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-theme-json-schema.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-textdomain-registry.php"));
         assert!(settings.should_route("/wp-includes/class-wp-image-editor.php"));
         assert!(settings.should_route("/wp-includes/class-wp-image-editor-gd.php"));
         assert!(settings.should_route("/wp-includes/class-wp-image-editor-imagick.php"));

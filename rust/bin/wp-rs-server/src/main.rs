@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-xmlrpc-server.php",
+            any(class_wp_xmlrpc_server_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-widget-factory.php",
+            any(class_wp_widget_factory_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-theme-json.php",
+            any(class_wp_theme_json_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-theme-json-schema.php",
+            any(class_wp_theme_json_schema_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-textdomain-registry.php",
+            any(class_wp_textdomain_registry_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-image-editor.php",
             any(class_wp_image_editor_include_live_dispatch),
         )
@@ -7323,6 +7343,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_xmlrpc_server_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_widget_factory_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_theme_json_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_theme_json_schema_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_textdomain_registry_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
