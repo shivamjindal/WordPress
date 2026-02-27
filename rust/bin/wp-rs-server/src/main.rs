@@ -1450,6 +1450,26 @@ async fn main() {
             any(js_dist_script_modules_block_library_query_view_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/latex-to-mathml/index.min.asset.php",
+            any(js_dist_script_modules_latex_to_mathml_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/image/view.min.asset.php",
+            any(js_dist_script_modules_block_library_image_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/file/view.min.asset.php",
+            any(js_dist_script_modules_block_library_file_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/form/view.min.asset.php",
+            any(js_dist_script_modules_block_library_form_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-editor/utils/fit-text-frontend.min.asset.php",
+            any(js_dist_script_modules_block_editor_utils_fit_text_frontend_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11696,6 +11716,36 @@ async fn js_dist_script_modules_block_library_navigation_view_min_asset_include_
 }
 
 async fn js_dist_script_modules_block_library_query_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_latex_to_mathml_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_image_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_file_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_form_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_editor_utils_fit_text_frontend_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
