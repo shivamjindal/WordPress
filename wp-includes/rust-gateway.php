@@ -304,6 +304,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/widgets-form.php',
 			'/wp-admin/widgets-form-blocks.php',
 			'/wp-admin/nav-menus.php',
+			'/wp-admin/site-editor.php',
+			'/wp-admin/press-this.php',
 			'/wp-admin/plugins.php',
 			'/wp-admin/themes.php',
 			'/wp-admin/users.php',

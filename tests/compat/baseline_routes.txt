@@ -91,6 +91,13 @@ POST /wp-admin/widgets-form-blocks.php
 GET /wp-admin/nav-menus.php
 GET /wp-admin/nav-menus.php?menu=2
 POST /wp-admin/nav-menus.php
+GET /wp-admin/site-editor.php
+GET /wp-admin/site-editor.php?postType=wp_navigation&postId=2
+GET /wp-admin/site-editor.php?path=/wp_global_styles
+POST /wp-admin/site-editor.php
+GET /wp-admin/press-this.php
+GET /wp-admin/press-this.php?u=https://example.com&t=Rust+Press+This
+POST /wp-admin/press-this.php
 GET /wp-admin/plugins.php
 GET /wp-admin/plugins.php?action=activate&plugin=hello.php
 POST /wp-admin/plugins.php

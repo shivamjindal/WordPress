@@ -172,6 +172,8 @@ async fn main() {
             any(widgets_form_blocks_live_dispatch),
         )
         .route("/wp-admin/nav-menus.php", any(nav_menus_live_dispatch))
+        .route("/wp-admin/site-editor.php", any(site_editor_live_dispatch))
+        .route("/wp-admin/press-this.php", any(press_this_live_dispatch))
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
@@ -2389,6 +2391,138 @@ async fn nav_menus_live_dispatch(State(state): State<AppState>, request: Request
     let updated_action = params.get("updated_action").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Navigation Menus (Rust)</h1><p>action={action}</p><p>menu={menu}</p><p>updated_action={updated_action}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn site_editor_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/site-editor.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_theme = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_edit_theme {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/site-editor.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::GET {
+        if params.get("postType").is_some_and(|v| v == "wp_navigation")
+            && params.contains_key("postId")
+        {
+            let post_id = params.get("postId").cloned().unwrap_or_default();
+            let target = format!("/wp-admin/site-editor.php?p=%2Fwp_navigation%2F{post_id}");
+            return rust_handled_redirect(&target).into_response();
+        }
+        if params.get("postType").is_some_and(|v| v == "wp_navigation") {
+            return rust_handled_redirect("/wp-admin/site-editor.php?p=%2Fnavigation")
+                .into_response();
+        }
+        if params.get("path").is_some_and(|v| v == "/wp_global_styles") {
+            return rust_handled_redirect("/wp-admin/site-editor.php?p=%2Fstyles").into_response();
+        }
+    }
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/site-editor.php?updated=true").into_response();
+    }
+
+    let p = params.get("p").cloned().unwrap_or_else(|| "/".to_string());
+    let post_type = params.get("postType").cloned().unwrap_or_default();
+    let post_id = params.get("postId").cloned().unwrap_or_default();
+    let path = params.get("path").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Site Editor (Rust)</h1><p>p={p}</p><p>post_type={post_type}</p><p>post_id={post_id}</p><p>path={path}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn press_this_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/press-this.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_press_this = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("create_posts")
+            || capabilities.contains("manage_options"));
+    if !can_press_this {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/press-this.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/post.php?action=edit&post=1").into_response();
+    }
+
+    let url = params.get("u").cloned().unwrap_or_default();
+    let title = params.get("t").cloned().unwrap_or_default();
+    let source = params.get("s").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Press This (Rust)</h1><p>url={url}</p><p>title={title}</p><p>source={source}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
