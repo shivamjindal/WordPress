@@ -9,6 +9,12 @@
 
 declare( strict_types = 1 );
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/abilities.php' ) === '/wp-includes/abilities.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/abilities.php' ) ) {
+	exit;
+}
+
 require_once __DIR__ . '/abilities/class-wp-settings-abilities.php';
 
 /**

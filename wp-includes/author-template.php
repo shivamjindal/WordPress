@@ -10,6 +10,12 @@
  * @subpackage Template
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/author-template.php' ) === '/wp-includes/author-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/author-template.php' ) ) {
+	exit;
+}
+
 /**
  * Retrieves the author of the current post.
  *

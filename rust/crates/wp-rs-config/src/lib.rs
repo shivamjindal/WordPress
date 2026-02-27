@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/abilities-api.php",
+        "/wp-includes/abilities.php",
+        "/wp-includes/admin-bar.php",
+        "/wp-includes/atomlib.php",
+        "/wp-includes/author-template.php",
         "/wp-includes/class-wp-theme-json-data.php",
         "/wp-includes/class-wp-theme-json-resolver.php",
         "/wp-includes/class-wp-token-map.php",
@@ -723,6 +728,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/abilities-api.php"));
+        assert!(settings.should_route("/wp-includes/abilities.php"));
+        assert!(settings.should_route("/wp-includes/admin-bar.php"));
+        assert!(settings.should_route("/wp-includes/atomlib.php"));
+        assert!(settings.should_route("/wp-includes/author-template.php"));
         assert!(settings.should_route("/wp-includes/class-wp-theme-json-data.php"));
         assert!(settings.should_route("/wp-includes/class-wp-theme-json-resolver.php"));
         assert!(settings.should_route("/wp-includes/class-wp-token-map.php"));

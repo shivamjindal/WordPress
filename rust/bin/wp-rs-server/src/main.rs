@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/abilities-api.php",
+            any(abilities_api_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/abilities.php",
+            any(abilities_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/admin-bar.php",
+            any(admin_bar_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/atomlib.php",
+            any(atomlib_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/author-template.php",
+            any(author_template_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-theme-json-data.php",
             any(class_wp_theme_json_data_include_live_dispatch),
         )
@@ -7543,6 +7563,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_api_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn abilities_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_bar_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn atomlib_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn author_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

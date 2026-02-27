@@ -87,6 +87,12 @@
 
 declare( strict_types = 1 );
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/abilities-api.php' ) === '/wp-includes/abilities-api.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/abilities-api.php' ) ) {
+	exit;
+}
+
 /**
  * Registers a new ability using the Abilities API. It requires three steps:
  *

@@ -10,6 +10,12 @@
  * @since 2.3.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/atomlib.php' ) === '/wp-includes/atomlib.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/atomlib.php' ) ) {
+	exit;
+}
+
 /**
  * Structure that store common Atom Feed Properties
  *

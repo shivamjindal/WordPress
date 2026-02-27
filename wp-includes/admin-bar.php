@@ -7,6 +7,12 @@
  * @since 3.1.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/admin-bar.php' ) === '/wp-includes/admin-bar.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/admin-bar.php' ) ) {
+	exit;
+}
+
 /**
  * Instantiates the admin bar object and set it up as a global for access elsewhere.
  *
