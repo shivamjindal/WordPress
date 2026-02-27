@@ -541,6 +541,17 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/privacy-tools.php",
         "/wp-admin/includes/revision.php",
         "/wp-admin/includes/schema.php",
+        "/wp-admin/includes/screen.php",
+        "/wp-admin/includes/taxonomy.php",
+        "/wp-admin/includes/template.php",
+        "/wp-admin/includes/theme-install.php",
+        "/wp-admin/includes/theme.php",
+        "/wp-admin/includes/translation-install.php",
+        "/wp-admin/includes/update-core.php",
+        "/wp-admin/includes/update.php",
+        "/wp-admin/includes/upgrade.php",
+        "/wp-admin/includes/user.php",
+        "/wp-admin/includes/widgets.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1225,6 +1236,17 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/privacy-tools.php"));
         assert!(settings.should_route("/wp-admin/includes/revision.php"));
         assert!(settings.should_route("/wp-admin/includes/schema.php"));
+        assert!(settings.should_route("/wp-admin/includes/screen.php"));
+        assert!(settings.should_route("/wp-admin/includes/taxonomy.php"));
+        assert!(settings.should_route("/wp-admin/includes/template.php"));
+        assert!(settings.should_route("/wp-admin/includes/theme-install.php"));
+        assert!(settings.should_route("/wp-admin/includes/theme.php"));
+        assert!(settings.should_route("/wp-admin/includes/translation-install.php"));
+        assert!(settings.should_route("/wp-admin/includes/update-core.php"));
+        assert!(settings.should_route("/wp-admin/includes/update.php"));
+        assert!(settings.should_route("/wp-admin/includes/upgrade.php"));
+        assert!(settings.should_route("/wp-admin/includes/user.php"));
+        assert!(settings.should_route("/wp-admin/includes/widgets.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

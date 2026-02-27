@@ -374,6 +374,17 @@ GET /wp-admin/includes/post.php
 GET /wp-admin/includes/privacy-tools.php
 GET /wp-admin/includes/revision.php
 GET /wp-admin/includes/schema.php
+GET /wp-admin/includes/screen.php
+GET /wp-admin/includes/taxonomy.php
+GET /wp-admin/includes/template.php
+GET /wp-admin/includes/theme-install.php
+GET /wp-admin/includes/theme.php
+GET /wp-admin/includes/translation-install.php
+GET /wp-admin/includes/update-core.php
+GET /wp-admin/includes/update.php
+GET /wp-admin/includes/upgrade.php
+GET /wp-admin/includes/user.php
+GET /wp-admin/includes/widgets.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

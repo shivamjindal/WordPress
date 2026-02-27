@@ -1382,6 +1382,50 @@ async fn main() {
             any(admin_includes_schema_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/screen.php",
+            any(admin_includes_screen_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/taxonomy.php",
+            any(admin_includes_taxonomy_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/template.php",
+            any(admin_includes_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/theme-install.php",
+            any(admin_includes_theme_install_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/theme.php",
+            any(admin_includes_theme_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/translation-install.php",
+            any(admin_includes_translation_install_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/update-core.php",
+            any(admin_includes_update_core_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/update.php",
+            any(admin_includes_update_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/upgrade.php",
+            any(admin_includes_upgrade_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/user.php",
+            any(admin_includes_user_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/widgets.php",
+            any(admin_includes_widgets_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2666,6 +2710,50 @@ async fn admin_includes_revision_include_live_dispatch(_request: Request) -> Res
 }
 
 async fn admin_includes_schema_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_screen_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_taxonomy_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_theme_install_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_theme_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_translation_install_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_update_core_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_update_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_upgrade_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_user_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_widgets_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
