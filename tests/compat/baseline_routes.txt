@@ -364,6 +364,11 @@ GET /wp-admin/includes/misc.php
 GET /wp-admin/includes/ms-admin-filters.php
 GET /wp-admin/includes/ms-deprecated.php
 GET /wp-admin/includes/ms.php
+GET /wp-admin/includes/nav-menu.php
+GET /wp-admin/includes/network.php
+GET /wp-admin/includes/noop.php
+GET /wp-admin/includes/options.php
+GET /wp-admin/includes/plugin-install.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

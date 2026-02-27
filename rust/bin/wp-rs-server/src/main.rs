@@ -1342,6 +1342,26 @@ async fn main() {
             any(admin_includes_ms_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/nav-menu.php",
+            any(admin_includes_nav_menu_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/network.php",
+            any(admin_includes_network_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/noop.php",
+            any(admin_includes_noop_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/options.php",
+            any(admin_includes_options_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/plugin-install.php",
+            any(admin_includes_plugin_install_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2586,6 +2606,26 @@ async fn admin_includes_ms_deprecated_include_live_dispatch(_request: Request) -
 }
 
 async fn admin_includes_ms_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_nav_menu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_network_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_noop_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_options_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_plugin_install_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
