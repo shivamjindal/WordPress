@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-recovery-mode.php",
+            any(class_wp_recovery_mode_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-recovery-mode-cookie-service.php",
+            any(class_wp_recovery_mode_cookie_service_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-recovery-mode-link-service.php",
+            any(class_wp_recovery_mode_link_service_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-recovery-mode-key-service.php",
+            any(class_wp_recovery_mode_key_service_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-recovery-mode-email-service.php",
+            any(class_wp_recovery_mode_email_service_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-xmlrpc-server.php",
             any(class_wp_xmlrpc_server_include_live_dispatch),
         )
@@ -7343,6 +7363,28 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_recovery_mode_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_recovery_mode_cookie_service_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_recovery_mode_link_service_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_recovery_mode_key_service_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_recovery_mode_email_service_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

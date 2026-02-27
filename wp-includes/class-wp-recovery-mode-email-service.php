@@ -6,6 +6,12 @@
  * @since 5.2.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-recovery-mode-email-service.php' ) === '/wp-includes/class-wp-recovery-mode-email-service.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-recovery-mode-email-service.php' ) ) {
+	exit;
+}
+
 /**
  * Core class used to send an email with a link to begin Recovery Mode.
  *
