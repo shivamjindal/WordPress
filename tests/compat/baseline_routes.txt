@@ -102,6 +102,11 @@ GET /wp-includes/default-constants.php
 GET /wp-includes/default-widgets.php
 GET /wp-includes/deprecated.php
 GET /wp-includes/embed-template.php
+GET /wp-includes/embed.php
+GET /wp-includes/error-protection.php
+GET /wp-includes/feed-atom-comments.php
+GET /wp-includes/feed-atom.php
+GET /wp-includes/feed-rdf.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

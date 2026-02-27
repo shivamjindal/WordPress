@@ -352,6 +352,23 @@ async fn main() {
             "/wp-includes/embed-template.php",
             any(embed_template_include_live_dispatch),
         )
+        .route("/wp-includes/embed.php", any(embed_include_live_dispatch))
+        .route(
+            "/wp-includes/error-protection.php",
+            any(error_protection_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/feed-atom-comments.php",
+            any(feed_atom_comments_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/feed-atom.php",
+            any(feed_atom_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/feed-rdf.php",
+            any(feed_rdf_include_live_dispatch),
+        )
         .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
@@ -7851,6 +7868,26 @@ async fn deprecated_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn embed_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn embed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn error_protection_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_atom_comments_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_atom_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn feed_rdf_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
