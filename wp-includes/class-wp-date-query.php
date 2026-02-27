@@ -14,6 +14,13 @@
  *
  * @since 3.7.0
  */
+
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-date-query.php' ) === '/wp-includes/class-wp-date-query.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-date-query.php' ) ) {
+	exit;
+}
+
 #[AllowDynamicProperties]
 class WP_Date_Query {
 	/**

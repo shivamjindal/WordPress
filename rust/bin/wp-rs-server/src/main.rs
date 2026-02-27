@@ -119,6 +119,26 @@ async fn main() {
             any(class_wp_user_meta_session_tokens_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-user-query.php",
+            any(class_wp_user_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-meta-query.php",
+            any(class_wp_meta_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-date-query.php",
+            any(class_wp_date_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-tax-query.php",
+            any(class_wp_tax_query_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-term-query.php",
+            any(class_wp_term_query_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/general-template.php",
             any(general_template_include_live_dispatch),
         )
@@ -7003,6 +7023,26 @@ async fn class_wp_session_tokens_include_live_dispatch(_request: Request) -> Res
 }
 
 async fn class_wp_user_meta_session_tokens_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_user_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_meta_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_date_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_tax_query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_term_query_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

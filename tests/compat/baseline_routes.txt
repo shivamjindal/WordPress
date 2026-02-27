@@ -42,6 +42,11 @@ GET /wp-includes/class-wp-roles.php
 GET /wp-includes/class-wp-user.php
 GET /wp-includes/class-wp-session-tokens.php
 GET /wp-includes/class-wp-user-meta-session-tokens.php
+GET /wp-includes/class-wp-user-query.php
+GET /wp-includes/class-wp-meta-query.php
+GET /wp-includes/class-wp-date-query.php
+GET /wp-includes/class-wp-tax-query.php
+GET /wp-includes/class-wp-term-query.php
 GET /wp-includes/general-template.php
 GET /wp-includes/link-template.php
 GET /wp-includes/default-filters.php

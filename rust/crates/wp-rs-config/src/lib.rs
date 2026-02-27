@@ -209,6 +209,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-user.php",
         "/wp-includes/class-wp-session-tokens.php",
         "/wp-includes/class-wp-user-meta-session-tokens.php",
+        "/wp-includes/class-wp-user-query.php",
+        "/wp-includes/class-wp-meta-query.php",
+        "/wp-includes/class-wp-date-query.php",
+        "/wp-includes/class-wp-tax-query.php",
+        "/wp-includes/class-wp-term-query.php",
         "/wp-includes/general-template.php",
         "/wp-includes/link-template.php",
         "/wp-includes/default-filters.php",
@@ -588,6 +593,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-user.php"));
         assert!(settings.should_route("/wp-includes/class-wp-session-tokens.php"));
         assert!(settings.should_route("/wp-includes/class-wp-user-meta-session-tokens.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-user-query.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-meta-query.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-date-query.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-tax-query.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-term-query.php"));
         assert!(settings.should_route("/wp-includes/general-template.php"));
         assert!(settings.should_route("/wp-includes/link-template.php"));
         assert!(settings.should_route("/wp-includes/default-filters.php"));
