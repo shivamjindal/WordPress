@@ -8,6 +8,12 @@
  * @since 6.9.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-block-processor.php' ) === '/wp-includes/class-wp-block-processor.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-block-processor.php' ) ) {
+	exit;
+}
+
 /**
  * Class for efficiently scanning through block structure in a document
  * without parsing the entire block tree and JSON attributes into memory.

@@ -7,6 +7,12 @@
  * @since 6.7.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-block-metadata-registry.php' ) === '/wp-includes/class-wp-block-metadata-registry.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-block-metadata-registry.php' ) ) {
+	exit;
+}
+
 /**
  * Class used for managing block metadata collections.
  *

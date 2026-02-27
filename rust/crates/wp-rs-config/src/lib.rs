@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-block-metadata-registry.php",
+        "/wp-includes/class-wp-block-parser.php",
+        "/wp-includes/class-wp-block-parser-block.php",
+        "/wp-includes/class-wp-block-parser-frame.php",
+        "/wp-includes/class-wp-block-processor.php",
         "/wp-includes/class-wp-block-bindings-registry.php",
         "/wp-includes/class-wp-block-bindings-source.php",
         "/wp-includes/class-wp-block-editor-context.php",
@@ -683,6 +688,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-metadata-registry.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-parser.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-parser-block.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-parser-frame.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-processor.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-bindings-registry.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-bindings-source.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-editor-context.php"));

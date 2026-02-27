@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-block-metadata-registry.php",
+            any(class_wp_block_metadata_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-parser.php",
+            any(class_wp_block_parser_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-parser-block.php",
+            any(class_wp_block_parser_block_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-parser-frame.php",
+            any(class_wp_block_parser_frame_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-processor.php",
+            any(class_wp_block_processor_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-block-bindings-registry.php",
             any(class_wp_block_bindings_registry_include_live_dispatch),
         )
@@ -7383,6 +7403,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_metadata_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_parser_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_parser_block_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_parser_frame_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_processor_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
