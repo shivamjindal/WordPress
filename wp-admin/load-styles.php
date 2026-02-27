@@ -1,5 +1,10 @@
 <?php
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/load-styles.php' ) ) {
+	exit;
+}
+
 /*
  * The error_reporting() function can be disabled in php.ini. On systems where that is the case,
  * it's best to add a dummy function to the wp-config.php file, but as this call to the function

@@ -19,6 +19,8 @@ POST /wp-comments-post.php
 GET /wp-admin/
 GET /wp-admin/index.php
 GET /wp-admin/admin.php
+GET /wp-admin/load-scripts.php?load=common,utils
+GET /wp-admin/load-styles.php?load=dashicons,common
 GET /wp-admin/user/admin.php
 GET /wp-admin/user/index.php
 GET /wp-admin/user/profile.php

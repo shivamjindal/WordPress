@@ -115,6 +115,8 @@ assert_rust_handled() {
 assert_rust_handled "/wp-login.php" "yes"
 assert_rust_handled "/wp-admin/install.php" "yes"
 assert_rust_handled "/wp-admin/setup-config.php" "yes"
+assert_rust_handled "/wp-admin/load-scripts.php?load=common,utils" "yes"
+assert_rust_handled "/wp-admin/load-styles.php?load=dashicons,common" "yes"
 assert_rust_handled "/wp-admin/user/admin.php" "yes"
 assert_rust_handled "/wp-admin/user/index.php" "yes"
 assert_rust_handled "/wp-admin/user/profile.php" "yes"

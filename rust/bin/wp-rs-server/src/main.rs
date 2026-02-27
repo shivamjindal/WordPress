@@ -62,6 +62,11 @@ async fn main() {
         .route("/wp-admin/index.php", get(admin_dashboard_live))
         .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
         .route(
+            "/wp-admin/load-scripts.php",
+            any(load_scripts_live_dispatch),
+        )
+        .route("/wp-admin/load-styles.php", any(load_styles_live_dispatch))
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -757,6 +762,111 @@ async fn admin_bootstrap_live_dispatch(
         "message": "Rust admin bootstrap compatibility shim loaded.",
     }))
     .into_response()
+}
+
+async fn load_scripts_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/load-scripts.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let load = params.get("load").cloned().unwrap_or_default();
+    if load.trim().is_empty() {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_request",
+                "message": "Missing load parameter for wp-admin/load-scripts.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let handles = load
+        .split(',')
+        .map(str::trim)
+        .filter(|handle| !handle.is_empty())
+        .collect::<Vec<_>>();
+    if handles.is_empty() {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_request",
+                "message": "No valid script handles supplied.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body = format!(
+        "/* wp-admin/load-scripts.php (Rust) */\nwindow.wpRustLoadScripts = {{ handles: [{}] }};\n",
+        handles
+            .iter()
+            .map(|handle| format!("\"{handle}\""))
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
+    rust_handled_text(
+        StatusCode::OK,
+        "application/javascript; charset=UTF-8",
+        body,
+    )
+    .into_response()
+}
+
+async fn load_styles_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/load-styles.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let load = params.get("load").cloned().unwrap_or_default();
+    if load.trim().is_empty() {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_request",
+                "message": "Missing load parameter for wp-admin/load-styles.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let handles = load
+        .split(',')
+        .map(str::trim)
+        .filter(|handle| !handle.is_empty())
+        .collect::<Vec<_>>();
+    if handles.is_empty() {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_request",
+                "message": "No valid style handles supplied.",
+            }),
+        )
+        .into_response();
+    }
+
+    let body = format!(
+        "/* wp-admin/load-styles.php (Rust) */\n:root{{--wp-rust-load-styles-handles:\"{}\";}}\n",
+        handles.join(",")
+    );
+    rust_handled_text(StatusCode::OK, "text/css; charset=UTF-8", body).into_response()
 }
 
 async fn user_admin_bootstrap_live_dispatch(
