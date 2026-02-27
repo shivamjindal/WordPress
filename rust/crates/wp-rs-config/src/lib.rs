@@ -523,6 +523,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/js/dist/script-modules/edit-site-init/index.min.asset.php",
         "/wp-includes/js/dist/url.min.asset.php",
         "/wp-includes/js/dist/preferences.min.asset.php",
+        "/wp-includes/js/dist/script-modules/interactivity/index.min.asset.php",
+        "/wp-includes/js/dist/token-list.min.asset.php",
+        "/wp-includes/js/dist/escape-html.min.asset.php",
+        "/wp-includes/js/dist/html-entities.min.asset.php",
+        "/wp-includes/js/dist/script-modules/lazy-editor/index.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1606,6 +1611,13 @@ mod tests {
         ));
         assert!(settings.should_route("/wp-includes/js/dist/url.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/preferences.min.asset.php"));
+        assert!(settings
+            .should_route("/wp-includes/js/dist/script-modules/interactivity/index.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/token-list.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/escape-html.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/html-entities.min.asset.php"));
+        assert!(settings
+            .should_route("/wp-includes/js/dist/script-modules/lazy-editor/index.min.asset.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

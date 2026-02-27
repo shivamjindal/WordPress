@@ -1330,6 +1330,26 @@ async fn main() {
             any(js_dist_preferences_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/interactivity/index.min.asset.php",
+            any(js_dist_script_modules_interactivity_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/token-list.min.asset.php",
+            any(js_dist_token_list_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/escape-html.min.asset.php",
+            any(js_dist_escape_html_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/html-entities.min.asset.php",
+            any(js_dist_html_entities_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/lazy-editor/index.min.asset.php",
+            any(js_dist_script_modules_lazy_editor_index_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11430,6 +11450,30 @@ async fn js_dist_url_min_asset_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn js_dist_preferences_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_interactivity_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_token_list_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_escape_html_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_html_entities_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_lazy_editor_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
