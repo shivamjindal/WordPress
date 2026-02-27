@@ -561,6 +561,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/Cache/Base.php",
         "/wp-includes/SimplePie/src/Cache/BaseDataCache.php",
         "/wp-includes/SimplePie/src/Cache/CallableNameFilter.php",
+        "/wp-includes/SimplePie/src/Cache/DB.php",
+        "/wp-includes/SimplePie/src/Cache/DataCache.php",
+        "/wp-includes/SimplePie/src/Cache/File.php",
+        "/wp-includes/SimplePie/src/Cache/Memcache.php",
+        "/wp-includes/SimplePie/src/Cache/Memcached.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1398,6 +1403,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Base.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/BaseDataCache.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/CallableNameFilter.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/DB.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/DataCache.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/File.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Memcache.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Memcached.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));
