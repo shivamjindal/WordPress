@@ -326,6 +326,11 @@ GET /wp-includes/js/dist/data-controls.min.asset.php
 GET /wp-includes/js/dist/data.min.asset.php
 GET /wp-includes/js/dist/date.min.asset.php
 GET /wp-includes/js/dist/deprecated.min.asset.php
+GET /wp-includes/js/dist/react-refresh-runtime.min.asset.php
+GET /wp-includes/js/dist/list-reusable-blocks.min.asset.php
+GET /wp-includes/js/dist/theme.min.asset.php
+GET /wp-includes/js/dist/widgets.min.asset.php
+GET /wp-includes/js/dist/i18n.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

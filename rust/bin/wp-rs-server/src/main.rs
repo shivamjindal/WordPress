@@ -1210,6 +1210,26 @@ async fn main() {
             any(js_dist_deprecated_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/react-refresh-runtime.min.asset.php",
+            any(js_dist_react_refresh_runtime_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/list-reusable-blocks.min.asset.php",
+            any(js_dist_list_reusable_blocks_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/theme.min.asset.php",
+            any(js_dist_theme_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/widgets.min.asset.php",
+            any(js_dist_widgets_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/i18n.min.asset.php",
+            any(js_dist_i18n_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11178,6 +11198,30 @@ async fn js_dist_date_min_asset_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn js_dist_deprecated_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_react_refresh_runtime_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_list_reusable_blocks_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_theme_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_widgets_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_i18n_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
