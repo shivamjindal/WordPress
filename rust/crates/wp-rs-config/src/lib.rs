@@ -179,6 +179,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/Admin",
         "/wp-blog-header.php",
         "/wp-load.php",
+        "/wp-settings.php",
         "/wp-login.php",
         "/wp-signup.php",
         "/wp-activate.php",
@@ -520,6 +521,7 @@ mod tests {
         assert!(settings.should_route("/Admin"));
         assert!(settings.should_route("/wp-blog-header.php"));
         assert!(settings.should_route("/wp-load.php"));
+        assert!(settings.should_route("/wp-settings.php"));
         assert!(settings.should_route("/wp-admin/admin-ajax.php"));
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-includes/js/tinymce/wp-tinymce.php"));

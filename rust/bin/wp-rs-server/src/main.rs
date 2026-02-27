@@ -57,6 +57,7 @@ async fn main() {
         .route("/wp-mail.php", any(mail_live_dispatch))
         .route("/wp-trackback.php", any(trackback_live_dispatch))
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
+        .route("/wp-settings.php", any(settings_bootstrap_live_dispatch))
         .route("/index.php", any(index_bootstrap_live_dispatch))
         .route("/wp-blog-header.php", any(blog_header_live_dispatch))
         .route("/wp-load.php", any(load_bootstrap_live_dispatch))
@@ -7004,6 +7005,21 @@ async fn load_bootstrap_live_dispatch(request: Request) -> Response {
             json!({
                 "error": "method_not_allowed",
                 "message": "wp-load.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_text(StatusCode::OK, "text/plain; charset=UTF-8", String::new()).into_response()
+}
+
+async fn settings_bootstrap_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-settings.php currently supports GET only.",
             }),
         )
         .into_response();

@@ -8,6 +8,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-settings.php' ) === '/wp-settings.php'
+	&& wp_rust_gateway_try_proxy( '/wp-settings.php' ) ) {
+	exit;
+}
+
 /**
  * Stores the location of the WordPress directory of functions, classes, and core content.
  *

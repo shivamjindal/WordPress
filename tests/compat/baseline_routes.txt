@@ -3,6 +3,7 @@ GET /
 GET /index.php
 GET /wp-blog-header.php
 GET /wp-load.php
+GET /wp-settings.php
 GET /search?s=rust
 GET /feed
 GET /Admin
