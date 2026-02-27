@@ -239,6 +239,23 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/category-template.php",
+            any(category_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/category.php",
+            any(category_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/comment-template.php",
+            any(comment_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/comment.php",
+            any(comment_include_live_dispatch),
+        )
+        .route("/wp-includes/compat.php", any(compat_include_live_dispatch))
+        .route(
             "/wp-includes/bookmark-template.php",
             any(bookmark_template_include_live_dispatch),
         )
@@ -7600,6 +7617,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn category_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn category_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn comment_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn comment_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn compat_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

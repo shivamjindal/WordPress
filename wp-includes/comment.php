@@ -6,6 +6,12 @@
  * @subpackage Comment
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/comment.php' ) === '/wp-includes/comment.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/comment.php' ) ) {
+	exit;
+}
+
 /**
  * Checks whether a comment passes internal checks to be allowed to add.
  *

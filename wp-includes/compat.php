@@ -11,6 +11,12 @@
  * @access private
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/compat.php' ) === '/wp-includes/compat.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/compat.php' ) ) {
+	exit;
+}
+
 // If gettext isn't available.
 if ( ! function_exists( '_' ) ) {
 	/**

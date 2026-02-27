@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/category-template.php",
+        "/wp-includes/category.php",
+        "/wp-includes/comment-template.php",
+        "/wp-includes/comment.php",
+        "/wp-includes/compat.php",
         "/wp-includes/bookmark-template.php",
         "/wp-includes/bookmark.php",
         "/wp-includes/cache-compat.php",
@@ -738,6 +743,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/category-template.php"));
+        assert!(settings.should_route("/wp-includes/category.php"));
+        assert!(settings.should_route("/wp-includes/comment-template.php"));
+        assert!(settings.should_route("/wp-includes/comment.php"));
+        assert!(settings.should_route("/wp-includes/compat.php"));
         assert!(settings.should_route("/wp-includes/bookmark-template.php"));
         assert!(settings.should_route("/wp-includes/bookmark.php"));
         assert!(settings.should_route("/wp-includes/cache-compat.php"));
