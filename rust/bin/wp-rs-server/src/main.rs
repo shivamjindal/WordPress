@@ -802,6 +802,26 @@ async fn main() {
             any(blocks_media_text_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/navigation-link.php",
+            any(blocks_navigation_link_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/navigation.php",
+            any(blocks_navigation_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/navigation-submenu.php",
+            any(blocks_navigation_submenu_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/page-list-item.php",
+            any(blocks_page_list_item_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/page-list.php",
+            any(blocks_page_list_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10312,6 +10332,26 @@ async fn blocks_loginout_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_media_text_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_navigation_link_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_navigation_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_navigation_submenu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_page_list_item_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_page_list_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
