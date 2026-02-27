@@ -1042,6 +1042,26 @@ async fn main() {
             any(class_custom_background_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-custom-image-header.php",
+            any(class_custom_image_header_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-file-upload-upgrader.php",
+            any(class_file_upload_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-ftp-pure.php",
+            any(class_ftp_pure_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-ftp-sockets.php",
+            any(class_ftp_sockets_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-ftp.php",
+            any(class_ftp_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -1980,6 +2000,26 @@ async fn class_core_upgrader_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_custom_background_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_custom_image_header_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_file_upload_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_ftp_pure_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_ftp_sockets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_ftp_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

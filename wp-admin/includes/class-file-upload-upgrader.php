@@ -7,6 +7,13 @@
  * @since 4.6.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-file-upload-upgrader.php' );
+if ( '/wp-admin/includes/class-file-upload-upgrader.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Core class used for handling file uploads.
  *
