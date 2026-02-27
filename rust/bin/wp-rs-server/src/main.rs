@@ -1190,6 +1190,26 @@ async fn main() {
             any(js_dist_core_data_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/customize-widgets.min.asset.php",
+            any(js_dist_customize_widgets_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/data-controls.min.asset.php",
+            any(js_dist_data_controls_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/data.min.asset.php",
+            any(js_dist_data_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/date.min.asset.php",
+            any(js_dist_date_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/deprecated.min.asset.php",
+            any(js_dist_deprecated_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11138,6 +11158,26 @@ async fn js_dist_core_commands_min_asset_include_live_dispatch(_request: Request
 }
 
 async fn js_dist_core_data_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_customize_widgets_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_data_controls_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_data_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_date_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_deprecated_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
