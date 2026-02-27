@@ -284,6 +284,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/global-styles-and-settings.php",
         "/wp-includes/http.php",
         "/wp-includes/https-detection.php",
+        "/wp-includes/https-migration.php",
+        "/wp-includes/kses.php",
+        "/wp-includes/l10n.php",
+        "/wp-includes/locale.php",
+        "/wp-includes/media-template.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -833,6 +838,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/global-styles-and-settings.php"));
         assert!(settings.should_route("/wp-includes/http.php"));
         assert!(settings.should_route("/wp-includes/https-detection.php"));
+        assert!(settings.should_route("/wp-includes/https-migration.php"));
+        assert!(settings.should_route("/wp-includes/kses.php"));
+        assert!(settings.should_route("/wp-includes/l10n.php"));
+        assert!(settings.should_route("/wp-includes/locale.php"));
+        assert!(settings.should_route("/wp-includes/media-template.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

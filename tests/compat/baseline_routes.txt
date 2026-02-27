@@ -117,6 +117,11 @@ GET /wp-includes/functions.wp-styles.php
 GET /wp-includes/global-styles-and-settings.php
 GET /wp-includes/http.php
 GET /wp-includes/https-detection.php
+GET /wp-includes/https-migration.php
+GET /wp-includes/kses.php
+GET /wp-includes/l10n.php
+GET /wp-includes/locale.php
+GET /wp-includes/media-template.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

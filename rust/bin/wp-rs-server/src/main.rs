@@ -401,6 +401,17 @@ async fn main() {
             any(https_detection_include_live_dispatch),
         )
         .route(
+            "/wp-includes/https-migration.php",
+            any(https_migration_include_live_dispatch),
+        )
+        .route("/wp-includes/kses.php", any(kses_include_live_dispatch))
+        .route("/wp-includes/l10n.php", any(l10n_include_live_dispatch))
+        .route("/wp-includes/locale.php", any(locale_include_live_dispatch))
+        .route(
+            "/wp-includes/media-template.php",
+            any(media_template_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7959,6 +7970,26 @@ async fn http_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn https_detection_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn https_migration_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn kses_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn locale_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn media_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

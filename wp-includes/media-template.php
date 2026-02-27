@@ -7,6 +7,12 @@
  * @since 3.5.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/media-template.php' ) === '/wp-includes/media-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/media-template.php' ) ) {
+	exit;
+}
+
 /**
  * Outputs the markup for an audio tag to be used in an Underscore template
  * when data.model is passed.
