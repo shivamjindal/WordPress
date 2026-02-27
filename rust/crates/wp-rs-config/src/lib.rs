@@ -484,6 +484,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/src/Exception/Http/Status407.php",
         "/wp-includes/Requests/src/Exception/Http/Status408.php",
         "/wp-includes/Requests/src/Exception/Http/Status409.php",
+        "/wp-includes/Requests/src/Exception/Http/Status410.php",
+        "/wp-includes/Requests/src/Exception/Http/Status411.php",
+        "/wp-includes/Requests/src/Exception/Http/Status412.php",
+        "/wp-includes/Requests/src/Exception/Http/Status413.php",
+        "/wp-includes/Requests/src/Exception/Http/Status414.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1232,6 +1237,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status407.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status408.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status409.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status410.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status411.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status412.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status413.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception/Http/Status414.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
