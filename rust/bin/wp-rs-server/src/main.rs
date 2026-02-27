@@ -1222,6 +1222,26 @@ async fn main() {
             any(class_wp_privacy_requests_table_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-screen.php",
+            any(class_wp_screen_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-site-health-auto-updates.php",
+            any(class_wp_site_health_auto_updates_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-site-health.php",
+            any(class_wp_site_health_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-site-icon.php",
+            any(class_wp_site_icon_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-terms-list-table.php",
+            any(class_wp_terms_list_table_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2346,6 +2366,26 @@ async fn class_wp_privacy_policy_content_include_live_dispatch(_request: Request
 }
 
 async fn class_wp_privacy_requests_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_screen_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_site_health_auto_updates_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_site_health_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_site_icon_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_terms_list_table_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

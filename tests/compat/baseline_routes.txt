@@ -334,6 +334,11 @@ GET /wp-admin/includes/class-wp-privacy-data-export-requests-list-table.php
 GET /wp-admin/includes/class-wp-privacy-data-removal-requests-list-table.php
 GET /wp-admin/includes/class-wp-privacy-policy-content.php
 GET /wp-admin/includes/class-wp-privacy-requests-table.php
+GET /wp-admin/includes/class-wp-screen.php
+GET /wp-admin/includes/class-wp-site-health-auto-updates.php
+GET /wp-admin/includes/class-wp-site-health.php
+GET /wp-admin/includes/class-wp-site-icon.php
+GET /wp-admin/includes/class-wp-terms-list-table.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

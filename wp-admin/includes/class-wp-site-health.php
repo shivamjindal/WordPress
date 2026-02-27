@@ -6,6 +6,12 @@
  * @subpackage Site_Health
  * @since 5.2.0
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-site-health.php' );
+if ( '/wp-admin/includes/class-wp-site-health.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 #[AllowDynamicProperties]
 class WP_Site_Health {

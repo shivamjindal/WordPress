@@ -12,6 +12,13 @@
  *
  * @since 3.3.0
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-screen.php' );
+if ( '/wp-admin/includes/class-wp-screen.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 #[AllowDynamicProperties]
 final class WP_Screen {
 	/**
