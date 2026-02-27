@@ -138,6 +138,9 @@ GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
+GET /wp-admin/update-core.php
+GET /wp-admin/update-core.php?action=do-plugin-upgrade
+POST /wp-admin/update-core.php?action=do-plugin-upgrade
 GET /wp-admin/maint/repair.php
 GET /wp-admin/maint/repair.php?repair=1
 GET /wp-cron.php?doing_wp_cron=1
