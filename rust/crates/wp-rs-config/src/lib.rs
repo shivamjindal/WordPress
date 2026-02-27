@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-customize-setting.php",
+        "/wp-includes/class-wp-customize-widgets.php",
+        "/wp-includes/class-wp-feed-cache-transient.php",
+        "/wp-includes/class-wp-feed-cache.php",
+        "/wp-includes/class-wp-http-ixr-client.php",
         "/wp-includes/class-wp-customize-control.php",
         "/wp-includes/class-wp-customize-manager.php",
         "/wp-includes/class-wp-customize-nav-menus.php",
@@ -703,6 +708,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-setting.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-widgets.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-feed-cache-transient.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-feed-cache.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-http-ixr-client.php"));
         assert!(settings.should_route("/wp-includes/class-wp-customize-control.php"));
         assert!(settings.should_route("/wp-includes/class-wp-customize-manager.php"));
         assert!(settings.should_route("/wp-includes/class-wp-customize-nav-menus.php"));

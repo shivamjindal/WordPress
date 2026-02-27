@@ -5,6 +5,13 @@
  * @package WordPress
  * @since 3.1.0
  */
+
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-http-ixr-client.php' ) === '/wp-includes/class-wp-http-ixr-client.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-http-ixr-client.php' ) ) {
+	exit;
+}
+
 #[AllowDynamicProperties]
 class WP_HTTP_IXR_Client extends IXR_Client {
 	public $scheme;

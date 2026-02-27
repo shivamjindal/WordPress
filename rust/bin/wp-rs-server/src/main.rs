@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-customize-setting.php",
+            any(class_wp_customize_setting_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-customize-widgets.php",
+            any(class_wp_customize_widgets_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-feed-cache-transient.php",
+            any(class_wp_feed_cache_transient_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-feed-cache.php",
+            any(class_wp_feed_cache_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-http-ixr-client.php",
+            any(class_wp_http_ixr_client_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-customize-control.php",
             any(class_wp_customize_control_include_live_dispatch),
         )
@@ -7463,6 +7483,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_customize_setting_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_wp_customize_widgets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_feed_cache_transient_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_feed_cache_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_http_ixr_client_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

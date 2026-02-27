@@ -72,6 +72,11 @@ GET /wp-includes/class-wp-styles.php
 GET /wp-includes/class-wp-dependencies.php
 GET /wp-includes/class-wp-dependency.php
 GET /wp-includes/class-wp-script-modules.php
+GET /wp-includes/class-wp-customize-setting.php
+GET /wp-includes/class-wp-customize-widgets.php
+GET /wp-includes/class-wp-feed-cache-transient.php
+GET /wp-includes/class-wp-feed-cache.php
+GET /wp-includes/class-wp-http-ixr-client.php
 GET /wp-includes/class-wp-customize-control.php
 GET /wp-includes/class-wp-customize-manager.php
 GET /wp-includes/class-wp-customize-nav-menus.php
