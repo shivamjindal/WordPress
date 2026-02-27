@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-block-pattern-categories-registry.php",
+            any(class_wp_block_pattern_categories_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-patterns-registry.php",
+            any(class_wp_block_patterns_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-styles-registry.php",
+            any(class_wp_block_styles_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-templates-registry.php",
+            any(class_wp_block_templates_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-type-registry.php",
+            any(class_wp_block_type_registry_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-block-metadata-registry.php",
             any(class_wp_block_metadata_registry_include_live_dispatch),
         )
@@ -7403,6 +7423,28 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_pattern_categories_registry_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_patterns_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_styles_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_templates_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_type_registry_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
