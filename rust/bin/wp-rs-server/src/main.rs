@@ -74,6 +74,14 @@ async fn main() {
         )
         .route("/wp-admin/load-styles.php", any(load_styles_live_dispatch))
         .route(
+            "/wp-admin/custom-background.php",
+            any(custom_background_live_dispatch),
+        )
+        .route(
+            "/wp-admin/custom-header.php",
+            any(custom_header_live_dispatch),
+        )
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -888,6 +896,23 @@ async fn load_styles_live_dispatch(request: Request) -> Response {
         handles.join(",")
     );
     rust_handled_text(StatusCode::OK, "text/css; charset=UTF-8", body).into_response()
+}
+
+fn legacy_admin_include_guard_response() -> Response {
+    rust_handled_text(
+        StatusCode::OK,
+        "text/plain; charset=UTF-8",
+        "-1".to_string(),
+    )
+    .into_response()
+}
+
+async fn custom_background_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn custom_header_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
 }
 
 async fn user_admin_bootstrap_live_dispatch(
