@@ -17,3 +17,4 @@ POST	/wp-admin/network/sites.php	application/x-www-form-urlencoded	action=allblo
 POST	/wp-admin/network/users.php	application/x-www-form-urlencoded	action=allusers&bulk_action=spam&allusers=2
 POST	/wp-admin/network/themes.php	application/x-www-form-urlencoded	action=enable-selected&checked=twentytwentyfive
 POST	/wp-admin/network/plugins.php	application/x-www-form-urlencoded	action=deactivate-selected&checked=hello.php
+POST	/wp-admin/network/settings.php	application/x-www-form-urlencoded	site_name=Rust+Network&new_admin_email=admin%40example.com&registration=all

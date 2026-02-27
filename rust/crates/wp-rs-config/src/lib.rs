@@ -208,6 +208,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/network/users.php",
         "/wp-admin/network/themes.php",
         "/wp-admin/network/plugins.php",
+        "/wp-admin/network/settings.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
         "/wp-admin/admin-ajax.php",
@@ -429,6 +430,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/network/users.php"));
         assert!(settings.should_route("/wp-admin/network/themes.php"));
         assert!(settings.should_route("/wp-admin/network/plugins.php"));
+        assert!(settings.should_route("/wp-admin/network/settings.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }
 

@@ -142,6 +142,10 @@ async fn main() {
             any(network_plugins_live_dispatch),
         )
         .route(
+            "/wp-admin/network/settings.php",
+            any(network_settings_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -1837,6 +1841,107 @@ async fn network_plugins_live_dispatch(
 
     let html = "<!doctype html><html><body><h1>Network Plugins (Rust)</h1><p>status=ready</p></body></html>"
         .to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_settings_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/settings.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_network_options = authenticated
+        && (capabilities.contains("manage_network_options")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_manage_network_options {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network_options capability is required for wp-admin/network/settings.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if let Some(hash) = params.get("network_admin_hash") {
+        if hash == "confirm-rust-admin-email" {
+            return rust_handled_redirect("/wp-admin/network/settings.php?updated=true")
+                .into_response();
+        }
+        return rust_handled_redirect("/wp-admin/network/settings.php?updated=false")
+            .into_response();
+    }
+
+    if params
+        .get("dismiss")
+        .is_some_and(|value| value == "new_network_admin_email")
+    {
+        return rust_handled_redirect("/wp-admin/network/settings.php?updated=true")
+            .into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        let site_name = params
+            .get("site_name")
+            .cloned()
+            .unwrap_or_else(|| "WordPress Network".to_string());
+        let new_admin_email = params.get("new_admin_email").cloned().unwrap_or_default();
+        let registration = params.get("registration").cloned().unwrap_or_default();
+        {
+            let mut options = state.options.lock().expect("options mutex poisoned");
+            options.set_option("network_site_name", &site_name, false);
+            if !new_admin_email.is_empty() {
+                options.set_option("network_admin_email", &new_admin_email, false);
+            }
+            if !registration.is_empty() {
+                options.set_option("network_registration", &registration, false);
+            }
+        }
+        return rust_handled_redirect("/wp-admin/network/settings.php?updated=true")
+            .into_response();
+    }
+
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let options = state.options.lock().expect("options mutex poisoned");
+    let site_name = options
+        .get_option("network_site_name")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "WordPress Network".to_string());
+    let network_admin_email = options
+        .get_option("network_admin_email")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "admin@example.com".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Network Settings (Rust)</h1><p>updated={updated}</p><p>site_name={site_name}</p><p>admin_email={network_admin_email}</p></body></html>"
+    );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
