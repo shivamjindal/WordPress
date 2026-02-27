@@ -14,6 +14,13 @@
  *
  * @see WP_List_Table
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-ms-themes-list-table.php' );
+if ( '/wp-admin/includes/class-wp-ms-themes-list-table.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 class WP_MS_Themes_List_Table extends WP_List_Table {
 
 	public $site_id;

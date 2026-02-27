@@ -324,6 +324,11 @@ GET /wp-admin/includes/class-wp-list-table-compat.php
 GET /wp-admin/includes/class-wp-list-table.php
 GET /wp-admin/includes/class-wp-media-list-table.php
 GET /wp-admin/includes/class-wp-ms-sites-list-table.php
+GET /wp-admin/includes/class-wp-ms-themes-list-table.php
+GET /wp-admin/includes/class-wp-ms-users-list-table.php
+GET /wp-admin/includes/class-wp-plugin-install-list-table.php
+GET /wp-admin/includes/class-wp-plugins-list-table.php
+GET /wp-admin/includes/class-wp-post-comments-list-table.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

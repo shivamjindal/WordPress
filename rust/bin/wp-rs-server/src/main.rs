@@ -1182,6 +1182,26 @@ async fn main() {
             any(class_wp_ms_sites_list_table_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-ms-themes-list-table.php",
+            any(class_wp_ms_themes_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-ms-users-list-table.php",
+            any(class_wp_ms_users_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-plugin-install-list-table.php",
+            any(class_wp_plugin_install_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-plugins-list-table.php",
+            any(class_wp_plugins_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-post-comments-list-table.php",
+            any(class_wp_post_comments_list_table_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2262,6 +2282,26 @@ async fn class_wp_media_list_table_include_live_dispatch(_request: Request) -> R
 }
 
 async fn class_wp_ms_sites_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_ms_themes_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_ms_users_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_plugin_install_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_plugins_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_post_comments_list_table_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -491,6 +491,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-wp-list-table.php",
         "/wp-admin/includes/class-wp-media-list-table.php",
         "/wp-admin/includes/class-wp-ms-sites-list-table.php",
+        "/wp-admin/includes/class-wp-ms-themes-list-table.php",
+        "/wp-admin/includes/class-wp-ms-users-list-table.php",
+        "/wp-admin/includes/class-wp-plugin-install-list-table.php",
+        "/wp-admin/includes/class-wp-plugins-list-table.php",
+        "/wp-admin/includes/class-wp-post-comments-list-table.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1121,6 +1126,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-wp-list-table.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-media-list-table.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-ms-sites-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-ms-themes-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-ms-users-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-plugin-install-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-plugins-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-post-comments-list-table.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
