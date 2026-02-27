@@ -521,6 +521,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/export.php",
         "/wp-admin/includes/file.php",
         "/wp-admin/includes/image-edit.php",
+        "/wp-admin/includes/image.php",
+        "/wp-admin/includes/import.php",
+        "/wp-admin/includes/list-table.php",
+        "/wp-admin/includes/media.php",
+        "/wp-admin/includes/menu.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1185,6 +1190,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/export.php"));
         assert!(settings.should_route("/wp-admin/includes/file.php"));
         assert!(settings.should_route("/wp-admin/includes/image-edit.php"));
+        assert!(settings.should_route("/wp-admin/includes/image.php"));
+        assert!(settings.should_route("/wp-admin/includes/import.php"));
+        assert!(settings.should_route("/wp-admin/includes/list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/media.php"));
+        assert!(settings.should_route("/wp-admin/includes/menu.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

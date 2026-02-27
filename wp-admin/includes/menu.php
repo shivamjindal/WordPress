@@ -5,6 +5,12 @@
  * @package WordPress
  * @subpackage Administration
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/menu.php' );
+if ( '/wp-admin/includes/menu.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 if ( is_network_admin() ) {
 

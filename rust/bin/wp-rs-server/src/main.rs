@@ -1302,6 +1302,26 @@ async fn main() {
             any(admin_includes_image_edit_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/image.php",
+            any(admin_includes_image_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/import.php",
+            any(admin_includes_import_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/list-table.php",
+            any(admin_includes_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/media.php",
+            any(admin_includes_media_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/menu.php",
+            any(admin_includes_menu_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2506,6 +2526,26 @@ async fn admin_includes_file_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn admin_includes_image_edit_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_image_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_import_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_media_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_menu_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
