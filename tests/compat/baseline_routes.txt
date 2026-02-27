@@ -309,6 +309,11 @@ GET /wp-admin/includes/class-walker-nav-menu-edit.php
 GET /wp-admin/includes/class-wp-ajax-upgrader-skin.php
 GET /wp-admin/includes/class-wp-application-passwords-list-table.php
 GET /wp-admin/includes/class-wp-automatic-updater.php
+GET /wp-admin/includes/class-wp-comments-list-table.php
+GET /wp-admin/includes/class-wp-community-events.php
+GET /wp-admin/includes/class-wp-debug-data.php
+GET /wp-admin/includes/class-wp-filesystem-base.php
+GET /wp-admin/includes/class-wp-filesystem-direct.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

@@ -1122,6 +1122,26 @@ async fn main() {
             any(class_wp_automatic_updater_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-comments-list-table.php",
+            any(class_wp_comments_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-community-events.php",
+            any(class_wp_community_events_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-debug-data.php",
+            any(class_wp_debug_data_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-filesystem-base.php",
+            any(class_wp_filesystem_base_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-filesystem-direct.php",
+            any(class_wp_filesystem_direct_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2142,6 +2162,26 @@ async fn class_wp_application_passwords_list_table_include_live_dispatch(
 }
 
 async fn class_wp_automatic_updater_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_comments_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_community_events_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_debug_data_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_filesystem_base_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_filesystem_direct_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

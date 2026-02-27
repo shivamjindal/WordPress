@@ -476,6 +476,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-wp-ajax-upgrader-skin.php",
         "/wp-admin/includes/class-wp-application-passwords-list-table.php",
         "/wp-admin/includes/class-wp-automatic-updater.php",
+        "/wp-admin/includes/class-wp-comments-list-table.php",
+        "/wp-admin/includes/class-wp-community-events.php",
+        "/wp-admin/includes/class-wp-debug-data.php",
+        "/wp-admin/includes/class-wp-filesystem-base.php",
+        "/wp-admin/includes/class-wp-filesystem-direct.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1091,6 +1096,11 @@ mod tests {
         assert!(settings
             .should_route("/wp-admin/includes/class-wp-application-passwords-list-table.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-automatic-updater.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-comments-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-community-events.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-debug-data.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-base.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-filesystem-direct.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
