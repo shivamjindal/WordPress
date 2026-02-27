@@ -311,6 +311,11 @@ GET /wp-includes/js/dist/autop.min.asset.php
 GET /wp-includes/js/dist/base-styles.min.asset.php
 GET /wp-includes/js/dist/blob.min.asset.php
 GET /wp-includes/js/dist/block-directory.min.asset.php
+GET /wp-includes/js/dist/block-editor.min.asset.php
+GET /wp-includes/js/dist/block-library.min.asset.php
+GET /wp-includes/js/dist/block-serialization-default-parser.min.asset.php
+GET /wp-includes/js/dist/block-serialization-spec-parser.min.asset.php
+GET /wp-includes/js/dist/blocks.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

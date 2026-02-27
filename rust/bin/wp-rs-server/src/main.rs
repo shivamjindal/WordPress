@@ -1150,6 +1150,26 @@ async fn main() {
             any(js_dist_block_directory_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/block-editor.min.asset.php",
+            any(js_dist_block_editor_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/block-library.min.asset.php",
+            any(js_dist_block_library_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/block-serialization-default-parser.min.asset.php",
+            any(js_dist_block_serialization_default_parser_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/block-serialization-spec-parser.min.asset.php",
+            any(js_dist_block_serialization_spec_parser_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/blocks.min.asset.php",
+            any(js_dist_blocks_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11054,6 +11074,30 @@ async fn js_dist_blob_min_asset_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn js_dist_block_directory_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_block_editor_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_block_library_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_block_serialization_default_parser_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_block_serialization_spec_parser_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_blocks_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
