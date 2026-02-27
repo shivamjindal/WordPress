@@ -7,6 +7,11 @@
  * @since 3.0.0
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/my-sites.php' ) ) {
+	exit;
+}
+
 require_once __DIR__ . '/admin.php';
 
 if ( ! is_multisite() ) {

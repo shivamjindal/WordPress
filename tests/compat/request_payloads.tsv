@@ -26,6 +26,7 @@ POST	/wp-admin/site-editor.php	application/x-www-form-urlencoded	action=save&pos
 POST	/wp-admin/press-this.php	application/x-www-form-urlencoded	action=save&u=https%3A%2F%2Fexample.com&t=Rust+Press+This
 POST	/wp-admin/term.php?tag_ID=1&taxonomy=category	application/x-www-form-urlencoded	name=Rust+Category&slug=rust-category
 POST	/wp-admin/revision.php?revision=1&action=restore	application/x-www-form-urlencoded	revision=1&action=restore
+POST	/wp-admin/my-sites.php	application/x-www-form-urlencoded	action=updateblogsettings&primary_blog=1
 POST	/wp-admin/plugins.php	application/x-www-form-urlencoded	action=activate-selected&checked=hello.php
 POST	/wp-admin/themes.php	application/x-www-form-urlencoded	action=enable-auto-update&stylesheet=twentytwentyfive
 POST	/wp-admin/users.php	application/x-www-form-urlencoded	action=delete&users=2

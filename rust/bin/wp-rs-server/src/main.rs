@@ -176,6 +176,18 @@ async fn main() {
         .route("/wp-admin/press-this.php", any(press_this_live_dispatch))
         .route("/wp-admin/term.php", any(term_live_dispatch))
         .route("/wp-admin/revision.php", any(revision_live_dispatch))
+        .route("/wp-admin/moderation.php", any(moderation_live_dispatch))
+        .route("/wp-admin/my-sites.php", any(my_sites_live_dispatch))
+        .route("/wp-admin/ms-sites.php", any(ms_sites_live_dispatch))
+        .route("/wp-admin/ms-users.php", any(ms_users_live_dispatch))
+        .route("/wp-admin/ms-themes.php", any(ms_themes_live_dispatch))
+        .route("/wp-admin/ms-edit.php", any(ms_edit_live_dispatch))
+        .route("/wp-admin/ms-admin.php", any(ms_admin_live_dispatch))
+        .route("/wp-admin/ms-options.php", any(ms_options_live_dispatch))
+        .route(
+            "/wp-admin/ms-upgrade-network.php",
+            any(ms_upgrade_network_live_dispatch),
+        )
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
@@ -2676,6 +2688,173 @@ async fn revision_live_dispatch(State(state): State<AppState>, request: Request)
         "<!doctype html><html><body><h1>Revisions (Rust)</h1><p>action={action}</p><p>revision={revision_id}</p><p>from={from}</p><p>to={to}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn moderation_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/moderation.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_moderate = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("moderate_comments")
+            || capabilities.contains("manage_options"));
+    if !can_moderate {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/moderation.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect("/wp-admin/edit-comments.php?comment_status=moderated").into_response()
+}
+
+async fn my_sites_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/my-sites.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_view = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("manage_sites")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_view {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for wp-admin/my-sites.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST
+        && params
+            .get("action")
+            .is_some_and(|value| value == "updateblogsettings")
+    {
+        let primary_blog = params.get("primary_blog").cloned().unwrap_or_default();
+        let target = format!("/wp-admin/my-sites.php?updated=true&primary_blog={primary_blog}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let action = params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| "splash".to_string());
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let primary_blog = params.get("primary_blog").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>My Sites (Rust)</h1><p>action={action}</p><p>updated={updated}</p><p>primary_blog={primary_blog}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn ms_sites_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/sites.php").await
+}
+
+async fn ms_users_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/users.php").await
+}
+
+async fn ms_themes_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/themes.php").await
+}
+
+async fn ms_edit_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/").await
+}
+
+async fn ms_admin_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/").await
+}
+
+async fn ms_options_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/settings.php").await
+}
+
+async fn ms_upgrade_network_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    multisite_redirect_live_dispatch(state, request, "/wp-admin/network/upgrade.php").await
+}
+
+async fn multisite_redirect_live_dispatch(
+    state: AppState,
+    request: Request,
+    target: &str,
+) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "legacy multisite redirect shims currently support GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("manage_sites")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_view {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network capability is required for this multisite admin shim.",
+            }),
+        )
+        .into_response();
+    }
+
+    rust_handled_redirect(target).into_response()
 }
 
 async fn plugins_live_dispatch(State(state): State<AppState>, request: Request) -> Response {

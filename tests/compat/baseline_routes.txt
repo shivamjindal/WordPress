@@ -103,6 +103,17 @@ POST /wp-admin/term.php?tag_ID=1&taxonomy=category
 GET /wp-admin/revision.php?revision=1&action=view
 GET /wp-admin/revision.php?revision=1&action=restore
 POST /wp-admin/revision.php?revision=1&action=restore
+GET /wp-admin/moderation.php
+GET /wp-admin/my-sites.php
+GET /wp-admin/my-sites.php?updated=true&primary_blog=1
+POST /wp-admin/my-sites.php
+GET /wp-admin/ms-sites.php
+GET /wp-admin/ms-users.php
+GET /wp-admin/ms-themes.php
+GET /wp-admin/ms-edit.php
+GET /wp-admin/ms-admin.php
+GET /wp-admin/ms-options.php
+GET /wp-admin/ms-upgrade-network.php
 GET /wp-admin/plugins.php
 GET /wp-admin/plugins.php?action=activate&plugin=hello.php
 POST /wp-admin/plugins.php
