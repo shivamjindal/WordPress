@@ -1282,6 +1282,26 @@ async fn main() {
             any(admin_includes_dashboard_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/deprecated.php",
+            any(admin_includes_deprecated_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/edit-tag-messages.php",
+            any(admin_includes_edit_tag_messages_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/export.php",
+            any(admin_includes_export_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/file.php",
+            any(admin_includes_file_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/image-edit.php",
+            any(admin_includes_image_edit_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2466,6 +2486,26 @@ async fn admin_includes_credits_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn admin_includes_dashboard_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_deprecated_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_edit_tag_messages_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_export_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_file_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_image_edit_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -6,6 +6,12 @@
  * @subpackage Administration
  * @since 4.4.0
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/edit-tag-messages.php' );
+if ( '/wp-admin/includes/edit-tag-messages.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 $messages = array();
 // 0 = unused. Messages start at index 1.

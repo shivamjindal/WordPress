@@ -349,6 +349,11 @@ GET /wp-admin/includes/comment.php
 GET /wp-admin/includes/continents-cities.php
 GET /wp-admin/includes/credits.php
 GET /wp-admin/includes/dashboard.php
+GET /wp-admin/includes/deprecated.php
+GET /wp-admin/includes/edit-tag-messages.php
+GET /wp-admin/includes/export.php
+GET /wp-admin/includes/file.php
+GET /wp-admin/includes/image-edit.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

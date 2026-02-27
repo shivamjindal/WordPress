@@ -516,6 +516,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/continents-cities.php",
         "/wp-admin/includes/credits.php",
         "/wp-admin/includes/dashboard.php",
+        "/wp-admin/includes/deprecated.php",
+        "/wp-admin/includes/edit-tag-messages.php",
+        "/wp-admin/includes/export.php",
+        "/wp-admin/includes/file.php",
+        "/wp-admin/includes/image-edit.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1175,6 +1180,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/continents-cities.php"));
         assert!(settings.should_route("/wp-admin/includes/credits.php"));
         assert!(settings.should_route("/wp-admin/includes/dashboard.php"));
+        assert!(settings.should_route("/wp-admin/includes/deprecated.php"));
+        assert!(settings.should_route("/wp-admin/includes/edit-tag-messages.php"));
+        assert!(settings.should_route("/wp-admin/includes/export.php"));
+        assert!(settings.should_route("/wp-admin/includes/file.php"));
+        assert!(settings.should_route("/wp-admin/includes/image-edit.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
