@@ -364,6 +364,11 @@ GET /wp-includes/SimplePie/library/SimplePie/Author.php
 GET /wp-includes/SimplePie/library/SimplePie/Cache/Base.php
 GET /wp-includes/SimplePie/library/SimplePie/Cache/DB.php
 GET /wp-includes/SimplePie/library/SimplePie/Cache/File.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/Memcache.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/Memcached.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/MySQL.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache/Redis.php
+GET /wp-includes/SimplePie/library/SimplePie/Cache.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

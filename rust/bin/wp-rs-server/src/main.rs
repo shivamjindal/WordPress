@@ -1356,6 +1356,26 @@ async fn main() {
             any(simple_pie_library_simple_pie_cache_file_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/Memcache.php",
+            any(simple_pie_library_simple_pie_cache_memcache_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/Memcached.php",
+            any(simple_pie_library_simple_pie_cache_memcached_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/MySQL.php",
+            any(simple_pie_library_simple_pie_cache_mysql_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache/Redis.php",
+            any(simple_pie_library_simple_pie_cache_redis_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/library/SimplePie/Cache.php",
+            any(simple_pie_library_simple_pie_cache_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10420,6 +10440,34 @@ async fn simple_pie_library_simple_pie_cache_db_include_live_dispatch(
 async fn simple_pie_library_simple_pie_cache_file_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_memcache_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_memcached_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_mysql_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_redis_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_library_simple_pie_cache_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

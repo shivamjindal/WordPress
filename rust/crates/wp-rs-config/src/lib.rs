@@ -531,6 +531,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/library/SimplePie/Cache/Base.php",
         "/wp-includes/SimplePie/library/SimplePie/Cache/DB.php",
         "/wp-includes/SimplePie/library/SimplePie/Cache/File.php",
+        "/wp-includes/SimplePie/library/SimplePie/Cache/Memcache.php",
+        "/wp-includes/SimplePie/library/SimplePie/Cache/Memcached.php",
+        "/wp-includes/SimplePie/library/SimplePie/Cache/MySQL.php",
+        "/wp-includes/SimplePie/library/SimplePie/Cache/Redis.php",
+        "/wp-includes/SimplePie/library/SimplePie/Cache.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1327,6 +1332,15 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/Base.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/DB.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/File.php"));
+        assert!(
+            settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/Memcache.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/Memcached.php")
+        );
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/MySQL.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache/Redis.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Cache.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
