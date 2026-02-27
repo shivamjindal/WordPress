@@ -7,6 +7,13 @@ declare(strict_types=1);
 
 namespace SimplePie;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/SimplePie/src/Caption.php' );
+if ( '/wp-includes/SimplePie/src/Caption.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Handles `<media:text>` captions as defined in Media RSS.
  *

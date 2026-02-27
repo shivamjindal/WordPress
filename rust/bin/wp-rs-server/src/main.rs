@@ -1516,6 +1516,26 @@ async fn main() {
             any(simple_pie_src_cache_include_live_dispatch),
         )
         .route(
+            "/wp-includes/SimplePie/src/Caption.php",
+            any(simple_pie_src_caption_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Category.php",
+            any(simple_pie_src_category_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Content/Type/Sniffer.php",
+            any(simple_pie_src_content_type_sniffer_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Copyright.php",
+            any(simple_pie_src_copyright_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/SimplePie/src/Credit.php",
+            any(simple_pie_src_credit_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
             any(simple_pie_library_simple_pie_restriction_include_live_dispatch),
         )
@@ -10794,6 +10814,26 @@ async fn simple_pie_src_cache_redis_include_live_dispatch(_request: Request) -> 
 }
 
 async fn simple_pie_src_cache_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_caption_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_category_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_content_type_sniffer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_copyright_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn simple_pie_src_credit_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

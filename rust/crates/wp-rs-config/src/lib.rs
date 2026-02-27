@@ -571,6 +571,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/src/Cache/Psr16.php",
         "/wp-includes/SimplePie/src/Cache/Redis.php",
         "/wp-includes/SimplePie/src/Cache.php",
+        "/wp-includes/SimplePie/src/Caption.php",
+        "/wp-includes/SimplePie/src/Category.php",
+        "/wp-includes/SimplePie/src/Content/Type/Sniffer.php",
+        "/wp-includes/SimplePie/src/Copyright.php",
+        "/wp-includes/SimplePie/src/Credit.php",
         "/wp-includes/SimplePie/library/SimplePie/Restriction.php",
         "/wp-includes/SimplePie/library/SimplePie/Sanitize.php",
         "/wp-includes/SimplePie/library/SimplePie/Source.php",
@@ -1418,6 +1423,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Psr16.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache/Redis.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/src/Cache.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Caption.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Category.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Content/Type/Sniffer.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Copyright.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/src/Credit.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Restriction.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Sanitize.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Source.php"));
