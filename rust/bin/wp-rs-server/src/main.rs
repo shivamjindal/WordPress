@@ -59,6 +59,7 @@ async fn main() {
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
+        .route("/wp-admin/index.php", get(admin_dashboard_live))
         .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
         .route("/wp-admin/profile.php", any(profile_live_dispatch))
         .route("/wp-admin/user-edit.php", any(user_edit_live_dispatch))

@@ -17,6 +17,7 @@ POST /wp-activate.php
 GET /wp-comments-post.php
 POST /wp-comments-post.php
 GET /wp-admin/
+GET /wp-admin/index.php
 GET /wp-admin/admin.php
 GET /wp-admin/profile.php
 GET /wp-admin/profile.php?updated=true
