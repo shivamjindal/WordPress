@@ -138,6 +138,12 @@ async fn main() {
             any(edit_comments_live_dispatch),
         )
         .route("/wp-admin/comment.php", any(comment_live_dispatch))
+        .route(
+            "/wp-admin/link-manager.php",
+            any(link_manager_live_dispatch),
+        )
+        .route("/wp-admin/link-add.php", any(link_add_live_dispatch))
+        .route("/wp-admin/link.php", any(link_live_dispatch))
         .route("/wp-admin/upload.php", any(upload_live_dispatch))
         .route("/wp-admin/media-new.php", any(media_new_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
@@ -2283,6 +2289,191 @@ async fn comment_live_dispatch(State(state): State<AppState>, request: Request) 
         "<!doctype html><html><body><h1>Edit Comment (Rust)</h1><p>action={action}</p><p>comment_id={comment_id}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn link_manager_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/link-manager.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_links = authenticated
+        && (capabilities.contains("manage_links")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network"));
+    if !can_manage_links {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_links capability is required for wp-admin/link-manager.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params
+        .get("action")
+        .or_else(|| params.get("doaction"))
+        .cloned()
+        .unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/link-manager.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let deleted = params.get("deleted").cloned().unwrap_or_default();
+    let s = params.get("s").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Link Manager (Rust)</h1><p>action={action}</p><p>deleted={deleted}</p><p>search={s}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn link_add_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/link-add.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_links = authenticated
+        && (capabilities.contains("manage_links")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network"));
+    if !can_manage_links {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_links capability is required for wp-admin/link-add.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/link-manager.php?added=true").into_response();
+    }
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    let cat_id = params.get("cat_id").cloned().unwrap_or_default();
+    let link_id = params.get("link_id").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Link Add (Rust)</h1><p>action={action}</p><p>cat_id={cat_id}</p><p>link_id={link_id}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn link_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/link.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_links = authenticated
+        && (capabilities.contains("manage_links")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network"));
+    if !can_manage_links {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_links capability is required for wp-admin/link.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    let link_id = params.get("link_id").cloned().unwrap_or_default();
+
+    if method == axum::http::Method::POST {
+        let target = if action.is_empty() {
+            "/wp-admin/link-manager.php".to_string()
+        } else {
+            format!("/wp-admin/link-manager.php?updated_action={action}")
+        };
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    if action == "edit" {
+        let html = format!(
+            "<!doctype html><html><body><h1>Edit Link (Rust)</h1><p>link_id={link_id}</p></body></html>"
+        );
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    rust_handled_redirect("/wp-admin/link-manager.php").into_response()
 }
 
 async fn upload_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
