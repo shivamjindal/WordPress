@@ -464,6 +464,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/library/Requests.php",
         "/wp-includes/Requests/src/Auth.php",
         "/wp-includes/Requests/src/Auth/Basic.php",
+        "/wp-includes/Requests/src/Autoload.php",
+        "/wp-includes/Requests/src/Capability.php",
+        "/wp-includes/Requests/src/Cookie.php",
+        "/wp-includes/Requests/src/Cookie/Jar.php",
+        "/wp-includes/Requests/src/Exception.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1192,6 +1197,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/library/Requests.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Auth.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Auth/Basic.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Autoload.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Capability.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Cookie.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Cookie/Jar.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Exception.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

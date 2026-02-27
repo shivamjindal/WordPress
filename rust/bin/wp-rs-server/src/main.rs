@@ -1088,6 +1088,26 @@ async fn main() {
             any(requests_src_auth_basic_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Autoload.php",
+            any(requests_src_autoload_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Capability.php",
+            any(requests_src_capability_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Cookie.php",
+            any(requests_src_cookie_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Cookie/Jar.php",
+            any(requests_src_cookie_jar_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Exception.php",
+            any(requests_src_exception_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9802,6 +9822,26 @@ async fn requests_src_auth_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn requests_src_auth_basic_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_autoload_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_capability_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_cookie_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_cookie_jar_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_exception_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

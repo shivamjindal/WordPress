@@ -297,6 +297,11 @@ GET /wp-includes/PHPMailer/SMTP.php
 GET /wp-includes/Requests/library/Requests.php
 GET /wp-includes/Requests/src/Auth.php
 GET /wp-includes/Requests/src/Auth/Basic.php
+GET /wp-includes/Requests/src/Autoload.php
+GET /wp-includes/Requests/src/Capability.php
+GET /wp-includes/Requests/src/Cookie.php
+GET /wp-includes/Requests/src/Cookie/Jar.php
+GET /wp-includes/Requests/src/Exception.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

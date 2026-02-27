@@ -12,6 +12,13 @@
 
 namespace WpOrg\Requests;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Requests/src/Autoload.php' );
+if ( '/wp-includes/Requests/src/Autoload.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /*
  * Ensure the autoloader is only declared once.
  * This safeguard is in place as this is the typical entry point for this library
