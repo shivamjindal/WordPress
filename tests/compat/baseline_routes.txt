@@ -81,6 +81,16 @@ POST /wp-admin/theme-install.php
 GET /wp-admin/theme-editor.php
 GET /wp-admin/theme-editor.php?theme=twentytwentyfive&file=style.css
 POST /wp-admin/theme-editor.php
+GET /wp-admin/widgets.php
+GET /wp-admin/widgets.php?widgets-access=on
+POST /wp-admin/widgets.php
+GET /wp-admin/widgets-form.php
+POST /wp-admin/widgets-form.php
+GET /wp-admin/widgets-form-blocks.php
+POST /wp-admin/widgets-form-blocks.php
+GET /wp-admin/nav-menus.php
+GET /wp-admin/nav-menus.php?menu=2
+POST /wp-admin/nav-menus.php
 GET /wp-admin/plugins.php
 GET /wp-admin/plugins.php?action=activate&plugin=hello.php
 POST /wp-admin/plugins.php

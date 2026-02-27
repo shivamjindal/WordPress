@@ -162,6 +162,16 @@ async fn main() {
             "/wp-admin/theme-editor.php",
             any(theme_editor_live_dispatch),
         )
+        .route("/wp-admin/widgets.php", any(widgets_live_dispatch))
+        .route(
+            "/wp-admin/widgets-form.php",
+            any(widgets_form_live_dispatch),
+        )
+        .route(
+            "/wp-admin/widgets-form-blocks.php",
+            any(widgets_form_blocks_live_dispatch),
+        )
+        .route("/wp-admin/nav-menus.php", any(nav_menus_live_dispatch))
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
@@ -2145,6 +2155,240 @@ async fn theme_editor_live_dispatch(State(state): State<AppState>, request: Requ
     let updated = params.get("updated").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Theme Editor (Rust)</h1><p>theme={theme}</p><p>file={file}</p><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn widgets_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/widgets.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_widgets = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_edit_widgets {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/widgets.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/widgets.php?updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let widgets_access = params.get("widgets-access").cloned().unwrap_or_default();
+    let updated_action = params.get("updated_action").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Widgets (Rust)</h1><p>action={action}</p><p>widgets_access={widgets_access}</p><p>updated_action={updated_action}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn widgets_form_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/widgets-form.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_widgets = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_edit_widgets {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/widgets-form.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST
+        && (params.contains_key("savewidget") || params.contains_key("removewidget"))
+    {
+        return rust_handled_redirect("/wp-admin/widgets.php?widget-updated=1").into_response();
+    }
+
+    let widgets_access = params.get("widgets-access").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Widgets Classic Form (Rust)</h1><p>widgets_access={widgets_access}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn widgets_form_blocks_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/widgets-form-blocks.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_widgets = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_edit_widgets {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/widgets-form-blocks.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/widgets.php?widget-updated=1").into_response();
+    }
+
+    let legacy_notice = params.get("classic-widgets").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Widgets Block Form (Rust)</h1><p>classic_widgets={legacy_notice}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn nav_menus_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/nav-menus.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_menus = authenticated
+        && (capabilities.contains("edit_theme_options")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("switch_themes"));
+    if !can_edit_menus {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_theme_options capability is required for wp-admin/nav-menus.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| "edit".to_string());
+    let menu = params.get("menu").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/nav-menus.php?menu={menu}&updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let updated_action = params.get("updated_action").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Navigation Menus (Rust)</h1><p>action={action}</p><p>menu={menu}</p><p>updated_action={updated_action}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
