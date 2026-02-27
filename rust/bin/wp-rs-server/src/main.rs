@@ -1004,6 +1004,10 @@ async fn main() {
             any(id3_module_tag_id3v2_include_live_dispatch),
         )
         .route(
+            "/wp-includes/ID3/module.tag.lyrics3.php",
+            any(id3_module_tag_lyrics3_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9634,6 +9638,10 @@ async fn id3_module_tag_id3v1_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn id3_module_tag_id3v2_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_tag_lyrics3_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

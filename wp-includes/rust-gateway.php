@@ -525,6 +525,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/ID3/module.tag.apetag.php',
 			'/wp-includes/ID3/module.tag.id3v1.php',
 			'/wp-includes/ID3/module.tag.id3v2.php',
+			'/wp-includes/ID3/module.tag.lyrics3.php',
 			'/wp-includes/style-engine.php',
 			'/wp-includes/sitemaps.php',
 			'/wp-includes/script-modules.php',

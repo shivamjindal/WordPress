@@ -276,6 +276,7 @@ GET /wp-includes/ID3/module.audio.ogg.php
 GET /wp-includes/ID3/module.tag.apetag.php
 GET /wp-includes/ID3/module.tag.id3v1.php
 GET /wp-includes/ID3/module.tag.id3v2.php
+GET /wp-includes/ID3/module.tag.lyrics3.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php
