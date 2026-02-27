@@ -134,6 +134,10 @@ async fn main() {
             any(network_users_live_dispatch),
         )
         .route(
+            "/wp-admin/network/themes.php",
+            any(network_themes_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -1696,6 +1700,80 @@ async fn network_users_live_dispatch(State(state): State<AppState>, request: Req
     let html =
         "<!doctype html><html><body><h1>Network Users (Rust)</h1><p>status=ready</p></body></html>"
             .to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_themes_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/themes.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_network_themes = authenticated
+        && (capabilities.contains("manage_network_themes")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_manage_network_themes {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network_themes capability is required for wp-admin/network/themes.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if action == "enable" {
+        return rust_handled_redirect("/wp-admin/network/themes.php?enabled=1").into_response();
+    }
+    if action == "disable" {
+        return rust_handled_redirect("/wp-admin/network/themes.php?disabled=1").into_response();
+    }
+    if action == "enable-selected" {
+        return rust_handled_redirect("/wp-admin/network/themes.php?enabled=1").into_response();
+    }
+    if action == "disable-selected" {
+        return rust_handled_redirect("/wp-admin/network/themes.php?disabled=1").into_response();
+    }
+    if action == "delete-selected" {
+        return rust_handled_redirect("/wp-admin/network/themes.php?deleted=1").into_response();
+    }
+    if action == "update-selected" {
+        let html =
+            "<!doctype html><html><body><h1>Network Themes Update (Rust)</h1><p>status=in_progress</p></body></html>"
+                .to_string();
+        return rust_handled_html(StatusCode::OK, html).into_response();
+    }
+
+    let search = params.get("s").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Network Themes (Rust)</h1><p>status=ready</p><p>search={search}</p></body></html>"
+    );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 

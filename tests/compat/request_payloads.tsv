@@ -15,3 +15,4 @@ POST	/wp-admin/network/setup.php	application/x-www-form-urlencoded	sitename=Rust
 POST	/wp-admin/ms-delete-site.php	application/x-www-form-urlencoded	action=deleteblog&confirmdelete=1
 POST	/wp-admin/network/sites.php	application/x-www-form-urlencoded	action=allblogs&site_ids=2
 POST	/wp-admin/network/users.php	application/x-www-form-urlencoded	action=allusers&bulk_action=spam&allusers=2
+POST	/wp-admin/network/themes.php	application/x-www-form-urlencoded	action=enable-selected&checked=twentytwentyfive
