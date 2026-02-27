@@ -7,6 +7,13 @@
  * @since 4.3.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/admin-filters.php' );
+if ( '/wp-admin/includes/admin-filters.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 // Bookmark hooks.
 add_action( 'admin_page_access_denied', 'wp_link_manager_disabled_message' );
 

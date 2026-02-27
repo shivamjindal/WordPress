@@ -1002,6 +1002,26 @@ async fn main() {
         )
         .route("/wp-admin/menu.php", any(menu_include_live_dispatch))
         .route(
+            "/wp-admin/includes/admin-filters.php",
+            any(admin_filters_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/admin.php",
+            any(admin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/ajax-actions.php",
+            any(ajax_actions_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/bookmark.php",
+            any(bookmark_admin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-automatic-upgrader-skin.php",
+            any(class_automatic_upgrader_skin_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -1901,6 +1921,26 @@ async fn options_head_include_live_dispatch(_request: Request) -> Response {
 
 async fn menu_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
+}
+
+async fn admin_filters_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ajax_actions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn bookmark_admin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_automatic_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
 }
 
 async fn menu_header_include_live_dispatch(_request: Request) -> Response {

@@ -446,6 +446,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/admin-functions.php",
         "/wp-admin/options-head.php",
         "/wp-admin/menu.php",
+        "/wp-admin/includes/admin-filters.php",
+        "/wp-admin/includes/admin.php",
+        "/wp-admin/includes/ajax-actions.php",
+        "/wp-admin/includes/bookmark.php",
+        "/wp-admin/includes/class-automatic-upgrader-skin.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1030,6 +1035,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/admin-functions.php"));
         assert!(settings.should_route("/wp-admin/options-head.php"));
         assert!(settings.should_route("/wp-admin/menu.php"));
+        assert!(settings.should_route("/wp-admin/includes/admin-filters.php"));
+        assert!(settings.should_route("/wp-admin/includes/admin.php"));
+        assert!(settings.should_route("/wp-admin/includes/ajax-actions.php"));
+        assert!(settings.should_route("/wp-admin/includes/bookmark.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-automatic-upgrader-skin.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

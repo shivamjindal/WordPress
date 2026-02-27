@@ -7,6 +7,13 @@
  * @since 2.1.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/ajax-actions.php' );
+if ( '/wp-admin/includes/ajax-actions.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 //
 // No-privilege Ajax handlers.
 //
