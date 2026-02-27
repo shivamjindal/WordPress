@@ -1262,6 +1262,26 @@ async fn main() {
             any(class_wp_upgrader_skins_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-users-list-table.php",
+            any(class_wp_users_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/comment.php",
+            any(admin_includes_comment_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/continents-cities.php",
+            any(admin_includes_continents_cities_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/credits.php",
+            any(admin_includes_credits_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/dashboard.php",
+            any(admin_includes_dashboard_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2426,6 +2446,26 @@ async fn class_wp_upgrader_skin_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn class_wp_upgrader_skins_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_users_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_comment_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_continents_cities_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_credits_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_dashboard_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -511,6 +511,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-wp-upgrader.php",
         "/wp-admin/includes/class-wp-upgrader-skin.php",
         "/wp-admin/includes/class-wp-upgrader-skins.php",
+        "/wp-admin/includes/class-wp-users-list-table.php",
+        "/wp-admin/includes/comment.php",
+        "/wp-admin/includes/continents-cities.php",
+        "/wp-admin/includes/credits.php",
+        "/wp-admin/includes/dashboard.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1165,6 +1170,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader-skin.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader-skins.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-users-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/comment.php"));
+        assert!(settings.should_route("/wp-admin/includes/continents-cities.php"));
+        assert!(settings.should_route("/wp-admin/includes/credits.php"));
+        assert!(settings.should_route("/wp-admin/includes/dashboard.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
