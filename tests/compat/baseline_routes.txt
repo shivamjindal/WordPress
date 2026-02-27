@@ -129,6 +129,9 @@ GET /wp-admin/edit.php
 GET /wp-admin/edit.php?post_type=post
 GET /wp-admin/edit.php?post_type=attachment
 POST /wp-admin/edit.php
+GET /wp-admin/edit-tags.php?taxonomy=category
+GET /wp-admin/edit-tags.php?taxonomy=post_tag&message=1
+POST /wp-admin/edit-tags.php?taxonomy=category
 GET /wp-admin/edit-comments.php
 GET /wp-admin/edit-comments.php?comment_status=spam
 POST /wp-admin/edit-comments.php

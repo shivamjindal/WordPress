@@ -197,6 +197,7 @@ async fn main() {
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
         .route("/wp-admin/edit.php", any(edit_posts_live_dispatch))
+        .route("/wp-admin/edit-tags.php", any(edit_tags_live_dispatch))
         .route(
             "/wp-admin/edit-comments.php",
             any(edit_comments_live_dispatch),
@@ -3216,6 +3217,83 @@ async fn edit_posts_live_dispatch(State(state): State<AppState>, request: Reques
     let s = params.get("s").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Edit Posts (Rust)</h1><p>post_type={post_type}</p><p>action={action}</p><p>paged={paged}</p><p>search={s}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn edit_tags_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/edit-tags.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_terms = authenticated
+        && (capabilities.contains("manage_categories")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_manage_terms {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_categories capability is required for wp-admin/edit-tags.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let taxonomy = params
+        .get("taxonomy")
+        .cloned()
+        .unwrap_or_else(|| "post_tag".to_string());
+    let action = params.get("action").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST {
+        let message = match action.as_str() {
+            "add-tag" => "1",
+            "editedtag" => "3",
+            "delete" => "2",
+            "bulk-delete" => "6",
+            _ => "1",
+        };
+        let target = format!("/wp-admin/edit-tags.php?taxonomy={taxonomy}&message={message}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let post_type = params
+        .get("post_type")
+        .cloned()
+        .unwrap_or_else(|| "post".to_string());
+    let message = params.get("message").cloned().unwrap_or_default();
+    let error = params.get("error").cloned().unwrap_or_default();
+    let paged = params
+        .get("paged")
+        .cloned()
+        .unwrap_or_else(|| "1".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Edit Tags (Rust)</h1><p>taxonomy={taxonomy}</p><p>post_type={post_type}</p><p>action={action}</p><p>message={message}</p><p>error={error}</p><p>paged={paged}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

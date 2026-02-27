@@ -31,6 +31,7 @@ POST	/wp-admin/plugins.php	application/x-www-form-urlencoded	action=activate-sel
 POST	/wp-admin/themes.php	application/x-www-form-urlencoded	action=enable-auto-update&stylesheet=twentytwentyfive
 POST	/wp-admin/users.php	application/x-www-form-urlencoded	action=delete&users=2
 POST	/wp-admin/edit.php	application/x-www-form-urlencoded	action=trash&post=1
+POST	/wp-admin/edit-tags.php?taxonomy=category	application/x-www-form-urlencoded	action=add-tag&tag-name=Rust+Category&slug=rust-category
 POST	/wp-admin/edit-comments.php	application/x-www-form-urlencoded	action=spam&delete_comments=2
 POST	/wp-admin/comment.php	application/x-www-form-urlencoded	action=editcomment&c=2&comment=updated
 POST	/wp-admin/link-manager.php	application/x-www-form-urlencoded	action=delete&linkcheck=1

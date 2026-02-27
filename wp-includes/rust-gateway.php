@@ -323,6 +323,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/themes.php',
 			'/wp-admin/users.php',
 			'/wp-admin/edit.php',
+			'/wp-admin/edit-tags.php',
 			'/wp-admin/edit-comments.php',
 			'/wp-admin/comment.php',
 			'/wp-admin/link-manager.php',
