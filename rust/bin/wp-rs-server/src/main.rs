@@ -1010,6 +1010,26 @@ async fn main() {
             any(build_routes_font_list_content_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes/font-list/route.min.asset.php",
+            any(build_routes_font_list_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/fonts-home/route.min.asset.php",
+            any(build_routes_fonts_home_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/home/route.min.asset.php",
+            any(build_routes_home_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/index.php",
+            any(build_routes_index_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/navigation-edit/content.min.asset.php",
+            any(build_routes_navigation_edit_content_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10732,6 +10752,32 @@ async fn build_pages_site_editor_page_wp_admin_include_live_dispatch(
 }
 
 async fn build_routes_font_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_font_list_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_fonts_home_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_home_route_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_index_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_navigation_edit_content_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
