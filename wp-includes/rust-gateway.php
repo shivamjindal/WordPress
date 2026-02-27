@@ -301,6 +301,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/network/update.php',
 			'/wp-admin/network/update-core.php',
 			'/wp-admin/network/plugin-install.php',
+			'/wp-admin/network/plugin-editor.php',
 			'/wp-admin/network/theme-install.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',

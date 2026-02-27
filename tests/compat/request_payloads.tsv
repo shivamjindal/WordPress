@@ -28,4 +28,5 @@ POST	/wp-admin/network/edit.php?action=siteoptions	application/x-www-form-urlenc
 POST	/wp-admin/network/update.php?action=update-selected	application/x-www-form-urlencoded	checked=hello.php
 POST	/wp-admin/network/update-core.php?action=do-plugin-upgrade	application/x-www-form-urlencoded	checked=hello.php
 POST	/wp-admin/network/plugin-install.php	application/x-www-form-urlencoded	s=akismet&tab=search&type=term
+POST	/wp-admin/network/plugin-editor.php	application/x-www-form-urlencoded	action=update&plugin=hello.php&file=hello.php
 POST	/wp-admin/network/theme-install.php	application/x-www-form-urlencoded	s=twentytwentyfive&tab=search&type=term

@@ -97,6 +97,9 @@ POST /wp-admin/network/update-core.php?action=do-plugin-upgrade
 GET /wp-admin/network/plugin-install.php
 GET /wp-admin/network/plugin-install.php?tab=plugin-information
 POST /wp-admin/network/plugin-install.php
+GET /wp-admin/network/plugin-editor.php
+GET /wp-admin/network/plugin-editor.php?plugin=hello.php&file=hello.php
+POST /wp-admin/network/plugin-editor.php
 GET /wp-admin/network/theme-install.php
 GET /wp-admin/network/theme-install.php?tab=theme-information
 POST /wp-admin/network/theme-install.php
