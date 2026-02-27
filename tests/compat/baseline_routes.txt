@@ -100,6 +100,9 @@ POST /wp-admin/network/plugin-install.php
 GET /wp-admin/network/plugin-editor.php
 GET /wp-admin/network/plugin-editor.php?plugin=hello.php&file=hello.php
 POST /wp-admin/network/plugin-editor.php
+GET /wp-admin/network/theme-editor.php
+GET /wp-admin/network/theme-editor.php?theme=twentytwentyfive&file=style.css
+POST /wp-admin/network/theme-editor.php
 GET /wp-admin/network/theme-install.php
 GET /wp-admin/network/theme-install.php?tab=theme-information
 POST /wp-admin/network/theme-install.php

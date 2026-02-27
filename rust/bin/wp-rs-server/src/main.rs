@@ -190,6 +190,10 @@ async fn main() {
             any(network_plugin_editor_live_dispatch),
         )
         .route(
+            "/wp-admin/network/theme-editor.php",
+            any(network_theme_editor_live_dispatch),
+        )
+        .route(
             "/wp-admin/network/theme-install.php",
             any(network_theme_install_live_dispatch),
         )
@@ -2848,6 +2852,73 @@ async fn network_plugin_editor_live_dispatch(
     let updated = params.get("updated").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Network Plugin Editor (Rust)</h1><p>plugin={plugin}</p><p>file={file}</p><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_theme_editor_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/theme-editor.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_themes = authenticated
+        && (capabilities.contains("edit_themes")
+            || capabilities.contains("manage_network_themes")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_edit_themes {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_themes capability is required for wp-admin/network/theme-editor.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST
+        && params
+            .get("action")
+            .is_some_and(|value| value.eq_ignore_ascii_case("update"))
+    {
+        let theme = params.get("theme").cloned().unwrap_or_default();
+        let target = format!("/wp-admin/network/theme-editor.php?theme={theme}&updated=true");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let theme = params.get("theme").cloned().unwrap_or_default();
+    let file = params.get("file").cloned().unwrap_or_default();
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Network Theme Editor (Rust)</h1><p>theme={theme}</p><p>file={file}</p><p>updated={updated}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
