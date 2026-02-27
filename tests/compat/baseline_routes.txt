@@ -299,6 +299,11 @@ GET /wp-admin/includes/class-language-pack-upgrader.php
 GET /wp-admin/includes/class-pclzip.php
 GET /wp-admin/includes/class-plugin-installer-skin.php
 GET /wp-admin/includes/class-plugin-upgrader-skin.php
+GET /wp-admin/includes/class-plugin-upgrader.php
+GET /wp-admin/includes/class-theme-installer-skin.php
+GET /wp-admin/includes/class-theme-upgrader-skin.php
+GET /wp-admin/includes/class-theme-upgrader.php
+GET /wp-admin/includes/class-walker-category-checklist.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

@@ -1082,6 +1082,26 @@ async fn main() {
             any(class_plugin_upgrader_skin_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-plugin-upgrader.php",
+            any(class_plugin_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-theme-installer-skin.php",
+            any(class_theme_installer_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-theme-upgrader-skin.php",
+            any(class_theme_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-theme-upgrader.php",
+            any(class_theme_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-walker-category-checklist.php",
+            any(class_walker_category_checklist_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2060,6 +2080,26 @@ async fn class_plugin_installer_skin_include_live_dispatch(_request: Request) ->
 }
 
 async fn class_plugin_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_plugin_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_theme_installer_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_theme_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_theme_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_category_checklist_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
