@@ -7,6 +7,12 @@
  * @since 7.0.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/view-transitions.php' ) === '/wp-includes/view-transitions.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/view-transitions.php' ) ) {
+	exit;
+}
+
 /**
  * Enqueues View Transitions CSS for the admin.
  *
