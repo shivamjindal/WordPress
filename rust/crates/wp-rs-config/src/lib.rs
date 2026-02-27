@@ -471,6 +471,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-theme-upgrader-skin.php",
         "/wp-admin/includes/class-theme-upgrader.php",
         "/wp-admin/includes/class-walker-category-checklist.php",
+        "/wp-admin/includes/class-walker-nav-menu-checklist.php",
+        "/wp-admin/includes/class-walker-nav-menu-edit.php",
+        "/wp-admin/includes/class-wp-ajax-upgrader-skin.php",
+        "/wp-admin/includes/class-wp-application-passwords-list-table.php",
+        "/wp-admin/includes/class-wp-automatic-updater.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1080,6 +1085,12 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-theme-upgrader-skin.php"));
         assert!(settings.should_route("/wp-admin/includes/class-theme-upgrader.php"));
         assert!(settings.should_route("/wp-admin/includes/class-walker-category-checklist.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-walker-nav-menu-checklist.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-walker-nav-menu-edit.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-ajax-upgrader-skin.php"));
+        assert!(settings
+            .should_route("/wp-admin/includes/class-wp-application-passwords-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-automatic-updater.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

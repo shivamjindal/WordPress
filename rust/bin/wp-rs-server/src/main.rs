@@ -1102,6 +1102,26 @@ async fn main() {
             any(class_walker_category_checklist_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-walker-nav-menu-checklist.php",
+            any(class_walker_nav_menu_checklist_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-walker-nav-menu-edit.php",
+            any(class_walker_nav_menu_edit_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-ajax-upgrader-skin.php",
+            any(class_wp_ajax_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-application-passwords-list-table.php",
+            any(class_wp_application_passwords_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-automatic-updater.php",
+            any(class_wp_automatic_updater_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2100,6 +2120,28 @@ async fn class_theme_upgrader_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn class_walker_category_checklist_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_nav_menu_checklist_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_walker_nav_menu_edit_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_ajax_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_application_passwords_list_table_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_automatic_updater_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

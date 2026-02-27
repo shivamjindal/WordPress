@@ -304,6 +304,11 @@ GET /wp-admin/includes/class-theme-installer-skin.php
 GET /wp-admin/includes/class-theme-upgrader-skin.php
 GET /wp-admin/includes/class-theme-upgrader.php
 GET /wp-admin/includes/class-walker-category-checklist.php
+GET /wp-admin/includes/class-walker-nav-menu-checklist.php
+GET /wp-admin/includes/class-walker-nav-menu-edit.php
+GET /wp-admin/includes/class-wp-ajax-upgrader-skin.php
+GET /wp-admin/includes/class-wp-application-passwords-list-table.php
+GET /wp-admin/includes/class-wp-automatic-updater.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php
