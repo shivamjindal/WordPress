@@ -5,6 +5,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/template-canvas.php' ) === '/wp-includes/template-canvas.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/template-canvas.php' ) ) {
+	exit;
+}
+
 /*
  * Get the template HTML.
  * This needs to run before <head> so that blocks can add scripts and styles in wp_head().

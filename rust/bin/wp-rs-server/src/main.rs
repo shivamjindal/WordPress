@@ -77,6 +77,14 @@ async fn main() {
             any(speculative_loading_include_live_dispatch),
         )
         .route(
+            "/wp-includes/template-loader.php",
+            any(template_loader_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/template-canvas.php",
+            any(template_canvas_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/template.php",
             any(template_include_live_dispatch),
         )
@@ -6879,6 +6887,14 @@ async fn theme_previews_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn speculative_loading_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn template_loader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn template_canvas_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

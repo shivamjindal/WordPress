@@ -279,6 +279,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/theme-templates.php',
 			'/wp-includes/theme-previews.php',
 			'/wp-includes/speculative-loading.php',
+			'/wp-includes/template-loader.php',
+			'/wp-includes/template-canvas.php',
 			'/wp-includes/template.php',
 			'/wp-includes/taxonomy.php',
 			'/wp-includes/shortcodes.php',

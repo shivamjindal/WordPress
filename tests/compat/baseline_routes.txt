@@ -30,6 +30,8 @@ GET /wp-includes/theme.php
 GET /wp-includes/theme-templates.php
 GET /wp-includes/theme-previews.php
 GET /wp-includes/speculative-loading.php
+GET /wp-includes/template-loader.php
+GET /wp-includes/template-canvas.php
 GET /wp-includes/template.php
 GET /wp-includes/taxonomy.php
 GET /wp-includes/shortcodes.php

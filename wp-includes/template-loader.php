@@ -4,6 +4,12 @@
  *
  * @package WordPress
  */
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/template-loader.php' ) === '/wp-includes/template-loader.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/template-loader.php' ) ) {
+	exit;
+}
+
 if ( wp_using_themes() ) {
 	/**
 	 * Fires before determining which template to load.
