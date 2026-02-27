@@ -543,6 +543,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/js/dist/script-modules/abilities/index.min.asset.php",
         "/wp-includes/js/dist/is-shallow-equal.min.asset.php",
         "/wp-includes/js/dist/warning.min.asset.php",
+        "/wp-includes/js/dist/script-modules/a11y/index.min.asset.php",
+        "/wp-includes/js/dist/script-modules/boot/index.min.asset.php",
+        "/wp-includes/js/dist/react-i18n.min.asset.php",
+        "/wp-includes/js/dist/script-modules/latex-to-mathml/loader.min.asset.php",
+        "/wp-includes/js/dist/script-modules/block-library/search/view.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1652,6 +1657,19 @@ mod tests {
             .should_route("/wp-includes/js/dist/script-modules/abilities/index.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/is-shallow-equal.min.asset.php"));
         assert!(settings.should_route("/wp-includes/js/dist/warning.min.asset.php"));
+        assert!(
+            settings.should_route("/wp-includes/js/dist/script-modules/a11y/index.min.asset.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/js/dist/script-modules/boot/index.min.asset.php")
+        );
+        assert!(settings.should_route("/wp-includes/js/dist/react-i18n.min.asset.php"));
+        assert!(settings.should_route(
+            "/wp-includes/js/dist/script-modules/latex-to-mathml/loader.min.asset.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/js/dist/script-modules/block-library/search/view.min.asset.php"
+        ));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

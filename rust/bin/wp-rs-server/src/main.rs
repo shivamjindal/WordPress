@@ -1410,6 +1410,26 @@ async fn main() {
             any(js_dist_warning_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/a11y/index.min.asset.php",
+            any(js_dist_script_modules_a11y_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/boot/index.min.asset.php",
+            any(js_dist_script_modules_boot_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/react-i18n.min.asset.php",
+            any(js_dist_react_i18n_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/latex-to-mathml/loader.min.asset.php",
+            any(js_dist_script_modules_latex_to_mathml_loader_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/search/view.min.asset.php",
+            any(js_dist_script_modules_block_library_search_view_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11602,6 +11622,34 @@ async fn js_dist_is_shallow_equal_min_asset_include_live_dispatch(_request: Requ
 }
 
 async fn js_dist_warning_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_a11y_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_boot_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_react_i18n_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_latex_to_mathml_loader_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_search_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
