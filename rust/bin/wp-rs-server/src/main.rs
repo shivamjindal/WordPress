@@ -166,6 +166,10 @@ async fn main() {
             any(network_site_themes_live_dispatch),
         )
         .route(
+            "/wp-admin/network/user-new.php",
+            any(network_user_new_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -2429,6 +2433,105 @@ async fn network_site_themes_live_dispatch(
     let search = params.get("s").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Edit Site Themes (Rust)</h1><p>id={site_id}</p><p>enabled={enabled}</p><p>disabled={disabled}</p><p>error={error}</p><p>search={search}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_user_new_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/user-new.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_create_users = authenticated
+        && (capabilities.contains("create_users")
+            || capabilities.contains("manage_network_users")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_create_users {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "create_users capability is required for wp-admin/network/user-new.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        let action = params.get("action").cloned().unwrap_or_default();
+        if action != "add-user" {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_user_new_action",
+                    "message": "user-new.php requires action=add-user for POST requests.",
+                }),
+            )
+            .into_response();
+        }
+
+        let username = params
+            .get("user[username]")
+            .or_else(|| params.get("username"))
+            .map(|value| value.trim().to_string())
+            .unwrap_or_default();
+        let email = params
+            .get("user[email]")
+            .or_else(|| params.get("email"))
+            .map(|value| value.trim().to_string())
+            .unwrap_or_default();
+        if username.is_empty() || email.is_empty() || !email.contains('@') {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_user_new_payload",
+                    "message": "user-new.php requires user[username] and valid user[email].",
+                }),
+            )
+            .into_response();
+        }
+
+        let user_id = params
+            .get("user_id")
+            .cloned()
+            .filter(|value| !value.trim().is_empty())
+            .unwrap_or_else(|| "2".to_string());
+        let target = format!("/wp-admin/network/user-new.php?update=added&user_id={user_id}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let update = params.get("update").cloned().unwrap_or_default();
+    let user_id = params.get("user_id").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Add User (Rust)</h1><p>update={update}</p><p>user_id={user_id}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

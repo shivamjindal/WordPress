@@ -84,6 +84,9 @@ POST /wp-admin/network/site-users.php?action=adduser
 GET /wp-admin/network/site-themes.php?id=2
 GET /wp-admin/network/site-themes.php?id=2&enabled=1
 POST /wp-admin/network/site-themes.php?action=enable-selected
+GET /wp-admin/network/user-new.php
+GET /wp-admin/network/user-new.php?update=added&user_id=2
+POST /wp-admin/network/user-new.php?action=add-user
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php
