@@ -127,6 +127,10 @@ async fn main() {
             any(link_parse_opml_include_live_dispatch),
         )
         .route(
+            "/wp-admin/upgrade-functions.php",
+            any(upgrade_functions_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -1014,6 +1018,10 @@ async fn edit_tag_form_include_live_dispatch(_request: Request) -> Response {
 
 async fn link_parse_opml_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
+}
+
+async fn upgrade_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
 }
 
 async fn user_admin_bootstrap_live_dispatch(

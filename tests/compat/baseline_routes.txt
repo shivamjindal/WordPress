@@ -40,6 +40,7 @@ GET /wp-admin/edit-form-comment.php
 GET /wp-admin/edit-link-form.php
 GET /wp-admin/edit-tag-form.php
 GET /wp-admin/link-parse-opml.php
+GET /wp-admin/upgrade-functions.php
 GET /wp-admin/user/admin.php
 GET /wp-admin/user/index.php
 GET /wp-admin/user/profile.php
