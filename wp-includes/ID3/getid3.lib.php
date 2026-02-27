@@ -11,6 +11,13 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/ID3/getid3.lib.php' );
+if ( '/wp-includes/ID3/getid3.lib.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 if (!defined('GETID3_LIBXML_OPTIONS') && defined('LIBXML_VERSION')) {
 	if (LIBXML_VERSION >= 20621) {
 		define('GETID3_LIBXML_OPTIONS', LIBXML_NOENT | LIBXML_NONET | LIBXML_NOWARNING | LIBXML_COMPACT);

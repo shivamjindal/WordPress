@@ -944,6 +944,26 @@ async fn main() {
             any(widgets_include_live_dispatch),
         )
         .route(
+            "/wp-includes/ID3/getid3.lib.php",
+            any(id3_getid3_lib_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/getid3.php",
+            any(id3_getid3_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.audio-video.asf.php",
+            any(id3_module_audio_video_asf_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.audio-video.flv.php",
+            any(id3_module_audio_video_flv_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ID3/module.audio-video.matroska.php",
+            any(id3_module_audio_video_matroska_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9514,6 +9534,26 @@ async fn shortcodes_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn widgets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_getid3_lib_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_getid3_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_audio_video_asf_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_audio_video_flv_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn id3_module_audio_video_matroska_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

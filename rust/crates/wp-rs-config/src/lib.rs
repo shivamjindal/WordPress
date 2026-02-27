@@ -428,6 +428,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/taxonomy.php",
         "/wp-includes/shortcodes.php",
         "/wp-includes/widgets.php",
+        "/wp-includes/ID3/getid3.lib.php",
+        "/wp-includes/ID3/getid3.php",
+        "/wp-includes/ID3/module.audio-video.asf.php",
+        "/wp-includes/ID3/module.audio-video.flv.php",
+        "/wp-includes/ID3/module.audio-video.matroska.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1120,6 +1125,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/taxonomy.php"));
         assert!(settings.should_route("/wp-includes/shortcodes.php"));
         assert!(settings.should_route("/wp-includes/widgets.php"));
+        assert!(settings.should_route("/wp-includes/ID3/getid3.lib.php"));
+        assert!(settings.should_route("/wp-includes/ID3/getid3.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.audio-video.asf.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.audio-video.flv.php"));
+        assert!(settings.should_route("/wp-includes/ID3/module.audio-video.matroska.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
