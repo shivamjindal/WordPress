@@ -106,6 +106,16 @@ POST /wp-admin/network/theme-editor.php
 GET /wp-admin/network/privacy.php
 GET /wp-admin/network/privacy.php?updated=true
 POST /wp-admin/network/privacy.php
+GET /wp-admin/network/about.php
+GET /wp-admin/network/credits.php
+GET /wp-admin/network/contribute.php
+GET /wp-admin/network/freedoms.php
+GET /wp-admin/network/profile.php
+GET /wp-admin/network/profile.php?updated=true
+POST /wp-admin/network/profile.php
+GET /wp-admin/network/user-edit.php?user_id=2
+GET /wp-admin/network/user-edit.php?user_id=2&updated=true
+POST /wp-admin/network/user-edit.php?user_id=2
 GET /wp-admin/network/theme-install.php
 GET /wp-admin/network/theme-install.php?tab=theme-information
 POST /wp-admin/network/theme-install.php

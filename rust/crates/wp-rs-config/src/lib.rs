@@ -222,6 +222,12 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/network/plugin-editor.php",
         "/wp-admin/network/theme-editor.php",
         "/wp-admin/network/privacy.php",
+        "/wp-admin/network/about.php",
+        "/wp-admin/network/credits.php",
+        "/wp-admin/network/contribute.php",
+        "/wp-admin/network/freedoms.php",
+        "/wp-admin/network/profile.php",
+        "/wp-admin/network/user-edit.php",
         "/wp-admin/network/theme-install.php",
         "/wp-admin/upgrade.php",
         "/wp-admin/maint/repair.php",
@@ -458,6 +464,12 @@ mod tests {
         assert!(settings.should_route("/wp-admin/network/plugin-editor.php"));
         assert!(settings.should_route("/wp-admin/network/theme-editor.php"));
         assert!(settings.should_route("/wp-admin/network/privacy.php"));
+        assert!(settings.should_route("/wp-admin/network/about.php"));
+        assert!(settings.should_route("/wp-admin/network/credits.php"));
+        assert!(settings.should_route("/wp-admin/network/contribute.php"));
+        assert!(settings.should_route("/wp-admin/network/freedoms.php"));
+        assert!(settings.should_route("/wp-admin/network/profile.php"));
+        assert!(settings.should_route("/wp-admin/network/user-edit.php"));
         assert!(settings.should_route("/wp-admin/network/theme-install.php"));
         assert!(!settings.should_route("/plugin-custom/endpoint"));
     }

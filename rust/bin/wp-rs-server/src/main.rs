@@ -198,6 +198,30 @@ async fn main() {
             any(network_privacy_live_dispatch),
         )
         .route(
+            "/wp-admin/network/about.php",
+            any(network_about_live_dispatch),
+        )
+        .route(
+            "/wp-admin/network/credits.php",
+            any(network_credits_live_dispatch),
+        )
+        .route(
+            "/wp-admin/network/contribute.php",
+            any(network_contribute_live_dispatch),
+        )
+        .route(
+            "/wp-admin/network/freedoms.php",
+            any(network_freedoms_live_dispatch),
+        )
+        .route(
+            "/wp-admin/network/profile.php",
+            any(network_profile_live_dispatch),
+        )
+        .route(
+            "/wp-admin/network/user-edit.php",
+            any(network_user_edit_live_dispatch),
+        )
+        .route(
             "/wp-admin/network/theme-install.php",
             any(network_theme_install_live_dispatch),
         )
@@ -2982,6 +3006,179 @@ async fn network_privacy_live_dispatch(
     let updated = params.get("updated").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Network Privacy (Rust)</h1><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_about_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    network_information_page_live_dispatch(state, request, "Network About (Rust)").await
+}
+
+async fn network_credits_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    network_information_page_live_dispatch(state, request, "Network Credits (Rust)").await
+}
+
+async fn network_contribute_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    network_information_page_live_dispatch(state, request, "Network Contribute (Rust)").await
+}
+
+async fn network_freedoms_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    network_information_page_live_dispatch(state, request, "Network Freedoms (Rust)").await
+}
+
+async fn network_information_page_live_dispatch(
+    state: AppState,
+    request: Request,
+    title: &str,
+) -> Response {
+    let (parts, _body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "network informational pages currently support GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_view = authenticated
+        && (capabilities.contains("manage_network")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("read"));
+    if !can_view {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_network capability is required for this network page.",
+            }),
+        )
+        .into_response();
+    }
+
+    let html = format!("<!doctype html><html><body><h1>{title}</h1></body></html>");
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_profile_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, _body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/profile.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_profile = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("edit_user")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_manage_profile {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for wp-admin/network/profile.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/network/profile.php?updated=true").into_response();
+    }
+
+    let params = parse_urlencoded(parts.uri.query().unwrap_or_default());
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Network Profile (Rust)</h1><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_user_edit_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/user-edit.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_users = authenticated
+        && (capabilities.contains("edit_users")
+            || capabilities.contains("promote_users")
+            || capabilities.contains("manage_network_users")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_edit_users {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_users capability is required for wp-admin/network/user-edit.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let user_id = params.get("user_id").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST {
+        let target = format!("/wp-admin/network/user-edit.php?user_id={user_id}&updated=true");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Network User Edit (Rust)</h1><p>user_id={user_id}</p><p>updated={updated}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

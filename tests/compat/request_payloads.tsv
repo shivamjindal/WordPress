@@ -31,4 +31,6 @@ POST	/wp-admin/network/plugin-install.php	application/x-www-form-urlencoded	s=ak
 POST	/wp-admin/network/plugin-editor.php	application/x-www-form-urlencoded	action=update&plugin=hello.php&file=hello.php
 POST	/wp-admin/network/theme-editor.php	application/x-www-form-urlencoded	action=update&theme=twentytwentyfive&file=style.css
 POST	/wp-admin/network/privacy.php	application/x-www-form-urlencoded	page_for_privacy_policy=2
+POST	/wp-admin/network/profile.php	application/x-www-form-urlencoded	action=update-user&nickname=networkadmin
+POST	/wp-admin/network/user-edit.php?user_id=2	application/x-www-form-urlencoded	action=update&user_id=2&email=admin%40example.com
 POST	/wp-admin/network/theme-install.php	application/x-www-form-urlencoded	s=twentytwentyfive&tab=search&type=term
