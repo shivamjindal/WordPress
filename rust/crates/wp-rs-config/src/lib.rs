@@ -509,6 +509,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/src/Exception/Transport.php",
         "/wp-includes/Requests/src/HookManager.php",
         "/wp-includes/Requests/src/Hooks.php",
+        "/wp-includes/Requests/src/IdnaEncoder.php",
+        "/wp-includes/Requests/src/Ipv6.php",
+        "/wp-includes/Requests/src/Iri.php",
+        "/wp-includes/Requests/src/Port.php",
+        "/wp-includes/Requests/src/Proxy/Http.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1282,6 +1287,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/src/Exception/Transport.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/HookManager.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Hooks.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/IdnaEncoder.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Ipv6.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Iri.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Port.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Proxy/Http.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

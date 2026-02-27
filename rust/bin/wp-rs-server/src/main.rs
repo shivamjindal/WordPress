@@ -1268,6 +1268,26 @@ async fn main() {
             any(requests_src_hooks_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/IdnaEncoder.php",
+            any(requests_src_idna_encoder_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Ipv6.php",
+            any(requests_src_ipv6_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Iri.php",
+            any(requests_src_iri_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Port.php",
+            any(requests_src_port_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Proxy/Http.php",
+            any(requests_src_proxy_http_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10234,6 +10254,26 @@ async fn requests_src_hook_manager_include_live_dispatch(_request: Request) -> R
 }
 
 async fn requests_src_hooks_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_idna_encoder_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_ipv6_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_iri_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_port_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_proxy_http_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
