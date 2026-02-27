@@ -292,6 +292,11 @@ GET /wp-includes/PHPMailer/Exception.php
 GET /wp-includes/PHPMailer/OAuth.php
 GET /wp-includes/PHPMailer/OAuthTokenProvider.php
 GET /wp-includes/PHPMailer/PHPMailer.php
+GET /wp-includes/PHPMailer/POP3.php
+GET /wp-includes/PHPMailer/SMTP.php
+GET /wp-includes/Requests/library/Requests.php
+GET /wp-includes/Requests/src/Auth.php
+GET /wp-includes/Requests/src/Auth/Basic.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

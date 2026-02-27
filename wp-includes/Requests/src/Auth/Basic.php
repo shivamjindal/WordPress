@@ -7,6 +7,13 @@
 
 namespace WpOrg\Requests\Auth;
 
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Requests/src/Auth/Basic.php' );
+if ( '/wp-includes/Requests/src/Auth/Basic.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 use WpOrg\Requests\Auth;
 use WpOrg\Requests\Exception\ArgumentCount;
 use WpOrg\Requests\Exception\InvalidArgument;

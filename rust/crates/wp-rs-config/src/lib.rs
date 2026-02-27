@@ -459,6 +459,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/PHPMailer/OAuth.php",
         "/wp-includes/PHPMailer/OAuthTokenProvider.php",
         "/wp-includes/PHPMailer/PHPMailer.php",
+        "/wp-includes/PHPMailer/POP3.php",
+        "/wp-includes/PHPMailer/SMTP.php",
+        "/wp-includes/Requests/library/Requests.php",
+        "/wp-includes/Requests/src/Auth.php",
+        "/wp-includes/Requests/src/Auth/Basic.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1182,6 +1187,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/PHPMailer/OAuth.php"));
         assert!(settings.should_route("/wp-includes/PHPMailer/OAuthTokenProvider.php"));
         assert!(settings.should_route("/wp-includes/PHPMailer/PHPMailer.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/POP3.php"));
+        assert!(settings.should_route("/wp-includes/PHPMailer/SMTP.php"));
+        assert!(settings.should_route("/wp-includes/Requests/library/Requests.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Auth.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Auth/Basic.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

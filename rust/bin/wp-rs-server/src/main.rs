@@ -1068,6 +1068,26 @@ async fn main() {
             any(phpmailer_phpmailer_include_live_dispatch),
         )
         .route(
+            "/wp-includes/PHPMailer/POP3.php",
+            any(phpmailer_pop3_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/PHPMailer/SMTP.php",
+            any(phpmailer_smtp_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/library/Requests.php",
+            any(requests_library_requests_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Auth.php",
+            any(requests_src_auth_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Auth/Basic.php",
+            any(requests_src_auth_basic_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9762,6 +9782,26 @@ async fn phpmailer_oauth_token_provider_include_live_dispatch(_request: Request)
 }
 
 async fn phpmailer_phpmailer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_pop3_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn phpmailer_smtp_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_library_requests_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_auth_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_auth_basic_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
