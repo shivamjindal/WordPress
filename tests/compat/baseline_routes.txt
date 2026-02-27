@@ -282,6 +282,11 @@ GET /wp-includes/IXR/class-IXR-client.php
 GET /wp-includes/IXR/class-IXR-clientmulticall.php
 GET /wp-includes/IXR/class-IXR-date.php
 GET /wp-includes/IXR/class-IXR-error.php
+GET /wp-includes/IXR/class-IXR-introspectionserver.php
+GET /wp-includes/IXR/class-IXR-message.php
+GET /wp-includes/IXR/class-IXR-request.php
+GET /wp-includes/IXR/class-IXR-server.php
+GET /wp-includes/IXR/class-IXR-value.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

@@ -449,6 +449,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/IXR/class-IXR-clientmulticall.php",
         "/wp-includes/IXR/class-IXR-date.php",
         "/wp-includes/IXR/class-IXR-error.php",
+        "/wp-includes/IXR/class-IXR-introspectionserver.php",
+        "/wp-includes/IXR/class-IXR-message.php",
+        "/wp-includes/IXR/class-IXR-request.php",
+        "/wp-includes/IXR/class-IXR-server.php",
+        "/wp-includes/IXR/class-IXR-value.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1162,6 +1167,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-clientmulticall.php"));
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-date.php"));
         assert!(settings.should_route("/wp-includes/IXR/class-IXR-error.php"));
+        assert!(settings.should_route("/wp-includes/IXR/class-IXR-introspectionserver.php"));
+        assert!(settings.should_route("/wp-includes/IXR/class-IXR-message.php"));
+        assert!(settings.should_route("/wp-includes/IXR/class-IXR-request.php"));
+        assert!(settings.should_route("/wp-includes/IXR/class-IXR-server.php"));
+        assert!(settings.should_route("/wp-includes/IXR/class-IXR-value.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

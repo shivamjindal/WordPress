@@ -1028,6 +1028,26 @@ async fn main() {
             any(ixr_class_error_include_live_dispatch),
         )
         .route(
+            "/wp-includes/IXR/class-IXR-introspectionserver.php",
+            any(ixr_class_introspectionserver_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-message.php",
+            any(ixr_class_message_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-request.php",
+            any(ixr_class_request_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-server.php",
+            any(ixr_class_server_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-value.php",
+            any(ixr_class_value_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9682,6 +9702,26 @@ async fn ixr_class_date_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn ixr_class_error_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_introspectionserver_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_message_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_request_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_server_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_value_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
