@@ -8,6 +8,7 @@ POST	/wp-activate.php	application/x-www-form-urlencoded	key=abc123
 POST	/wp-comments-post.php	application/x-www-form-urlencoded	comment_post_ID=123&comment=hello
 POST	/wp-admin/install.php	application/x-www-form-urlencoded	weblog_title=Rust+Site&user_login=admin&admin_email=admin@example.com
 POST	/wp-admin/profile.php	application/x-www-form-urlencoded	action=update-user&nickname=rustadmin
+POST	/wp-admin/user-edit.php?user_id=2	application/x-www-form-urlencoded	action=update&user_id=2&email=admin%40example.com
 POST	/wp-admin/setup-config.php	application/x-www-form-urlencoded	dbname=wordpress&uname=wp_user&pwd=secret
 POST	/wp-admin/export-personal-data.php	application/x-www-form-urlencoded	username_or_email_for_privacy_request=person%40example.com&action=add_request
 POST	/wp-admin/erase-personal-data.php	application/x-www-form-urlencoded	username_or_email_for_privacy_request=person%40example.com&action=add_request
