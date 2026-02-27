@@ -199,6 +199,11 @@ GET /wp-includes/blocks/calendar.php
 GET /wp-includes/blocks/categories.php
 GET /wp-includes/blocks/comment-author-name.php
 GET /wp-includes/blocks/comment-content.php
+GET /wp-includes/blocks/comment-date.php
+GET /wp-includes/blocks/comment-edit-link.php
+GET /wp-includes/blocks/comment-reply-link.php
+GET /wp-includes/blocks/comments-pagination-next.php
+GET /wp-includes/blocks/comments-pagination-numbers.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
