@@ -1022,6 +1022,26 @@ async fn main() {
             any(class_automatic_upgrader_skin_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-bulk-plugin-upgrader-skin.php",
+            any(class_bulk_plugin_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-bulk-theme-upgrader-skin.php",
+            any(class_bulk_theme_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-bulk-upgrader-skin.php",
+            any(class_bulk_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-core-upgrader.php",
+            any(class_core_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-custom-background.php",
+            any(class_custom_background_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -1940,6 +1960,26 @@ async fn bookmark_admin_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn class_automatic_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_bulk_plugin_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_bulk_theme_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_bulk_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_core_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_custom_background_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

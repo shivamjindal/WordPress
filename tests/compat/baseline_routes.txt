@@ -284,6 +284,11 @@ GET /wp-admin/includes/admin.php
 GET /wp-admin/includes/ajax-actions.php
 GET /wp-admin/includes/bookmark.php
 GET /wp-admin/includes/class-automatic-upgrader-skin.php
+GET /wp-admin/includes/class-bulk-plugin-upgrader-skin.php
+GET /wp-admin/includes/class-bulk-theme-upgrader-skin.php
+GET /wp-admin/includes/class-bulk-upgrader-skin.php
+GET /wp-admin/includes/class-core-upgrader.php
+GET /wp-admin/includes/class-custom-background.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php
