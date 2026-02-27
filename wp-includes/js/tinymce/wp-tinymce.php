@@ -4,6 +4,11 @@
  * This is a back-compat for plugins that may be using this method of loading directly.
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-includes/js/tinymce/wp-tinymce.php' ) ) {
+	exit;
+}
+
 /**
  * Disable error reporting
  *

@@ -261,6 +261,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-mail.php',
 			'/wp-trackback.php',
 			'/wp-links-opml.php',
+			'/wp-includes/js/tinymce/wp-tinymce.php',
 			'/wp-admin',
 			'/wp-admin/',
 			'/wp-admin/index.php',

@@ -16,6 +16,8 @@ GET /wp-activate.php?key=abc123
 POST /wp-activate.php
 GET /wp-comments-post.php
 POST /wp-comments-post.php
+GET /wp-includes/js/tinymce/wp-tinymce.php?c=1
+GET /wp-includes/js/tinymce/wp-tinymce.php
 GET /wp-admin/
 GET /wp-admin/index.php
 GET /wp-admin/admin.php

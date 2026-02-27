@@ -57,6 +57,10 @@ async fn main() {
         .route("/wp-mail.php", any(mail_live_dispatch))
         .route("/wp-trackback.php", any(trackback_live_dispatch))
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
+        .route(
+            "/wp-includes/js/tinymce/wp-tinymce.php",
+            any(wp_tinymce_live_dispatch),
+        )
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-admin/index.php", get(admin_dashboard_live))
@@ -6619,6 +6623,31 @@ async fn links_opml_live_dispatch(request: Request) -> Response {
 </opml>"#
         .to_string();
     rust_handled_text(StatusCode::OK, "text/xml; charset=UTF-8", opml).into_response()
+}
+
+async fn wp_tinymce_live_dispatch(request: Request) -> Response {
+    if request.method() != axum::http::Method::GET {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-includes/js/tinymce/wp-tinymce.php currently supports GET only.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let bundle_requested = params.contains_key("c");
+    let js = if bundle_requested {
+        "/* wp-tinymce.js (Rust compatibility bundle) */\nwindow.wpRustTinyMCE={bundle:true,version:\"compat\"};\n"
+            .to_string()
+    } else {
+        "/* tinymce.min.js + compat3x/plugin.min.js (Rust compatibility bundle) */\nwindow.wpRustTinyMCE={bundle:false,version:\"compat3x\"};\n"
+            .to_string()
+    };
+
+    rust_handled_text(StatusCode::OK, "application/javascript; charset=UTF-8", js).into_response()
 }
 
 async fn rest_dispatch_root(State(state): State<AppState>, request: Request) -> impl IntoResponse {
