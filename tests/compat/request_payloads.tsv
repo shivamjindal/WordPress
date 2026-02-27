@@ -26,3 +26,4 @@ POST	/wp-admin/network/site-themes.php?action=enable-selected	application/x-www-
 POST	/wp-admin/network/user-new.php?action=add-user	application/x-www-form-urlencoded	user%5Busername%5D=rustuser&user%5Bemail%5D=rustuser%40example.com
 POST	/wp-admin/network/edit.php?action=siteoptions	application/x-www-form-urlencoded	id=2
 POST	/wp-admin/network/update.php?action=update-selected	application/x-www-form-urlencoded	checked=hello.php
+POST	/wp-admin/network/plugin-install.php	application/x-www-form-urlencoded	s=akismet&tab=search&type=term
