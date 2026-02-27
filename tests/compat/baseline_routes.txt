@@ -161,6 +161,9 @@ GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php
 GET /wp-admin/upgrade.php
 GET /wp-admin/upgrade.php?step=upgrade_db
+GET /wp-admin/update.php
+GET /wp-admin/update.php?action=update-selected
+POST /wp-admin/update.php?action=update-selected
 GET /wp-admin/update-core.php
 GET /wp-admin/update-core.php?action=do-plugin-upgrade
 POST /wp-admin/update-core.php?action=do-plugin-upgrade

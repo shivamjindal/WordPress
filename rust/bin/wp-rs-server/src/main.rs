@@ -260,6 +260,7 @@ async fn main() {
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
+        .route("/wp-admin/update.php", any(update_live_dispatch))
         .route("/wp-admin/update-core.php", any(update_core_live_dispatch))
         .route("/wp-admin/upgrade.php", any(upgrade_live_dispatch))
         .route("/wp-admin/maint/repair.php", any(repair_live_dispatch))
@@ -4022,6 +4023,68 @@ async fn upgrade_live_dispatch(request: Request) -> Response {
     }
 
     let html = "<!doctype html><html><body><h1>WordPress Upgrade (Rust)</h1><p>No update required.</p></body></html>".to_string();
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn update_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/update.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_update = authenticated
+        && (capabilities.contains("update_plugins")
+            || capabilities.contains("update_themes")
+            || capabilities.contains("install_plugins")
+            || capabilities.contains("install_themes")
+            || capabilities.contains("manage_options"));
+    if !can_update {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "update_plugins capability is required for wp-admin/update.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params.get("action").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/update.php?action={action}&updated=true");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let plugin = params.get("plugin").cloned().unwrap_or_default();
+    let theme = params.get("theme").cloned().unwrap_or_default();
+    let success = params.get("success").cloned().unwrap_or_default();
+    let failure = params.get("failure").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Update/Install (Rust)</h1><p>action={action}</p><p>plugin={plugin}</p><p>theme={theme}</p><p>success={success}</p><p>failure={failure}</p></body></html>"
+    );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 

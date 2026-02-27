@@ -6,6 +6,11 @@
  * @subpackage Administration
  */
 
+require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/update.php' ) ) {
+	exit;
+}
+
 if ( ! defined( 'IFRAME_REQUEST' )
 	&& isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'update-selected', 'activate-plugin', 'update-selected-themes' ), true )
 ) {

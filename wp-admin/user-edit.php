@@ -7,11 +7,7 @@
  */
 
 require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
-if (
-	isset( $_SERVER['SCRIPT_NAME'] ) &&
-	'user-edit.php' === basename( (string) $_SERVER['SCRIPT_NAME'] ) &&
-	wp_rust_gateway_try_proxy( '/wp-admin/user-edit.php' )
-) {
+if ( wp_rust_gateway_try_proxy( '/wp-admin/user-edit.php' ) ) {
 	exit;
 }
 
