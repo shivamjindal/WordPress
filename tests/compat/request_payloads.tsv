@@ -30,4 +30,5 @@ POST	/wp-admin/network/update-core.php?action=do-plugin-upgrade	application/x-ww
 POST	/wp-admin/network/plugin-install.php	application/x-www-form-urlencoded	s=akismet&tab=search&type=term
 POST	/wp-admin/network/plugin-editor.php	application/x-www-form-urlencoded	action=update&plugin=hello.php&file=hello.php
 POST	/wp-admin/network/theme-editor.php	application/x-www-form-urlencoded	action=update&theme=twentytwentyfive&file=style.css
+POST	/wp-admin/network/privacy.php	application/x-www-form-urlencoded	page_for_privacy_policy=2
 POST	/wp-admin/network/theme-install.php	application/x-www-form-urlencoded	s=twentytwentyfive&tab=search&type=term
