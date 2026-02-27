@@ -922,6 +922,26 @@ async fn main() {
             any(blocks_read_more_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/require-dynamic-blocks.php",
+            any(blocks_require_dynamic_blocks_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/require-static-blocks.php",
+            any(blocks_require_static_blocks_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/rss.php",
+            any(blocks_rss_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/search.php",
+            any(blocks_search_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/shortcode.php",
+            any(blocks_shortcode_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10552,6 +10572,26 @@ async fn blocks_query_total_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn blocks_read_more_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_require_dynamic_blocks_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_require_static_blocks_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_rss_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_search_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_shortcode_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
