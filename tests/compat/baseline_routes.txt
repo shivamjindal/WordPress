@@ -97,6 +97,11 @@ GET /wp-includes/class.wp-scripts.php
 GET /wp-includes/class.wp-styles.php
 GET /wp-includes/compat-utf8.php
 GET /wp-includes/cron.php
+GET /wp-includes/date.php
+GET /wp-includes/default-constants.php
+GET /wp-includes/default-widgets.php
+GET /wp-includes/deprecated.php
+GET /wp-includes/embed-template.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

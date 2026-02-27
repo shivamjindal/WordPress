@@ -335,6 +335,23 @@ async fn main() {
             any(compat_utf8_include_live_dispatch),
         )
         .route("/wp-includes/cron.php", any(cron_include_live_dispatch))
+        .route("/wp-includes/date.php", any(date_include_live_dispatch))
+        .route(
+            "/wp-includes/default-constants.php",
+            any(default_constants_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/default-widgets.php",
+            any(default_widgets_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/deprecated.php",
+            any(deprecated_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/embed-template.php",
+            any(embed_template_include_live_dispatch),
+        )
         .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
@@ -7814,6 +7831,26 @@ async fn compat_utf8_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn cron_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn date_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn default_constants_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn default_widgets_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn deprecated_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn embed_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

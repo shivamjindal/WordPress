@@ -7,6 +7,12 @@
  * @since 2.8.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/default-widgets.php' ) === '/wp-includes/default-widgets.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/default-widgets.php' ) ) {
+	exit;
+}
+
 // Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );

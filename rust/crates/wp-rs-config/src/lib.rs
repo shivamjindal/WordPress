@@ -264,6 +264,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class.wp-styles.php",
         "/wp-includes/compat-utf8.php",
         "/wp-includes/cron.php",
+        "/wp-includes/date.php",
+        "/wp-includes/default-constants.php",
+        "/wp-includes/default-widgets.php",
+        "/wp-includes/deprecated.php",
+        "/wp-includes/embed-template.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -793,6 +798,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class.wp-styles.php"));
         assert!(settings.should_route("/wp-includes/compat-utf8.php"));
         assert!(settings.should_route("/wp-includes/cron.php"));
+        assert!(settings.should_route("/wp-includes/date.php"));
+        assert!(settings.should_route("/wp-includes/default-constants.php"));
+        assert!(settings.should_route("/wp-includes/default-widgets.php"));
+        assert!(settings.should_route("/wp-includes/deprecated.php"));
+        assert!(settings.should_route("/wp-includes/embed-template.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));
