@@ -1362,6 +1362,26 @@ async fn main() {
             any(admin_includes_plugin_install_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/plugin.php",
+            any(admin_includes_plugin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/post.php",
+            any(admin_includes_post_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/privacy-tools.php",
+            any(admin_includes_privacy_tools_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/revision.php",
+            any(admin_includes_revision_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/schema.php",
+            any(admin_includes_schema_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2626,6 +2646,26 @@ async fn admin_includes_options_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn admin_includes_plugin_install_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_plugin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_post_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_privacy_tools_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_revision_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_schema_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

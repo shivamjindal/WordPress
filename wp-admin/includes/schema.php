@@ -7,6 +7,12 @@
  * @package WordPress
  * @subpackage Administration
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/schema.php' );
+if ( '/wp-admin/includes/schema.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 /**
  * Declare these as global in case schema.php is included from a function.

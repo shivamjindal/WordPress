@@ -369,6 +369,11 @@ GET /wp-admin/includes/network.php
 GET /wp-admin/includes/noop.php
 GET /wp-admin/includes/options.php
 GET /wp-admin/includes/plugin-install.php
+GET /wp-admin/includes/plugin.php
+GET /wp-admin/includes/post.php
+GET /wp-admin/includes/privacy-tools.php
+GET /wp-admin/includes/revision.php
+GET /wp-admin/includes/schema.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php
