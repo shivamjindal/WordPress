@@ -69,6 +69,9 @@ GET /wp-admin/network/settings.php
 GET /wp-admin/network/settings.php?network_admin_hash=confirm-rust-admin-email
 GET /wp-admin/network/settings.php?dismiss=new_network_admin_email
 POST /wp-admin/network/settings.php
+GET /wp-admin/network/site-new.php
+GET /wp-admin/network/site-new.php?update=added&id=2
+POST /wp-admin/network/site-new.php?action=add-site
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php

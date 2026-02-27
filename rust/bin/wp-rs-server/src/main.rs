@@ -146,6 +146,10 @@ async fn main() {
             any(network_settings_live_dispatch),
         )
         .route(
+            "/wp-admin/network/site-new.php",
+            any(network_site_new_live_dispatch),
+        )
+        .route(
             "/wp-admin/ms-delete-site.php",
             any(ms_delete_site_live_dispatch),
         )
@@ -1941,6 +1945,110 @@ async fn network_settings_live_dispatch(
         .unwrap_or_else(|| "admin@example.com".to_string());
     let html = format!(
         "<!doctype html><html><body><h1>Network Settings (Rust)</h1><p>updated={updated}</p><p>site_name={site_name}</p><p>admin_email={network_admin_email}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn network_site_new_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/network/site-new.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_create_sites = authenticated
+        && (capabilities.contains("create_sites")
+            || capabilities.contains("manage_network")
+            || capabilities.contains("manage_options"));
+    if !can_create_sites {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "create_sites capability is required for wp-admin/network/site-new.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST {
+        let action = params.get("action").cloned().unwrap_or_default();
+        if action != "add-site" {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_site_new_action",
+                    "message": "site-new.php requires action=add-site for POST requests.",
+                }),
+            )
+            .into_response();
+        }
+
+        let domain = params
+            .get("blog[domain]")
+            .or_else(|| params.get("domain"))
+            .map(|value| value.trim().to_string())
+            .unwrap_or_default();
+        let title = params
+            .get("blog[title]")
+            .or_else(|| params.get("title"))
+            .map(|value| value.trim().to_string())
+            .unwrap_or_default();
+        let email = params
+            .get("blog[email]")
+            .or_else(|| params.get("email"))
+            .map(|value| value.trim().to_string())
+            .unwrap_or_default();
+
+        if domain.is_empty() || title.is_empty() || email.is_empty() || !email.contains('@') {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_site_new_payload",
+                    "message": "site-new.php requires blog[domain], blog[title], and a valid blog[email].",
+                }),
+            )
+            .into_response();
+        }
+
+        let site_id = params
+            .get("site_id")
+            .cloned()
+            .filter(|value| !value.trim().is_empty())
+            .unwrap_or_else(|| "2".to_string());
+        let target = format!("/wp-admin/network/site-new.php?update=added&id={site_id}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let update = params.get("update").cloned().unwrap_or_default();
+    let site_id = params.get("id").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Add Site (Rust)</h1><p>update={update}</p><p>id={site_id}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
