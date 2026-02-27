@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-customize-control.php",
+            any(class_wp_customize_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-customize-manager.php",
+            any(class_wp_customize_manager_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-customize-nav-menus.php",
+            any(class_wp_customize_nav_menus_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-customize-panel.php",
+            any(class_wp_customize_panel_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-customize-section.php",
+            any(class_wp_customize_section_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-block-supports.php",
             any(class_wp_block_supports_include_live_dispatch),
         )
@@ -7443,6 +7463,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_customize_control_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_wp_customize_manager_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_customize_nav_menus_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_customize_panel_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_wp_customize_section_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

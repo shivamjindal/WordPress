@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-customize-control.php",
+        "/wp-includes/class-wp-customize-manager.php",
+        "/wp-includes/class-wp-customize-nav-menus.php",
+        "/wp-includes/class-wp-customize-panel.php",
+        "/wp-includes/class-wp-customize-section.php",
         "/wp-includes/class-wp-block-supports.php",
         "/wp-includes/class-wp-block-template.php",
         "/wp-includes/class-wp-block-type.php",
@@ -698,6 +703,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-control.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-manager.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-nav-menus.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-panel.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-customize-section.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-supports.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-template.php"));
         assert!(settings.should_route("/wp-includes/class-wp-block-type.php"));
