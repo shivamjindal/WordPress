@@ -91,6 +91,9 @@ GET /wp-admin/network/edit.php?action=siteoptions
 POST /wp-admin/network/edit.php?action=siteoptions
 GET /wp-admin/network/update.php?action=update-selected
 POST /wp-admin/network/update.php?action=update-selected
+GET /wp-admin/network/update-core.php
+GET /wp-admin/network/update-core.php?action=do-plugin-upgrade
+POST /wp-admin/network/update-core.php?action=do-plugin-upgrade
 GET /wp-admin/network/plugin-install.php
 GET /wp-admin/network/plugin-install.php?tab=plugin-information
 POST /wp-admin/network/plugin-install.php
