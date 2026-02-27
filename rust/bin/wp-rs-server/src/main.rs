@@ -57,6 +57,7 @@ async fn main() {
         .route("/wp-mail.php", any(mail_live_dispatch))
         .route("/wp-trackback.php", any(trackback_live_dispatch))
         .route("/wp-links-opml.php", any(links_opml_live_dispatch))
+        .route("/wp-includes/load.php", any(load_include_live_dispatch))
         .route(
             "/wp-includes/wp-diff.php",
             any(wp_diff_include_live_dispatch),
@@ -6789,6 +6790,10 @@ async fn links_opml_live_dispatch(request: Request) -> Response {
 </opml>"#
         .to_string();
     rust_handled_text(StatusCode::OK, "text/xml; charset=UTF-8", opml).into_response()
+}
+
+async fn load_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
 }
 
 async fn wp_diff_include_live_dispatch(_request: Request) -> Response {
