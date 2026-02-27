@@ -194,6 +194,11 @@ GET /wp-includes/blocks/accordion.php
 GET /wp-includes/blocks/archives.php
 GET /wp-includes/blocks/avatar.php
 GET /wp-includes/blocks/block.php
+GET /wp-includes/blocks/button.php
+GET /wp-includes/blocks/calendar.php
+GET /wp-includes/blocks/categories.php
+GET /wp-includes/blocks/comment-author-name.php
+GET /wp-includes/blocks/comment-content.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

@@ -682,6 +682,26 @@ async fn main() {
             any(blocks_block_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/button.php",
+            any(blocks_button_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/calendar.php",
+            any(blocks_calendar_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/categories.php",
+            any(blocks_categories_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comment-author-name.php",
+            any(blocks_comment_author_name_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comment-content.php",
+            any(blocks_comment_content_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10072,6 +10092,26 @@ async fn blocks_avatar_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn blocks_block_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_button_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_calendar_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_categories_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comment_author_name_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comment_content_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
