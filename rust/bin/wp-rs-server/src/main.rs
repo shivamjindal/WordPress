@@ -1430,6 +1430,26 @@ async fn main() {
             any(js_dist_script_modules_block_library_search_view_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/edit-widgets.min.asset.php",
+            any(js_dist_edit_widgets_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/accordion/view.min.asset.php",
+            any(js_dist_script_modules_block_library_accordion_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/tabs/view.min.asset.php",
+            any(js_dist_script_modules_block_library_tabs_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/navigation/view.min.asset.php",
+            any(js_dist_script_modules_block_library_navigation_view_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/block-library/query/view.min.asset.php",
+            any(js_dist_script_modules_block_library_query_view_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11648,6 +11668,34 @@ async fn js_dist_script_modules_latex_to_mathml_loader_min_asset_include_live_di
 }
 
 async fn js_dist_script_modules_block_library_search_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_edit_widgets_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_accordion_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_tabs_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_navigation_view_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_block_library_query_view_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

@@ -381,6 +381,11 @@ GET /wp-includes/js/dist/script-modules/boot/index.min.asset.php
 GET /wp-includes/js/dist/react-i18n.min.asset.php
 GET /wp-includes/js/dist/script-modules/latex-to-mathml/loader.min.asset.php
 GET /wp-includes/js/dist/script-modules/block-library/search/view.min.asset.php
+GET /wp-includes/js/dist/edit-widgets.min.asset.php
+GET /wp-includes/js/dist/script-modules/block-library/accordion/view.min.asset.php
+GET /wp-includes/js/dist/script-modules/block-library/tabs/view.min.asset.php
+GET /wp-includes/js/dist/script-modules/block-library/navigation/view.min.asset.php
+GET /wp-includes/js/dist/script-modules/block-library/query/view.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
