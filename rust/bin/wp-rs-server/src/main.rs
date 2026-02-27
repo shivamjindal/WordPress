@@ -842,6 +842,26 @@ async fn main() {
             any(blocks_post_comments_count_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/post-comments-form.php",
+            any(blocks_post_comments_form_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-comments-link.php",
+            any(blocks_post_comments_link_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-content.php",
+            any(blocks_post_content_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-date.php",
+            any(blocks_post_date_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-excerpt.php",
+            any(blocks_post_excerpt_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10392,6 +10412,26 @@ async fn blocks_post_author_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn blocks_post_comments_count_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_comments_form_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_comments_link_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_content_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_date_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_excerpt_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
