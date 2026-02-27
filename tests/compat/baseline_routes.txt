@@ -339,6 +339,11 @@ GET /wp-admin/includes/class-wp-site-health-auto-updates.php
 GET /wp-admin/includes/class-wp-site-health.php
 GET /wp-admin/includes/class-wp-site-icon.php
 GET /wp-admin/includes/class-wp-terms-list-table.php
+GET /wp-admin/includes/class-wp-theme-install-list-table.php
+GET /wp-admin/includes/class-wp-themes-list-table.php
+GET /wp-admin/includes/class-wp-upgrader.php
+GET /wp-admin/includes/class-wp-upgrader-skin.php
+GET /wp-admin/includes/class-wp-upgrader-skins.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

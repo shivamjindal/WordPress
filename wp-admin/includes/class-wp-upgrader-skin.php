@@ -13,6 +13,13 @@
  * @since 2.8.0
  * @since 4.6.0 Moved to its own file from wp-admin/includes/class-wp-upgrader-skins.php.
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-upgrader-skin.php' );
+if ( '/wp-admin/includes/class-wp-upgrader-skin.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 #[AllowDynamicProperties]
 class WP_Upgrader_Skin {
 

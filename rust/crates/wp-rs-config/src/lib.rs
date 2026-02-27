@@ -506,6 +506,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/class-wp-site-health.php",
         "/wp-admin/includes/class-wp-site-icon.php",
         "/wp-admin/includes/class-wp-terms-list-table.php",
+        "/wp-admin/includes/class-wp-theme-install-list-table.php",
+        "/wp-admin/includes/class-wp-themes-list-table.php",
+        "/wp-admin/includes/class-wp-upgrader.php",
+        "/wp-admin/includes/class-wp-upgrader-skin.php",
+        "/wp-admin/includes/class-wp-upgrader-skins.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1155,6 +1160,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/class-wp-site-health.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-site-icon.php"));
         assert!(settings.should_route("/wp-admin/includes/class-wp-terms-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-theme-install-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-themes-list-table.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader-skin.php"));
+        assert!(settings.should_route("/wp-admin/includes/class-wp-upgrader-skins.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));

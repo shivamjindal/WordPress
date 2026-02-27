@@ -14,6 +14,13 @@
  *
  * @see WP_Themes_List_Table
  */
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/includes/class-wp-theme-install-list-table.php' );
+if ( '/wp-admin/includes/class-wp-theme-install-list-table.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 class WP_Theme_Install_List_Table extends WP_Themes_List_Table {
 
 	public $features = array();

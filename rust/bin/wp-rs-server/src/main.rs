@@ -1242,6 +1242,26 @@ async fn main() {
             any(class_wp_terms_list_table_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/class-wp-theme-install-list-table.php",
+            any(class_wp_theme_install_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-themes-list-table.php",
+            any(class_wp_themes_list_table_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-upgrader.php",
+            any(class_wp_upgrader_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-upgrader-skin.php",
+            any(class_wp_upgrader_skin_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/class-wp-upgrader-skins.php",
+            any(class_wp_upgrader_skins_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2386,6 +2406,26 @@ async fn class_wp_site_icon_include_live_dispatch(_request: Request) -> Response
 }
 
 async fn class_wp_terms_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_theme_install_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_themes_list_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_upgrader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_upgrader_skin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_upgrader_skins_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
