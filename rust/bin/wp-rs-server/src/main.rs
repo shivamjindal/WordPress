@@ -60,6 +60,7 @@ async fn main() {
         .route("/wp-admin", get(admin_dashboard_live))
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
+        .route("/wp-admin/profile.php", any(profile_live_dispatch))
         .route("/wp-admin/install.php", any(install_live_dispatch))
         .route(
             "/wp-admin/setup-config.php",
@@ -651,6 +652,47 @@ async fn admin_bootstrap_live_dispatch(
         "message": "Rust admin bootstrap compatibility shim loaded.",
     }))
     .into_response()
+}
+
+async fn profile_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/profile.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view_profile = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("edit_user")
+            || capabilities.contains("manage_options"));
+    if !can_view_profile {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for wp-admin/profile.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    if request.method() == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/profile.php?updated=true").into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Profile (Rust)</h1><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn install_live_dispatch(request: Request) -> Response {
