@@ -411,6 +411,20 @@ async fn main() {
             "/wp-includes/media-template.php",
             any(media_template_include_live_dispatch),
         )
+        .route("/wp-includes/media.php", any(media_include_live_dispatch))
+        .route("/wp-includes/meta.php", any(meta_include_live_dispatch))
+        .route(
+            "/wp-includes/ms-blogs.php",
+            any(ms_blogs_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-default-constants.php",
+            any(ms_default_constants_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-default-filters.php",
+            any(ms_default_filters_include_live_dispatch),
+        )
         .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
@@ -7990,6 +8004,26 @@ async fn locale_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn media_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn media_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn meta_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_blogs_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn ms_default_constants_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_default_filters_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
