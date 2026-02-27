@@ -64,6 +64,8 @@ async fn main() {
         .route("/wp-admin/profile.php", any(profile_live_dispatch))
         .route("/wp-admin/user-edit.php", any(user_edit_live_dispatch))
         .route("/wp-admin/user-new.php", any(user_new_live_dispatch))
+        .route("/wp-admin/post-new.php", any(post_new_live_dispatch))
+        .route("/wp-admin/post.php", any(post_live_dispatch))
         .route("/wp-admin/install.php", any(install_live_dispatch))
         .route(
             "/wp-admin/setup-config.php",
@@ -130,6 +132,7 @@ async fn main() {
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
+        .route("/wp-admin/edit.php", any(edit_posts_live_dispatch))
         .route("/wp-admin/upload.php", any(upload_live_dispatch))
         .route("/wp-admin/media-new.php", any(media_new_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
@@ -843,6 +846,139 @@ async fn user_new_live_dispatch(State(state): State<AppState>, request: Request)
     let user_id = params.get("user_id").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>User New (Rust)</h1><p>update={update}</p><p>user_id={user_id}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn post_new_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/post-new.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_create_posts = authenticated
+        && (capabilities.contains("create_posts")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_create_posts {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "create_posts capability is required for wp-admin/post-new.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let post_type = params
+        .get("post_type")
+        .cloned()
+        .unwrap_or_else(|| "post".to_string());
+    if post_type == "attachment" {
+        return rust_handled_redirect("/wp-admin/media-new.php").into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        let action = params.get("action").cloned().unwrap_or_default();
+        if action == "post" || action == "postajaxpost" {
+            return rust_handled_redirect("/wp-admin/post.php?action=edit&post=1").into_response();
+        }
+    }
+
+    let html = format!(
+        "<!doctype html><html><body><h1>Post New (Rust)</h1><p>post_type={post_type}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn post_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/post.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_posts = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("create_posts")
+            || capabilities.contains("manage_options"));
+    if !can_edit_posts {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/post.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| "edit".to_string());
+    let post_id = params
+        .get("post")
+        .or_else(|| params.get("post_ID"))
+        .cloned()
+        .unwrap_or_else(|| "0".to_string());
+
+    if action == "delete" || action == "trash" {
+        return rust_handled_redirect("/wp-admin/edit.php?deleted=1").into_response();
+    }
+
+    if method == axum::http::Method::POST && (action == "post" || action == "postajaxpost") {
+        return rust_handled_redirect("/wp-admin/post.php?action=edit&post=1").into_response();
+    }
+
+    let html = format!(
+        "<!doctype html><html><body><h1>Post Edit (Rust)</h1><p>action={action}</p><p>post={post_id}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
@@ -1934,6 +2070,79 @@ async fn users_live_dispatch(State(state): State<AppState>, request: Request) ->
     let search = params.get("s").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Users (Rust)</h1><p>action={action}</p><p>role={role}</p><p>search={search}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn edit_posts_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/edit.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_posts = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("edit_pages")
+            || capabilities.contains("manage_options"));
+    if !can_edit_posts {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/edit.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let post_type = params
+        .get("post_type")
+        .cloned()
+        .unwrap_or_else(|| "post".to_string());
+    if post_type == "attachment" {
+        return rust_handled_redirect("/wp-admin/upload.php").into_response();
+    }
+
+    let action = params
+        .get("action")
+        .or_else(|| params.get("doaction"))
+        .cloned()
+        .unwrap_or_default();
+    if method == axum::http::Method::POST && !action.is_empty() {
+        let target = format!("/wp-admin/edit.php?post_type={post_type}&updated_action={action}");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let paged = params
+        .get("paged")
+        .cloned()
+        .unwrap_or_else(|| "1".to_string());
+    let s = params.get("s").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Edit Posts (Rust)</h1><p>post_type={post_type}</p><p>action={action}</p><p>paged={paged}</p><p>search={s}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

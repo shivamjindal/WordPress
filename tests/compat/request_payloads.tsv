@@ -10,6 +10,8 @@ POST	/wp-admin/install.php	application/x-www-form-urlencoded	weblog_title=Rust+S
 POST	/wp-admin/profile.php	application/x-www-form-urlencoded	action=update-user&nickname=rustadmin
 POST	/wp-admin/user-edit.php?user_id=2	application/x-www-form-urlencoded	action=update&user_id=2&email=admin%40example.com
 POST	/wp-admin/user-new.php	application/x-www-form-urlencoded	action=adduser&email=rustuser%40example.com&role=subscriber
+POST	/wp-admin/post-new.php	application/x-www-form-urlencoded	action=post&post_type=post&post_title=Rust+Draft
+POST	/wp-admin/post.php?action=post	application/x-www-form-urlencoded	post_ID=1&post_title=Rust+Updated
 POST	/wp-admin/plugin-install.php	application/x-www-form-urlencoded	s=akismet&tab=search&type=term
 POST	/wp-admin/plugin-editor.php	application/x-www-form-urlencoded	action=update&plugin=hello.php&file=hello.php
 POST	/wp-admin/theme-install.php	application/x-www-form-urlencoded	s=twentytwentyfive&tab=search&type=term
@@ -17,6 +19,7 @@ POST	/wp-admin/theme-editor.php	application/x-www-form-urlencoded	action=update&
 POST	/wp-admin/plugins.php	application/x-www-form-urlencoded	action=activate-selected&checked=hello.php
 POST	/wp-admin/themes.php	application/x-www-form-urlencoded	action=enable-auto-update&stylesheet=twentytwentyfive
 POST	/wp-admin/users.php	application/x-www-form-urlencoded	action=delete&users=2
+POST	/wp-admin/edit.php	application/x-www-form-urlencoded	action=trash&post=1
 POST	/wp-admin/upload.php	application/x-www-form-urlencoded	action=delete&media=1
 POST	/wp-admin/media-new.php	application/x-www-form-urlencoded	html-upload=1&post_id=0
 POST	/wp-admin/setup-config.php	application/x-www-form-urlencoded	dbname=wordpress&uname=wp_user&pwd=secret

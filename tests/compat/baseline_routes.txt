@@ -28,6 +28,12 @@ POST /wp-admin/user-edit.php?user_id=2
 GET /wp-admin/user-new.php
 GET /wp-admin/user-new.php?update=addnoconfirmation&user_id=2
 POST /wp-admin/user-new.php
+GET /wp-admin/post-new.php
+GET /wp-admin/post-new.php?post_type=attachment
+POST /wp-admin/post-new.php
+GET /wp-admin/post.php?action=edit&post=1
+GET /wp-admin/post.php?action=delete&post=1
+POST /wp-admin/post.php?action=post
 GET /wp-admin/install.php
 POST /wp-admin/install.php
 GET /wp-admin/setup-config.php
@@ -70,6 +76,10 @@ POST /wp-admin/themes.php
 GET /wp-admin/users.php
 GET /wp-admin/users.php?action=delete&id=2
 POST /wp-admin/users.php
+GET /wp-admin/edit.php
+GET /wp-admin/edit.php?post_type=post
+GET /wp-admin/edit.php?post_type=attachment
+POST /wp-admin/edit.php
 GET /wp-admin/upload.php
 GET /wp-admin/upload.php?posted=1
 POST /wp-admin/upload.php

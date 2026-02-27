@@ -186,6 +186,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/profile.php",
         "/wp-admin/user-edit.php",
         "/wp-admin/user-new.php",
+        "/wp-admin/post-new.php",
+        "/wp-admin/post.php",
         "/wp-admin/install.php",
         "/wp-admin/setup-config.php",
         "/wp-admin/install-helper.php",
@@ -210,6 +212,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/plugins.php",
         "/wp-admin/themes.php",
         "/wp-admin/users.php",
+        "/wp-admin/edit.php",
         "/wp-admin/upload.php",
         "/wp-admin/media-new.php",
         "/wp-admin/tools.php",
@@ -451,6 +454,8 @@ mod tests {
         assert!(settings.should_route("/wp-admin/profile.php"));
         assert!(settings.should_route("/wp-admin/user-edit.php"));
         assert!(settings.should_route("/wp-admin/user-new.php"));
+        assert!(settings.should_route("/wp-admin/post-new.php"));
+        assert!(settings.should_route("/wp-admin/post.php"));
         assert!(settings.should_route("/wp-admin/setup-config.php"));
         assert!(settings.should_route("/wp-admin/options.php"));
         assert!(settings.should_route("/wp-admin/options-general.php"));
@@ -473,6 +478,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/plugins.php"));
         assert!(settings.should_route("/wp-admin/themes.php"));
         assert!(settings.should_route("/wp-admin/users.php"));
+        assert!(settings.should_route("/wp-admin/edit.php"));
         assert!(settings.should_route("/wp-admin/upload.php"));
         assert!(settings.should_route("/wp-admin/media-new.php"));
         assert!(settings.should_route("/wp-admin/tools.php"));
