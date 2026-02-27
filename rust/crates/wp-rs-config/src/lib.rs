@@ -371,6 +371,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/blocks/comment-reply-link.php",
         "/wp-includes/blocks/comments-pagination-next.php",
         "/wp-includes/blocks/comments-pagination-numbers.php",
+        "/wp-includes/blocks/blocks-json.php",
+        "/wp-includes/blocks/comments-pagination-previous.php",
+        "/wp-includes/blocks/comments-pagination.php",
+        "/wp-includes/blocks/comments-title.php",
+        "/wp-includes/blocks/comments.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1278,6 +1283,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/blocks/comment-reply-link.php"));
         assert!(settings.should_route("/wp-includes/blocks/comments-pagination-next.php"));
         assert!(settings.should_route("/wp-includes/blocks/comments-pagination-numbers.php"));
+        assert!(settings.should_route("/wp-includes/blocks/blocks-json.php"));
+        assert!(settings.should_route("/wp-includes/blocks/comments-pagination-previous.php"));
+        assert!(settings.should_route("/wp-includes/blocks/comments-pagination.php"));
+        assert!(settings.should_route("/wp-includes/blocks/comments-title.php"));
+        assert!(settings.should_route("/wp-includes/blocks/comments.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

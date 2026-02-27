@@ -722,6 +722,26 @@ async fn main() {
             any(blocks_comments_pagination_numbers_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/blocks-json.php",
+            any(blocks_blocks_json_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comments-pagination-previous.php",
+            any(blocks_comments_pagination_previous_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comments-pagination.php",
+            any(blocks_comments_pagination_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comments-title.php",
+            any(blocks_comments_title_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/comments.php",
+            any(blocks_comments_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10152,6 +10172,26 @@ async fn blocks_comments_pagination_next_include_live_dispatch(_request: Request
 }
 
 async fn blocks_comments_pagination_numbers_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_blocks_json_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comments_pagination_previous_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comments_pagination_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comments_title_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_comments_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

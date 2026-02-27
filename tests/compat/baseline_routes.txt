@@ -204,6 +204,11 @@ GET /wp-includes/blocks/comment-edit-link.php
 GET /wp-includes/blocks/comment-reply-link.php
 GET /wp-includes/blocks/comments-pagination-next.php
 GET /wp-includes/blocks/comments-pagination-numbers.php
+GET /wp-includes/blocks/blocks-json.php
+GET /wp-includes/blocks/comments-pagination-previous.php
+GET /wp-includes/blocks/comments-pagination.php
+GET /wp-includes/blocks/comments-title.php
+GET /wp-includes/blocks/comments.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
