@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-IXR.php",
+        "/wp-includes/class-avif-info.php",
+        "/wp-includes/class-feed.php",
+        "/wp-includes/class-http.php",
+        "/wp-includes/class-json.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -743,6 +748,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-IXR.php"));
+        assert!(settings.should_route("/wp-includes/class-avif-info.php"));
+        assert!(settings.should_route("/wp-includes/class-feed.php"));
+        assert!(settings.should_route("/wp-includes/class-http.php"));
+        assert!(settings.should_route("/wp-includes/class-json.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

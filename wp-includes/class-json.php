@@ -1,4 +1,10 @@
 <?php
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-json.php' ) === '/wp-includes/class-json.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-json.php' ) ) {
+	exit;
+}
+
 _deprecated_file( basename( __FILE__ ), '5.3.0', '', 'The PHP native JSON extension is now a requirement.' );
 
 if ( ! class_exists( 'Services_JSON' ) ) :

@@ -39,6 +39,12 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php BSD
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-IXR.php' ) === '/wp-includes/class-IXR.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-IXR.php' ) ) {
+	exit;
+}
+
 // Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );

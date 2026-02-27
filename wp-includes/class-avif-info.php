@@ -18,6 +18,12 @@
 
 namespace Avifinfo;
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( \wp_rust_gateway_current_request_path( '/wp-includes/class-avif-info.php' ) === '/wp-includes/class-avif-info.php'
+	&& \wp_rust_gateway_try_proxy( '/wp-includes/class-avif-info.php' ) ) {
+	exit;
+}
+
 const FOUND     = 0; // Input correctly parsed and information retrieved.
 const NOT_FOUND = 1; // Input correctly parsed but information is missing or elsewhere.
 const TRUNCATED = 2; // Input correctly parsed until missing bytes to continue.

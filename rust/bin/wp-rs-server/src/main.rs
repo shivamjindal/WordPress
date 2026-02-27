@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-IXR.php",
+            any(class_ixr_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-avif-info.php",
+            any(class_avif_info_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-feed.php",
+            any(class_feed_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-http.php",
+            any(class_http_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-json.php",
+            any(class_json_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7617,6 +7637,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_ixr_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_avif_info_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_feed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_http_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_json_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
