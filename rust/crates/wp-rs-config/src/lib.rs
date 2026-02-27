@@ -524,6 +524,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/src/Transport/Fsockopen.php",
         "/wp-includes/Requests/src/Transport.php",
         "/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php",
+        "/wp-includes/Requests/src/Utility/FilteredIterator.php",
+        "/wp-includes/Requests/src/Utility/InputValidator.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1313,6 +1315,8 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/src/Transport.php"));
         assert!(settings
             .should_route("/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Utility/FilteredIterator.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Utility/InputValidator.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

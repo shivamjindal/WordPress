@@ -1328,6 +1328,14 @@ async fn main() {
             any(requests_src_utility_case_insensitive_dictionary_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Utility/FilteredIterator.php",
+            any(requests_src_utility_filtered_iterator_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Utility/InputValidator.php",
+            any(requests_src_utility_input_validator_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10356,6 +10364,16 @@ async fn requests_src_transport_include_live_dispatch(_request: Request) -> Resp
 async fn requests_src_utility_case_insensitive_dictionary_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_utility_filtered_iterator_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_utility_input_validator_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

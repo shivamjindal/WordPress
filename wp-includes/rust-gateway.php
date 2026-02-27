@@ -606,6 +606,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/Requests/src/Transport/Fsockopen.php',
 			'/wp-includes/Requests/src/Transport.php',
 			'/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php',
+			'/wp-includes/Requests/src/Utility/FilteredIterator.php',
+			'/wp-includes/Requests/src/Utility/InputValidator.php',
 			'/wp-includes/style-engine.php',
 			'/wp-includes/sitemaps.php',
 			'/wp-includes/script-modules.php',
