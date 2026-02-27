@@ -72,6 +72,11 @@ GET /wp-includes/class-wp-styles.php
 GET /wp-includes/class-wp-dependencies.php
 GET /wp-includes/class-wp-dependency.php
 GET /wp-includes/class-wp-script-modules.php
+GET /wp-includes/class-wp-admin-bar.php
+GET /wp-includes/class-wp-ajax-response.php
+GET /wp-includes/class-wp-embed.php
+GET /wp-includes/class-wp-editor.php
+GET /wp-includes/class-wp-oembed.php
 GET /wp-includes/class-wp-comment.php
 GET /wp-includes/class-wp-term.php
 GET /wp-includes/class-wp-user-request.php

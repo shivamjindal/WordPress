@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-admin-bar.php",
+        "/wp-includes/class-wp-ajax-response.php",
+        "/wp-includes/class-wp-embed.php",
+        "/wp-includes/class-wp-editor.php",
+        "/wp-includes/class-wp-oembed.php",
         "/wp-includes/class-wp-comment.php",
         "/wp-includes/class-wp-term.php",
         "/wp-includes/class-wp-user-request.php",
@@ -658,6 +663,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-admin-bar.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-ajax-response.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-embed.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-editor.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-oembed.php"));
         assert!(settings.should_route("/wp-includes/class-wp-comment.php"));
         assert!(settings.should_route("/wp-includes/class-wp-term.php"));
         assert!(settings.should_route("/wp-includes/class-wp-user-request.php"));

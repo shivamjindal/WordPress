@@ -8,6 +8,12 @@
  * Private, not included by default. See wp_editor() in wp-includes/general-template.php.
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-editor.php' ) === '/wp-includes/class-wp-editor.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-editor.php' ) ) {
+	exit;
+}
+
 #[AllowDynamicProperties]
 final class _WP_Editors {
 	public static $mce_locale;
