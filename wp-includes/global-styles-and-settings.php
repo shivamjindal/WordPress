@@ -5,6 +5,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/global-styles-and-settings.php' ) === '/wp-includes/global-styles-and-settings.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/global-styles-and-settings.php' ) ) {
+	exit;
+}
+
 /**
  * Gets the settings resulting of merging core, theme, and user data.
  *

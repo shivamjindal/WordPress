@@ -384,6 +384,23 @@ async fn main() {
         .route("/wp-includes/feed.php", any(feed_include_live_dispatch))
         .route("/wp-includes/fonts.php", any(fonts_include_live_dispatch))
         .route(
+            "/wp-includes/functions.wp-scripts.php",
+            any(functions_dot_wp_scripts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/functions.wp-styles.php",
+            any(functions_dot_wp_styles_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/global-styles-and-settings.php",
+            any(global_styles_and_settings_include_live_dispatch),
+        )
+        .route("/wp-includes/http.php", any(http_include_live_dispatch))
+        .route(
+            "/wp-includes/https-detection.php",
+            any(https_detection_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7922,6 +7939,26 @@ async fn feed_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn fonts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn functions_dot_wp_scripts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn functions_dot_wp_styles_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn global_styles_and_settings_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn http_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn https_detection_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -279,6 +279,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/feed-rss2.php",
         "/wp-includes/feed.php",
         "/wp-includes/fonts.php",
+        "/wp-includes/functions.wp-scripts.php",
+        "/wp-includes/functions.wp-styles.php",
+        "/wp-includes/global-styles-and-settings.php",
+        "/wp-includes/http.php",
+        "/wp-includes/https-detection.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -823,6 +828,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/feed-rss2.php"));
         assert!(settings.should_route("/wp-includes/feed.php"));
         assert!(settings.should_route("/wp-includes/fonts.php"));
+        assert!(settings.should_route("/wp-includes/functions.wp-scripts.php"));
+        assert!(settings.should_route("/wp-includes/functions.wp-styles.php"));
+        assert!(settings.should_route("/wp-includes/global-styles-and-settings.php"));
+        assert!(settings.should_route("/wp-includes/http.php"));
+        assert!(settings.should_route("/wp-includes/https-detection.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

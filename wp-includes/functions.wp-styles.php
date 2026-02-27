@@ -8,6 +8,12 @@
  * @subpackage Dependencies
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/functions.wp-styles.php' ) === '/wp-includes/functions.wp-styles.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/functions.wp-styles.php' ) ) {
+	exit;
+}
+
 /**
  * Initializes $wp_styles if it has not been set.
  *

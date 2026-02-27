@@ -8,6 +8,12 @@
  * @subpackage Dependencies
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/functions.wp-scripts.php' ) === '/wp-includes/functions.wp-scripts.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/functions.wp-scripts.php' ) ) {
+	exit;
+}
+
 /**
  * Initializes $wp_scripts if it has not been set.
  *
