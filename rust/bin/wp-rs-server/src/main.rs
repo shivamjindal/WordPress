@@ -1008,6 +1008,26 @@ async fn main() {
             any(id3_module_tag_lyrics3_include_live_dispatch),
         )
         .route(
+            "/wp-includes/IXR/class-IXR-base64.php",
+            any(ixr_class_base64_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-client.php",
+            any(ixr_class_client_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-clientmulticall.php",
+            any(ixr_class_clientmulticall_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-date.php",
+            any(ixr_class_date_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/IXR/class-IXR-error.php",
+            any(ixr_class_error_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -9642,6 +9662,26 @@ async fn id3_module_tag_id3v2_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn id3_module_tag_lyrics3_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_base64_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_client_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_clientmulticall_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_date_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ixr_class_error_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
