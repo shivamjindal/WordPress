@@ -6,6 +6,12 @@
  * @subpackage Template
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/link-template.php' ) === '/wp-includes/link-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/link-template.php' ) ) {
+	exit;
+}
+
 /**
  * Displays the permalink for the current post.
  *

@@ -80,6 +80,20 @@ async fn main() {
             "/wp-includes/capabilities.php",
             any(capabilities_include_live_dispatch),
         )
+        .route("/wp-includes/option.php", any(option_include_live_dispatch))
+        .route("/wp-includes/post.php", any(post_include_live_dispatch))
+        .route(
+            "/wp-includes/class-wp-hook.php",
+            any(class_wp_hook_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/general-template.php",
+            any(general_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/link-template.php",
+            any(link_template_include_live_dispatch),
+        )
         .route("/wp-includes/theme.php", any(theme_include_live_dispatch))
         .route(
             "/wp-includes/theme-templates.php",
@@ -6908,6 +6922,26 @@ async fn pluggable_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn capabilities_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn option_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn post_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_hook_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn general_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn link_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

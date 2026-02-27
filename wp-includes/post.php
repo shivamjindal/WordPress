@@ -6,6 +6,12 @@
  * @subpackage Post
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/post.php' ) === '/wp-includes/post.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/post.php' ) ) {
+	exit;
+}
+
 //
 // Post Type registration.
 //
