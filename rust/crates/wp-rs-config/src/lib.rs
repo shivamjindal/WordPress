@@ -314,6 +314,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/revision.php",
         "/wp-includes/rewrite.php",
         "/wp-includes/robots-template.php",
+        "/wp-includes/rss-functions.php",
+        "/wp-includes/rss.php",
+        "/wp-includes/script-loader.php",
+        "/wp-includes/session.php",
+        "/wp-includes/spl-autoload-compat.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -893,6 +898,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/revision.php"));
         assert!(settings.should_route("/wp-includes/rewrite.php"));
         assert!(settings.should_route("/wp-includes/robots-template.php"));
+        assert!(settings.should_route("/wp-includes/rss-functions.php"));
+        assert!(settings.should_route("/wp-includes/rss.php"));
+        assert!(settings.should_route("/wp-includes/script-loader.php"));
+        assert!(settings.should_route("/wp-includes/session.php"));
+        assert!(settings.should_route("/wp-includes/spl-autoload-compat.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

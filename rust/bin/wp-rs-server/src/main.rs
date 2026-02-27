@@ -503,6 +503,23 @@ async fn main() {
             any(robots_template_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rss-functions.php",
+            any(rss_functions_include_live_dispatch),
+        )
+        .route("/wp-includes/rss.php", any(rss_include_live_dispatch))
+        .route(
+            "/wp-includes/script-loader.php",
+            any(script_loader_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/session.php",
+            any(session_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/spl-autoload-compat.php",
+            any(spl_autoload_compat_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -8181,6 +8198,26 @@ async fn rewrite_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn robots_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rss_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rss_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn script_loader_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn session_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn spl_autoload_compat_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

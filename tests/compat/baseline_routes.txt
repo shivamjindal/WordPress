@@ -147,6 +147,11 @@ GET /wp-includes/rest-api.php
 GET /wp-includes/revision.php
 GET /wp-includes/rewrite.php
 GET /wp-includes/robots-template.php
+GET /wp-includes/rss-functions.php
+GET /wp-includes/rss.php
+GET /wp-includes/script-loader.php
+GET /wp-includes/session.php
+GET /wp-includes/spl-autoload-compat.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php
