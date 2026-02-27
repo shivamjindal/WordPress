@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-simplepie-file.php",
+            any(class_wp_simplepie_file_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-simplepie-sanitize-kses.php",
+            any(class_wp_simplepie_sanitize_kses_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-speculation-rules.php",
+            any(class_wp_speculation_rules_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-text-diff-renderer-inline.php",
+            any(class_wp_text_diff_renderer_inline_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-text-diff-renderer-table.php",
+            any(class_wp_text_diff_renderer_table_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-navigation-fallback.php",
             any(class_wp_navigation_fallback_include_live_dispatch),
         )
@@ -7504,6 +7524,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
+}
+
+async fn class_wp_simplepie_file_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_simplepie_sanitize_kses_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn class_wp_speculation_rules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_text_diff_renderer_inline_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_text_diff_renderer_table_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
 }
 
 async fn class_wp_navigation_fallback_include_live_dispatch(_request: Request) -> Response {

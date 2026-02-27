@@ -7,6 +7,12 @@
  * @since 4.7.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-text-diff-renderer-table.php' ) === '/wp-includes/class-wp-text-diff-renderer-table.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-text-diff-renderer-table.php' ) ) {
+	exit;
+}
+
 // Don't load directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
