@@ -1,1 +1,8 @@
-<?php return array('dependencies' => array('react', 'react-dom', 'react-jsx-runtime', 'wp-a11y', 'wp-api-fetch', 'wp-blob', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-commands', 'wp-components', 'wp-compose', 'wp-core-data', 'wp-data', 'wp-date', 'wp-deprecated', 'wp-dom', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-html-entities', 'wp-i18n', 'wp-keyboard-shortcuts', 'wp-keycodes', 'wp-notices', 'wp-patterns', 'wp-plugins', 'wp-preferences', 'wp-primitives', 'wp-private-apis', 'wp-router', 'wp-style-engine', 'wp-url', 'wp-warning', 'wp-widgets'), 'module_dependencies' => array(array('id' => '@wordpress/route', 'import' => 'static')), 'version' => 'b6731193c6ba800903f7');
+<?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/js/dist/edit-site.min.asset.php' );
+if ( '/wp-includes/js/dist/edit-site.min.asset.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+return array('dependencies' => array('react', 'react-dom', 'react-jsx-runtime', 'wp-a11y', 'wp-api-fetch', 'wp-blob', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-commands', 'wp-components', 'wp-compose', 'wp-core-data', 'wp-data', 'wp-date', 'wp-deprecated', 'wp-dom', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-html-entities', 'wp-i18n', 'wp-keyboard-shortcuts', 'wp-keycodes', 'wp-notices', 'wp-patterns', 'wp-plugins', 'wp-preferences', 'wp-primitives', 'wp-private-apis', 'wp-router', 'wp-style-engine', 'wp-url', 'wp-warning', 'wp-widgets'), 'module_dependencies' => array(array('id' => '@wordpress/route', 'import' => 'static')), 'version' => 'b6731193c6ba800903f7');

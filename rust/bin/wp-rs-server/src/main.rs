@@ -1370,6 +1370,26 @@ async fn main() {
             any(js_dist_plugins_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/patterns.min.asset.php",
+            any(js_dist_patterns_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/editor.min.asset.php",
+            any(js_dist_editor_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/workflow/index.min.asset.php",
+            any(js_dist_script_modules_workflow_index_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/edit-site.min.asset.php",
+            any(js_dist_edit_site_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/route/index.min.asset.php",
+            any(js_dist_script_modules_route_index_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11516,6 +11536,30 @@ async fn js_dist_undo_manager_min_asset_include_live_dispatch(_request: Request)
 }
 
 async fn js_dist_plugins_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_patterns_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_editor_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_workflow_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_edit_site_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_route_index_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
