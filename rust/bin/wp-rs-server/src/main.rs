@@ -466,6 +466,23 @@ async fn main() {
             any(pluggable_deprecated_include_live_dispatch),
         )
         .route(
+            "/wp-includes/post-formats.php",
+            any(post_formats_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/post-template.php",
+            any(post_template_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/post-thumbnail-template.php",
+            any(post_thumbnail_template_include_live_dispatch),
+        )
+        .route("/wp-includes/query.php", any(query_include_live_dispatch))
+        .route(
+            "/wp-includes/registration-functions.php",
+            any(registration_functions_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -8104,6 +8121,26 @@ async fn nav_menu_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn pluggable_deprecated_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn post_formats_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn post_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn post_thumbnail_template_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn query_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn registration_functions_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

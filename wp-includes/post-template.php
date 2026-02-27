@@ -8,6 +8,12 @@
  * @subpackage Template
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/post-template.php' ) === '/wp-includes/post-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/post-template.php' ) ) {
+	exit;
+}
+
 /**
  * Displays the ID of the current item in the WordPress Loop.
  *

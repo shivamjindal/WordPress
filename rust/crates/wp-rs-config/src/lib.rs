@@ -304,6 +304,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/nav-menu-template.php",
         "/wp-includes/nav-menu.php",
         "/wp-includes/pluggable-deprecated.php",
+        "/wp-includes/post-formats.php",
+        "/wp-includes/post-template.php",
+        "/wp-includes/post-thumbnail-template.php",
+        "/wp-includes/query.php",
+        "/wp-includes/registration-functions.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -873,6 +878,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/nav-menu-template.php"));
         assert!(settings.should_route("/wp-includes/nav-menu.php"));
         assert!(settings.should_route("/wp-includes/pluggable-deprecated.php"));
+        assert!(settings.should_route("/wp-includes/post-formats.php"));
+        assert!(settings.should_route("/wp-includes/post-template.php"));
+        assert!(settings.should_route("/wp-includes/post-thumbnail-template.php"));
+        assert!(settings.should_route("/wp-includes/query.php"));
+        assert!(settings.should_route("/wp-includes/registration-functions.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

@@ -137,6 +137,11 @@ GET /wp-includes/ms-site.php
 GET /wp-includes/nav-menu-template.php
 GET /wp-includes/nav-menu.php
 GET /wp-includes/pluggable-deprecated.php
+GET /wp-includes/post-formats.php
+GET /wp-includes/post-template.php
+GET /wp-includes/post-thumbnail-template.php
+GET /wp-includes/query.php
+GET /wp-includes/registration-functions.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php

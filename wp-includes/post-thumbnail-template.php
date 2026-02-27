@@ -9,6 +9,12 @@
  * @subpackage Template
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/post-thumbnail-template.php' ) === '/wp-includes/post-thumbnail-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/post-thumbnail-template.php' ) ) {
+	exit;
+}
+
 /**
  * Determines whether a post has an image attached.
  *
