@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-block-bindings-registry.php",
+            any(class_wp_block_bindings_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-bindings-source.php",
+            any(class_wp_block_bindings_source_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-editor-context.php",
+            any(class_wp_block_editor_context_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block-list.php",
+            any(class_wp_block_list_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-block.php",
+            any(class_wp_block_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-recovery-mode.php",
             any(class_wp_recovery_mode_include_live_dispatch),
         )
@@ -7363,6 +7383,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_bindings_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_bindings_source_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_editor_context_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_list_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_block_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

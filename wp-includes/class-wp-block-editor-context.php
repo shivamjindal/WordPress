@@ -6,6 +6,12 @@
  * @since 5.8.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-block-editor-context.php' ) === '/wp-includes/class-wp-block-editor-context.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-block-editor-context.php' ) ) {
+	exit;
+}
+
 /**
  * Contains information about a block editor being rendered.
  *

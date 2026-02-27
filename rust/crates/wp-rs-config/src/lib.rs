@@ -239,6 +239,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/class-wp-dependencies.php",
         "/wp-includes/class-wp-dependency.php",
         "/wp-includes/class-wp-script-modules.php",
+        "/wp-includes/class-wp-block-bindings-registry.php",
+        "/wp-includes/class-wp-block-bindings-source.php",
+        "/wp-includes/class-wp-block-editor-context.php",
+        "/wp-includes/class-wp-block-list.php",
+        "/wp-includes/class-wp-block.php",
         "/wp-includes/class-wp-recovery-mode.php",
         "/wp-includes/class-wp-recovery-mode-cookie-service.php",
         "/wp-includes/class-wp-recovery-mode-link-service.php",
@@ -678,6 +683,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/class-wp-dependencies.php"));
         assert!(settings.should_route("/wp-includes/class-wp-dependency.php"));
         assert!(settings.should_route("/wp-includes/class-wp-script-modules.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-bindings-registry.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-bindings-source.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-editor-context.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block-list.php"));
+        assert!(settings.should_route("/wp-includes/class-wp-block.php"));
         assert!(settings.should_route("/wp-includes/class-wp-recovery-mode.php"));
         assert!(settings.should_route("/wp-includes/class-wp-recovery-mode-cookie-service.php"));
         assert!(settings.should_route("/wp-includes/class-wp-recovery-mode-link-service.php"));
