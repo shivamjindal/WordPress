@@ -102,6 +102,10 @@ async fn main() {
             "/wp-admin/privacy-policy-guide.php",
             any(privacy_policy_guide_live_dispatch),
         )
+        .route("/wp-admin/about.php", any(about_live_dispatch))
+        .route("/wp-admin/credits.php", any(credits_live_dispatch))
+        .route("/wp-admin/contribute.php", any(contribute_live_dispatch))
+        .route("/wp-admin/freedoms.php", any(freedoms_live_dispatch))
         .route("/wp-admin/tools.php", any(tools_live_dispatch))
         .route("/wp-admin/site-health.php", any(site_health_live_dispatch))
         .route("/wp-admin/export.php", any(export_live_dispatch))
@@ -1252,6 +1256,65 @@ async fn privacy_policy_guide_live_dispatch(
     let html = format!(
         "<!doctype html><html><body><h1>Privacy Policy Guide (Rust)</h1><p>wp_page_for_privacy_policy={privacy_page_id}</p><p>guide_mode=direct</p></body></html>"
     );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn about_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    admin_information_page_live_dispatch(state, request, "About WordPress (Rust)").await
+}
+
+async fn credits_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    admin_information_page_live_dispatch(state, request, "Credits (Rust)").await
+}
+
+async fn contribute_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    admin_information_page_live_dispatch(state, request, "Get Involved (Rust)").await
+}
+
+async fn freedoms_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() == axum::http::Method::GET {
+        let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+        if params.contains_key("privacy-notice") {
+            return rust_handled_redirect("/wp-admin/privacy.php").into_response();
+        }
+    }
+    admin_information_page_live_dispatch(state, request, "Freedoms (Rust)").await
+}
+
+async fn admin_information_page_live_dispatch(
+    state: AppState,
+    request: Request,
+    title: &str,
+) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "admin informational pages currently support GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network"));
+    if !can_view {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for this wp-admin informational page.",
+            }),
+        )
+        .into_response();
+    }
+
+    let html = format!("<!doctype html><html><body><h1>{title}</h1></body></html>");
     rust_handled_html(StatusCode::OK, html).into_response()
 }
 
