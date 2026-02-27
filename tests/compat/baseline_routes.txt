@@ -409,6 +409,11 @@ GET /wp-includes/SimplePie/src/Category.php
 GET /wp-includes/SimplePie/src/Content/Type/Sniffer.php
 GET /wp-includes/SimplePie/src/Copyright.php
 GET /wp-includes/SimplePie/src/Credit.php
+GET /wp-includes/SimplePie/src/Enclosure.php
+GET /wp-includes/SimplePie/src/Exception.php
+GET /wp-includes/SimplePie/src/File.php
+GET /wp-includes/SimplePie/src/Gzdecode.php
+GET /wp-includes/SimplePie/src/HTTP/Client.php
 GET /wp-includes/SimplePie/library/SimplePie/Restriction.php
 GET /wp-includes/SimplePie/library/SimplePie/Sanitize.php
 GET /wp-includes/SimplePie/library/SimplePie/Source.php
