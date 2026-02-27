@@ -6,6 +6,12 @@
  * @since 5.2.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/class-wp-paused-extensions-storage.php' ) === '/wp-includes/class-wp-paused-extensions-storage.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/class-wp-paused-extensions-storage.php' ) ) {
+	exit;
+}
+
 /**
  * Core class used for storing paused extensions.
  *

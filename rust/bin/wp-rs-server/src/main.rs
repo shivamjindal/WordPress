@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/class-wp-navigation-fallback.php",
+            any(class_wp_navigation_fallback_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-object-cache.php",
+            any(class_wp_object_cache_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-oembed-controller.php",
+            any(class_wp_oembed_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-paused-extensions-storage.php",
+            any(class_wp_paused_extensions_storage_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/class-wp-phpmailer.php",
+            any(class_wp_phpmailer_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/class-wp-customize-setting.php",
             any(class_wp_customize_setting_include_live_dispatch),
         )
@@ -7483,6 +7503,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_navigation_fallback_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_object_cache_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_oembed_controller_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_paused_extensions_storage_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn class_wp_phpmailer_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
