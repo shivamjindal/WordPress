@@ -519,6 +519,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Requests/src/Response/Headers.php",
         "/wp-includes/Requests/src/Response.php",
         "/wp-includes/Requests/src/Session.php",
+        "/wp-includes/Requests/src/Ssl.php",
+        "/wp-includes/Requests/src/Transport/Curl.php",
+        "/wp-includes/Requests/src/Transport/Fsockopen.php",
+        "/wp-includes/Requests/src/Transport.php",
+        "/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1302,6 +1307,12 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Requests/src/Response/Headers.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Response.php"));
         assert!(settings.should_route("/wp-includes/Requests/src/Session.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Ssl.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Transport/Curl.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Transport/Fsockopen.php"));
+        assert!(settings.should_route("/wp-includes/Requests/src/Transport.php"));
+        assert!(settings
+            .should_route("/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));

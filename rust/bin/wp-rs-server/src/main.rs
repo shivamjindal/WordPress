@@ -1308,6 +1308,26 @@ async fn main() {
             any(requests_src_session_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Requests/src/Ssl.php",
+            any(requests_src_ssl_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Transport/Curl.php",
+            any(requests_src_transport_curl_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Transport/Fsockopen.php",
+            any(requests_src_transport_fsockopen_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Transport.php",
+            any(requests_src_transport_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Requests/src/Utility/CaseInsensitiveDictionary.php",
+            any(requests_src_utility_case_insensitive_dictionary_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/style-engine.php",
             any(style_engine_include_live_dispatch),
         )
@@ -10314,6 +10334,28 @@ async fn requests_src_response_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn requests_src_session_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_ssl_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_transport_curl_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_transport_fsockopen_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_transport_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn requests_src_utility_case_insensitive_dictionary_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
