@@ -174,6 +174,8 @@ async fn main() {
         .route("/wp-admin/nav-menus.php", any(nav_menus_live_dispatch))
         .route("/wp-admin/site-editor.php", any(site_editor_live_dispatch))
         .route("/wp-admin/press-this.php", any(press_this_live_dispatch))
+        .route("/wp-admin/term.php", any(term_live_dispatch))
+        .route("/wp-admin/revision.php", any(revision_live_dispatch))
         .route("/wp-admin/plugins.php", any(plugins_live_dispatch))
         .route("/wp-admin/themes.php", any(themes_live_dispatch))
         .route("/wp-admin/users.php", any(users_live_dispatch))
@@ -2523,6 +2525,155 @@ async fn press_this_live_dispatch(State(state): State<AppState>, request: Reques
     let source = params.get("s").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>Press This (Rust)</h1><p>url={url}</p><p>title={title}</p><p>source={source}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn term_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/term.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_terms = authenticated
+        && (capabilities.contains("manage_categories")
+            || capabilities.contains("edit_posts")
+            || capabilities.contains("manage_options"));
+    if !can_edit_terms {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "manage_categories capability is required for wp-admin/term.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let tag_id = params.get("tag_ID").cloned().unwrap_or_default();
+    if tag_id.trim().is_empty() {
+        return rust_handled_redirect("/wp-admin/edit-tags.php").into_response();
+    }
+
+    if method == axum::http::Method::POST {
+        let taxonomy = params
+            .get("taxonomy")
+            .cloned()
+            .unwrap_or_else(|| "category".to_string());
+        let target =
+            format!("/wp-admin/edit-tags.php?taxonomy={taxonomy}&tag_ID={tag_id}&updated=1");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let taxonomy = params
+        .get("taxonomy")
+        .cloned()
+        .unwrap_or_else(|| "category".to_string());
+    let post_type = params
+        .get("post_type")
+        .cloned()
+        .unwrap_or_else(|| "post".to_string());
+    let html = format!(
+        "<!doctype html><html><body><h1>Edit Term (Rust)</h1><p>tag_id={tag_id}</p><p>taxonomy={taxonomy}</p><p>post_type={post_type}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn revision_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/revision.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_manage_revisions = authenticated
+        && (capabilities.contains("edit_posts")
+            || capabilities.contains("read")
+            || capabilities.contains("manage_options"));
+    if !can_manage_revisions {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_posts capability is required for wp-admin/revision.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let action = params
+        .get("action")
+        .cloned()
+        .unwrap_or_else(|| "view".to_string());
+    let revision_id = params
+        .get("revision")
+        .or_else(|| params.get("to"))
+        .cloned()
+        .unwrap_or_default();
+
+    if revision_id.trim().is_empty() {
+        return rust_handled_redirect("/wp-admin/edit.php").into_response();
+    }
+
+    if method == axum::http::Method::POST && action == "restore" {
+        return rust_handled_redirect("/wp-admin/post.php?action=edit&post=1&message=5")
+            .into_response();
+    }
+
+    if method == axum::http::Method::GET && action == "restore" {
+        return rust_handled_redirect("/wp-admin/revision.php?revision=1&action=view")
+            .into_response();
+    }
+
+    let from = params.get("from").cloned().unwrap_or_default();
+    let to = params.get("to").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>Revisions (Rust)</h1><p>action={action}</p><p>revision={revision_id}</p><p>from={from}</p><p>to={to}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }

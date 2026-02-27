@@ -98,6 +98,11 @@ POST /wp-admin/site-editor.php
 GET /wp-admin/press-this.php
 GET /wp-admin/press-this.php?u=https://example.com&t=Rust+Press+This
 POST /wp-admin/press-this.php
+GET /wp-admin/term.php?tag_ID=1&taxonomy=category
+POST /wp-admin/term.php?tag_ID=1&taxonomy=category
+GET /wp-admin/revision.php?revision=1&action=view
+GET /wp-admin/revision.php?revision=1&action=restore
+POST /wp-admin/revision.php?revision=1&action=restore
 GET /wp-admin/plugins.php
 GET /wp-admin/plugins.php?action=activate&plugin=hello.php
 POST /wp-admin/plugins.php
