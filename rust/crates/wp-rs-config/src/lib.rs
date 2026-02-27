@@ -208,6 +208,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/edit-tag-form.php",
         "/wp-admin/link-parse-opml.php",
         "/wp-admin/upgrade-functions.php",
+        "/wp-admin/network/menu.php",
+        "/wp-admin/user/menu.php",
         "/wp-admin/user/admin.php",
         "/wp-admin/user/index.php",
         "/wp-admin/user/profile.php",
@@ -540,6 +542,8 @@ mod tests {
         assert!(settings.should_route("/wp-admin/edit-tag-form.php"));
         assert!(settings.should_route("/wp-admin/link-parse-opml.php"));
         assert!(settings.should_route("/wp-admin/upgrade-functions.php"));
+        assert!(settings.should_route("/wp-admin/network/menu.php"));
+        assert!(settings.should_route("/wp-admin/user/menu.php"));
         assert!(settings.should_route("/wp-admin/user/admin.php"));
         assert!(settings.should_route("/wp-admin/user/index.php"));
         assert!(settings.should_route("/wp-admin/user/profile.php"));

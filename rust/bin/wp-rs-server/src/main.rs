@@ -131,6 +131,14 @@ async fn main() {
             any(upgrade_functions_include_live_dispatch),
         )
         .route(
+            "/wp-admin/network/menu.php",
+            any(network_menu_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/menu.php",
+            any(user_menu_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/user/admin.php",
             any(user_admin_bootstrap_live_dispatch),
         )
@@ -1021,6 +1029,14 @@ async fn link_parse_opml_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn upgrade_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn network_menu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn user_menu_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_guard_response()
 }
 
