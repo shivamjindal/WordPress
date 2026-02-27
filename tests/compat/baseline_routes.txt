@@ -94,6 +94,9 @@ POST /wp-admin/network/update.php?action=update-selected
 GET /wp-admin/network/plugin-install.php
 GET /wp-admin/network/plugin-install.php?tab=plugin-information
 POST /wp-admin/network/plugin-install.php
+GET /wp-admin/network/theme-install.php
+GET /wp-admin/network/theme-install.php?tab=theme-information
+POST /wp-admin/network/theme-install.php
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php
