@@ -267,6 +267,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/admin.php',
 			'/wp-admin/profile.php',
 			'/wp-admin/user-edit.php',
+			'/wp-admin/user-new.php',
 			'/wp-admin/install.php',
 			'/wp-admin/setup-config.php',
 			'/wp-admin/install-helper.php',

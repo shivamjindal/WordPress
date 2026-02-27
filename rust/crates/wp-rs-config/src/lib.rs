@@ -185,6 +185,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/admin.php",
         "/wp-admin/profile.php",
         "/wp-admin/user-edit.php",
+        "/wp-admin/user-new.php",
         "/wp-admin/install.php",
         "/wp-admin/setup-config.php",
         "/wp-admin/install-helper.php",
@@ -447,6 +448,7 @@ mod tests {
         assert!(settings.should_route("/wp-admin/index.php"));
         assert!(settings.should_route("/wp-admin/profile.php"));
         assert!(settings.should_route("/wp-admin/user-edit.php"));
+        assert!(settings.should_route("/wp-admin/user-new.php"));
         assert!(settings.should_route("/wp-admin/setup-config.php"));
         assert!(settings.should_route("/wp-admin/options.php"));
         assert!(settings.should_route("/wp-admin/options-general.php"));

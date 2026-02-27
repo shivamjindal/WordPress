@@ -25,6 +25,9 @@ POST /wp-admin/profile.php
 GET /wp-admin/user-edit.php?user_id=2
 GET /wp-admin/user-edit.php?user_id=2&updated=true
 POST /wp-admin/user-edit.php?user_id=2
+GET /wp-admin/user-new.php
+GET /wp-admin/user-new.php?update=addnoconfirmation&user_id=2
+POST /wp-admin/user-new.php
 GET /wp-admin/install.php
 POST /wp-admin/install.php
 GET /wp-admin/setup-config.php

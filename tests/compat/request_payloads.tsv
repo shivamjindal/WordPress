@@ -9,6 +9,7 @@ POST	/wp-comments-post.php	application/x-www-form-urlencoded	comment_post_ID=123
 POST	/wp-admin/install.php	application/x-www-form-urlencoded	weblog_title=Rust+Site&user_login=admin&admin_email=admin@example.com
 POST	/wp-admin/profile.php	application/x-www-form-urlencoded	action=update-user&nickname=rustadmin
 POST	/wp-admin/user-edit.php?user_id=2	application/x-www-form-urlencoded	action=update&user_id=2&email=admin%40example.com
+POST	/wp-admin/user-new.php	application/x-www-form-urlencoded	action=adduser&email=rustuser%40example.com&role=subscriber
 POST	/wp-admin/plugin-install.php	application/x-www-form-urlencoded	s=akismet&tab=search&type=term
 POST	/wp-admin/plugin-editor.php	application/x-www-form-urlencoded	action=update&plugin=hello.php&file=hello.php
 POST	/wp-admin/theme-install.php	application/x-www-form-urlencoded	s=twentytwentyfive&tab=search&type=term

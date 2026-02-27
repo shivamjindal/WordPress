@@ -63,6 +63,7 @@ async fn main() {
         .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
         .route("/wp-admin/profile.php", any(profile_live_dispatch))
         .route("/wp-admin/user-edit.php", any(user_edit_live_dispatch))
+        .route("/wp-admin/user-new.php", any(user_new_live_dispatch))
         .route("/wp-admin/install.php", any(install_live_dispatch))
         .route(
             "/wp-admin/setup-config.php",
@@ -773,6 +774,73 @@ async fn user_edit_live_dispatch(State(state): State<AppState>, request: Request
     let updated = params.get("updated").cloned().unwrap_or_default();
     let html = format!(
         "<!doctype html><html><body><h1>User Edit (Rust)</h1><p>user_id={user_id}</p><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn user_new_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/user-new.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_create_users = authenticated
+        && (capabilities.contains("create_users")
+            || capabilities.contains("promote_users")
+            || capabilities.contains("manage_network_users")
+            || capabilities.contains("manage_options"));
+    if !can_create_users {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "create_users capability is required for wp-admin/user-new.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    if method == axum::http::Method::POST
+        && params
+            .get("action")
+            .is_some_and(|value| value.eq_ignore_ascii_case("adduser"))
+    {
+        let email = params.get("email").cloned().unwrap_or_default();
+        if email.trim().is_empty() {
+            return rust_handled_redirect("/wp-admin/user-new.php?update=enter_email")
+                .into_response();
+        }
+        return rust_handled_redirect("/wp-admin/user-new.php?update=addnoconfirmation&user_id=2")
+            .into_response();
+    }
+
+    let update = params.get("update").cloned().unwrap_or_default();
+    let user_id = params.get("user_id").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>User New (Rust)</h1><p>update={update}</p><p>user_id={user_id}</p></body></html>"
     );
     rust_handled_html(StatusCode::OK, html).into_response()
 }
