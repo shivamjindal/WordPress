@@ -239,6 +239,26 @@ async fn main() {
             any(class_wp_script_modules_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-bindings.php",
+            any(block_bindings_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-editor.php",
+            any(block_editor_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-patterns.php",
+            any(block_patterns_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-template-utils.php",
+            any(block_template_utils_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-template.php",
+            any(block_template_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/abilities-api.php",
             any(abilities_api_include_live_dispatch),
         )
@@ -7563,6 +7583,26 @@ async fn class_wp_dependency_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn class_wp_script_modules_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_bindings_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_editor_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_patterns_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_template_utils_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_template_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

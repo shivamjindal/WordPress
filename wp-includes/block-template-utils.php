@@ -6,6 +6,12 @@
  * @since 5.8.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/block-template-utils.php' ) === '/wp-includes/block-template-utils.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/block-template-utils.php' ) ) {
+	exit;
+}
+
 // Define constants for supported wp_template_part_area taxonomy.
 if ( ! defined( 'WP_TEMPLATE_PART_AREA_HEADER' ) ) {
 	define( 'WP_TEMPLATE_PART_AREA_HEADER', 'header' );

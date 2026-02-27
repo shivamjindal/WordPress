@@ -5,6 +5,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/block-template.php' ) === '/wp-includes/block-template.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/block-template.php' ) ) {
+	exit;
+}
+
 /**
  * Adds necessary hooks to resolve '_wp-find-template' requests.
  *
