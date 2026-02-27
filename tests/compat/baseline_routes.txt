@@ -244,6 +244,11 @@ GET /wp-includes/blocks/post-navigation-link.php
 GET /wp-includes/blocks/post-template.php
 GET /wp-includes/blocks/post-terms.php
 GET /wp-includes/blocks/post-time-to-read.php
+GET /wp-includes/blocks/post-title.php
+GET /wp-includes/blocks/query-no-results.php
+GET /wp-includes/blocks/query-pagination-next.php
+GET /wp-includes/blocks/query-pagination-numbers.php
+GET /wp-includes/blocks/query-pagination.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
