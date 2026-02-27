@@ -379,6 +379,11 @@ GET /wp-includes/SimplePie/library/SimplePie/Decode/HTML/Entities.php
 GET /wp-includes/SimplePie/library/SimplePie/Enclosure.php
 GET /wp-includes/SimplePie/library/SimplePie/Exception.php
 GET /wp-includes/SimplePie/library/SimplePie/File.php
+GET /wp-includes/SimplePie/library/SimplePie/HTTP/Parser.php
+GET /wp-includes/SimplePie/library/SimplePie/IRI.php
+GET /wp-includes/SimplePie/library/SimplePie/Item.php
+GET /wp-includes/SimplePie/library/SimplePie/Locator.php
+GET /wp-includes/SimplePie/library/SimplePie/Misc.php
 GET /wp-includes/style-engine.php
 GET /wp-includes/sitemaps.php
 GET /wp-includes/script-modules.php

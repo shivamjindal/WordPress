@@ -546,6 +546,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/SimplePie/library/SimplePie/Enclosure.php",
         "/wp-includes/SimplePie/library/SimplePie/Exception.php",
         "/wp-includes/SimplePie/library/SimplePie/File.php",
+        "/wp-includes/SimplePie/library/SimplePie/HTTP/Parser.php",
+        "/wp-includes/SimplePie/library/SimplePie/IRI.php",
+        "/wp-includes/SimplePie/library/SimplePie/Item.php",
+        "/wp-includes/SimplePie/library/SimplePie/Locator.php",
+        "/wp-includes/SimplePie/library/SimplePie/Misc.php",
         "/wp-includes/style-engine.php",
         "/wp-includes/sitemaps.php",
         "/wp-includes/script-modules.php",
@@ -1363,6 +1368,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Enclosure.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Exception.php"));
         assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/File.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/HTTP/Parser.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/IRI.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Item.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Locator.php"));
+        assert!(settings.should_route("/wp-includes/SimplePie/library/SimplePie/Misc.php"));
         assert!(settings.should_route("/wp-includes/style-engine.php"));
         assert!(settings.should_route("/wp-includes/sitemaps.php"));
         assert!(settings.should_route("/wp-includes/script-modules.php"));
