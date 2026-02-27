@@ -294,6 +294,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/ms-blogs.php",
         "/wp-includes/ms-default-constants.php",
         "/wp-includes/ms-default-filters.php",
+        "/wp-includes/ms-deprecated.php",
+        "/wp-includes/ms-files.php",
+        "/wp-includes/ms-functions.php",
+        "/wp-includes/ms-load.php",
+        "/wp-includes/ms-network.php",
         "/wp-includes/category-template.php",
         "/wp-includes/category.php",
         "/wp-includes/comment-template.php",
@@ -853,6 +858,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/ms-blogs.php"));
         assert!(settings.should_route("/wp-includes/ms-default-constants.php"));
         assert!(settings.should_route("/wp-includes/ms-default-filters.php"));
+        assert!(settings.should_route("/wp-includes/ms-deprecated.php"));
+        assert!(settings.should_route("/wp-includes/ms-files.php"));
+        assert!(settings.should_route("/wp-includes/ms-functions.php"));
+        assert!(settings.should_route("/wp-includes/ms-load.php"));
+        assert!(settings.should_route("/wp-includes/ms-network.php"));
         assert!(settings.should_route("/wp-includes/category-template.php"));
         assert!(settings.should_route("/wp-includes/category.php"));
         assert!(settings.should_route("/wp-includes/comment-template.php"));

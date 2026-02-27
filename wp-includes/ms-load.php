@@ -8,6 +8,12 @@
  * @subpackage Multisite
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/ms-load.php' ) === '/wp-includes/ms-load.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/ms-load.php' ) ) {
+	exit;
+}
+
 /**
  * Whether a subdomain configuration is enabled.
  *

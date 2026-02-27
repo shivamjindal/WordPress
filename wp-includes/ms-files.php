@@ -8,6 +8,12 @@
  * @subpackage Multisite
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/ms-files.php' ) === '/wp-includes/ms-files.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/ms-files.php' ) ) {
+	exit;
+}
+
 define( 'MS_FILES_REQUEST', true );
 define( 'SHORTINIT', true );
 

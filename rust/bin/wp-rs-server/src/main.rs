@@ -426,6 +426,26 @@ async fn main() {
             any(ms_default_filters_include_live_dispatch),
         )
         .route(
+            "/wp-includes/ms-deprecated.php",
+            any(ms_deprecated_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-files.php",
+            any(ms_files_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-functions.php",
+            any(ms_functions_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-load.php",
+            any(ms_load_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/ms-network.php",
+            any(ms_network_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -8024,6 +8044,26 @@ async fn ms_default_constants_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn ms_default_filters_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_deprecated_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_files_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_load_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn ms_network_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

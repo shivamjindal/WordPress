@@ -7,6 +7,12 @@
  * @since 5.1.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/ms-network.php' ) === '/wp-includes/ms-network.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/ms-network.php' ) ) {
+	exit;
+}
+
 /**
  * Retrieves network data given a network ID or network object.
  *
