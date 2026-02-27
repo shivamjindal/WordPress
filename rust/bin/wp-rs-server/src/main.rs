@@ -822,6 +822,26 @@ async fn main() {
             any(blocks_page_list_include_live_dispatch),
         )
         .route(
+            "/wp-includes/blocks/pattern.php",
+            any(blocks_pattern_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-author-biography.php",
+            any(blocks_post_author_biography_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-author-name.php",
+            any(blocks_post_author_name_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-author.php",
+            any(blocks_post_author_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/blocks/post-comments-count.php",
+            any(blocks_post_comments_count_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10352,6 +10372,26 @@ async fn blocks_page_list_item_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn blocks_page_list_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_pattern_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_author_biography_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_author_name_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_author_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn blocks_post_comments_count_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

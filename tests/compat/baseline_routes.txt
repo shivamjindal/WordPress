@@ -229,6 +229,11 @@ GET /wp-includes/blocks/navigation.php
 GET /wp-includes/blocks/navigation-submenu.php
 GET /wp-includes/blocks/page-list-item.php
 GET /wp-includes/blocks/page-list.php
+GET /wp-includes/blocks/pattern.php
+GET /wp-includes/blocks/post-author-biography.php
+GET /wp-includes/blocks/post-author-name.php
+GET /wp-includes/blocks/post-author.php
+GET /wp-includes/blocks/post-comments-count.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
