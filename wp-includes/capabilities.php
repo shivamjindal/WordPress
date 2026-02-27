@@ -6,6 +6,12 @@
  * @subpackage Users
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/capabilities.php' ) === '/wp-includes/capabilities.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/capabilities.php' ) ) {
+	exit;
+}
+
 /**
  * Maps a capability to the primitive capabilities required of the given user to
  * satisfy the capability being checked.

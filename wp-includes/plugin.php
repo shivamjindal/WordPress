@@ -21,6 +21,12 @@
  * @since 1.5.0
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/plugin.php' ) === '/wp-includes/plugin.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/plugin.php' ) ) {
+	exit;
+}
+
 // Initialize the filter globals.
 require __DIR__ . '/class-wp-hook.php';
 

@@ -63,6 +63,23 @@ async fn main() {
         .route("/wp-includes/wp-db.php", any(wp_db_include_live_dispatch))
         .route("/wp-includes/utf8.php", any(utf8_include_live_dispatch))
         .route("/wp-includes/user.php", any(user_include_live_dispatch))
+        .route(
+            "/wp-includes/functions.php",
+            any(functions_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/formatting.php",
+            any(formatting_include_live_dispatch),
+        )
+        .route("/wp-includes/plugin.php", any(plugin_include_live_dispatch))
+        .route(
+            "/wp-includes/pluggable.php",
+            any(pluggable_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/capabilities.php",
+            any(capabilities_include_live_dispatch),
+        )
         .route("/wp-includes/theme.php", any(theme_include_live_dispatch))
         .route(
             "/wp-includes/theme-templates.php",
@@ -6871,6 +6888,26 @@ async fn utf8_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn user_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn functions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_guard_response()
+}
+
+async fn formatting_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn plugin_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pluggable_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn capabilities_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
