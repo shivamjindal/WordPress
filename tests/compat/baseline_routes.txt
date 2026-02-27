@@ -62,6 +62,9 @@ POST /wp-admin/network/users.php
 GET /wp-admin/network/themes.php
 GET /wp-admin/network/themes.php?action=enable&theme=twentytwentyfive
 POST /wp-admin/network/themes.php
+GET /wp-admin/network/plugins.php
+GET /wp-admin/network/plugins.php?action=activate&plugin=hello.php
+POST /wp-admin/network/plugins.php
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php

@@ -16,3 +16,4 @@ POST	/wp-admin/ms-delete-site.php	application/x-www-form-urlencoded	action=delet
 POST	/wp-admin/network/sites.php	application/x-www-form-urlencoded	action=allblogs&site_ids=2
 POST	/wp-admin/network/users.php	application/x-www-form-urlencoded	action=allusers&bulk_action=spam&allusers=2
 POST	/wp-admin/network/themes.php	application/x-www-form-urlencoded	action=enable-selected&checked=twentytwentyfive
+POST	/wp-admin/network/plugins.php	application/x-www-form-urlencoded	action=deactivate-selected&checked=hello.php

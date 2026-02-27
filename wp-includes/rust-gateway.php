@@ -289,6 +289,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/network/sites.php',
 			'/wp-admin/network/users.php',
 			'/wp-admin/network/themes.php',
+			'/wp-admin/network/plugins.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',
 			'/wp-admin/admin-ajax.php',
