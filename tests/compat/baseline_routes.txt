@@ -116,6 +116,9 @@ POST /wp-admin/network/profile.php
 GET /wp-admin/network/user-edit.php?user_id=2
 GET /wp-admin/network/user-edit.php?user_id=2&updated=true
 POST /wp-admin/network/user-edit.php?user_id=2
+GET /wp-admin/network/upgrade.php
+GET /wp-admin/network/upgrade.php?action=upgrade&n=0
+POST /wp-admin/network/upgrade.php
 GET /wp-admin/network/theme-install.php
 GET /wp-admin/network/theme-install.php?tab=theme-information
 POST /wp-admin/network/theme-install.php

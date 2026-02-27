@@ -310,6 +310,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/network/freedoms.php',
 			'/wp-admin/network/profile.php',
 			'/wp-admin/network/user-edit.php',
+			'/wp-admin/network/upgrade.php',
 			'/wp-admin/network/theme-install.php',
 			'/wp-admin/upgrade.php',
 			'/wp-admin/maint/repair.php',
