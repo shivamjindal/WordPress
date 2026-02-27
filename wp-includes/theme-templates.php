@@ -1,5 +1,11 @@
 <?php
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/theme-templates.php' ) === '/wp-includes/theme-templates.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/theme-templates.php' ) ) {
+	exit;
+}
+
 /**
  * Sets a custom slug when creating auto-draft template parts.
  *

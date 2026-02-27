@@ -5,6 +5,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/theme-previews.php' ) === '/wp-includes/theme-previews.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/theme-previews.php' ) ) {
+	exit;
+}
+
 /**
  * Filters the blog option to return the path for the previewed theme.
  *

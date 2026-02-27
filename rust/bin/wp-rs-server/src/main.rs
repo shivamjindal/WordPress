@@ -65,6 +65,18 @@ async fn main() {
         .route("/wp-includes/user.php", any(user_include_live_dispatch))
         .route("/wp-includes/theme.php", any(theme_include_live_dispatch))
         .route(
+            "/wp-includes/theme-templates.php",
+            any(theme_templates_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-previews.php",
+            any(theme_previews_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/speculative-loading.php",
+            any(speculative_loading_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/template.php",
             any(template_include_live_dispatch),
         )
@@ -6855,6 +6867,18 @@ async fn user_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn theme_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_templates_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_previews_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn speculative_loading_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

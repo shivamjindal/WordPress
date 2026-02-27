@@ -27,6 +27,9 @@ GET /wp-includes/wp-db.php
 GET /wp-includes/utf8.php
 GET /wp-includes/user.php
 GET /wp-includes/theme.php
+GET /wp-includes/theme-templates.php
+GET /wp-includes/theme-previews.php
+GET /wp-includes/speculative-loading.php
 GET /wp-includes/template.php
 GET /wp-includes/taxonomy.php
 GET /wp-includes/shortcodes.php
