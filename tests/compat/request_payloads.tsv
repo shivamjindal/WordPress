@@ -24,3 +24,4 @@ POST	/wp-admin/network/site-settings.php?action=update-site	application/x-www-fo
 POST	/wp-admin/network/site-users.php?action=adduser	application/x-www-form-urlencoded	id=2&newuser=admin&new_role=subscriber
 POST	/wp-admin/network/site-themes.php?action=enable-selected	application/x-www-form-urlencoded	id=2&checked=twentytwentyfive
 POST	/wp-admin/network/user-new.php?action=add-user	application/x-www-form-urlencoded	user%5Busername%5D=rustuser&user%5Bemail%5D=rustuser%40example.com
+POST	/wp-admin/network/edit.php?action=siteoptions	application/x-www-form-urlencoded	id=2
