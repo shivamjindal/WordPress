@@ -296,6 +296,11 @@ GET /wp-includes/build/routes/post/route.min.asset.php
 GET /wp-includes/build/routes/registry.php
 GET /wp-includes/build/routes/styles/content.min.asset.php
 GET /wp-includes/build/routes/styles/route.min.asset.php
+GET /wp-includes/build/routes/template-list/content.min.asset.php
+GET /wp-includes/build/routes/template-list/route.min.asset.php
+GET /wp-includes/build/routes/template-part-list/content.min.asset.php
+GET /wp-includes/build/routes/template-part-list/route.min.asset.php
+GET /wp-includes/build/routes/template-part/route.min.asset.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

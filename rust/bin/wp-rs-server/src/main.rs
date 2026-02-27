@@ -1090,6 +1090,26 @@ async fn main() {
             any(build_routes_styles_route_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes/template-list/content.min.asset.php",
+            any(build_routes_template_list_content_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/template-list/route.min.asset.php",
+            any(build_routes_template_list_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/template-part-list/content.min.asset.php",
+            any(build_routes_template_part_list_content_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/template-part-list/route.min.asset.php",
+            any(build_routes_template_part_list_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/routes/template-part/route.min.asset.php",
+            any(build_routes_template_part_route_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10922,6 +10942,36 @@ async fn build_routes_styles_content_min_asset_include_live_dispatch(
 }
 
 async fn build_routes_styles_route_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_list_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_part_list_content_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_part_list_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_part_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
