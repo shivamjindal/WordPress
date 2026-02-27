@@ -61,6 +61,39 @@ async fn main() {
         .route("/wp-admin/", get(admin_dashboard_live))
         .route("/wp-admin/index.php", get(admin_dashboard_live))
         .route("/wp-admin/admin.php", any(admin_bootstrap_live_dispatch))
+        .route(
+            "/wp-admin/user/admin.php",
+            any(user_admin_bootstrap_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/index.php",
+            get(user_dashboard_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/profile.php",
+            any(user_profile_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/user-edit.php",
+            any(user_user_edit_live_dispatch),
+        )
+        .route("/wp-admin/user/about.php", any(user_about_live_dispatch))
+        .route(
+            "/wp-admin/user/credits.php",
+            any(user_credits_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/contribute.php",
+            any(user_contribute_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/freedoms.php",
+            any(user_freedoms_live_dispatch),
+        )
+        .route(
+            "/wp-admin/user/privacy.php",
+            any(user_privacy_live_dispatch),
+        )
         .route("/wp-admin/profile.php", any(profile_live_dispatch))
         .route("/wp-admin/user-edit.php", any(user_edit_live_dispatch))
         .route("/wp-admin/user-new.php", any(user_new_live_dispatch))
@@ -698,6 +731,212 @@ async fn admin_bootstrap_live_dispatch(
         "message": "Rust admin bootstrap compatibility shim loaded.",
     }))
     .into_response()
+}
+
+async fn user_admin_bootstrap_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    if !authenticated {
+        return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fuser%2Fadmin.php")
+            .into_response();
+    }
+
+    rust_handled_json(json!({
+        "component": "user-admin-bootstrap",
+        "authenticated": true,
+        "capabilities": capabilities,
+        "message": "Rust user-admin bootstrap compatibility shim loaded.",
+    }))
+    .into_response()
+}
+
+async fn user_dashboard_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+
+    if !authenticated {
+        return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fuser%2F")
+            .into_response();
+    }
+
+    let mut html = "<!doctype html><html><body><h1>WordPress User Admin (Rust)</h1>".to_string();
+    if !capabilities.is_empty() {
+        html.push_str("<ul>");
+        for capability in capabilities {
+            html.push_str(&format!("<li>{capability}</li>"));
+        }
+        html.push_str("</ul>");
+    }
+    html.push_str("</body></html>");
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn user_profile_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/user/profile.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view_profile = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("edit_user")
+            || capabilities.contains("manage_options"));
+    if !can_view_profile {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for wp-admin/user/profile.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    if request.method() == axum::http::Method::POST {
+        return rust_handled_redirect("/wp-admin/user/profile.php?updated=true").into_response();
+    }
+
+    let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>User Profile (Rust)</h1><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn user_user_edit_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    let (parts, body) = request.into_parts();
+    let method = parts.method.clone();
+    if method != axum::http::Method::GET && method != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/user/user-edit.php currently supports GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let can_edit_users = authenticated
+        && (capabilities.contains("edit_users")
+            || capabilities.contains("edit_user")
+            || capabilities.contains("promote_users")
+            || capabilities.contains("manage_options"));
+    if !can_edit_users {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "edit_users capability is required for wp-admin/user/user-edit.php.",
+            }),
+        )
+        .into_response();
+    }
+
+    let params = if method == axum::http::Method::POST {
+        let body_bytes = read_request_body(body).await;
+        let content_type = parts
+            .headers
+            .get("content-type")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default()
+            .to_ascii_lowercase();
+        merged_params(parts.uri.query(), &body_bytes, &content_type)
+    } else {
+        parse_urlencoded(parts.uri.query().unwrap_or_default())
+    };
+
+    let user_id = params.get("user_id").cloned().unwrap_or_default();
+    if method == axum::http::Method::POST {
+        let target = format!("/wp-admin/user/user-edit.php?user_id={user_id}&updated=true");
+        return rust_handled_redirect(&target).into_response();
+    }
+
+    let updated = params.get("updated").cloned().unwrap_or_default();
+    let html = format!(
+        "<!doctype html><html><body><h1>User Admin Edit (Rust)</h1><p>user_id={user_id}</p><p>updated={updated}</p></body></html>"
+    );
+    rust_handled_html(StatusCode::OK, html).into_response()
+}
+
+async fn user_about_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    user_information_page_live_dispatch(state, request, "User About WordPress (Rust)").await
+}
+
+async fn user_credits_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    user_information_page_live_dispatch(state, request, "User Credits (Rust)").await
+}
+
+async fn user_contribute_live_dispatch(
+    State(state): State<AppState>,
+    request: Request,
+) -> Response {
+    user_information_page_live_dispatch(state, request, "User Get Involved (Rust)").await
+}
+
+async fn user_freedoms_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    if request.method() == axum::http::Method::GET {
+        let params = parse_urlencoded(request.uri().query().unwrap_or_default());
+        if params.contains_key("privacy-notice") {
+            return rust_handled_redirect("/wp-admin/user/privacy.php").into_response();
+        }
+    }
+    user_information_page_live_dispatch(state, request, "User Freedoms (Rust)").await
+}
+
+async fn user_privacy_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
+    user_information_page_live_dispatch(state, request, "User Privacy (Rust)").await
+}
+
+async fn user_information_page_live_dispatch(
+    state: AppState,
+    request: Request,
+    title: &str,
+) -> Response {
+    if request.method() != axum::http::Method::GET && request.method() != axum::http::Method::POST {
+        return rust_handled_json_with_status(
+            StatusCode::METHOD_NOT_ALLOWED,
+            json!({
+                "error": "method_not_allowed",
+                "message": "wp-admin/user informational pages currently support GET and POST.",
+            }),
+        )
+        .into_response();
+    }
+
+    let (authenticated, capabilities) =
+        auth_context_from_headers(request.headers(), &state.auth_secrets);
+    let can_view = authenticated
+        && (capabilities.contains("read")
+            || capabilities.contains("manage_options")
+            || capabilities.contains("manage_network"));
+    if !can_view {
+        return rust_handled_json_with_status(
+            StatusCode::FORBIDDEN,
+            json!({
+                "error": "rest_forbidden",
+                "message": "read capability is required for this wp-admin/user informational page.",
+            }),
+        )
+        .into_response();
+    }
+
+    let html = format!("<!doctype html><html><body><h1>{title}</h1></body></html>");
+    rust_handled_html(StatusCode::OK, html).into_response()
 }
 
 async fn profile_live_dispatch(State(state): State<AppState>, request: Request) -> Response {

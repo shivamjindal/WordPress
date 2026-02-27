@@ -7,6 +7,11 @@
  * @since 3.1.0
  */
 
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+if ( wp_rust_gateway_try_proxy( '/wp-admin/user/admin.php' ) ) {
+	exit;
+}
+
 define( 'WP_USER_ADMIN', true );
 
 require_once dirname( __DIR__ ) . '/admin.php';

@@ -183,6 +183,15 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/",
         "/wp-admin/index.php",
         "/wp-admin/admin.php",
+        "/wp-admin/user/admin.php",
+        "/wp-admin/user/index.php",
+        "/wp-admin/user/profile.php",
+        "/wp-admin/user/user-edit.php",
+        "/wp-admin/user/about.php",
+        "/wp-admin/user/credits.php",
+        "/wp-admin/user/contribute.php",
+        "/wp-admin/user/freedoms.php",
+        "/wp-admin/user/privacy.php",
         "/wp-admin/profile.php",
         "/wp-admin/user-edit.php",
         "/wp-admin/user-new.php",
@@ -458,6 +467,15 @@ mod tests {
         assert!(settings.should_route("/wp-login.php"));
         assert!(settings.should_route("/wp-admin/admin.php"));
         assert!(settings.should_route("/wp-admin/index.php"));
+        assert!(settings.should_route("/wp-admin/user/admin.php"));
+        assert!(settings.should_route("/wp-admin/user/index.php"));
+        assert!(settings.should_route("/wp-admin/user/profile.php"));
+        assert!(settings.should_route("/wp-admin/user/user-edit.php"));
+        assert!(settings.should_route("/wp-admin/user/about.php"));
+        assert!(settings.should_route("/wp-admin/user/credits.php"));
+        assert!(settings.should_route("/wp-admin/user/contribute.php"));
+        assert!(settings.should_route("/wp-admin/user/freedoms.php"));
+        assert!(settings.should_route("/wp-admin/user/privacy.php"));
         assert!(settings.should_route("/wp-admin/profile.php"));
         assert!(settings.should_route("/wp-admin/user-edit.php"));
         assert!(settings.should_route("/wp-admin/user-new.php"));
