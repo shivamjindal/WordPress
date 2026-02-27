@@ -5,6 +5,12 @@
  * @package WordPress
  */
 
+require_once __DIR__ . '/rust-gateway.php';
+if ( wp_rust_gateway_current_request_path( '/wp-includes/feed-rss2-comments.php' ) === '/wp-includes/feed-rss2-comments.php'
+	&& wp_rust_gateway_try_proxy( '/wp-includes/feed-rss2-comments.php' ) ) {
+	exit;
+}
+
 header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
 
 echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';

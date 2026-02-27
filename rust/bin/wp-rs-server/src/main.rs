@@ -370,6 +370,20 @@ async fn main() {
             any(feed_rdf_include_live_dispatch),
         )
         .route(
+            "/wp-includes/feed-rss.php",
+            any(feed_rss_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/feed-rss2-comments.php",
+            any(feed_rss2_comments_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/feed-rss2.php",
+            any(feed_rss2_include_live_dispatch),
+        )
+        .route("/wp-includes/feed.php", any(feed_include_live_dispatch))
+        .route("/wp-includes/fonts.php", any(fonts_include_live_dispatch))
+        .route(
             "/wp-includes/category-template.php",
             any(category_template_include_live_dispatch),
         )
@@ -7888,6 +7902,26 @@ async fn feed_atom_include_live_dispatch(_request: Request) -> Response {
 }
 
 async fn feed_rdf_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_rss_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_rss2_comments_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_rss2_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn feed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

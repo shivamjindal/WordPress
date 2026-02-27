@@ -107,6 +107,11 @@ GET /wp-includes/error-protection.php
 GET /wp-includes/feed-atom-comments.php
 GET /wp-includes/feed-atom.php
 GET /wp-includes/feed-rdf.php
+GET /wp-includes/feed-rss.php
+GET /wp-includes/feed-rss2-comments.php
+GET /wp-includes/feed-rss2.php
+GET /wp-includes/feed.php
+GET /wp-includes/fonts.php
 GET /wp-includes/category-template.php
 GET /wp-includes/category.php
 GET /wp-includes/comment-template.php
