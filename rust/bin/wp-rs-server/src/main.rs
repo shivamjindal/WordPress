@@ -1322,6 +1322,26 @@ async fn main() {
             any(admin_includes_menu_include_live_dispatch),
         )
         .route(
+            "/wp-admin/includes/meta-boxes.php",
+            any(admin_includes_meta_boxes_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/misc.php",
+            any(admin_includes_misc_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/ms-admin-filters.php",
+            any(admin_includes_ms_admin_filters_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/ms-deprecated.php",
+            any(admin_includes_ms_deprecated_include_live_dispatch),
+        )
+        .route(
+            "/wp-admin/includes/ms.php",
+            any(admin_includes_ms_include_live_dispatch),
+        )
+        .route(
             "/wp-admin/menu-header.php",
             any(menu_header_include_live_dispatch),
         )
@@ -2546,6 +2566,26 @@ async fn admin_includes_media_include_live_dispatch(_request: Request) -> Respon
 }
 
 async fn admin_includes_menu_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_meta_boxes_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_misc_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_ms_admin_filters_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_ms_deprecated_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn admin_includes_ms_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -359,6 +359,11 @@ GET /wp-admin/includes/import.php
 GET /wp-admin/includes/list-table.php
 GET /wp-admin/includes/media.php
 GET /wp-admin/includes/menu.php
+GET /wp-admin/includes/meta-boxes.php
+GET /wp-admin/includes/misc.php
+GET /wp-admin/includes/ms-admin-filters.php
+GET /wp-admin/includes/ms-deprecated.php
+GET /wp-admin/includes/ms.php
 GET /wp-admin/menu-header.php
 GET /wp-admin/admin-header.php
 GET /wp-admin/admin-footer.php

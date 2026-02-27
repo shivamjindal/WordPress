@@ -526,6 +526,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-admin/includes/list-table.php",
         "/wp-admin/includes/media.php",
         "/wp-admin/includes/menu.php",
+        "/wp-admin/includes/meta-boxes.php",
+        "/wp-admin/includes/misc.php",
+        "/wp-admin/includes/ms-admin-filters.php",
+        "/wp-admin/includes/ms-deprecated.php",
+        "/wp-admin/includes/ms.php",
         "/wp-admin/menu-header.php",
         "/wp-admin/admin-header.php",
         "/wp-admin/admin-footer.php",
@@ -1195,6 +1200,11 @@ mod tests {
         assert!(settings.should_route("/wp-admin/includes/list-table.php"));
         assert!(settings.should_route("/wp-admin/includes/media.php"));
         assert!(settings.should_route("/wp-admin/includes/menu.php"));
+        assert!(settings.should_route("/wp-admin/includes/meta-boxes.php"));
+        assert!(settings.should_route("/wp-admin/includes/misc.php"));
+        assert!(settings.should_route("/wp-admin/includes/ms-admin-filters.php"));
+        assert!(settings.should_route("/wp-admin/includes/ms-deprecated.php"));
+        assert!(settings.should_route("/wp-admin/includes/ms.php"));
         assert!(settings.should_route("/wp-admin/menu-header.php"));
         assert!(settings.should_route("/wp-admin/admin-header.php"));
         assert!(settings.should_route("/wp-admin/admin-footer.php"));
