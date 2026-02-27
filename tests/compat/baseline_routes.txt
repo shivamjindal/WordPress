@@ -78,6 +78,9 @@ POST /wp-admin/network/site-info.php?action=update-site
 GET /wp-admin/network/site-settings.php?id=2
 GET /wp-admin/network/site-settings.php?update=updated&id=2
 POST /wp-admin/network/site-settings.php?action=update-site
+GET /wp-admin/network/site-users.php?id=2
+GET /wp-admin/network/site-users.php?id=2&update=adduser
+POST /wp-admin/network/site-users.php?action=adduser
 GET /wp-admin/ms-delete-site.php
 GET /wp-admin/ms-delete-site.php?h=confirm-rust-delete
 POST /wp-admin/ms-delete-site.php

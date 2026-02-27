@@ -21,3 +21,4 @@ POST	/wp-admin/network/settings.php	application/x-www-form-urlencoded	site_name=
 POST	/wp-admin/network/site-new.php?action=add-site	application/x-www-form-urlencoded	blog%5Bdomain%5D=rustsite&blog%5Btitle%5D=Rust+Site&blog%5Bemail%5D=admin%40example.com
 POST	/wp-admin/network/site-info.php?action=update-site	application/x-www-form-urlencoded	id=2&blog%5Burl%5D=https%3A%2F%2Fexample.com%2Frustsite%2F
 POST	/wp-admin/network/site-settings.php?action=update-site	application/x-www-form-urlencoded	id=2&option%5Bblogname%5D=Rust+Site+2&option%5Badmin_email%5D=admin2%40example.com
+POST	/wp-admin/network/site-users.php?action=adduser	application/x-www-form-urlencoded	id=2&newuser=admin&new_role=subscriber
