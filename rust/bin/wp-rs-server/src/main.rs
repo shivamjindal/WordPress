@@ -1110,6 +1110,26 @@ async fn main() {
             any(build_routes_template_part_route_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes/template/route.min.asset.php",
+            any(build_routes_template_route_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/css/dist/index.php",
+            any(css_dist_index_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/css/dist/registry.php",
+            any(css_dist_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/a11y.min.asset.php",
+            any(js_dist_a11y_min_asset_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/annotations.min.asset.php",
+            any(js_dist_annotations_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -10972,6 +10992,28 @@ async fn build_routes_template_part_list_route_min_asset_include_live_dispatch(
 async fn build_routes_template_part_route_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_template_route_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn css_dist_index_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn css_dist_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_a11y_min_asset_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_annotations_min_asset_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

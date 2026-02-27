@@ -468,6 +468,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/build/routes/template-part-list/content.min.asset.php",
         "/wp-includes/build/routes/template-part-list/route.min.asset.php",
         "/wp-includes/build/routes/template-part/route.min.asset.php",
+        "/wp-includes/build/routes/template/route.min.asset.php",
+        "/wp-includes/css/dist/index.php",
+        "/wp-includes/css/dist/registry.php",
+        "/wp-includes/js/dist/a11y.min.asset.php",
+        "/wp-includes/js/dist/annotations.min.asset.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1488,6 +1493,11 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/build/routes/template-part/route.min.asset.php")
         );
+        assert!(settings.should_route("/wp-includes/build/routes/template/route.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/css/dist/index.php"));
+        assert!(settings.should_route("/wp-includes/css/dist/registry.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/a11y.min.asset.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/annotations.min.asset.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
