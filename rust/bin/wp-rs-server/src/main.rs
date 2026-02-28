@@ -1694,6 +1694,26 @@ async fn main() {
             any(sodium_compat_namespaced_core_curve25519_h_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-supports/utils.php",
+            any(block_supports_utils_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Poly1305/State.php",
+            any(sodium_compat_namespaced_core_poly1305_state_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/colors.php",
+            any(block_supports_colors_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Crypto.php",
+            any(sodium_compat_namespaced_crypto_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/align.php",
+            any(block_supports_align_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12236,6 +12256,28 @@ async fn sitemaps_class_wp_sitemaps_stylesheet_include_live_dispatch(
 async fn sodium_compat_namespaced_core_curve25519_h_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_utils_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_poly1305_state_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_colors_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_crypto_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_align_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
