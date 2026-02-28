@@ -624,6 +624,11 @@ GET /wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-run-controller.ph
 GET /wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-themes-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-block-pattern-categories-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-categories-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-list-controller.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

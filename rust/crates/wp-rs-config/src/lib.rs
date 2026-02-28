@@ -786,6 +786,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-themes-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-block-pattern-categories-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-categories-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-list-controller.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2326,6 +2331,20 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php"
+        ));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-themes-controller.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-pattern-categories-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-categories-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-list-controller.php"
         ));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));

@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php' );
+if ( '/wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * REST API: WP_REST_Autosaves_Controller class.
  *

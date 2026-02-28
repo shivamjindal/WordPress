@@ -2382,6 +2382,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_menu_locations_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-themes-controller.php",
+            any(rest_api_endpoints_class_wp_rest_themes_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-pattern-categories-controller.php",
+            any(rest_api_endpoints_class_wp_rest_block_pattern_categories_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-autosaves-controller.php",
+            any(rest_api_endpoints_class_wp_rest_autosaves_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-categories-controller.php",
+            any(rest_api_endpoints_class_wp_rest_abilities_v1_categories_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-list-controller.php",
+            any(rest_api_endpoints_class_wp_rest_abilities_v1_list_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13860,6 +13880,36 @@ async fn rest_api_endpoints_class_wp_rest_block_renderer_controller_include_live
 }
 
 async fn rest_api_endpoints_class_wp_rest_menu_locations_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_themes_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_block_pattern_categories_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_autosaves_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_abilities_v1_categories_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_abilities_v1_list_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
