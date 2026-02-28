@@ -2362,6 +2362,26 @@ async fn main() {
             any(sodium_compat_src_core32_curve25519_ge_p3_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-users-controller.php",
+            any(rest_api_endpoints_class_wp_rest_users_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-run-controller.php",
+            any(rest_api_endpoints_class_wp_rest_abilities_v1_run_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php",
+            any(rest_api_endpoints_class_wp_rest_search_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php",
+            any(rest_api_endpoints_class_wp_rest_block_renderer_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php",
+            any(rest_api_endpoints_class_wp_rest_menu_locations_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13810,6 +13830,36 @@ async fn sodium_compat_src_core32_hchacha20_include_live_dispatch(_request: Requ
 }
 
 async fn sodium_compat_src_core32_curve25519_ge_p3_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_users_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_abilities_v1_run_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_search_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_block_renderer_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_menu_locations_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

@@ -619,6 +619,11 @@ GET /wp-includes/sodium_compat/src/Core32/Int32.php
 GET /wp-includes/sodium_compat/src/Core32/SecretStream/State.php
 GET /wp-includes/sodium_compat/src/Core32/HChaCha20.php
 GET /wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P3.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-users-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-run-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

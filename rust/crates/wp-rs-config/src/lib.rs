@@ -781,6 +781,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/src/Core32/SecretStream/State.php",
         "/wp-includes/sodium_compat/src/Core32/HChaCha20.php",
         "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P3.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-users-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-run-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2309,6 +2314,19 @@ mod tests {
         );
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/HChaCha20.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P3.php"));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-users-controller.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-abilities-v1-run-controller.php"
+        ));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-search-controller.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-renderer-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-menu-locations-controller.php"
+        ));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
