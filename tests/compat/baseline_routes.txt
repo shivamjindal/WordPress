@@ -654,6 +654,11 @@ GET /wp-includes/rest-api/class-wp-rest-request.php
 GET /wp-includes/rest-api/class-wp-rest-server.php
 GET /wp-includes/sodium_compat/src/SodiumException.php
 GET /wp-includes/html-api/class-wp-html-text-replacement.php
+GET /wp-includes/js/dist/script-modules/index.php
+GET /wp-includes/js/dist/script-modules/registry.php
+GET /wp-includes/widgets/class-wp-widget-media-video.php
+GET /wp-includes/widgets/class-wp-widget-calendar.php
+GET /wp-includes/widgets/class-wp-widget-media-image.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

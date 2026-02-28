@@ -816,6 +816,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/class-wp-rest-server.php",
         "/wp-includes/sodium_compat/src/SodiumException.php",
         "/wp-includes/html-api/class-wp-html-text-replacement.php",
+        "/wp-includes/js/dist/script-modules/index.php",
+        "/wp-includes/js/dist/script-modules/registry.php",
+        "/wp-includes/widgets/class-wp-widget-media-video.php",
+        "/wp-includes/widgets/class-wp-widget-calendar.php",
+        "/wp-includes/widgets/class-wp-widget-media-image.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2401,6 +2406,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/rest-api/class-wp-rest-server.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/SodiumException.php"));
         assert!(settings.should_route("/wp-includes/html-api/class-wp-html-text-replacement.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/script-modules/index.php"));
+        assert!(settings.should_route("/wp-includes/js/dist/script-modules/registry.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-video.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-calendar.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-image.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

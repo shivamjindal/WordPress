@@ -2502,6 +2502,26 @@ async fn main() {
             any(html_api_class_wp_html_text_replacement_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/index.php",
+            any(js_dist_script_modules_index_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/js/dist/script-modules/registry.php",
+            any(js_dist_script_modules_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-media-video.php",
+            any(widgets_class_wp_widget_media_video_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-calendar.php",
+            any(widgets_class_wp_widget_calendar_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-media-image.php",
+            any(widgets_class_wp_widget_media_image_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14134,6 +14154,26 @@ async fn sodium_compat_src_sodium_exception_include_live_dispatch(_request: Requ
 async fn html_api_class_wp_html_text_replacement_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_index_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_media_video_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_calendar_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_media_image_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
