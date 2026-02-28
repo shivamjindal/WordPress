@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php' );
+if ( '/wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * WP_REST_Navigation_Fallback_Controller class
  *

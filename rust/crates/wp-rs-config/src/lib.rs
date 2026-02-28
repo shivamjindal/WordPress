@@ -751,6 +751,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/fonts/class-wp-font-collection.php",
         "/wp-includes/fonts/class-wp-font-utils.php",
         "/wp-includes/sodium_compat/src/Core/Ristretto255.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-settings-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-blocks-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-block-types-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-url-details-controller.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2236,6 +2241,19 @@ mod tests {
         assert!(settings.should_route("/wp-includes/fonts/class-wp-font-collection.php"));
         assert!(settings.should_route("/wp-includes/fonts/class-wp-font-utils.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Ristretto255.php"));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-settings-controller.php"));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-blocks-controller.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-types-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-url-details-controller.php"
+        ));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
