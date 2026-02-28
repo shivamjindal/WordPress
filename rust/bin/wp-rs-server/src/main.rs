@@ -3242,6 +3242,26 @@ async fn main() {
             any(wp_content_themes_twentytwenty_template_parts_navigation_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwenty/template-parts/entry-author-bio.php",
+            any(wp_content_themes_twentytwenty_template_parts_entry_author_bio_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/template-parts/modal-search.php",
+            any(wp_content_themes_twentytwenty_template_parts_modal_search_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/template-parts/pagination.php",
+            any(wp_content_themes_twentytwenty_template_parts_pagination_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/index.php",
+            any(wp_content_themes_twentytwenty_index_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/searchform.php",
+            any(wp_content_themes_twentytwenty_searchform_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15824,6 +15844,32 @@ async fn wp_content_themes_twentytwenty_template_parts_modal_menu_live_dispatch(
 async fn wp_content_themes_twentytwenty_template_parts_navigation_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_template_parts_entry_author_bio_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_template_parts_modal_search_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_template_parts_pagination_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_index_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_searchform_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
