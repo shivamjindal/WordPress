@@ -946,6 +946,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyone/template-parts/header/site-header.php",
         "/wp-content/themes/twentytwentyone/template-parts/header/excerpt-header.php",
         "/wp-content/themes/twentytwentyone/template-parts/header/site-branding.php",
+        "/wp-content/themes/twentytwentyone/template-parts/content/content-none.php",
+        "/wp-content/themes/twentytwentyone/template-parts/content/content-single.php",
+        "/wp-content/themes/twentytwentyone/template-parts/content/content.php",
+        "/wp-content/themes/twentytwentyone/template-parts/content/content-excerpt.php",
+        "/wp-content/themes/twentytwentyone/template-parts/content/content-page.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2702,6 +2707,20 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyone/template-parts/header/site-branding.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-none.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-single.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyone/template-parts/content/content.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-excerpt.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-page.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));

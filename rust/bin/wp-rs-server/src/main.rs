@@ -3022,6 +3022,26 @@ async fn main() {
             any(wp_content_themes_twentytwentyone_template_parts_header_site_branding_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-none.php",
+            any(wp_content_themes_twentytwentyone_template_parts_content_content_none_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-single.php",
+            any(wp_content_themes_twentytwentyone_template_parts_content_content_single_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content.php",
+            any(wp_content_themes_twentytwentyone_template_parts_content_content_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-excerpt.php",
+            any(wp_content_themes_twentytwentyone_template_parts_content_content_excerpt_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/template-parts/content/content-page.php",
+            any(wp_content_themes_twentytwentyone_template_parts_content_content_page_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15298,6 +15318,36 @@ async fn wp_content_themes_twentytwentyone_template_parts_header_excerpt_header_
 }
 
 async fn wp_content_themes_twentytwentyone_template_parts_header_site_branding_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_content_content_none_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_content_content_single_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_content_content_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_content_content_excerpt_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_content_content_page_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
