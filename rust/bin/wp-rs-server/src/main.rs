@@ -2442,6 +2442,26 @@ async fn main() {
             any(sodium_compat_src_core32_x25519_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core32/HSalsa20.php",
+            any(sodium_compat_src_core32_hsalsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Int64.php",
+            any(sodium_compat_src_core32_int64_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Poly1305/State.php",
+            any(sodium_compat_src_core32_poly1305_state_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/File.php",
+            any(sodium_compat_src_file_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/PHP52/SplFixedArray.php",
+            any(sodium_compat_src_php52_spl_fixed_array_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14004,6 +14024,30 @@ async fn sodium_compat_src_core32_xchacha20_include_live_dispatch(_request: Requ
 }
 
 async fn sodium_compat_src_core32_x25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_hsalsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_int64_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_poly1305_state_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_file_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_php52_spl_fixed_array_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

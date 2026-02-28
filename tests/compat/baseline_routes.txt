@@ -639,6 +639,11 @@ GET /wp-includes/sodium_compat/src/Core32/Salsa20.php
 GET /wp-includes/sodium_compat/src/Core32/ChaCha20.php
 GET /wp-includes/sodium_compat/src/Core32/XChaCha20.php
 GET /wp-includes/sodium_compat/src/Core32/X25519.php
+GET /wp-includes/sodium_compat/src/Core32/HSalsa20.php
+GET /wp-includes/sodium_compat/src/Core32/Int64.php
+GET /wp-includes/sodium_compat/src/Core32/Poly1305/State.php
+GET /wp-includes/sodium_compat/src/File.php
+GET /wp-includes/sodium_compat/src/PHP52/SplFixedArray.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
