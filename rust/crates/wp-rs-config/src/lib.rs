@@ -951,6 +951,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyone/template-parts/content/content.php",
         "/wp-content/themes/twentytwentyone/template-parts/content/content-excerpt.php",
         "/wp-content/themes/twentytwentyone/template-parts/content/content-page.php",
+        "/wp-content/themes/twentytwentyone/template-parts/footer/footer-widgets.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-audio.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-status.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-link.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-aside.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2721,6 +2726,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyone/template-parts/content/content-page.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/footer/footer-widgets.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-audio.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-status.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-link.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-aside.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));

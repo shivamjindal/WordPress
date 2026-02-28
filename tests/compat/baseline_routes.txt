@@ -789,6 +789,11 @@ GET /wp-content/themes/twentytwentyone/template-parts/content/content-single.php
 GET /wp-content/themes/twentytwentyone/template-parts/content/content.php
 GET /wp-content/themes/twentytwentyone/template-parts/content/content-excerpt.php
 GET /wp-content/themes/twentytwentyone/template-parts/content/content-page.php
+GET /wp-content/themes/twentytwentyone/template-parts/footer/footer-widgets.php
+GET /wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-audio.php
+GET /wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-status.php
+GET /wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-link.php
+GET /wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-aside.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
