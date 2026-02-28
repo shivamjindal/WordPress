@@ -884,6 +884,11 @@ GET /wp-content/themes/twentythirteen/inc/block-patterns.php
 GET /wp-content/themes/twentythirteen/content-audio.php
 GET /wp-content/themes/twentythirteen/author-bio.php
 GET /wp-content/themes/twentythirteen/content-chat.php
+GET /wp-content/themes/twentythirteen/search.php
+GET /wp-content/themes/twentythirteen/category.php
+GET /wp-content/themes/twentythirteen/functions.php
+GET /wp-content/themes/twentythirteen/header.php
+GET /wp-content/themes/twentythirteen/taxonomy-post_format.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php

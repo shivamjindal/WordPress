@@ -1046,6 +1046,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentythirteen/content-audio.php",
         "/wp-content/themes/twentythirteen/author-bio.php",
         "/wp-content/themes/twentythirteen/content-chat.php",
+        "/wp-content/themes/twentythirteen/search.php",
+        "/wp-content/themes/twentythirteen/category.php",
+        "/wp-content/themes/twentythirteen/functions.php",
+        "/wp-content/themes/twentythirteen/header.php",
+        "/wp-content/themes/twentythirteen/taxonomy-post_format.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2997,6 +3002,11 @@ mod tests {
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-audio.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/author-bio.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-chat.php"));
+        assert!(settings.should_route("/wp-content/themes/twentythirteen/search.php"));
+        assert!(settings.should_route("/wp-content/themes/twentythirteen/category.php"));
+        assert!(settings.should_route("/wp-content/themes/twentythirteen/functions.php"));
+        assert!(settings.should_route("/wp-content/themes/twentythirteen/header.php"));
+        assert!(settings.should_route("/wp-content/themes/twentythirteen/taxonomy-post_format.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/index.php"));

@@ -3422,6 +3422,26 @@ async fn main() {
             any(wp_content_themes_twentythirteen_content_chat_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentythirteen/search.php",
+            any(wp_content_themes_twentythirteen_search_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/category.php",
+            any(wp_content_themes_twentythirteen_category_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/functions.php",
+            any(wp_content_themes_twentythirteen_functions_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/header.php",
+            any(wp_content_themes_twentythirteen_header_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/taxonomy-post_format.php",
+            any(wp_content_themes_twentythirteen_taxonomy_post_format_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -16234,6 +16254,28 @@ async fn wp_content_themes_twentythirteen_author_bio_live_dispatch(_request: Req
 }
 
 async fn wp_content_themes_twentythirteen_content_chat_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_search_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_category_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_functions_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_header_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_taxonomy_post_format_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
