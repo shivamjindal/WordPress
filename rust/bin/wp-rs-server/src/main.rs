@@ -2282,6 +2282,26 @@ async fn main() {
             any(sodium_compat_src_core_xchacha20_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core/X25519.php",
+            any(sodium_compat_src_core_x25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/ChaCha20/Ctx.php",
+            any(sodium_compat_src_core_chacha20_ctx_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/ChaCha20/IetfCtx.php",
+            any(sodium_compat_src_core_chacha20_ietf_ctx_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Poly1305.php",
+            any(sodium_compat_src_core_poly1305_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/SipHash.php",
+            any(sodium_compat_src_core_sip_hash_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13640,6 +13660,28 @@ async fn sodium_compat_src_core_chacha20_include_live_dispatch(_request: Request
 }
 
 async fn sodium_compat_src_core_xchacha20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_x25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_chacha20_ctx_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_chacha20_ietf_ctx_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_poly1305_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_sip_hash_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
