@@ -1942,6 +1942,26 @@ async fn main() {
             any(sodium_compat_lib_php84compat_const_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/lib/stream-xchacha20.php",
+            any(sodium_compat_lib_stream_xchacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-font-faces-controller.php",
+            any(rest_api_endpoints_class_wp_rest_font_faces_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-directory-controller.php",
+            any(rest_api_endpoints_class_wp_rest_block_directory_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/lib/constants.php",
+            any(sodium_compat_lib_constants_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-menus-controller.php",
+            any(rest_api_endpoints_class_wp_rest_menus_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -12826,6 +12846,32 @@ async fn sodium_compat_lib_php84compat_include_live_dispatch(_request: Request) 
 }
 
 async fn sodium_compat_lib_php84compat_const_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_stream_xchacha20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_font_faces_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_block_directory_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_constants_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_menus_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
