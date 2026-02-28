@@ -2982,6 +2982,26 @@ async fn main() {
             any(wp_content_themes_twentythirteen_comments_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentythirteen/content.php",
+            any(wp_content_themes_twentythirteen_content_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/tag.php",
+            any(wp_content_themes_twentythirteen_tag_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/sidebar-main.php",
+            any(wp_content_themes_twentythirteen_sidebar_main_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/content-status.php",
+            any(wp_content_themes_twentythirteen_content_status_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/single.php",
+            any(wp_content_themes_twentythirteen_single_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -15170,6 +15190,30 @@ async fn wp_content_themes_twentythirteen_archive_live_dispatch(_request: Reques
 }
 
 async fn wp_content_themes_twentythirteen_comments_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_tag_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_sidebar_main_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_status_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_single_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
