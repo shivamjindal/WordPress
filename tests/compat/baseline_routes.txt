@@ -889,6 +889,11 @@ GET /wp-content/themes/twentythirteen/category.php
 GET /wp-content/themes/twentythirteen/functions.php
 GET /wp-content/themes/twentythirteen/header.php
 GET /wp-content/themes/twentythirteen/taxonomy-post_format.php
+GET /wp-content/themes/twentythirteen/content-video.php
+GET /wp-content/themes/twentythirteen/404.php
+GET /wp-content/themes/twentythirteen/page.php
+GET /wp-content/themes/twentythirteen/content-gallery.php
+GET /wp-content/themes/twentythirteen/image.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php

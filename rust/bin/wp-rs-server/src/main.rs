@@ -3442,6 +3442,26 @@ async fn main() {
             any(wp_content_themes_twentythirteen_taxonomy_post_format_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentythirteen/content-video.php",
+            any(wp_content_themes_twentythirteen_content_video_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/404.php",
+            any(wp_content_themes_twentythirteen_404_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/page.php",
+            any(wp_content_themes_twentythirteen_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/content-gallery.php",
+            any(wp_content_themes_twentythirteen_content_gallery_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/image.php",
+            any(wp_content_themes_twentythirteen_image_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -16278,6 +16298,30 @@ async fn wp_content_themes_twentythirteen_header_live_dispatch(_request: Request
 async fn wp_content_themes_twentythirteen_taxonomy_post_format_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_video_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_404_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_gallery_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_image_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
