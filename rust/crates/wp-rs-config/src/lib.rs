@@ -776,6 +776,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/src/Core32/Util.php",
         "/wp-includes/sodium_compat/src/Core32/XSalsa20.php",
         "/wp-includes/sodium_compat/src/Core32/Curve25519.php",
+        "/wp-includes/sodium_compat/src/Core/Poly1305/State.php",
+        "/wp-includes/sodium_compat/src/Core32/Int32.php",
+        "/wp-includes/sodium_compat/src/Core32/SecretStream/State.php",
+        "/wp-includes/sodium_compat/src/Core32/HChaCha20.php",
+        "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P3.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2297,6 +2302,13 @@ mod tests {
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/Util.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/XSalsa20.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/Curve25519.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Poly1305/State.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/Int32.php"));
+        assert!(
+            settings.should_route("/wp-includes/sodium_compat/src/Core32/SecretStream/State.php")
+        );
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/HChaCha20.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P3.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
