@@ -646,6 +646,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/namespaced/Core/X25519.php",
         "/wp-includes/sodium_compat/namespaced/Core/ChaCha20/Ctx.php",
         "/wp-includes/sodium_compat/namespaced/Core/ChaCha20/IetfCtx.php",
+        "/wp-includes/sodium_compat/namespaced/Core/BLAKE2b.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Poly1305.php",
+        "/wp-includes/sodium_compat/namespaced/Core/SipHash.php",
+        "/wp-includes/sodium_compat/namespaced/Core/HSalsa20.php",
+        "/wp-includes/sodium_compat/namespaced/File.php",
         "/wp-includes/block-supports/block-style-variations.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
         "/wp-includes/block-supports/background.php",
@@ -1929,6 +1934,11 @@ mod tests {
         );
         assert!(settings
             .should_route("/wp-includes/sodium_compat/namespaced/Core/ChaCha20/IetfCtx.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/BLAKE2b.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Poly1305.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/SipHash.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/HSalsa20.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/File.php"));
         assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
         assert!(
             settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php")

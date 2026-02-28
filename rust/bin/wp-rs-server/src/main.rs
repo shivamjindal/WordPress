@@ -1822,6 +1822,26 @@ async fn main() {
             any(sodium_compat_namespaced_core_chacha20_ietf_ctx_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/namespaced/Core/BLAKE2b.php",
+            any(sodium_compat_namespaced_core_blake2b_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Poly1305.php",
+            any(sodium_compat_namespaced_core_poly1305_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/SipHash.php",
+            any(sodium_compat_namespaced_core_sip_hash_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/HSalsa20.php",
+            any(sodium_compat_namespaced_core_hsalsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/File.php",
+            any(sodium_compat_namespaced_file_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12536,6 +12556,34 @@ async fn sodium_compat_namespaced_core_chacha20_ctx_include_live_dispatch(
 async fn sodium_compat_namespaced_core_chacha20_ietf_ctx_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_blake2b_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_poly1305_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_sip_hash_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_hsalsa20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_file_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
