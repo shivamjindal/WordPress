@@ -821,6 +821,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/widgets/class-wp-widget-media-video.php",
         "/wp-includes/widgets/class-wp-widget-calendar.php",
         "/wp-includes/widgets/class-wp-widget-media-image.php",
+        "/wp-includes/widgets/class-wp-widget-categories.php",
+        "/wp-includes/widgets/class-wp-nav-menu-widget.php",
+        "/wp-includes/widgets/class-wp-widget-media-audio.php",
+        "/wp-includes/widgets/class-wp-widget-links.php",
+        "/wp-includes/widgets/class-wp-widget-recent-comments.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2411,6 +2416,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-video.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-calendar.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-image.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-categories.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-nav-menu-widget.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-audio.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-links.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-recent-comments.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

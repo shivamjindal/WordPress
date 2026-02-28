@@ -2522,6 +2522,26 @@ async fn main() {
             any(widgets_class_wp_widget_media_image_include_live_dispatch),
         )
         .route(
+            "/wp-includes/widgets/class-wp-widget-categories.php",
+            any(widgets_class_wp_widget_categories_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-nav-menu-widget.php",
+            any(widgets_class_wp_nav_menu_widget_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-media-audio.php",
+            any(widgets_class_wp_widget_media_audio_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-links.php",
+            any(widgets_class_wp_widget_links_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-recent-comments.php",
+            any(widgets_class_wp_widget_recent_comments_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14174,6 +14194,28 @@ async fn widgets_class_wp_widget_calendar_include_live_dispatch(_request: Reques
 }
 
 async fn widgets_class_wp_widget_media_image_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_categories_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_nav_menu_widget_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_media_audio_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_links_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_recent_comments_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
