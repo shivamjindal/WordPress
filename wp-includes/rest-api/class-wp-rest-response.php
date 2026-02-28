@@ -1,4 +1,11 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/rest-api/class-wp-rest-response.php' );
+if ( '/wp-includes/rest-api/class-wp-rest-response.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * REST API: WP_REST_Response class
  *

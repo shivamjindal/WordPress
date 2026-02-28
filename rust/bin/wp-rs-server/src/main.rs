@@ -2482,6 +2482,26 @@ async fn main() {
             any(sodium_compat_src_core32_sip_hash_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/class-wp-rest-response.php",
+            any(rest_api_class_wp_rest_response_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/class-wp-rest-request.php",
+            any(rest_api_class_wp_rest_request_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/class-wp-rest-server.php",
+            any(rest_api_class_wp_rest_server_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/SodiumException.php",
+            any(sodium_compat_src_sodium_exception_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-text-replacement.php",
+            any(html_api_class_wp_html_text_replacement_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14092,6 +14112,28 @@ async fn sodium_compat_src_core32_poly1305_include_live_dispatch(_request: Reque
 }
 
 async fn sodium_compat_src_core32_sip_hash_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_class_wp_rest_response_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_class_wp_rest_request_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_class_wp_rest_server_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_sodium_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_text_replacement_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
