@@ -2962,6 +2962,26 @@ async fn main() {
             any(wp_content_themes_twentyeleven_image_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyeleven/content-gallery.php",
+            any(wp_content_themes_twentyeleven_content_gallery_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-page.php",
+            any(wp_content_themes_twentyeleven_content_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/footer.php",
+            any(wp_content_themes_twentyeleven_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/author.php",
+            any(wp_content_themes_twentyeleven_author_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-image.php",
+            any(wp_content_themes_twentyeleven_content_image_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15166,6 +15186,28 @@ async fn wp_content_themes_twentyeleven_page_live_dispatch(_request: Request) ->
 }
 
 async fn wp_content_themes_twentyeleven_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_gallery_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_author_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_image_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
