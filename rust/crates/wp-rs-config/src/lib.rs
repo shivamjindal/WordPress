@@ -726,6 +726,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/customize/class-wp-customize-new-menu-control.php",
         "/wp-includes/customize/class-wp-customize-cropped-image-control.php",
         "/wp-includes/customize/class-wp-customize-theme-control.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-revisions-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-post-statuses-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-attachments-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-site-health-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2160,6 +2165,20 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/customize/class-wp-customize-theme-control.php")
         );
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-revisions-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-post-statuses-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-attachments-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-site-health-controller.php"
+        ));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

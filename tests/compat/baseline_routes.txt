@@ -564,6 +564,11 @@ GET /wp-includes/customize/class-wp-customize-nav-menu-name-control.php
 GET /wp-includes/customize/class-wp-customize-new-menu-control.php
 GET /wp-includes/customize/class-wp-customize-cropped-image-control.php
 GET /wp-includes/customize/class-wp-customize-theme-control.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-revisions-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-post-statuses-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-attachments-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-site-health-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
