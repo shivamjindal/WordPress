@@ -3262,6 +3262,26 @@ async fn main() {
             any(wp_content_themes_twentytwenty_searchform_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwenty/comments.php",
+            any(wp_content_themes_twentytwenty_comments_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-svg-icons.php",
+            any(wp_content_themes_twentytwenty_classes_class_twentytwenty_svg_icons_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-customize.php",
+            any(wp_content_themes_twentytwenty_classes_class_twentytwenty_customize_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/footer.php",
+            any(wp_content_themes_twentytwenty_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-non-latin-languages.php",
+            any(wp_content_themes_twentytwenty_classes_class_twentytwenty_non_latin_languages_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15870,6 +15890,32 @@ async fn wp_content_themes_twentytwenty_index_live_dispatch(_request: Request) -
 }
 
 async fn wp_content_themes_twentytwenty_searchform_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_comments_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_classes_class_twentytwenty_svg_icons_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_classes_class_twentytwenty_customize_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_classes_class_twentytwenty_non_latin_languages_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

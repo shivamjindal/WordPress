@@ -844,6 +844,11 @@ GET /wp-content/themes/twentytwenty/template-parts/modal-search.php
 GET /wp-content/themes/twentytwenty/template-parts/pagination.php
 GET /wp-content/themes/twentytwenty/index.php
 GET /wp-content/themes/twentytwenty/searchform.php
+GET /wp-content/themes/twentytwenty/comments.php
+GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-svg-icons.php
+GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-customize.php
+GET /wp-content/themes/twentytwenty/footer.php
+GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-non-latin-languages.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
