@@ -2222,6 +2222,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_sidebars_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core/Curve25519/Fe.php",
+            any(sodium_compat_src_core_curve25519_fe_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Salsa20.php",
+            any(sodium_compat_src_core_salsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/fonts/class-wp-font-collection.php",
+            any(fonts_class_wp_font_collection_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/fonts/class-wp-font-utils.php",
+            any(fonts_class_wp_font_utils_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Ristretto255.php",
+            any(sodium_compat_src_core_ristretto255_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13506,6 +13526,26 @@ async fn rest_api_endpoints_class_wp_rest_controller_include_live_dispatch(
 async fn rest_api_endpoints_class_wp_rest_sidebars_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_curve25519_fe_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_salsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_class_wp_font_collection_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_class_wp_font_utils_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_ristretto255_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

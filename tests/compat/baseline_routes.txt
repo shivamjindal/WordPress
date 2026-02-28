@@ -584,6 +584,11 @@ GET /wp-includes/rest-api/endpoints/class-wp-rest-global-styles-revisions-contro
 GET /wp-includes/rest-api/endpoints/class-wp-rest-comments-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-sidebars-controller.php
+GET /wp-includes/sodium_compat/src/Core/Curve25519/Fe.php
+GET /wp-includes/sodium_compat/src/Core/Salsa20.php
+GET /wp-includes/fonts/class-wp-font-collection.php
+GET /wp-includes/fonts/class-wp-font-utils.php
+GET /wp-includes/sodium_compat/src/Core/Ristretto255.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
