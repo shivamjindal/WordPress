@@ -1962,6 +1962,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_menus_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-header-image-control.php",
+            any(customize_class_wp_customize_header_image_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-site-icon-control.php",
+            any(customize_class_wp_customize_site_icon_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-item-control.php",
+            any(customize_class_wp_customize_nav_menu_item_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-item-setting.php",
+            any(customize_class_wp_customize_nav_menu_item_setting_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/lib/php72compat_const.php",
+            any(sodium_compat_lib_php72compat_const_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -12872,6 +12892,34 @@ async fn sodium_compat_lib_constants_include_live_dispatch(_request: Request) ->
 async fn rest_api_endpoints_class_wp_rest_menus_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_header_image_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_site_icon_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_item_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_item_setting_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_php72compat_const_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

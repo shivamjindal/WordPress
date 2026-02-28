@@ -681,6 +681,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/endpoints/class-wp-rest-block-directory-controller.php",
         "/wp-includes/sodium_compat/lib/constants.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-menus-controller.php",
+        "/wp-includes/customize/class-wp-customize-header-image-control.php",
+        "/wp-includes/customize/class-wp-customize-site-icon-control.php",
+        "/wp-includes/customize/class-wp-customize-nav-menu-item-control.php",
+        "/wp-includes/customize/class-wp-customize-nav-menu-item-setting.php",
+        "/wp-includes/sodium_compat/lib/php72compat_const.php",
         "/wp-includes/customize/class-wp-customize-background-image-control.php",
         "/wp-includes/customize/class-wp-customize-filter-setting.php",
         "/wp-includes/customize/class-wp-customize-sidebar-section.php",
@@ -2024,6 +2029,15 @@ mod tests {
         assert!(settings.should_route("/wp-includes/sodium_compat/lib/constants.php"));
         assert!(settings
             .should_route("/wp-includes/rest-api/endpoints/class-wp-rest-menus-controller.php"));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-header-image-control.php"));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-site-icon-control.php"));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-nav-menu-item-control.php"));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-nav-menu-item-setting.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/lib/php72compat_const.php"));
         assert!(settings.should_route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php"
         ));
