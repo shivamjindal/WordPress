@@ -1654,6 +1654,26 @@ async fn main() {
             any(sodium_compat_namespaced_core_hchacha20_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P3.php",
+            any(sodium_compat_namespaced_core_curve25519_ge_p3_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Precomp.php",
+            any(sodium_compat_namespaced_core_curve25519_ge_precomp_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P1p1.php",
+            any(sodium_compat_namespaced_core_curve25519_ge_p1p1_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P2.php",
+            any(sodium_compat_namespaced_core_curve25519_ge_p2_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Cached.php",
+            any(sodium_compat_namespaced_core_curve25519_ge_cached_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12136,6 +12156,36 @@ async fn sodium_compat_namespaced_core_curve25519_include_live_dispatch(
 }
 
 async fn sodium_compat_namespaced_core_hchacha20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_ge_p3_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_ge_precomp_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_ge_p1p1_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_ge_p2_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_ge_cached_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
