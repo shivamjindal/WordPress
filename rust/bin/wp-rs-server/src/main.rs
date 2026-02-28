@@ -2882,6 +2882,26 @@ async fn main() {
             any(wp_content_themes_twentyeleven_content_featured_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyeleven/searchform.php",
+            any(wp_content_themes_twentyeleven_searchform_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-intro.php",
+            any(wp_content_themes_twentyeleven_content_intro_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/comments.php",
+            any(wp_content_themes_twentyeleven_comments_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content.php",
+            any(wp_content_themes_twentyeleven_content_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/showcase.php",
+            any(wp_content_themes_twentyeleven_showcase_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14958,6 +14978,26 @@ async fn wp_content_themes_twentyeleven_archive_live_dispatch(_request: Request)
 async fn wp_content_themes_twentyeleven_content_featured_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_searchform_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_intro_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_comments_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_showcase_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
