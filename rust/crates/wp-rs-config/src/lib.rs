@@ -564,6 +564,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/pomo/po.php",
         "/wp-includes/pomo/translations.php",
         "/wp-includes/pomo/streams.php",
+        "/wp-includes/pomo/mo.php",
+        "/wp-includes/Text/Diff.php",
+        "/wp-includes/Text/Exception.php",
+        "/wp-includes/Text/Diff/Renderer.php",
+        "/wp-includes/style-engine/class-wp-style-engine-processor.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1722,6 +1727,13 @@ mod tests {
         assert!(settings.should_route("/wp-includes/pomo/po.php"));
         assert!(settings.should_route("/wp-includes/pomo/translations.php"));
         assert!(settings.should_route("/wp-includes/pomo/streams.php"));
+        assert!(settings.should_route("/wp-includes/pomo/mo.php"));
+        assert!(settings.should_route("/wp-includes/Text/Diff.php"));
+        assert!(settings.should_route("/wp-includes/Text/Exception.php"));
+        assert!(settings.should_route("/wp-includes/Text/Diff/Renderer.php"));
+        assert!(
+            settings.should_route("/wp-includes/style-engine/class-wp-style-engine-processor.php")
+        );
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

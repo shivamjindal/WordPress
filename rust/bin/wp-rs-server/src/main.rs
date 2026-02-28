@@ -1494,6 +1494,26 @@ async fn main() {
             any(pomo_streams_include_live_dispatch),
         )
         .route(
+            "/wp-includes/pomo/mo.php",
+            any(pomo_mo_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Text/Diff.php",
+            any(text_diff_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Text/Exception.php",
+            any(text_exception_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Text/Diff/Renderer.php",
+            any(text_diff_renderer_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/style-engine/class-wp-style-engine-processor.php",
+            any(style_engine_class_wp_style_engine_processor_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11798,6 +11818,28 @@ async fn pomo_translations_include_live_dispatch(_request: Request) -> Response 
 }
 
 async fn pomo_streams_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_mo_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn text_diff_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn text_exception_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn text_diff_renderer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn style_engine_class_wp_style_engine_processor_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

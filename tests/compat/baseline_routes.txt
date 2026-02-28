@@ -397,6 +397,11 @@ GET /wp-includes/pomo/plural-forms.php
 GET /wp-includes/pomo/po.php
 GET /wp-includes/pomo/translations.php
 GET /wp-includes/pomo/streams.php
+GET /wp-includes/pomo/mo.php
+GET /wp-includes/Text/Diff.php
+GET /wp-includes/Text/Exception.php
+GET /wp-includes/Text/Diff/Renderer.php
+GET /wp-includes/style-engine/class-wp-style-engine-processor.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
