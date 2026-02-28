@@ -594,6 +594,11 @@ GET /wp-includes/rest-api/endpoints/class-wp-rest-blocks-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-block-types-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-url-details-controller.php
+GET /wp-includes/fonts/class-wp-font-face-resolver.php
+GET /wp-includes/sodium_compat/src/Core/AEGIS/State128L.php
+GET /wp-includes/sodium_compat/src/Core/AEGIS/State256.php
+GET /wp-includes/sodium_compat/src/Core/ChaCha20.php
+GET /wp-includes/sodium_compat/src/Core/XChaCha20.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

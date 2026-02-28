@@ -2262,6 +2262,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_url_details_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/fonts/class-wp-font-face-resolver.php",
+            any(fonts_class_wp_font_face_resolver_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AEGIS/State128L.php",
+            any(sodium_compat_src_core_aegis_state128l_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AEGIS/State256.php",
+            any(sodium_compat_src_core_aegis_state256_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/ChaCha20.php",
+            any(sodium_compat_src_core_chacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/XChaCha20.php",
+            any(sodium_compat_src_core_xchacha20_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13596,6 +13616,30 @@ async fn rest_api_endpoints_class_wp_rest_block_types_controller_include_live_di
 async fn rest_api_endpoints_class_wp_rest_url_details_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_class_wp_font_face_resolver_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aegis_state128l_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aegis_state256_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_chacha20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_xchacha20_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

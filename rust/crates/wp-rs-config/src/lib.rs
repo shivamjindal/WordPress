@@ -756,6 +756,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/endpoints/class-wp-rest-navigation-fallback-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-block-types-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-url-details-controller.php",
+        "/wp-includes/fonts/class-wp-font-face-resolver.php",
+        "/wp-includes/sodium_compat/src/Core/AEGIS/State128L.php",
+        "/wp-includes/sodium_compat/src/Core/AEGIS/State256.php",
+        "/wp-includes/sodium_compat/src/Core/ChaCha20.php",
+        "/wp-includes/sodium_compat/src/Core/XChaCha20.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2254,6 +2259,11 @@ mod tests {
         assert!(settings.should_route(
             "/wp-includes/rest-api/endpoints/class-wp-rest-url-details-controller.php"
         ));
+        assert!(settings.should_route("/wp-includes/fonts/class-wp-font-face-resolver.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/AEGIS/State128L.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/AEGIS/State256.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/ChaCha20.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/XChaCha20.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
