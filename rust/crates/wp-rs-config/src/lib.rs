@@ -721,6 +721,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/fonts/class-wp-font-library.php",
         "/wp-includes/sodium_compat/src/Core/SecretStream/State.php",
         "/wp-includes/fonts/class-wp-font-face.php",
+        "/wp-includes/customize/class-wp-customize-nav-menu-auto-add-control.php",
+        "/wp-includes/customize/class-wp-customize-nav-menu-name-control.php",
+        "/wp-includes/customize/class-wp-customize-new-menu-control.php",
+        "/wp-includes/customize/class-wp-customize-cropped-image-control.php",
+        "/wp-includes/customize/class-wp-customize-theme-control.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2142,6 +2147,19 @@ mod tests {
         assert!(settings.should_route("/wp-includes/fonts/class-wp-font-library.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/SecretStream/State.php"));
         assert!(settings.should_route("/wp-includes/fonts/class-wp-font-face.php"));
+        assert!(settings.should_route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-auto-add-control.php"
+        ));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-nav-menu-name-control.php"));
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-new-menu-control.php")
+        );
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-customize-cropped-image-control.php"));
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-theme-control.php")
+        );
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

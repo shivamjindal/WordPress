@@ -559,6 +559,11 @@ GET /wp-includes/sodium_compat/src/Core/AES/KeySchedule.php
 GET /wp-includes/fonts/class-wp-font-library.php
 GET /wp-includes/sodium_compat/src/Core/SecretStream/State.php
 GET /wp-includes/fonts/class-wp-font-face.php
+GET /wp-includes/customize/class-wp-customize-nav-menu-auto-add-control.php
+GET /wp-includes/customize/class-wp-customize-nav-menu-name-control.php
+GET /wp-includes/customize/class-wp-customize-new-menu-control.php
+GET /wp-includes/customize/class-wp-customize-cropped-image-control.php
+GET /wp-includes/customize/class-wp-customize-theme-control.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

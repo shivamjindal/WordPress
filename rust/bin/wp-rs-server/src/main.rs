@@ -2122,6 +2122,26 @@ async fn main() {
             any(fonts_class_wp_font_face_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-auto-add-control.php",
+            any(customize_class_wp_customize_nav_menu_auto_add_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-name-control.php",
+            any(customize_class_wp_customize_nav_menu_name_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-new-menu-control.php",
+            any(customize_class_wp_customize_new_menu_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-cropped-image-control.php",
+            any(customize_class_wp_customize_cropped_image_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-theme-control.php",
+            any(customize_class_wp_customize_theme_control_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13260,6 +13280,36 @@ async fn sodium_compat_src_core_secret_stream_state_include_live_dispatch(
 }
 
 async fn fonts_class_wp_font_face_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_auto_add_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_name_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_new_menu_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_cropped_image_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_theme_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
