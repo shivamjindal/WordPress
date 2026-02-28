@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/customize/class-wp-customize-selective-refresh.php' );
+if ( '/wp-includes/customize/class-wp-customize-selective-refresh.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Customize API: WP_Customize_Selective_Refresh class
  *

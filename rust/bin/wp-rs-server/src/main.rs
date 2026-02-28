@@ -2062,6 +2062,26 @@ async fn main() {
             any(sodium_compat_src_crypto32_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-selective-refresh.php",
+            any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-widget-form-customize-control.php",
+            any(customize_class_wp_widget_form_customize_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-media-control.php",
+            any(customize_class_wp_customize_media_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-date-time-control.php",
+            any(customize_class_wp_customize_date_time_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-header-image-setting.php",
+            any(customize_class_wp_customize_header_image_setting_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -13100,6 +13120,36 @@ async fn sodium_compat_src_core_blake2b_include_live_dispatch(_request: Request)
 }
 
 async fn sodium_compat_src_crypto32_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_selective_refresh_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_widget_form_customize_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_media_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_date_time_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_header_image_setting_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
