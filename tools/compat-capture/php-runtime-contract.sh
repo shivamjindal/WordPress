@@ -491,6 +491,7 @@ assert_rust_handled "/wp-includes/js/dist/script-modules/block-library/image/vie
 assert_rust_handled "/wp-includes/js/dist/script-modules/block-library/file/view.min.asset.php" "yes"
 assert_rust_handled "/wp-includes/js/dist/script-modules/block-library/form/view.min.asset.php" "yes"
 assert_rust_handled "/wp-includes/js/dist/script-modules/block-editor/utils/fit-text-frontend.min.asset.php" "yes"
+assert_rust_handled "/wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php" "yes"
 assert_rust_handled "/wp-includes/admin-bar.php" "yes"
 assert_rust_handled "/wp-includes/atomlib.php" "yes"
 assert_rust_handled "/wp-includes/author-template.php" "yes"

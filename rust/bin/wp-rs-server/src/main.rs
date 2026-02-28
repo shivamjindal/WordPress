@@ -1470,6 +1470,10 @@ async fn main() {
             any(js_dist_script_modules_block_editor_utils_fit_text_frontend_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php",
+            any(js_dist_script_modules_core_abilities_index_min_asset_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11746,6 +11750,12 @@ async fn js_dist_script_modules_block_library_form_view_min_asset_include_live_d
 }
 
 async fn js_dist_script_modules_block_editor_utils_fit_text_frontend_min_asset_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn js_dist_script_modules_core_abilities_index_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

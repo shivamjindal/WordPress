@@ -640,6 +640,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-includes/js/dist/script-modules/block-library/file/view.min.asset.php',
 			'/wp-includes/js/dist/script-modules/block-library/form/view.min.asset.php',
 			'/wp-includes/js/dist/script-modules/block-editor/utils/fit-text-frontend.min.asset.php',
+			'/wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php',
 			'/wp-includes/admin-bar.php',
 			'/wp-includes/atomlib.php',
 			'/wp-includes/author-template.php',
