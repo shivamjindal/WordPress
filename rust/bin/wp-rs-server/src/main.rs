@@ -1802,6 +1802,26 @@ async fn main() {
             any(sodium_compat_namespaced_core_xsalsa20_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/namespaced/Core/ChaCha20.php",
+            any(sodium_compat_namespaced_core_chacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/XChaCha20.php",
+            any(sodium_compat_namespaced_core_xchacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/X25519.php",
+            any(sodium_compat_namespaced_core_x25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/ChaCha20/Ctx.php",
+            any(sodium_compat_namespaced_core_chacha20_ctx_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/ChaCha20/IetfCtx.php",
+            any(sodium_compat_namespaced_core_chacha20_ietf_ctx_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12486,6 +12506,34 @@ async fn theme_compat_comments_include_live_dispatch(_request: Request) -> Respo
 }
 
 async fn sodium_compat_namespaced_core_xsalsa20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_chacha20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_xchacha20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_x25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_chacha20_ctx_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_chacha20_ietf_ctx_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
