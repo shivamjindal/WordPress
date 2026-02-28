@@ -809,6 +809,11 @@ GET /wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-quote.php
 GET /wp-content/themes/twentytwentyone/index.php
 GET /wp-content/themes/twentytwentyone/archive.php
 GET /wp-content/themes/twentytwentyone/footer.php
+GET /wp-content/themes/twentytwentyone/image.php
+GET /wp-content/themes/twentytwentyone/searchform.php
+GET /wp-content/themes/twentytwenty/singular.php
+GET /wp-content/themes/twentytwentyone/comments.php
+GET /wp-content/themes/twentytwenty/template-parts/entry-header.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php

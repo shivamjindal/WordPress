@@ -3122,6 +3122,26 @@ async fn main() {
             any(wp_content_themes_twentytwentyone_footer_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyone/image.php",
+            any(wp_content_themes_twentytwentyone_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/searchform.php",
+            any(wp_content_themes_twentytwentyone_searchform_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/singular.php",
+            any(wp_content_themes_twentytwenty_singular_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/comments.php",
+            any(wp_content_themes_twentytwentyone_comments_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwenty/template-parts/entry-header.php",
+            any(wp_content_themes_twentytwenty_template_parts_entry_header_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15542,6 +15562,28 @@ async fn wp_content_themes_twentytwentyone_archive_live_dispatch(_request: Reque
 }
 
 async fn wp_content_themes_twentytwentyone_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_searchform_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_singular_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_comments_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwenty_template_parts_entry_header_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
