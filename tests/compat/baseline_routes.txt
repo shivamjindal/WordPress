@@ -499,6 +499,11 @@ GET /wp-includes/rest-api/fields/class-wp-rest-meta-fields.php
 GET /wp-includes/rest-api/fields/class-wp-rest-term-meta-fields.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-font-collections-controller.php
 GET /wp-includes/theme-compat/footer-embed.php
+GET /wp-includes/theme-compat/embed.php
+GET /wp-includes/theme-compat/embed-content.php
+GET /wp-includes/theme-compat/header-embed.php
+GET /wp-includes/theme-compat/header.php
+GET /wp-includes/theme-compat/embed-404.php
 GET /wp-includes/block-supports/block-style-variations.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php
 GET /wp-includes/block-supports/background.php

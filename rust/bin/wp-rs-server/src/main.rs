@@ -1902,6 +1902,26 @@ async fn main() {
             any(theme_compat_footer_embed_include_live_dispatch),
         )
         .route(
+            "/wp-includes/theme-compat/embed.php",
+            any(theme_compat_embed_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/embed-content.php",
+            any(theme_compat_embed_content_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/header-embed.php",
+            any(theme_compat_header_embed_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/header.php",
+            any(theme_compat_header_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/embed-404.php",
+            any(theme_compat_embed_404_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12720,6 +12740,26 @@ async fn rest_api_endpoints_class_wp_rest_font_collections_controller_include_li
 }
 
 async fn theme_compat_footer_embed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_embed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_embed_content_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_header_embed_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_header_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_embed_404_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

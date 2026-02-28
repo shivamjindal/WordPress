@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/theme-compat/header-embed.php' );
+if ( '/wp-includes/theme-compat/header-embed.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Contains the post embed header template
  *
