@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/block-supports/aria-label.php' );
+if ( '/wp-includes/block-supports/aria-label.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Aria label block support flag.
  *

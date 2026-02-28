@@ -594,6 +594,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sitemaps/class-wp-sitemaps.php",
         "/wp-includes/sitemaps/class-wp-sitemaps-registry.php",
         "/wp-includes/sitemaps/class-wp-sitemaps-index.php",
+        "/wp-includes/block-supports/border.php",
+        "/wp-includes/block-supports/custom-classname.php",
+        "/wp-includes/block-supports/duotone.php",
+        "/wp-includes/block-supports/spacing.php",
+        "/wp-includes/block-supports/aria-label.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1793,6 +1798,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps.php"));
         assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps-registry.php"));
         assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps-index.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/border.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/custom-classname.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/duotone.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/spacing.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/aria-label.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

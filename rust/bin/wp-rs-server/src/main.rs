@@ -1614,6 +1614,26 @@ async fn main() {
             any(sitemaps_class_wp_sitemaps_index_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-supports/border.php",
+            any(block_supports_border_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/custom-classname.php",
+            any(block_supports_custom_classname_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/duotone.php",
+            any(block_supports_duotone_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/spacing.php",
+            any(block_supports_spacing_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/aria-label.php",
+            any(block_supports_aria_label_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12052,6 +12072,26 @@ async fn sitemaps_class_wp_sitemaps_registry_include_live_dispatch(_request: Req
 }
 
 async fn sitemaps_class_wp_sitemaps_index_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_border_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_custom_classname_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_duotone_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_spacing_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_aria_label_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
