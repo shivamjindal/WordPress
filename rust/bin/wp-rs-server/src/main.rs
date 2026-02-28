@@ -2062,6 +2062,26 @@ async fn main() {
             any(sodium_compat_src_crypto32_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-background-image-setting.php",
+            any(customize_class_wp_customize_background_image_setting_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-themes-panel.php",
+            any(customize_class_wp_customize_themes_panel_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-control.php",
+            any(customize_class_wp_customize_nav_menu_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-background-position-control.php",
+            any(customize_class_wp_customize_background_position_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-partial.php",
+            any(customize_class_wp_customize_partial_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13120,6 +13140,34 @@ async fn sodium_compat_src_core_blake2b_include_live_dispatch(_request: Request)
 }
 
 async fn sodium_compat_src_crypto32_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_background_image_setting_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_themes_panel_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_background_position_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_partial_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
