@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentysixteen/sidebar-content-bottom.php' );
+if ( '/wp-content/themes/twentysixteen/sidebar-content-bottom.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * The template for the content bottom widget areas on posts and pages
  *
