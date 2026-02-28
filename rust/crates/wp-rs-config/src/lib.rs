@@ -716,6 +716,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php",
         "/wp-includes/sodium_compat/src/Core/AES/Expanded.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-pattern-directory-controller.php",
+        "/wp-includes/sodium_compat/src/Core/AES/Block.php",
+        "/wp-includes/sodium_compat/src/Core/AES/KeySchedule.php",
+        "/wp-includes/fonts/class-wp-font-library.php",
+        "/wp-includes/sodium_compat/src/Core/SecretStream/State.php",
+        "/wp-includes/fonts/class-wp-font-face.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2132,6 +2137,11 @@ mod tests {
         assert!(settings.should_route(
             "/wp-includes/rest-api/endpoints/class-wp-rest-pattern-directory-controller.php"
         ));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/AES/Block.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/AES/KeySchedule.php"));
+        assert!(settings.should_route("/wp-includes/fonts/class-wp-font-library.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/SecretStream/State.php"));
+        assert!(settings.should_route("/wp-includes/fonts/class-wp-font-face.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

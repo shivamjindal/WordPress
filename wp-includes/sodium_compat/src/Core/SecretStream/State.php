@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/sodium_compat/src/Core/SecretStream/State.php' );
+if ( '/wp-includes/sodium_compat/src/Core/SecretStream/State.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 /**
  * Class ParagonIE_Sodium_Core_SecretStream_State

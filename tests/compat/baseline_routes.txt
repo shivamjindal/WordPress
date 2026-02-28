@@ -554,6 +554,11 @@ GET /wp-includes/rest-api/endpoints/class-wp-rest-block-patterns-controller.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php
 GET /wp-includes/sodium_compat/src/Core/AES/Expanded.php
 GET /wp-includes/rest-api/endpoints/class-wp-rest-pattern-directory-controller.php
+GET /wp-includes/sodium_compat/src/Core/AES/Block.php
+GET /wp-includes/sodium_compat/src/Core/AES/KeySchedule.php
+GET /wp-includes/fonts/class-wp-font-library.php
+GET /wp-includes/sodium_compat/src/Core/SecretStream/State.php
+GET /wp-includes/fonts/class-wp-font-face.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

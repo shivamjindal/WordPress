@@ -2102,6 +2102,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_pattern_directory_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core/AES/Block.php",
+            any(sodium_compat_src_core_aes_block_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AES/KeySchedule.php",
+            any(sodium_compat_src_core_aes_key_schedule_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/fonts/class-wp-font-library.php",
+            any(fonts_class_wp_font_library_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/SecretStream/State.php",
+            any(sodium_compat_src_core_secret_stream_state_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/fonts/class-wp-font-face.php",
+            any(fonts_class_wp_font_face_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13216,6 +13236,30 @@ async fn sodium_compat_src_core_aes_expanded_include_live_dispatch(_request: Req
 async fn rest_api_endpoints_class_wp_rest_pattern_directory_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aes_block_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aes_key_schedule_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_class_wp_font_library_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_secret_stream_state_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn fonts_class_wp_font_face_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
