@@ -841,6 +841,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/html-api/class-wp-html-open-elements.php",
         "/wp-includes/widgets/class-wp-widget-media-gallery.php",
         "/wp-includes/widgets/class-wp-widget-text.php",
+        "/wp-includes/html-api/html5-named-character-references.php",
+        "/wp-includes/html-api/class-wp-html-active-formatting-elements.php",
+        "/wp-includes/html-api/class-wp-html-processor.php",
+        "/wp-includes/html-api/class-wp-html-doctype-info.php",
+        "/wp-includes/html-api/class-wp-html-processor-state.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2451,6 +2456,12 @@ mod tests {
         assert!(settings.should_route("/wp-includes/html-api/class-wp-html-open-elements.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-media-gallery.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-text.php"));
+        assert!(settings.should_route("/wp-includes/html-api/html5-named-character-references.php"));
+        assert!(settings
+            .should_route("/wp-includes/html-api/class-wp-html-active-formatting-elements.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-processor.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-doctype-info.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-processor-state.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
