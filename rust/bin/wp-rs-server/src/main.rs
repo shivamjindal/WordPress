@@ -1594,6 +1594,26 @@ async fn main() {
             any(sitemaps_providers_class_wp_sitemaps_posts_include_live_dispatch),
         )
         .route(
+            "/wp-includes/l10n/class-wp-translations.php",
+            any(l10n_class_wp_translations_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/l10n/class-wp-translation-file.php",
+            any(l10n_class_wp_translation_file_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps.php",
+            any(sitemaps_class_wp_sitemaps_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps-registry.php",
+            any(sitemaps_class_wp_sitemaps_registry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps-index.php",
+            any(sitemaps_class_wp_sitemaps_index_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12012,6 +12032,26 @@ async fn sitemaps_providers_class_wp_sitemaps_users_include_live_dispatch(
 async fn sitemaps_providers_class_wp_sitemaps_posts_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_class_wp_translations_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_class_wp_translation_file_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_registry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_index_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

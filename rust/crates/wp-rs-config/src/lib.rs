@@ -589,6 +589,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sitemaps/providers/class-wp-sitemaps-taxonomies.php",
         "/wp-includes/sitemaps/providers/class-wp-sitemaps-users.php",
         "/wp-includes/sitemaps/providers/class-wp-sitemaps-posts.php",
+        "/wp-includes/l10n/class-wp-translations.php",
+        "/wp-includes/l10n/class-wp-translation-file.php",
+        "/wp-includes/sitemaps/class-wp-sitemaps.php",
+        "/wp-includes/sitemaps/class-wp-sitemaps-registry.php",
+        "/wp-includes/sitemaps/class-wp-sitemaps-index.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1783,6 +1788,11 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/sitemaps/providers/class-wp-sitemaps-posts.php")
         );
+        assert!(settings.should_route("/wp-includes/l10n/class-wp-translations.php"));
+        assert!(settings.should_route("/wp-includes/l10n/class-wp-translation-file.php"));
+        assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps.php"));
+        assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps-registry.php"));
+        assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps-index.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

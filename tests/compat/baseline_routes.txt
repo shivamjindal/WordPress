@@ -422,6 +422,11 @@ GET /wp-includes/sitemaps/class-wp-sitemaps-provider.php
 GET /wp-includes/sitemaps/providers/class-wp-sitemaps-taxonomies.php
 GET /wp-includes/sitemaps/providers/class-wp-sitemaps-users.php
 GET /wp-includes/sitemaps/providers/class-wp-sitemaps-posts.php
+GET /wp-includes/l10n/class-wp-translations.php
+GET /wp-includes/l10n/class-wp-translation-file.php
+GET /wp-includes/sitemaps/class-wp-sitemaps.php
+GET /wp-includes/sitemaps/class-wp-sitemaps-registry.php
+GET /wp-includes/sitemaps/class-wp-sitemaps-index.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
