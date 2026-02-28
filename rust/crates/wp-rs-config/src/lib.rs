@@ -966,6 +966,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-gallery.php",
         "/wp-content/themes/twentytwentyone/page.php",
         "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-image.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-chat.php",
+        "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-quote.php",
+        "/wp-content/themes/twentytwentyone/index.php",
+        "/wp-content/themes/twentytwentyone/archive.php",
+        "/wp-content/themes/twentytwentyone/footer.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2779,6 +2784,15 @@ mod tests {
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-image.php"
         ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-chat.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-quote.php"
+        ));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyone/index.php"));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyone/archive.php"));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyone/footer.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/index.php"));

@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-chat.php' );
+if ( '/wp-content/themes/twentytwentyone/template-parts/excerpt/excerpt-chat.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Shows the appropriate content for the Chat post format.
  *
