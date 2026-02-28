@@ -2422,6 +2422,26 @@ async fn main() {
             any(sodium_compat_src_core32_curve25519_h_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/Fe.php",
+            any(sodium_compat_src_core32_curve25519_fe_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Salsa20.php",
+            any(sodium_compat_src_core32_salsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/ChaCha20.php",
+            any(sodium_compat_src_core32_chacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/XChaCha20.php",
+            any(sodium_compat_src_core32_xchacha20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/X25519.php",
+            any(sodium_compat_src_core32_x25519_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13962,6 +13982,28 @@ async fn sodium_compat_src_core32_curve25519_ge_cached_include_live_dispatch(
 async fn sodium_compat_src_core32_curve25519_h_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_fe_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_salsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_chacha20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_xchacha20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_x25519_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

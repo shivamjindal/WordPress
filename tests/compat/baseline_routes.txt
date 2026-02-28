@@ -634,6 +634,11 @@ GET /wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P1p1.php
 GET /wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P2.php
 GET /wp-includes/sodium_compat/src/Core32/Curve25519/Ge/Cached.php
 GET /wp-includes/sodium_compat/src/Core32/Curve25519/H.php
+GET /wp-includes/sodium_compat/src/Core32/Curve25519/Fe.php
+GET /wp-includes/sodium_compat/src/Core32/Salsa20.php
+GET /wp-includes/sodium_compat/src/Core32/ChaCha20.php
+GET /wp-includes/sodium_compat/src/Core32/XChaCha20.php
+GET /wp-includes/sodium_compat/src/Core32/X25519.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
