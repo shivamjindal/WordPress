@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/plugins/hello.php' );
+if ( '/wp-content/plugins/hello.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * @package Hello_Dolly
  * @version 1.7.2

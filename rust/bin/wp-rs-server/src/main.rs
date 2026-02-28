@@ -2642,6 +2642,26 @@ async fn main() {
             any(html_api_class_wp_html_unsupported_exception_include_live_dispatch),
         )
         .route(
+            "/wp-content/index.php",
+            any(wp_content_index_live_dispatch),
+        )
+        .route(
+            "/wp-content/plugins/hello.php",
+            any(wp_content_plugins_hello_live_dispatch),
+        )
+        .route(
+            "/wp-content/plugins/index.php",
+            any(wp_content_plugins_index_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfifteen/image.php",
+            any(wp_content_themes_twentyfifteen_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfifteen/content-none.php",
+            any(wp_content_themes_twentyfifteen_content_none_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14428,6 +14448,26 @@ async fn widgets_class_wp_widget_recent_posts_include_live_dispatch(_request: Re
 async fn html_api_class_wp_html_unsupported_exception_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_index_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_plugins_hello_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_plugins_index_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfifteen_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfifteen_content_none_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

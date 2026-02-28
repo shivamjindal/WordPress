@@ -689,6 +689,11 @@ GET /wp-includes/widgets/class-wp-widget-pages.php
 GET /wp-includes/widgets/class-wp-widget-rss.php
 GET /wp-includes/widgets/class-wp-widget-recent-posts.php
 GET /wp-includes/html-api/class-wp-html-unsupported-exception.php
+GET /wp-content/index.php
+GET /wp-content/plugins/hello.php
+GET /wp-content/plugins/index.php
+GET /wp-content/themes/twentyfifteen/image.php
+GET /wp-content/themes/twentyfifteen/content-none.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

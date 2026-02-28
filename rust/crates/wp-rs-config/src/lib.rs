@@ -851,6 +851,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/widgets/class-wp-widget-rss.php",
         "/wp-includes/widgets/class-wp-widget-recent-posts.php",
         "/wp-includes/html-api/class-wp-html-unsupported-exception.php",
+        "/wp-content/index.php",
+        "/wp-content/plugins/hello.php",
+        "/wp-content/plugins/index.php",
+        "/wp-content/themes/twentyfifteen/image.php",
+        "/wp-content/themes/twentyfifteen/content-none.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2474,6 +2479,11 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/html-api/class-wp-html-unsupported-exception.php")
         );
+        assert!(settings.should_route("/wp-content/index.php"));
+        assert!(settings.should_route("/wp-content/plugins/hello.php"));
+        assert!(settings.should_route("/wp-content/plugins/index.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyfifteen/image.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyfifteen/content-none.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
