@@ -1016,6 +1016,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentyseventeen/template-parts/header/site-branding.php",
         "/wp-content/themes/twentyseventeen/template-parts/footer/footer-widgets.php",
         "/wp-content/themes/twentyseventeen/template-parts/footer/site-info.php",
+        "/wp-content/themes/twentytwenty/classes/class-twentytwenty-walker-page.php",
+        "/wp-content/themes/twentytwenty/classes/class-twentytwenty-walker-comment.php",
+        "/wp-content/themes/twentytwenty/classes/class-twentytwenty-script-loader.php",
+        "/wp-content/themes/twentytwenty/classes/class-twentytwenty-separator-control.php",
+        "/wp-content/themes/twentytwenty/inc/custom-css.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2926,6 +2931,19 @@ mod tests {
         assert!(settings.should_route(
             "/wp-content/themes/twentyseventeen/template-parts/footer/site-info.php"
         ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-walker-page.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-walker-comment.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-script-loader.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwenty/classes/class-twentytwenty-separator-control.php"
+        ));
+        assert!(settings.should_route("/wp-content/themes/twentytwenty/inc/custom-css.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/index.php"));
