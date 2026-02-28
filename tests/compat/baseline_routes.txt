@@ -829,6 +829,11 @@ GET /wp-content/themes/twentytwentyone/inc/template-tags.php
 GET /wp-content/themes/twentytwentyone/inc/block-styles.php
 GET /wp-content/themes/twentytwentyone/inc/template-functions.php
 GET /wp-content/themes/twentytwentyone/inc/menu-functions.php
+GET /wp-content/themes/twentytwenty/template-parts/footer-menus-widgets.php
+GET /wp-content/themes/twentytwentyone/search.php
+GET /wp-content/themes/twentytwenty/template-parts/featured-image.php
+GET /wp-content/themes/twentytwenty/template-parts/content.php
+GET /wp-content/themes/twentytwentyone/functions.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
