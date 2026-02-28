@@ -1982,6 +1982,26 @@ async fn main() {
             any(sodium_compat_lib_php72compat_const_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/lib/ristretto255.php",
+            any(sodium_compat_lib_ristretto255_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-global-styles-controller.php",
+            any(rest_api_endpoints_class_wp_rest_global_styles_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/autoload.php",
+            any(sodium_compat_autoload_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-font-families-controller.php",
+            any(rest_api_endpoints_class_wp_rest_font_families_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-menu-items-controller.php",
+            any(rest_api_endpoints_class_wp_rest_menu_items_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -12920,6 +12940,32 @@ async fn customize_class_wp_customize_nav_menu_item_setting_include_live_dispatc
 }
 
 async fn sodium_compat_lib_php72compat_const_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_ristretto255_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_global_styles_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_autoload_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_font_families_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_menu_items_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/sodium_compat/autoload.php' );
+if ( '/wp-includes/sodium_compat/autoload.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 if (PHP_VERSION_ID < 70000) {
     if (!is_callable('sodiumCompatAutoloader')) {
