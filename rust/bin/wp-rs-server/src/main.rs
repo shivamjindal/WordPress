@@ -2862,6 +2862,26 @@ async fn main() {
             any(wp_content_themes_twentysixteen_sidebar_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyeleven/content-single.php",
+            any(wp_content_themes_twentyeleven_content_single_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-aside.php",
+            any(wp_content_themes_twentyeleven_content_aside_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/index.php",
+            any(wp_content_themes_twentyeleven_index_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/archive.php",
+            any(wp_content_themes_twentyeleven_archive_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-featured.php",
+            any(wp_content_themes_twentyeleven_content_featured_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14914,6 +14934,30 @@ async fn wp_content_themes_twentysixteen_footer_live_dispatch(_request: Request)
 }
 
 async fn wp_content_themes_twentysixteen_sidebar_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_single_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_aside_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_index_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_archive_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_featured_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
