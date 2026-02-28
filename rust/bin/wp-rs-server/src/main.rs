@@ -2402,6 +2402,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_abilities_v1_list_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/Precomp.php",
+            any(sodium_compat_src_core32_curve25519_ge_precomp_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P1p1.php",
+            any(sodium_compat_src_core32_curve25519_ge_p1p1_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/P2.php",
+            any(sodium_compat_src_core32_curve25519_ge_p2_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/Ge/Cached.php",
+            any(sodium_compat_src_core32_curve25519_ge_cached_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519/H.php",
+            any(sodium_compat_src_core32_curve25519_h_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13910,6 +13930,36 @@ async fn rest_api_endpoints_class_wp_rest_abilities_v1_categories_controller_inc
 }
 
 async fn rest_api_endpoints_class_wp_rest_abilities_v1_list_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_ge_precomp_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_ge_p1p1_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_ge_p2_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_ge_cached_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_h_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
