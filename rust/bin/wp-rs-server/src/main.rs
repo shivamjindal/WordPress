@@ -2022,6 +2022,26 @@ async fn main() {
             any(sodium_compat_src_core_xsalsa20_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-edit-site-export-controller.php",
+            any(rest_api_endpoints_class_wp_rest_edit_site_export_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-widget-types-controller.php",
+            any(rest_api_endpoints_class_wp_rest_widget_types_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-application-passwords-controller.php",
+            any(rest_api_endpoints_class_wp_rest_application_passwords_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-template-revisions-controller.php",
+            any(rest_api_endpoints_class_wp_rest_template_revisions_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-templates-controller.php",
+            any(rest_api_endpoints_class_wp_rest_templates_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -13010,6 +13030,36 @@ async fn sodium_compat_src_core_base64_original_include_live_dispatch(
 }
 
 async fn sodium_compat_src_core_xsalsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_edit_site_export_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_widget_types_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_application_passwords_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_template_revisions_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_templates_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

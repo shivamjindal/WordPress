@@ -696,6 +696,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/src/Core/Base64/UrlSafe.php",
         "/wp-includes/sodium_compat/src/Core/Base64/Original.php",
         "/wp-includes/sodium_compat/src/Core/XSalsa20.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-edit-site-export-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-widget-types-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-application-passwords-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-template-revisions-controller.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-templates-controller.php",
         "/wp-includes/customize/class-wp-customize-background-image-control.php",
         "/wp-includes/customize/class-wp-customize-filter-setting.php",
         "/wp-includes/customize/class-wp-customize-sidebar-section.php",
@@ -2064,6 +2069,21 @@ mod tests {
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Base64/UrlSafe.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Base64/Original.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/XSalsa20.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-edit-site-export-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-widget-types-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-application-passwords-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-template-revisions-controller.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-templates-controller.php"
+        ));
         assert!(settings.should_route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php"
         ));
