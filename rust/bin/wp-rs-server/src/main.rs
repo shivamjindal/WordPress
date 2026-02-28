@@ -2842,6 +2842,26 @@ async fn main() {
             any(wp_content_themes_twentysixteen_header_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentysixteen/404.php",
+            any(wp_content_themes_twentysixteen_404_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/page.php",
+            any(wp_content_themes_twentysixteen_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/image.php",
+            any(wp_content_themes_twentysixteen_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/footer.php",
+            any(wp_content_themes_twentysixteen_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/sidebar.php",
+            any(wp_content_themes_twentysixteen_sidebar_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14874,6 +14894,26 @@ async fn wp_content_themes_twentysixteen_functions_live_dispatch(_request: Reque
 }
 
 async fn wp_content_themes_twentysixteen_header_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_404_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_sidebar_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

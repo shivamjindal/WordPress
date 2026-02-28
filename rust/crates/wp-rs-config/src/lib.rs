@@ -901,6 +901,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentysixteen/search.php",
         "/wp-content/themes/twentysixteen/functions.php",
         "/wp-content/themes/twentysixteen/header.php",
+        "/wp-content/themes/twentysixteen/404.php",
+        "/wp-content/themes/twentysixteen/page.php",
+        "/wp-content/themes/twentysixteen/image.php",
+        "/wp-content/themes/twentysixteen/footer.php",
+        "/wp-content/themes/twentysixteen/sidebar.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2593,6 +2598,11 @@ mod tests {
         assert!(settings.should_route("/wp-content/themes/twentysixteen/search.php"));
         assert!(settings.should_route("/wp-content/themes/twentysixteen/functions.php"));
         assert!(settings.should_route("/wp-content/themes/twentysixteen/header.php"));
+        assert!(settings.should_route("/wp-content/themes/twentysixteen/404.php"));
+        assert!(settings.should_route("/wp-content/themes/twentysixteen/page.php"));
+        assert!(settings.should_route("/wp-content/themes/twentysixteen/image.php"));
+        assert!(settings.should_route("/wp-content/themes/twentysixteen/footer.php"));
+        assert!(settings.should_route("/wp-content/themes/twentysixteen/sidebar.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
