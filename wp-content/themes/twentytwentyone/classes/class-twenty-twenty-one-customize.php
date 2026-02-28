@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize.php' );
+if ( '/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Customizer settings for this theme.
  *

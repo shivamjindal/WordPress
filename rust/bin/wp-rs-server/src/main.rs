@@ -3142,6 +3142,26 @@ async fn main() {
             any(wp_content_themes_twentytwenty_template_parts_entry_header_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize.php",
+            any(wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_customize_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-custom-colors.php",
+            any(wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_custom_colors_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-dark-mode.php",
+            any(wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_dark_mode_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize-notice-control.php",
+            any(wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_customize_notice_control_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-svg-icons.php",
+            any(wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_svg_icons_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15582,6 +15602,36 @@ async fn wp_content_themes_twentytwentyone_comments_live_dispatch(_request: Requ
 }
 
 async fn wp_content_themes_twentytwenty_template_parts_entry_header_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_customize_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_custom_colors_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_dark_mode_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_customize_notice_control_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_classes_class_twenty_twenty_one_svg_icons_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
