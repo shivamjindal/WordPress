@@ -729,6 +729,11 @@ GET /wp-content/themes/twentyseventeen/template-parts/post/content.php
 GET /wp-content/themes/twentyseventeen/template-parts/post/content-audio.php
 GET /wp-content/themes/twentyseventeen/template-parts/post/content-excerpt.php
 GET /wp-content/themes/twentyseventeen/template-parts/post/content-video.php
+GET /wp-content/themes/twentyseventeen/template-parts/post/content-gallery.php
+GET /wp-content/themes/twentyseventeen/template-parts/post/content-image.php
+GET /wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php
+GET /wp-content/themes/twentyseventeen/template-parts/page/content-front-page.php
+GET /wp-content/themes/twentyseventeen/template-parts/page/content-page.php
 GET /wp-content/themes/twentysixteen/comments.php
 GET /wp-content/themes/twentysixteen/single.php
 GET /wp-content/themes/twentysixteen/sidebar-content-bottom.php

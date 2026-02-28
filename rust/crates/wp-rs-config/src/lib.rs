@@ -891,6 +891,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentyseventeen/template-parts/post/content-audio.php",
         "/wp-content/themes/twentyseventeen/template-parts/post/content-excerpt.php",
         "/wp-content/themes/twentyseventeen/template-parts/post/content-video.php",
+        "/wp-content/themes/twentyseventeen/template-parts/post/content-gallery.php",
+        "/wp-content/themes/twentyseventeen/template-parts/post/content-image.php",
+        "/wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php",
+        "/wp-content/themes/twentyseventeen/template-parts/page/content-front-page.php",
+        "/wp-content/themes/twentyseventeen/template-parts/page/content-page.php",
         "/wp-content/themes/twentysixteen/comments.php",
         "/wp-content/themes/twentysixteen/single.php",
         "/wp-content/themes/twentysixteen/sidebar-content-bottom.php",
@@ -2645,6 +2650,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentyseventeen/template-parts/post/content-video.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/post/content-gallery.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/post/content-image.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/page/content-front-page-panels.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/page/content-front-page.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/page/content-page.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentysixteen/comments.php"));
         assert!(settings.should_route("/wp-content/themes/twentysixteen/single.php"));
