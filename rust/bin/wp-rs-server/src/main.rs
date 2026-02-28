@@ -1534,6 +1534,26 @@ async fn main() {
             any(style_engine_class_wp_style_engine_css_rules_store_include_live_dispatch),
         )
         .route(
+            "/wp-includes/Text/Diff/Engine/xdiff.php",
+            any(text_diff_engine_xdiff_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/style-engine/class-wp-style-engine-css-declarations.php",
+            any(style_engine_class_wp_style_engine_css_declarations_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/Text/Diff/Engine/native.php",
+            any(text_diff_engine_native_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/style-engine/class-wp-style-engine.php",
+            any(style_engine_class_wp_style_engine_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/build/pages.php",
+            any(build_pages_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11884,6 +11904,28 @@ async fn style_engine_class_wp_style_engine_css_rule_include_live_dispatch(
 async fn style_engine_class_wp_style_engine_css_rules_store_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn text_diff_engine_xdiff_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn style_engine_class_wp_style_engine_css_declarations_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn text_diff_engine_native_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn style_engine_class_wp_style_engine_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_pages_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Text/Diff/Engine/native.php' );
+if ( '/wp-includes/Text/Diff/Engine/native.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Class used internally by Text_Diff to actually compute the diffs.
  *

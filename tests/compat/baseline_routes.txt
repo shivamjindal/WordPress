@@ -407,6 +407,11 @@ GET /wp-includes/Text/Diff/Engine/string.php
 GET /wp-includes/Text/Diff/Engine/shell.php
 GET /wp-includes/style-engine/class-wp-style-engine-css-rule.php
 GET /wp-includes/style-engine/class-wp-style-engine-css-rules-store.php
+GET /wp-includes/Text/Diff/Engine/xdiff.php
+GET /wp-includes/style-engine/class-wp-style-engine-css-declarations.php
+GET /wp-includes/Text/Diff/Engine/native.php
+GET /wp-includes/style-engine/class-wp-style-engine.php
+GET /wp-includes/build/pages.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
