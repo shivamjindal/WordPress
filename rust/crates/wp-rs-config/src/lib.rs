@@ -579,6 +579,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Text/Diff/Engine/native.php",
         "/wp-includes/style-engine/class-wp-style-engine.php",
         "/wp-includes/build/pages.php",
+        "/wp-includes/build/routes.php",
+        "/wp-includes/php-compat/readonly.php",
+        "/wp-includes/l10n/class-wp-translation-file-php.php",
+        "/wp-includes/l10n/class-wp-translation-file-mo.php",
+        "/wp-includes/l10n/class-wp-translation-controller.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1758,6 +1763,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/Text/Diff/Engine/native.php"));
         assert!(settings.should_route("/wp-includes/style-engine/class-wp-style-engine.php"));
         assert!(settings.should_route("/wp-includes/build/pages.php"));
+        assert!(settings.should_route("/wp-includes/build/routes.php"));
+        assert!(settings.should_route("/wp-includes/php-compat/readonly.php"));
+        assert!(settings.should_route("/wp-includes/l10n/class-wp-translation-file-php.php"));
+        assert!(settings.should_route("/wp-includes/l10n/class-wp-translation-file-mo.php"));
+        assert!(settings.should_route("/wp-includes/l10n/class-wp-translation-controller.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

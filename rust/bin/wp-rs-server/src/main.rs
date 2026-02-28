@@ -1554,6 +1554,26 @@ async fn main() {
             any(build_pages_include_live_dispatch),
         )
         .route(
+            "/wp-includes/build/routes.php",
+            any(build_routes_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/php-compat/readonly.php",
+            any(php_compat_readonly_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/l10n/class-wp-translation-file-php.php",
+            any(l10n_class_wp_translation_file_php_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/l10n/class-wp-translation-file-mo.php",
+            any(l10n_class_wp_translation_file_mo_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/l10n/class-wp-translation-controller.php",
+            any(l10n_class_wp_translation_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11926,6 +11946,26 @@ async fn style_engine_class_wp_style_engine_include_live_dispatch(_request: Requ
 }
 
 async fn build_pages_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn build_routes_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn php_compat_readonly_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_class_wp_translation_file_php_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_class_wp_translation_file_mo_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn l10n_class_wp_translation_controller_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

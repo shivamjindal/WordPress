@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/php-compat/readonly.php' );
+if ( '/wp-includes/php-compat/readonly.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Conditionally declares a `readonly()` function, which was renamed
  * to `wp_readonly()` in WordPress 5.9.0.

@@ -412,6 +412,11 @@ GET /wp-includes/style-engine/class-wp-style-engine-css-declarations.php
 GET /wp-includes/Text/Diff/Engine/native.php
 GET /wp-includes/style-engine/class-wp-style-engine.php
 GET /wp-includes/build/pages.php
+GET /wp-includes/build/routes.php
+GET /wp-includes/php-compat/readonly.php
+GET /wp-includes/l10n/class-wp-translation-file-php.php
+GET /wp-includes/l10n/class-wp-translation-file-mo.php
+GET /wp-includes/l10n/class-wp-translation-controller.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php
