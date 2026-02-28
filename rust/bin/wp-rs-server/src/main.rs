@@ -1942,6 +1942,26 @@ async fn main() {
             any(sodium_compat_lib_php84compat_const_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-background-image-control.php",
+            any(customize_class_wp_customize_background_image_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-filter-setting.php",
+            any(customize_class_wp_customize_filter_setting_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-sidebar-section.php",
+            any(customize_class_wp_customize_sidebar_section_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-section.php",
+            any(customize_class_wp_customize_nav_menu_section_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-upload-control.php",
+            any(customize_class_wp_customize_upload_control_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12806,6 +12826,36 @@ async fn sodium_compat_lib_php84compat_include_live_dispatch(_request: Request) 
 }
 
 async fn sodium_compat_lib_php84compat_const_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_background_image_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_filter_setting_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_sidebar_section_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_section_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_upload_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

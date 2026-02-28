@@ -509,6 +509,11 @@ GET /wp-includes/customize/class-wp-widget-area-customize-control.php
 GET /wp-includes/customize/class-wp-customize-nav-menu-locations-control.php
 GET /wp-includes/sodium_compat/lib/php84compat.php
 GET /wp-includes/sodium_compat/lib/php84compat_const.php
+GET /wp-includes/customize/class-wp-customize-background-image-control.php
+GET /wp-includes/customize/class-wp-customize-filter-setting.php
+GET /wp-includes/customize/class-wp-customize-sidebar-section.php
+GET /wp-includes/customize/class-wp-customize-nav-menu-section.php
+GET /wp-includes/customize/class-wp-customize-upload-control.php
 GET /wp-includes/block-supports/block-style-variations.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php
 GET /wp-includes/block-supports/background.php

@@ -676,6 +676,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/customize/class-wp-customize-nav-menu-locations-control.php",
         "/wp-includes/sodium_compat/lib/php84compat.php",
         "/wp-includes/sodium_compat/lib/php84compat_const.php",
+        "/wp-includes/customize/class-wp-customize-background-image-control.php",
+        "/wp-includes/customize/class-wp-customize-filter-setting.php",
+        "/wp-includes/customize/class-wp-customize-sidebar-section.php",
+        "/wp-includes/customize/class-wp-customize-nav-menu-section.php",
+        "/wp-includes/customize/class-wp-customize-upload-control.php",
         "/wp-includes/block-supports/block-style-variations.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
         "/wp-includes/block-supports/background.php",
@@ -2004,6 +2009,21 @@ mod tests {
         ));
         assert!(settings.should_route("/wp-includes/sodium_compat/lib/php84compat.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/lib/php84compat_const.php"));
+        assert!(settings.should_route(
+            "/wp-includes/customize/class-wp-customize-background-image-control.php"
+        ));
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-filter-setting.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-sidebar-section.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-nav-menu-section.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-upload-control.php")
+        );
         assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
         assert!(
             settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php")
