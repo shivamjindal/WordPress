@@ -631,6 +631,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-supports/anchor.php",
         "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php",
         "/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php",
+        "/wp-includes/customize/class-wp-customize-color-control.php",
+        "/wp-includes/rest-api/search/class-wp-rest-post-search-handler.php",
+        "/wp-includes/customize/class-wp-sidebar-block-editor-control.php",
+        "/wp-includes/rest-api/search/class-wp-rest-search-handler.php",
+        "/wp-includes/customize/class-wp-customize-new-menu-section.php",
         "/wp-includes/block-supports/block-style-variations.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
         "/wp-includes/block-supports/background.php",
@@ -1886,6 +1891,19 @@ mod tests {
         ));
         assert!(settings
             .should_route("/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php"));
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-color-control.php")
+        );
+        assert!(settings
+            .should_route("/wp-includes/rest-api/search/class-wp-rest-post-search-handler.php"));
+        assert!(settings
+            .should_route("/wp-includes/customize/class-wp-sidebar-block-editor-control.php"));
+        assert!(
+            settings.should_route("/wp-includes/rest-api/search/class-wp-rest-search-handler.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-new-menu-section.php")
+        );
         assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
         assert!(
             settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php")

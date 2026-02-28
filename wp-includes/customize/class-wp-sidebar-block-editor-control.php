@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/customize/class-wp-sidebar-block-editor-control.php' );
+if ( '/wp-includes/customize/class-wp-sidebar-block-editor-control.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Customize API: WP_Sidebar_Block_Editor_Control class.
  *
