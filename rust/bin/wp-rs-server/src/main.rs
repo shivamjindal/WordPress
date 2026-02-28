@@ -1734,6 +1734,26 @@ async fn main() {
             any(block_supports_elements_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php",
+            any(rest_api_search_class_wp_rest_post_format_search_handler_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php",
+            any(rest_api_search_class_wp_rest_term_search_handler_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/block-style-variations.php",
+            any(block_supports_block_style_variations_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
+            any(sodium_compat_namespaced_core_curve25519_fe_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/background.php",
+            any(block_supports_background_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12318,6 +12338,34 @@ async fn block_supports_generated_classname_include_live_dispatch(_request: Requ
 }
 
 async fn block_supports_elements_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_search_class_wp_rest_post_format_search_handler_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_search_class_wp_rest_term_search_handler_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_block_style_variations_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_fe_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_background_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

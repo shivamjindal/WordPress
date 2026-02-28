@@ -457,6 +457,11 @@ GET /wp-includes/block-supports/settings.php
 GET /wp-includes/block-supports/dimensions.php
 GET /wp-includes/block-supports/generated-classname.php
 GET /wp-includes/block-supports/elements.php
+GET /wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php
+GET /wp-includes/rest-api/search/class-wp-rest-term-search-handler.php
+GET /wp-includes/block-supports/block-style-variations.php
+GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php
+GET /wp-includes/block-supports/background.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

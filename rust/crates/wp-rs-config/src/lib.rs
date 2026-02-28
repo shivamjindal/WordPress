@@ -624,6 +624,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-supports/dimensions.php",
         "/wp-includes/block-supports/generated-classname.php",
         "/wp-includes/block-supports/elements.php",
+        "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php",
+        "/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php",
+        "/wp-includes/block-supports/block-style-variations.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
+        "/wp-includes/block-supports/background.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1866,6 +1871,16 @@ mod tests {
         assert!(settings.should_route("/wp-includes/block-supports/dimensions.php"));
         assert!(settings.should_route("/wp-includes/block-supports/generated-classname.php"));
         assert!(settings.should_route("/wp-includes/block-supports/elements.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php"
+        ));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
+        assert!(
+            settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php")
+        );
+        assert!(settings.should_route("/wp-includes/block-supports/background.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
