@@ -831,6 +831,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/widgets/class-wp-widget-block.php",
         "/wp-includes/widgets/class-wp-widget-search.php",
         "/wp-includes/widgets/class-wp-widget-tag-cloud.php",
+        "/wp-includes/html-api/class-wp-html-tag-processor.php",
+        "/wp-includes/html-api/class-wp-html-token.php",
+        "/wp-includes/html-api/class-wp-html-decoder.php",
+        "/wp-includes/html-api/class-wp-html-span.php",
+        "/wp-includes/html-api/class-wp-html-stack-event.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2431,6 +2436,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-block.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-search.php"));
         assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-tag-cloud.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-tag-processor.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-token.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-decoder.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-span.php"));
+        assert!(settings.should_route("/wp-includes/html-api/class-wp-html-stack-event.php"));
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings

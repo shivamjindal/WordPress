@@ -2562,6 +2562,26 @@ async fn main() {
             any(widgets_class_wp_widget_tag_cloud_include_live_dispatch),
         )
         .route(
+            "/wp-includes/html-api/class-wp-html-tag-processor.php",
+            any(html_api_class_wp_html_tag_processor_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-token.php",
+            any(html_api_class_wp_html_token_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-decoder.php",
+            any(html_api_class_wp_html_decoder_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-span.php",
+            any(html_api_class_wp_html_span_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-stack-event.php",
+            any(html_api_class_wp_html_stack_event_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14256,6 +14276,26 @@ async fn widgets_class_wp_widget_search_include_live_dispatch(_request: Request)
 }
 
 async fn widgets_class_wp_widget_tag_cloud_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_tag_processor_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_token_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_decoder_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_span_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_stack_event_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
