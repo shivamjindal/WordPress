@@ -574,6 +574,11 @@ GET /wp-includes/customize/class-wp-customize-nav-menu-location-control.php
 GET /wp-includes/sodium_compat/src/Core/HChaCha20.php
 GET /wp-includes/sodium_compat/src/Core/Curve25519/Ge/P3.php
 GET /wp-includes/sodium_compat/src/Core/Curve25519/Ge/Precomp.php
+GET /wp-includes/sodium_compat/src/Core/Curve25519/Ge/P1p1.php
+GET /wp-includes/sodium_compat/src/Core/Curve25519/Ge/P2.php
+GET /wp-includes/sodium_compat/src/Core/Curve25519/Ge/Cached.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-template-autosaves-controller.php
+GET /wp-includes/sodium_compat/src/Core/Curve25519/H.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
