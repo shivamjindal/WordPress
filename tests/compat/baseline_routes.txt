@@ -819,6 +819,11 @@ GET /wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-custom-co
 GET /wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-dark-mode.php
 GET /wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize-notice-control.php
 GET /wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-svg-icons.php
+GET /wp-content/themes/twentytwentyone/classes/class-twenty-twenty-one-customize-color-control.php
+GET /wp-content/themes/twentytwentyone/single.php
+GET /wp-content/themes/twentytwentyone/inc/custom-css.php
+GET /wp-content/themes/twentytwentyone/inc/back-compat.php
+GET /wp-content/themes/twentytwentyone/inc/block-patterns.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
