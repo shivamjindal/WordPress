@@ -664,6 +664,11 @@ GET /wp-includes/widgets/class-wp-nav-menu-widget.php
 GET /wp-includes/widgets/class-wp-widget-media-audio.php
 GET /wp-includes/widgets/class-wp-widget-links.php
 GET /wp-includes/widgets/class-wp-widget-recent-comments.php
+GET /wp-includes/widgets/class-wp-widget-archives.php
+GET /wp-includes/widgets/class-wp-widget-media.php
+GET /wp-includes/widgets/class-wp-widget-block.php
+GET /wp-includes/widgets/class-wp-widget-search.php
+GET /wp-includes/widgets/class-wp-widget-tag-cloud.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

@@ -2542,6 +2542,26 @@ async fn main() {
             any(widgets_class_wp_widget_recent_comments_include_live_dispatch),
         )
         .route(
+            "/wp-includes/widgets/class-wp-widget-archives.php",
+            any(widgets_class_wp_widget_archives_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-media.php",
+            any(widgets_class_wp_widget_media_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-block.php",
+            any(widgets_class_wp_widget_block_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-search.php",
+            any(widgets_class_wp_widget_search_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-tag-cloud.php",
+            any(widgets_class_wp_widget_tag_cloud_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14216,6 +14236,26 @@ async fn widgets_class_wp_widget_links_include_live_dispatch(_request: Request) 
 async fn widgets_class_wp_widget_recent_comments_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_archives_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_media_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_block_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_search_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_tag_cloud_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
