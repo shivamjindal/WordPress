@@ -1862,6 +1862,26 @@ async fn main() {
             any(customize_class_wp_customize_nav_menu_setting_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/lib/sodium_compat.php",
+            any(sodium_compat_lib_sodium_compat_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Ed25519.php",
+            any(sodium_compat_src_core_ed25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Util.php",
+            any(sodium_compat_src_core_util_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-themes-section.php",
+            any(customize_class_wp_customize_themes_section_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-image-control.php",
+            any(customize_class_wp_customize_image_control_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12626,6 +12646,30 @@ async fn customize_class_wp_customize_custom_css_setting_include_live_dispatch(
 }
 
 async fn customize_class_wp_customize_nav_menu_setting_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_sodium_compat_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_ed25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_util_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_themes_section_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_image_control_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

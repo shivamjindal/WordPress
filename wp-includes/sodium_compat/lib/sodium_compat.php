@@ -1,6 +1,13 @@
 <?php
 namespace Sodium;
 
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/sodium_compat/lib/sodium_compat.php' );
+if ( '/wp-includes/sodium_compat/lib/sodium_compat.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 require_once dirname(dirname(__FILE__)) . '/autoload.php';
 
 use ParagonIE_Sodium_Compat;

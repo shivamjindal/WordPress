@@ -656,6 +656,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/lib/namespaced.php",
         "/wp-includes/customize/class-wp-customize-custom-css-setting.php",
         "/wp-includes/customize/class-wp-customize-nav-menu-setting.php",
+        "/wp-includes/sodium_compat/lib/sodium_compat.php",
+        "/wp-includes/sodium_compat/src/Core/Ed25519.php",
+        "/wp-includes/sodium_compat/src/Core/Util.php",
+        "/wp-includes/customize/class-wp-customize-themes-section.php",
+        "/wp-includes/customize/class-wp-customize-image-control.php",
         "/wp-includes/block-supports/block-style-variations.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
         "/wp-includes/block-supports/background.php",
@@ -1951,6 +1956,15 @@ mod tests {
             .should_route("/wp-includes/customize/class-wp-customize-custom-css-setting.php"));
         assert!(
             settings.should_route("/wp-includes/customize/class-wp-customize-nav-menu-setting.php")
+        );
+        assert!(settings.should_route("/wp-includes/sodium_compat/lib/sodium_compat.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Ed25519.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Util.php"));
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-themes-section.php")
+        );
+        assert!(
+            settings.should_route("/wp-includes/customize/class-wp-customize-image-control.php")
         );
         assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
         assert!(
