@@ -709,6 +709,11 @@ GET /wp-content/themes/twentyfifteen/inc/customizer.php
 GET /wp-content/themes/twentyfifteen/inc/block-patterns.php
 GET /wp-content/themes/twentyfifteen/inc/template-tags.php
 GET /wp-content/themes/twentyfifteen/author-bio.php
+GET /wp-content/themes/twentyfifteen/search.php
+GET /wp-content/themes/twentyfifteen/functions.php
+GET /wp-content/themes/twentyfifteen/header.php
+GET /wp-content/themes/twentyfifteen/404.php
+GET /wp-content/themes/twentyfifteen/page.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php
