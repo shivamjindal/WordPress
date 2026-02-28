@@ -2922,6 +2922,26 @@ async fn main() {
             any(wp_content_themes_twentyeleven_sidebar_page_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyeleven/inc/block-patterns.php",
+            any(wp_content_themes_twentyeleven_inc_block_patterns_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/inc/widgets.php",
+            any(wp_content_themes_twentyeleven_inc_widgets_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/inc/theme-options.php",
+            any(wp_content_themes_twentyeleven_inc_theme_options_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/search.php",
+            any(wp_content_themes_twentyeleven_search_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/category.php",
+            any(wp_content_themes_twentyeleven_category_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -15042,6 +15062,30 @@ async fn wp_content_themes_twentyeleven_single_live_dispatch(_request: Request) 
 }
 
 async fn wp_content_themes_twentyeleven_sidebar_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_inc_block_patterns_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_inc_widgets_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_inc_theme_options_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_search_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_category_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
