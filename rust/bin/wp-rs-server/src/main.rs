@@ -1882,6 +1882,26 @@ async fn main() {
             any(customize_class_wp_customize_image_control_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/fields/class-wp-rest-user-meta-fields.php",
+            any(rest_api_fields_class_wp_rest_user_meta_fields_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/fields/class-wp-rest-meta-fields.php",
+            any(rest_api_fields_class_wp_rest_meta_fields_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/fields/class-wp-rest-term-meta-fields.php",
+            any(rest_api_fields_class_wp_rest_term_meta_fields_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-font-collections-controller.php",
+            any(rest_api_endpoints_class_wp_rest_font_collections_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/footer-embed.php",
+            any(theme_compat_footer_embed_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12672,6 +12692,34 @@ async fn customize_class_wp_customize_themes_section_include_live_dispatch(
 async fn customize_class_wp_customize_image_control_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_fields_class_wp_rest_user_meta_fields_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_fields_class_wp_rest_meta_fields_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_fields_class_wp_rest_term_meta_fields_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_font_collections_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_footer_embed_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

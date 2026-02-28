@@ -661,6 +661,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/src/Core/Util.php",
         "/wp-includes/customize/class-wp-customize-themes-section.php",
         "/wp-includes/customize/class-wp-customize-image-control.php",
+        "/wp-includes/rest-api/fields/class-wp-rest-user-meta-fields.php",
+        "/wp-includes/rest-api/fields/class-wp-rest-meta-fields.php",
+        "/wp-includes/rest-api/fields/class-wp-rest-term-meta-fields.php",
+        "/wp-includes/rest-api/endpoints/class-wp-rest-font-collections-controller.php",
+        "/wp-includes/theme-compat/footer-embed.php",
         "/wp-includes/block-supports/block-style-variations.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php",
         "/wp-includes/block-supports/background.php",
@@ -1966,6 +1971,15 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/customize/class-wp-customize-image-control.php")
         );
+        assert!(settings
+            .should_route("/wp-includes/rest-api/fields/class-wp-rest-user-meta-fields.php"));
+        assert!(settings.should_route("/wp-includes/rest-api/fields/class-wp-rest-meta-fields.php"));
+        assert!(settings
+            .should_route("/wp-includes/rest-api/fields/class-wp-rest-term-meta-fields.php"));
+        assert!(settings.should_route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-font-collections-controller.php"
+        ));
+        assert!(settings.should_route("/wp-includes/theme-compat/footer-embed.php"));
         assert!(settings.should_route("/wp-includes/block-supports/block-style-variations.php"));
         assert!(
             settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php")
