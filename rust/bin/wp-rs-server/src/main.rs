@@ -1782,6 +1782,26 @@ async fn main() {
             any(customize_class_wp_customize_new_menu_section_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/fields/class-wp-rest-comment-meta-fields.php",
+            any(rest_api_fields_class_wp_rest_comment_meta_fields_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/fields/class-wp-rest-post-meta-fields.php",
+            any(rest_api_fields_class_wp_rest_post_meta_fields_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Salsa20.php",
+            any(sodium_compat_namespaced_core_salsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/theme-compat/comments.php",
+            any(theme_compat_comments_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Xsalsa20.php",
+            any(sodium_compat_namespaced_core_xsalsa20_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12438,6 +12458,34 @@ async fn rest_api_search_class_wp_rest_search_handler_include_live_dispatch(
 }
 
 async fn customize_class_wp_customize_new_menu_section_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_fields_class_wp_rest_comment_meta_fields_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_fields_class_wp_rest_post_meta_fields_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_salsa20_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn theme_compat_comments_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_xsalsa20_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
