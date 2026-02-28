@@ -2202,6 +2202,26 @@ async fn main() {
             any(sodium_compat_src_core_curve25519_h_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-widgets-controller.php",
+            any(rest_api_endpoints_class_wp_rest_widgets_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-global-styles-revisions-controller.php",
+            any(rest_api_endpoints_class_wp_rest_global_styles_revisions_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-comments-controller.php",
+            any(rest_api_endpoints_class_wp_rest_comments_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-controller.php",
+            any(rest_api_endpoints_class_wp_rest_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-sidebars-controller.php",
+            any(rest_api_endpoints_class_wp_rest_sidebars_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13456,6 +13476,36 @@ async fn rest_api_endpoints_class_wp_rest_template_autosaves_controller_include_
 }
 
 async fn sodium_compat_src_core_curve25519_h_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_widgets_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_global_styles_revisions_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_comments_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_sidebars_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
