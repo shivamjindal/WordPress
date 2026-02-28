@@ -609,6 +609,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P1p1.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P2.php",
         "/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Cached.php",
+        "/wp-includes/interactivity-api/class-wp-interactivity-api.php",
+        "/wp-includes/interactivity-api/interactivity-api.php",
+        "/wp-includes/interactivity-api/class-wp-interactivity-api-directives-processor.php",
+        "/wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Curve25519/H.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1828,6 +1833,17 @@ mod tests {
             .should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P2.php"));
         assert!(settings
             .should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Cached.php"));
+        assert!(
+            settings.should_route("/wp-includes/interactivity-api/class-wp-interactivity-api.php")
+        );
+        assert!(settings.should_route("/wp-includes/interactivity-api/interactivity-api.php"));
+        assert!(settings.should_route(
+            "/wp-includes/interactivity-api/class-wp-interactivity-api-directives-processor.php"
+        ));
+        assert!(settings.should_route("/wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php"));
+        assert!(
+            settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519/H.php")
+        );
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

@@ -442,6 +442,11 @@ GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Precomp.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P1p1.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/P2.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Ge/Cached.php
+GET /wp-includes/interactivity-api/class-wp-interactivity-api.php
+GET /wp-includes/interactivity-api/interactivity-api.php
+GET /wp-includes/interactivity-api/class-wp-interactivity-api-directives-processor.php
+GET /wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php
+GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/H.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

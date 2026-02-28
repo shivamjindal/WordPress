@@ -1674,6 +1674,26 @@ async fn main() {
             any(sodium_compat_namespaced_core_curve25519_ge_cached_include_live_dispatch),
         )
         .route(
+            "/wp-includes/interactivity-api/class-wp-interactivity-api.php",
+            any(interactivity_api_class_wp_interactivity_api_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/interactivity-api/interactivity-api.php",
+            any(interactivity_api_interactivity_api_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/interactivity-api/class-wp-interactivity-api-directives-processor.php",
+            any(interactivity_api_class_wp_interactivity_api_directives_processor_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php",
+            any(sitemaps_class_wp_sitemaps_stylesheet_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519/H.php",
+            any(sodium_compat_namespaced_core_curve25519_h_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12186,6 +12206,34 @@ async fn sodium_compat_namespaced_core_curve25519_ge_p2_include_live_dispatch(
 }
 
 async fn sodium_compat_namespaced_core_curve25519_ge_cached_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn interactivity_api_class_wp_interactivity_api_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn interactivity_api_interactivity_api_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn interactivity_api_class_wp_interactivity_api_directives_processor_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_stylesheet_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_h_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

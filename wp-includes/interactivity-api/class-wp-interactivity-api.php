@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/interactivity-api/class-wp-interactivity-api.php' );
+if ( '/wp-includes/interactivity-api/class-wp-interactivity-api.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Interactivity API: WP_Interactivity_API class.
  *
