@@ -569,6 +569,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/Text/Exception.php",
         "/wp-includes/Text/Diff/Renderer.php",
         "/wp-includes/style-engine/class-wp-style-engine-processor.php",
+        "/wp-includes/Text/Diff/Renderer/inline.php",
+        "/wp-includes/Text/Diff/Engine/string.php",
+        "/wp-includes/Text/Diff/Engine/shell.php",
+        "/wp-includes/style-engine/class-wp-style-engine-css-rule.php",
+        "/wp-includes/style-engine/class-wp-style-engine-css-rules-store.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1734,6 +1739,14 @@ mod tests {
         assert!(
             settings.should_route("/wp-includes/style-engine/class-wp-style-engine-processor.php")
         );
+        assert!(settings.should_route("/wp-includes/Text/Diff/Renderer/inline.php"));
+        assert!(settings.should_route("/wp-includes/Text/Diff/Engine/string.php"));
+        assert!(settings.should_route("/wp-includes/Text/Diff/Engine/shell.php"));
+        assert!(
+            settings.should_route("/wp-includes/style-engine/class-wp-style-engine-css-rule.php")
+        );
+        assert!(settings
+            .should_route("/wp-includes/style-engine/class-wp-style-engine-css-rules-store.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

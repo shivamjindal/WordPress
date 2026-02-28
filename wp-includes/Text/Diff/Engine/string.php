@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/Text/Diff/Engine/string.php' );
+if ( '/wp-includes/Text/Diff/Engine/string.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Parses unified or context diffs output from eg. the diff utility.
  *
