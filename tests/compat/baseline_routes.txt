@@ -457,6 +457,11 @@ GET /wp-includes/block-supports/settings.php
 GET /wp-includes/block-supports/dimensions.php
 GET /wp-includes/block-supports/generated-classname.php
 GET /wp-includes/block-supports/elements.php
+GET /wp-includes/block-supports/position.php
+GET /wp-includes/block-supports/block-visibility.php
+GET /wp-includes/block-supports/layout.php
+GET /wp-includes/block-supports/typography.php
+GET /wp-includes/block-supports/anchor.php
 GET /wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php
 GET /wp-includes/rest-api/search/class-wp-rest-term-search-handler.php
 GET /wp-includes/block-supports/block-style-variations.php

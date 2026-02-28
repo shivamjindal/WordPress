@@ -1734,6 +1734,26 @@ async fn main() {
             any(block_supports_elements_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-supports/position.php",
+            any(block_supports_position_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/block-visibility.php",
+            any(block_supports_block_visibility_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/layout.php",
+            any(block_supports_layout_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/typography.php",
+            any(block_supports_typography_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/anchor.php",
+            any(block_supports_anchor_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php",
             any(rest_api_search_class_wp_rest_post_format_search_handler_include_live_dispatch),
         )
@@ -12338,6 +12358,26 @@ async fn block_supports_generated_classname_include_live_dispatch(_request: Requ
 }
 
 async fn block_supports_elements_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_position_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_block_visibility_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_layout_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_typography_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_anchor_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

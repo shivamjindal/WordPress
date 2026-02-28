@@ -624,6 +624,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-supports/dimensions.php",
         "/wp-includes/block-supports/generated-classname.php",
         "/wp-includes/block-supports/elements.php",
+        "/wp-includes/block-supports/position.php",
+        "/wp-includes/block-supports/block-visibility.php",
+        "/wp-includes/block-supports/layout.php",
+        "/wp-includes/block-supports/typography.php",
+        "/wp-includes/block-supports/anchor.php",
         "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php",
         "/wp-includes/rest-api/search/class-wp-rest-term-search-handler.php",
         "/wp-includes/block-supports/block-style-variations.php",
@@ -1871,6 +1876,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/block-supports/dimensions.php"));
         assert!(settings.should_route("/wp-includes/block-supports/generated-classname.php"));
         assert!(settings.should_route("/wp-includes/block-supports/elements.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/position.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/block-visibility.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/layout.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/typography.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/anchor.php"));
         assert!(settings.should_route(
             "/wp-includes/rest-api/search/class-wp-rest-post-format-search-handler.php"
         ));
