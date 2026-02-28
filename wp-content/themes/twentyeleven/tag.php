@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentyeleven/tag.php' );
+if ( '/wp-content/themes/twentyeleven/tag.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Template used to display Tag Archive pages
  *

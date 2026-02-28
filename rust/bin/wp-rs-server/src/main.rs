@@ -2902,6 +2902,26 @@ async fn main() {
             any(wp_content_themes_twentyeleven_showcase_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyeleven/tag.php",
+            any(wp_content_themes_twentyeleven_tag_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/sidebar-footer.php",
+            any(wp_content_themes_twentyeleven_sidebar_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-status.php",
+            any(wp_content_themes_twentyeleven_content_status_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/single.php",
+            any(wp_content_themes_twentyeleven_single_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/sidebar-page.php",
+            any(wp_content_themes_twentyeleven_sidebar_page_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14998,6 +15018,30 @@ async fn wp_content_themes_twentyeleven_content_live_dispatch(_request: Request)
 }
 
 async fn wp_content_themes_twentyeleven_showcase_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_tag_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_sidebar_footer_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_status_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_single_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_sidebar_page_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
