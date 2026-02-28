@@ -1021,6 +1021,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwenty/classes/class-twentytwenty-script-loader.php",
         "/wp-content/themes/twentytwenty/classes/class-twentytwenty-separator-control.php",
         "/wp-content/themes/twentytwenty/inc/custom-css.php",
+        "/wp-content/themes/twentyten/loop-page.php",
+        "/wp-content/themes/twentyten/index.php",
+        "/wp-content/themes/twentyten/archive.php",
+        "/wp-content/themes/twentyten/loop-single.php",
+        "/wp-content/themes/twentyten/loop.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2944,6 +2949,11 @@ mod tests {
             "/wp-content/themes/twentytwenty/classes/class-twentytwenty-separator-control.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentytwenty/inc/custom-css.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyten/loop-page.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyten/index.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyten/archive.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyten/loop-single.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyten/loop.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/index.php"));
