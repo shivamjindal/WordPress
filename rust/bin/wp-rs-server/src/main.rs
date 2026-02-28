@@ -1574,6 +1574,26 @@ async fn main() {
             any(l10n_class_wp_translation_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps-renderer.php",
+            any(sitemaps_class_wp_sitemaps_renderer_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/class-wp-sitemaps-provider.php",
+            any(sitemaps_class_wp_sitemaps_provider_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/providers/class-wp-sitemaps-taxonomies.php",
+            any(sitemaps_providers_class_wp_sitemaps_taxonomies_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/providers/class-wp-sitemaps-users.php",
+            any(sitemaps_providers_class_wp_sitemaps_users_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sitemaps/providers/class-wp-sitemaps-posts.php",
+            any(sitemaps_providers_class_wp_sitemaps_posts_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11966,6 +11986,32 @@ async fn l10n_class_wp_translation_file_mo_include_live_dispatch(_request: Reque
 }
 
 async fn l10n_class_wp_translation_controller_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_renderer_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_class_wp_sitemaps_provider_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_providers_class_wp_sitemaps_taxonomies_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_providers_class_wp_sitemaps_users_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sitemaps_providers_class_wp_sitemaps_posts_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

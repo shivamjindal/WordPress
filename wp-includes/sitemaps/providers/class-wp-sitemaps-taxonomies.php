@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/sitemaps/providers/class-wp-sitemaps-taxonomies.php' );
+if ( '/wp-includes/sitemaps/providers/class-wp-sitemaps-taxonomies.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Sitemaps: WP_Sitemaps_Taxonomies class
  *
