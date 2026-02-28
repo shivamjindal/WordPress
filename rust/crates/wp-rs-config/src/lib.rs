@@ -619,6 +619,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-supports/colors.php",
         "/wp-includes/sodium_compat/namespaced/Crypto.php",
         "/wp-includes/block-supports/align.php",
+        "/wp-includes/block-supports/shadow.php",
+        "/wp-includes/block-supports/settings.php",
+        "/wp-includes/block-supports/dimensions.php",
+        "/wp-includes/block-supports/generated-classname.php",
+        "/wp-includes/block-supports/elements.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1856,6 +1861,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/block-supports/colors.php"));
         assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Crypto.php"));
         assert!(settings.should_route("/wp-includes/block-supports/align.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/shadow.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/settings.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/dimensions.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/generated-classname.php"));
+        assert!(settings.should_route("/wp-includes/block-supports/elements.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));

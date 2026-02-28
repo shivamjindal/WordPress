@@ -452,6 +452,11 @@ GET /wp-includes/sodium_compat/namespaced/Core/Poly1305/State.php
 GET /wp-includes/block-supports/colors.php
 GET /wp-includes/sodium_compat/namespaced/Crypto.php
 GET /wp-includes/block-supports/align.php
+GET /wp-includes/block-supports/shadow.php
+GET /wp-includes/block-supports/settings.php
+GET /wp-includes/block-supports/dimensions.php
+GET /wp-includes/block-supports/generated-classname.php
+GET /wp-includes/block-supports/elements.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

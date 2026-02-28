@@ -1714,6 +1714,26 @@ async fn main() {
             any(block_supports_align_include_live_dispatch),
         )
         .route(
+            "/wp-includes/block-supports/shadow.php",
+            any(block_supports_shadow_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/settings.php",
+            any(block_supports_settings_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/dimensions.php",
+            any(block_supports_dimensions_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/generated-classname.php",
+            any(block_supports_generated_classname_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/block-supports/elements.php",
+            any(block_supports_elements_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12278,6 +12298,26 @@ async fn sodium_compat_namespaced_crypto_include_live_dispatch(_request: Request
 }
 
 async fn block_supports_align_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_shadow_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_settings_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_dimensions_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_generated_classname_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn block_supports_elements_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
