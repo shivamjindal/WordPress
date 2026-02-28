@@ -2082,6 +2082,26 @@ async fn main() {
             any(customize_class_wp_customize_partial_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-post-types-controller.php",
+            any(rest_api_endpoints_class_wp_rest_post_types_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-block-patterns-controller.php",
+            any(rest_api_endpoints_class_wp_rest_block_patterns_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php",
+            any(rest_api_endpoints_class_wp_rest_plugins_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AES/Expanded.php",
+            any(sodium_compat_src_core_aes_expanded_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-pattern-directory-controller.php",
+            any(rest_api_endpoints_class_wp_rest_pattern_directory_controller_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13168,6 +13188,34 @@ async fn customize_class_wp_customize_background_position_control_include_live_d
 }
 
 async fn customize_class_wp_customize_partial_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_post_types_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_block_patterns_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_plugins_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aes_expanded_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_pattern_directory_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
