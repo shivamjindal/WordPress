@@ -2322,6 +2322,26 @@ async fn main() {
             any(sodium_compat_src_core_aegis256_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Crypto.php",
+            any(sodium_compat_src_crypto_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Ed25519.php",
+            any(sodium_compat_src_core32_ed25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Util.php",
+            any(sodium_compat_src_core32_util_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/XSalsa20.php",
+            any(sodium_compat_src_core32_xsalsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core32/Curve25519.php",
+            any(sodium_compat_src_core32_curve25519_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13726,6 +13746,26 @@ async fn sodium_compat_src_core_aes_include_live_dispatch(_request: Request) -> 
 }
 
 async fn sodium_compat_src_core_aegis256_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_crypto_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_ed25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_util_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_xsalsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core32_curve25519_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
