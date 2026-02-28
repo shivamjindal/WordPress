@@ -674,6 +674,11 @@ GET /wp-includes/html-api/class-wp-html-token.php
 GET /wp-includes/html-api/class-wp-html-decoder.php
 GET /wp-includes/html-api/class-wp-html-span.php
 GET /wp-includes/html-api/class-wp-html-stack-event.php
+GET /wp-includes/html-api/class-wp-html-attribute-token.php
+GET /wp-includes/widgets/class-wp-widget-custom-html.php
+GET /wp-includes/html-api/class-wp-html-open-elements.php
+GET /wp-includes/widgets/class-wp-widget-media-gallery.php
+GET /wp-includes/widgets/class-wp-widget-text.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

@@ -2582,6 +2582,26 @@ async fn main() {
             any(html_api_class_wp_html_stack_event_include_live_dispatch),
         )
         .route(
+            "/wp-includes/html-api/class-wp-html-attribute-token.php",
+            any(html_api_class_wp_html_attribute_token_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-custom-html.php",
+            any(widgets_class_wp_widget_custom_html_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-open-elements.php",
+            any(html_api_class_wp_html_open_elements_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-media-gallery.php",
+            any(widgets_class_wp_widget_media_gallery_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-text.php",
+            any(widgets_class_wp_widget_text_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14296,6 +14316,30 @@ async fn html_api_class_wp_html_span_include_live_dispatch(_request: Request) ->
 }
 
 async fn html_api_class_wp_html_stack_event_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_attribute_token_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_custom_html_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_open_elements_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_media_gallery_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_text_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
