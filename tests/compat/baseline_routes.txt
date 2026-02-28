@@ -604,6 +604,11 @@ GET /wp-includes/sodium_compat/src/Core/ChaCha20/Ctx.php
 GET /wp-includes/sodium_compat/src/Core/ChaCha20/IetfCtx.php
 GET /wp-includes/sodium_compat/src/Core/Poly1305.php
 GET /wp-includes/sodium_compat/src/Core/SipHash.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-terms-controller.php
+GET /wp-includes/rest-api/endpoints/class-wp-rest-taxonomies-controller.php
+GET /wp-includes/sodium_compat/src/Core/HSalsa20.php
+GET /wp-includes/sodium_compat/src/Core/AES.php
+GET /wp-includes/sodium_compat/src/Core/AEGIS256.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

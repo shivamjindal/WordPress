@@ -2302,6 +2302,26 @@ async fn main() {
             any(sodium_compat_src_core_sip_hash_include_live_dispatch),
         )
         .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-terms-controller.php",
+            any(rest_api_endpoints_class_wp_rest_terms_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/rest-api/endpoints/class-wp-rest-taxonomies-controller.php",
+            any(rest_api_endpoints_class_wp_rest_taxonomies_controller_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/HSalsa20.php",
+            any(sodium_compat_src_core_hsalsa20_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AES.php",
+            any(sodium_compat_src_core_aes_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/AEGIS256.php",
+            any(sodium_compat_src_core_aegis256_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -13682,6 +13702,30 @@ async fn sodium_compat_src_core_poly1305_include_live_dispatch(_request: Request
 }
 
 async fn sodium_compat_src_core_sip_hash_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_terms_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn rest_api_endpoints_class_wp_rest_taxonomies_controller_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_hsalsa20_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aes_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aegis256_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
