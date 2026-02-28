@@ -734,6 +734,11 @@ GET /wp-content/themes/twentysixteen/single.php
 GET /wp-content/themes/twentysixteen/sidebar-content-bottom.php
 GET /wp-content/themes/twentysixteen/inc/back-compat.php
 GET /wp-content/themes/twentysixteen/inc/customizer.php
+GET /wp-content/themes/twentysixteen/inc/block-patterns.php
+GET /wp-content/themes/twentysixteen/inc/template-tags.php
+GET /wp-content/themes/twentysixteen/search.php
+GET /wp-content/themes/twentysixteen/functions.php
+GET /wp-content/themes/twentysixteen/header.php
 GET /wp-includes/customize/class-wp-customize-background-image-control.php
 GET /wp-includes/customize/class-wp-customize-filter-setting.php
 GET /wp-includes/customize/class-wp-customize-sidebar-section.php

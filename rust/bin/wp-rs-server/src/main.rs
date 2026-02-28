@@ -2822,6 +2822,26 @@ async fn main() {
             any(wp_content_themes_twentysixteen_inc_customizer_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentysixteen/inc/block-patterns.php",
+            any(wp_content_themes_twentysixteen_inc_block_patterns_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/inc/template-tags.php",
+            any(wp_content_themes_twentysixteen_inc_template_tags_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/search.php",
+            any(wp_content_themes_twentysixteen_search_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/functions.php",
+            any(wp_content_themes_twentysixteen_functions_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentysixteen/header.php",
+            any(wp_content_themes_twentysixteen_header_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14830,6 +14850,30 @@ async fn wp_content_themes_twentysixteen_inc_back_compat_live_dispatch(
 async fn wp_content_themes_twentysixteen_inc_customizer_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_inc_block_patterns_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_inc_template_tags_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_search_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_functions_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentysixteen_header_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
