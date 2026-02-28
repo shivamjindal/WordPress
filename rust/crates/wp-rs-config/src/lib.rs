@@ -1011,6 +1011,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwenty/classes/class-twentytwenty-customize.php",
         "/wp-content/themes/twentytwenty/footer.php",
         "/wp-content/themes/twentytwenty/classes/class-twentytwenty-non-latin-languages.php",
+        "/wp-content/themes/twentyseventeen/template-parts/navigation/navigation-top.php",
+        "/wp-content/themes/twentyseventeen/template-parts/header/header-image.php",
+        "/wp-content/themes/twentyseventeen/template-parts/header/site-branding.php",
+        "/wp-content/themes/twentyseventeen/template-parts/footer/footer-widgets.php",
+        "/wp-content/themes/twentyseventeen/template-parts/footer/site-info.php",
         "/wp-content/themes/twentythirteen/content-none.php",
         "/wp-content/themes/twentythirteen/content-aside.php",
         "/wp-content/themes/twentythirteen/index.php",
@@ -2905,6 +2910,21 @@ mod tests {
         assert!(settings.should_route("/wp-content/themes/twentytwenty/footer.php"));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwenty/classes/class-twentytwenty-non-latin-languages.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/navigation/navigation-top.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/header/header-image.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/header/site-branding.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/footer/footer-widgets.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentyseventeen/template-parts/footer/site-info.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-none.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/content-aside.php"));
