@@ -392,6 +392,11 @@ GET /wp-includes/js/dist/script-modules/block-library/file/view.min.asset.php
 GET /wp-includes/js/dist/script-modules/block-library/form/view.min.asset.php
 GET /wp-includes/js/dist/script-modules/block-editor/utils/fit-text-frontend.min.asset.php
 GET /wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php
+GET /wp-includes/pomo/entry.php
+GET /wp-includes/pomo/plural-forms.php
+GET /wp-includes/pomo/po.php
+GET /wp-includes/pomo/translations.php
+GET /wp-includes/pomo/streams.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

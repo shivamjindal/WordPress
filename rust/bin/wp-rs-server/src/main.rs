@@ -1474,6 +1474,26 @@ async fn main() {
             any(js_dist_script_modules_core_abilities_index_min_asset_include_live_dispatch),
         )
         .route(
+            "/wp-includes/pomo/entry.php",
+            any(pomo_entry_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/pomo/plural-forms.php",
+            any(pomo_plural_forms_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/pomo/po.php",
+            any(pomo_po_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/pomo/translations.php",
+            any(pomo_translations_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/pomo/streams.php",
+            any(pomo_streams_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -11758,6 +11778,26 @@ async fn js_dist_script_modules_block_editor_utils_fit_text_frontend_min_asset_i
 async fn js_dist_script_modules_core_abilities_index_min_asset_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_entry_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_plural_forms_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_po_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_translations_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn pomo_streams_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

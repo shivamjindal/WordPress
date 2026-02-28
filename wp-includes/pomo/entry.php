@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/pomo/entry.php' );
+if ( '/wp-includes/pomo/entry.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Contains Translation_Entry class
  *

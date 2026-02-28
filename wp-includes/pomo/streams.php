@@ -1,4 +1,10 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/pomo/streams.php' );
+if ( '/wp-includes/pomo/streams.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 /**
  * Classes, which help reading streams of data from files.
  * Based on the classes from Danilo Segan <danilo@kvota.net>

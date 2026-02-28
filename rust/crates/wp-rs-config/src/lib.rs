@@ -559,6 +559,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/js/dist/script-modules/block-library/form/view.min.asset.php",
         "/wp-includes/js/dist/script-modules/block-editor/utils/fit-text-frontend.min.asset.php",
         "/wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php",
+        "/wp-includes/pomo/entry.php",
+        "/wp-includes/pomo/plural-forms.php",
+        "/wp-includes/pomo/po.php",
+        "/wp-includes/pomo/translations.php",
+        "/wp-includes/pomo/streams.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1712,6 +1717,11 @@ mod tests {
         assert!(settings.should_route(
             "/wp-includes/js/dist/script-modules/core-abilities/index.min.asset.php"
         ));
+        assert!(settings.should_route("/wp-includes/pomo/entry.php"));
+        assert!(settings.should_route("/wp-includes/pomo/plural-forms.php"));
+        assert!(settings.should_route("/wp-includes/pomo/po.php"));
+        assert!(settings.should_route("/wp-includes/pomo/translations.php"));
+        assert!(settings.should_route("/wp-includes/pomo/streams.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
