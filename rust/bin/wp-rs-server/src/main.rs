@@ -1922,6 +1922,26 @@ async fn main() {
             any(theme_compat_embed_404_include_live_dispatch),
         )
         .route(
+            "/wp-includes/customize/class-wp-customize-code-editor-control.php",
+            any(customize_class_wp_customize_code_editor_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-widget-area-customize-control.php",
+            any(customize_class_wp_widget_area_customize_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/customize/class-wp-customize-nav-menu-locations-control.php",
+            any(customize_class_wp_customize_nav_menu_locations_control_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/lib/php84compat.php",
+            any(sodium_compat_lib_php84compat_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/lib/php84compat_const.php",
+            any(sodium_compat_lib_php84compat_const_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/block-supports/block-style-variations.php",
             any(block_supports_block_style_variations_include_live_dispatch),
         )
@@ -12760,6 +12780,32 @@ async fn theme_compat_header_include_live_dispatch(_request: Request) -> Respons
 }
 
 async fn theme_compat_embed_404_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_code_editor_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_widget_area_customize_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn customize_class_wp_customize_nav_menu_locations_control_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_php84compat_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_lib_php84compat_const_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

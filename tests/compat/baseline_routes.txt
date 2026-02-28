@@ -504,6 +504,11 @@ GET /wp-includes/theme-compat/embed-content.php
 GET /wp-includes/theme-compat/header-embed.php
 GET /wp-includes/theme-compat/header.php
 GET /wp-includes/theme-compat/embed-404.php
+GET /wp-includes/customize/class-wp-customize-code-editor-control.php
+GET /wp-includes/customize/class-wp-widget-area-customize-control.php
+GET /wp-includes/customize/class-wp-customize-nav-menu-locations-control.php
+GET /wp-includes/sodium_compat/lib/php84compat.php
+GET /wp-includes/sodium_compat/lib/php84compat_const.php
 GET /wp-includes/block-supports/block-style-variations.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php
 GET /wp-includes/block-supports/background.php
