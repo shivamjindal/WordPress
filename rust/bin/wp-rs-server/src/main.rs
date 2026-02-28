@@ -2982,6 +2982,26 @@ async fn main() {
             any(wp_content_themes_twentyeleven_content_image_live_dispatch),
         )
         .route(
+            "/wp-content/themes/index.php",
+            any(wp_content_themes_index_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-quote.php",
+            any(wp_content_themes_twentyeleven_content_quote_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/sidebar.php",
+            any(wp_content_themes_twentyeleven_sidebar_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyeleven/content-link.php",
+            any(wp_content_themes_twentyeleven_content_link_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyone/template-parts/post/author-bio.php",
+            any(wp_content_themes_twentytwentyone_template_parts_post_author_bio_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -15208,6 +15228,28 @@ async fn wp_content_themes_twentyeleven_author_live_dispatch(_request: Request) 
 }
 
 async fn wp_content_themes_twentyeleven_content_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_index_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_quote_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_sidebar_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyeleven_content_link_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyone_template_parts_post_author_bio_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

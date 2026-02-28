@@ -774,6 +774,11 @@ GET /wp-content/themes/twentyeleven/content-page.php
 GET /wp-content/themes/twentyeleven/footer.php
 GET /wp-content/themes/twentyeleven/author.php
 GET /wp-content/themes/twentyeleven/content-image.php
+GET /wp-content/themes/index.php
+GET /wp-content/themes/twentyeleven/content-quote.php
+GET /wp-content/themes/twentyeleven/sidebar.php
+GET /wp-content/themes/twentyeleven/content-link.php
+GET /wp-content/themes/twentytwentyone/template-parts/post/author-bio.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
