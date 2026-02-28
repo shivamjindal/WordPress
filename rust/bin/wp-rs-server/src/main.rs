@@ -1634,6 +1634,26 @@ async fn main() {
             any(block_supports_aria_label_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/autoload-php7.php",
+            any(sodium_compat_autoload_php7_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Ed25519.php",
+            any(sodium_compat_namespaced_core_ed25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Util.php",
+            any(sodium_compat_namespaced_core_util_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/Curve25519.php",
+            any(sodium_compat_namespaced_core_curve25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/namespaced/Core/HChaCha20.php",
+            any(sodium_compat_namespaced_core_hchacha20_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/admin-bar.php",
             any(admin_bar_include_live_dispatch),
         )
@@ -12092,6 +12112,32 @@ async fn block_supports_spacing_include_live_dispatch(_request: Request) -> Resp
 }
 
 async fn block_supports_aria_label_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_autoload_php7_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_ed25519_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_util_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_curve25519_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_namespaced_core_hchacha20_include_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

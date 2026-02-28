@@ -432,6 +432,11 @@ GET /wp-includes/block-supports/custom-classname.php
 GET /wp-includes/block-supports/duotone.php
 GET /wp-includes/block-supports/spacing.php
 GET /wp-includes/block-supports/aria-label.php
+GET /wp-includes/sodium_compat/autoload-php7.php
+GET /wp-includes/sodium_compat/namespaced/Core/Ed25519.php
+GET /wp-includes/sodium_compat/namespaced/Core/Util.php
+GET /wp-includes/sodium_compat/namespaced/Core/Curve25519.php
+GET /wp-includes/sodium_compat/namespaced/Core/HChaCha20.php
 GET /wp-includes/admin-bar.php
 GET /wp-includes/atomlib.php
 GET /wp-includes/author-template.php

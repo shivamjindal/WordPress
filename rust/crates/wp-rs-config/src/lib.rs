@@ -599,6 +599,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/block-supports/duotone.php",
         "/wp-includes/block-supports/spacing.php",
         "/wp-includes/block-supports/aria-label.php",
+        "/wp-includes/sodium_compat/autoload-php7.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Ed25519.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Util.php",
+        "/wp-includes/sodium_compat/namespaced/Core/Curve25519.php",
+        "/wp-includes/sodium_compat/namespaced/Core/HChaCha20.php",
         "/wp-includes/admin-bar.php",
         "/wp-includes/atomlib.php",
         "/wp-includes/author-template.php",
@@ -1803,6 +1808,11 @@ mod tests {
         assert!(settings.should_route("/wp-includes/block-supports/duotone.php"));
         assert!(settings.should_route("/wp-includes/block-supports/spacing.php"));
         assert!(settings.should_route("/wp-includes/block-supports/aria-label.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/autoload-php7.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Ed25519.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Util.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/Curve25519.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/namespaced/Core/HChaCha20.php"));
         assert!(settings.should_route("/wp-includes/admin-bar.php"));
         assert!(settings.should_route("/wp-includes/atomlib.php"));
         assert!(settings.should_route("/wp-includes/author-template.php"));
