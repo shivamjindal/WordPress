@@ -859,6 +859,11 @@ GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-walker-comment.ph
 GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-script-loader.php
 GET /wp-content/themes/twentytwenty/classes/class-twentytwenty-separator-control.php
 GET /wp-content/themes/twentytwenty/inc/custom-css.php
+GET /wp-content/themes/twentytwenty/inc/block-patterns.php
+GET /wp-content/themes/twentytwenty/inc/starter-content.php
+GET /wp-content/themes/twentytwenty/inc/svg-icons.php
+GET /wp-content/themes/twentytwenty/inc/template-tags.php
+GET /wp-content/themes/twentytwenty/functions.php
 GET /wp-content/themes/twentyten/loop-page.php
 GET /wp-content/themes/twentyten/index.php
 GET /wp-content/themes/twentyten/archive.php
