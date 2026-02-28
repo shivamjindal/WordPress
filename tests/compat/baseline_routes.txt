@@ -484,6 +484,11 @@ GET /wp-includes/sodium_compat/namespaced/Core/Poly1305.php
 GET /wp-includes/sodium_compat/namespaced/Core/SipHash.php
 GET /wp-includes/sodium_compat/namespaced/Core/HSalsa20.php
 GET /wp-includes/sodium_compat/namespaced/File.php
+GET /wp-includes/sodium_compat/namespaced/Compat.php
+GET /wp-includes/sodium_compat/lib/php72compat.php
+GET /wp-includes/sodium_compat/lib/namespaced.php
+GET /wp-includes/customize/class-wp-customize-custom-css-setting.php
+GET /wp-includes/customize/class-wp-customize-nav-menu-setting.php
 GET /wp-includes/block-supports/block-style-variations.php
 GET /wp-includes/sodium_compat/namespaced/Core/Curve25519/Fe.php
 GET /wp-includes/block-supports/background.php
