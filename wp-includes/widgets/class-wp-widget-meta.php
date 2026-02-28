@@ -1,4 +1,11 @@
 <?php
+require_once dirname( __DIR__ ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/widgets/class-wp-widget-meta.php' );
+if ( '/wp-includes/widgets/class-wp-widget-meta.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Widget API: WP_Widget_Meta class
  *

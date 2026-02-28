@@ -2622,6 +2622,26 @@ async fn main() {
             any(html_api_class_wp_html_processor_state_include_live_dispatch),
         )
         .route(
+            "/wp-includes/widgets/class-wp-widget-meta.php",
+            any(widgets_class_wp_widget_meta_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-pages.php",
+            any(widgets_class_wp_widget_pages_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-rss.php",
+            any(widgets_class_wp_widget_rss_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/widgets/class-wp-widget-recent-posts.php",
+            any(widgets_class_wp_widget_recent_posts_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/html-api/class-wp-html-unsupported-exception.php",
+            any(html_api_class_wp_html_unsupported_exception_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-selective-refresh.php",
             any(customize_class_wp_customize_selective_refresh_include_live_dispatch),
         )
@@ -14384,6 +14404,28 @@ async fn html_api_class_wp_html_doctype_info_include_live_dispatch(_request: Req
 }
 
 async fn html_api_class_wp_html_processor_state_include_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_meta_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_pages_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_rss_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn widgets_class_wp_widget_recent_posts_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn html_api_class_wp_html_unsupported_exception_include_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

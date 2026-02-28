@@ -846,6 +846,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/html-api/class-wp-html-processor.php",
         "/wp-includes/html-api/class-wp-html-doctype-info.php",
         "/wp-includes/html-api/class-wp-html-processor-state.php",
+        "/wp-includes/widgets/class-wp-widget-meta.php",
+        "/wp-includes/widgets/class-wp-widget-pages.php",
+        "/wp-includes/widgets/class-wp-widget-rss.php",
+        "/wp-includes/widgets/class-wp-widget-recent-posts.php",
+        "/wp-includes/html-api/class-wp-html-unsupported-exception.php",
         "/wp-includes/customize/class-wp-customize-selective-refresh.php",
         "/wp-includes/customize/class-wp-widget-form-customize-control.php",
         "/wp-includes/customize/class-wp-customize-media-control.php",
@@ -2462,6 +2467,13 @@ mod tests {
         assert!(settings.should_route("/wp-includes/html-api/class-wp-html-processor.php"));
         assert!(settings.should_route("/wp-includes/html-api/class-wp-html-doctype-info.php"));
         assert!(settings.should_route("/wp-includes/html-api/class-wp-html-processor-state.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-meta.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-pages.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-rss.php"));
+        assert!(settings.should_route("/wp-includes/widgets/class-wp-widget-recent-posts.php"));
+        assert!(
+            settings.should_route("/wp-includes/html-api/class-wp-html-unsupported-exception.php")
+        );
         assert!(settings
             .should_route("/wp-includes/customize/class-wp-customize-selective-refresh.php"));
         assert!(settings
