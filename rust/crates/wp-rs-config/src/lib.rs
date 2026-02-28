@@ -701,6 +701,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-includes/rest-api/endpoints/class-wp-rest-application-passwords-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-template-revisions-controller.php",
         "/wp-includes/rest-api/endpoints/class-wp-rest-templates-controller.php",
+        "/wp-includes/sodium_compat/src/Core/AEGIS128L.php",
+        "/wp-includes/sodium_compat/src/Core/Curve25519.php",
+        "/wp-includes/sodium_compat/src/Compat.php",
+        "/wp-includes/sodium_compat/src/Core/BLAKE2b.php",
+        "/wp-includes/sodium_compat/src/Crypto32.php",
         "/wp-includes/customize/class-wp-customize-background-image-control.php",
         "/wp-includes/customize/class-wp-customize-filter-setting.php",
         "/wp-includes/customize/class-wp-customize-sidebar-section.php",
@@ -2084,6 +2089,11 @@ mod tests {
         assert!(settings.should_route(
             "/wp-includes/rest-api/endpoints/class-wp-rest-templates-controller.php"
         ));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/AEGIS128L.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/Curve25519.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Compat.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Core/BLAKE2b.php"));
+        assert!(settings.should_route("/wp-includes/sodium_compat/src/Crypto32.php"));
         assert!(settings.should_route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php"
         ));

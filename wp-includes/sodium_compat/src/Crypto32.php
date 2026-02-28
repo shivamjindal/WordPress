@@ -1,4 +1,10 @@
 <?php
+require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/sodium_compat/src/Crypto32.php' );
+if ( '/wp-includes/sodium_compat/src/Crypto32.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
 
 if (class_exists('ParagonIE_Sodium_Crypto32', false)) {
     return;

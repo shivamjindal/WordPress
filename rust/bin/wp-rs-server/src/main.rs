@@ -2042,6 +2042,26 @@ async fn main() {
             any(rest_api_endpoints_class_wp_rest_templates_controller_include_live_dispatch),
         )
         .route(
+            "/wp-includes/sodium_compat/src/Core/AEGIS128L.php",
+            any(sodium_compat_src_core_aegis128l_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/Curve25519.php",
+            any(sodium_compat_src_core_curve25519_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Compat.php",
+            any(sodium_compat_src_compat_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Core/BLAKE2b.php",
+            any(sodium_compat_src_core_blake2b_include_live_dispatch),
+        )
+        .route(
+            "/wp-includes/sodium_compat/src/Crypto32.php",
+            any(sodium_compat_src_crypto32_include_live_dispatch),
+        )
+        .route(
             "/wp-includes/customize/class-wp-customize-background-image-control.php",
             any(customize_class_wp_customize_background_image_control_include_live_dispatch),
         )
@@ -13060,6 +13080,26 @@ async fn rest_api_endpoints_class_wp_rest_template_revisions_controller_include_
 async fn rest_api_endpoints_class_wp_rest_templates_controller_include_live_dispatch(
     _request: Request,
 ) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_aegis128l_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_curve25519_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_compat_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_core_blake2b_include_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn sodium_compat_src_crypto32_include_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
