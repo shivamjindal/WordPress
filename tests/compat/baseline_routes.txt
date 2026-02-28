@@ -864,6 +864,11 @@ GET /wp-content/themes/twentyten/index.php
 GET /wp-content/themes/twentyten/archive.php
 GET /wp-content/themes/twentyten/loop-single.php
 GET /wp-content/themes/twentyten/loop.php
+GET /wp-content/themes/twentyten/block-patterns.php
+GET /wp-content/themes/twentyten/comments.php
+GET /wp-content/themes/twentyten/tag.php
+GET /wp-content/themes/twentyten/sidebar-footer.php
+GET /wp-content/themes/twentyten/single.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php

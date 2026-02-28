@@ -3342,6 +3342,26 @@ async fn main() {
             any(wp_content_themes_twentyten_loop_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyten/block-patterns.php",
+            any(wp_content_themes_twentyten_block_patterns_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/comments.php",
+            any(wp_content_themes_twentyten_comments_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/tag.php",
+            any(wp_content_themes_twentyten_tag_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/sidebar-footer.php",
+            any(wp_content_themes_twentyten_sidebar_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/single.php",
+            any(wp_content_themes_twentyten_single_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -16056,6 +16076,26 @@ async fn wp_content_themes_twentyten_loop_single_live_dispatch(_request: Request
 }
 
 async fn wp_content_themes_twentyten_loop_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_block_patterns_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_comments_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_tag_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_sidebar_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_single_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
