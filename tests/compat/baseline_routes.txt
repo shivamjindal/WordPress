@@ -1028,6 +1028,11 @@ GET /wp-content/themes/twentytwelve/author.php
 GET /wp-content/themes/twentytwelve/content-image.php
 GET /wp-content/themes/twentytwelve/content-quote.php
 GET /wp-content/themes/twentytwelve/sidebar.php
+GET /wp-content/themes/twentytwelve/content-link.php
+GET /wp-content/themes/twentytwentytwo/index.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-image-background.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-centered-title-navigation-social.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-title-navigation-social.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
