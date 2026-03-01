@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfive/patterns/template-home-posts-grid-news-blog.php' );
+if ( '/wp-content/themes/twentytwentyfive/patterns/template-home-posts-grid-news-blog.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: News blog with featured posts grid
  * Slug: twentytwentyfive/template-home-posts-grid-news-blog

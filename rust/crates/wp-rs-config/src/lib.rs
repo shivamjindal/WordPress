@@ -1279,6 +1279,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/banner-poster.php",
         "/wp-content/themes/twentytwentyfive/patterns/header-centered.php",
         "/wp-content/themes/twentytwentyfive/patterns/header-columns.php",
+        "/wp-content/themes/twentytwentyfive/patterns/cta-grid-products-link.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-news-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/format-audio.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-home-posts-grid-news-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/pricing-2-col.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3755,6 +3760,21 @@ mod tests {
             .should_route("/wp-content/themes/twentytwentyfive/patterns/header-centered.php"));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/header-columns.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/cta-grid-products-link.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-news-blog.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/format-audio.php")
+        );
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-home-posts-grid-news-blog.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/pricing-2-col.php")
+        );
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));
