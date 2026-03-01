@@ -1059,6 +1059,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfour/patterns/hidden-comments.php",
         "/wp-content/themes/twentytwentyfour/patterns/template-search-blogging.php",
         "/wp-content/themes/twentytwentyfour/patterns/cta-services-image-left.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-single-photo-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-search-news-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/hero-book.php",
+        "/wp-content/themes/twentytwentyfive/patterns/contact-location-and-link.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3056,6 +3061,19 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/cta-services-image-left.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-single-photo-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-search-news-blog.php"
+        ));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyfive/patterns/hero-book.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/contact-location-and-link.php"
         ));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
