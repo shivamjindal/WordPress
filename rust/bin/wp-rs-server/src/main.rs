@@ -3770,6 +3770,26 @@ async fn main() {
             any(wp_content_themes_twentynineteen_404_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentynineteen/page.php",
+            any(wp_content_themes_twentynineteen_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/image.php",
+            any(wp_content_themes_twentynineteen_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/footer.php",
+            any(wp_content_themes_twentynineteen_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/content-none.php",
+            any(wp_content_themes_twentytwelve_content_none_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/content-aside.php",
+            any(wp_content_themes_twentytwelve_content_aside_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
             any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
         )
@@ -17254,6 +17274,26 @@ async fn wp_content_themes_twentynineteen_header_live_dispatch(_request: Request
 }
 
 async fn wp_content_themes_twentynineteen_404_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_content_none_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_content_aside_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 

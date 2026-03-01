@@ -998,6 +998,11 @@ GET /wp-content/themes/twentynineteen/search.php
 GET /wp-content/themes/twentynineteen/functions.php
 GET /wp-content/themes/twentynineteen/header.php
 GET /wp-content/themes/twentynineteen/404.php
+GET /wp-content/themes/twentynineteen/page.php
+GET /wp-content/themes/twentynineteen/image.php
+GET /wp-content/themes/twentynineteen/footer.php
+GET /wp-content/themes/twentytwelve/content-none.php
+GET /wp-content/themes/twentytwelve/content-aside.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
