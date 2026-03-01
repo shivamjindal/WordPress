@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-heading-paragraph-links-image.php' );
+if ( '/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-heading-paragraph-links-image.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: Link in bio heading, paragraph, links and full-height image
  * Slug: twentytwentyfive/page-link-in-bio-heading-paragraph-links-image

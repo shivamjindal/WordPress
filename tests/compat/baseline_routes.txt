@@ -964,6 +964,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/cta-heading-search.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-columns.php
 GET /wp-content/themes/twentytwentyfive/patterns/template-query-loop-photo-blog.php
 GET /wp-content/themes/twentytwentyfive/patterns/template-home-news-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-page-vertical-header-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-single-offset.php
+GET /wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-heading-paragraph-links-image.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-single-vertical-header-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-archive-photo-blog.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php

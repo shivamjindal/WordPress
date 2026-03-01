@@ -4510,6 +4510,36 @@ async fn main() {
             ),
         )
         .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-page-vertical-header-blog.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_template_page_vertical_header_blog_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-single-offset.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_template_single_offset_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-heading-paragraph-links-image.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_page_link_in_bio_heading_paragraph_links_image_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-single-vertical-header-blog.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_template_single_vertical_header_blog_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-archive-photo-blog.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_template_archive_photo_blog_live_dispatch,
+            ),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -18836,6 +18866,36 @@ async fn wp_content_themes_twentytwentyfive_patterns_template_query_loop_photo_b
 }
 
 async fn wp_content_themes_twentytwentyfive_patterns_template_home_news_blog_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_page_vertical_header_blog_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_single_offset_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_page_link_in_bio_heading_paragraph_links_image_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_single_vertical_header_blog_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_archive_photo_blog_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
