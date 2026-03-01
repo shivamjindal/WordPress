@@ -3434,6 +3434,26 @@ async fn main() {
             any(wp_content_themes_twentyten_footer_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfour/patterns/template-search-portfolio.php",
+            any(wp_content_themes_twentytwentyfour_patterns_template_search_portfolio_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/posts-grid-2-col.php",
+            any(wp_content_themes_twentytwentyfour_patterns_posts_grid_2_col_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/gallery-full-screen-image.php",
+            any(wp_content_themes_twentytwentyfour_patterns_gallery_full_screen_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/team-4-col.php",
+            any(wp_content_themes_twentytwentyfour_patterns_team_4_col_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/hidden-comments.php",
+            any(wp_content_themes_twentytwentyfour_patterns_hidden_comments_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -16338,6 +16358,36 @@ async fn wp_content_themes_twentyten_page_live_dispatch(_request: Request) -> Re
 }
 
 async fn wp_content_themes_twentyten_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_template_search_portfolio_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_posts_grid_2_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_gallery_full_screen_image_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_team_4_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_hidden_comments_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

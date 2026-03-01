@@ -1049,6 +1049,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentyten/404.php",
         "/wp-content/themes/twentyten/page.php",
         "/wp-content/themes/twentyten/footer.php",
+        "/wp-content/themes/twentytwentyfour/patterns/template-search-portfolio.php",
+        "/wp-content/themes/twentytwentyfour/patterns/posts-grid-2-col.php",
+        "/wp-content/themes/twentytwentyfour/patterns/gallery-full-screen-image.php",
+        "/wp-content/themes/twentytwentyfour/patterns/team-4-col.php",
+        "/wp-content/themes/twentytwentyfour/patterns/hidden-comments.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3025,6 +3030,19 @@ mod tests {
         assert!(settings.should_route("/wp-content/themes/twentyten/404.php"));
         assert!(settings.should_route("/wp-content/themes/twentyten/page.php"));
         assert!(settings.should_route("/wp-content/themes/twentyten/footer.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/template-search-portfolio.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfour/patterns/posts-grid-2-col.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/gallery-full-screen-image.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfour/patterns/team-4-col.php")
+        );
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfour/patterns/hidden-comments.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));

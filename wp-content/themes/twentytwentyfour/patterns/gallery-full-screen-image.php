@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfour/patterns/gallery-full-screen-image.php' );
+if ( '/wp-content/themes/twentytwentyfour/patterns/gallery-full-screen-image.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: Full screen image
  * Slug: twentytwentyfour/gallery-full-screen-image
