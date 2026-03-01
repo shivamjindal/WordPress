@@ -1324,6 +1324,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/template-archive-vertical-header-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/banner-intro.php",
         "/wp-content/themes/twentytwentyfive/patterns/format-link.php",
+        "/wp-content/themes/twentytwentyfive/patterns/hidden-search.php",
+        "/wp-content/themes/twentytwentyfive/patterns/overlapped-images.php",
+        "/wp-content/themes/twentytwentyfive/patterns/header.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-text-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-archive-news-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php",
         "/wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php",
         "/wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php",
@@ -3925,6 +3930,18 @@ mod tests {
         assert!(
             settings.should_route("/wp-content/themes/twentytwentyfive/patterns/format-link.php")
         );
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/hidden-search.php")
+        );
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/overlapped-images.php"));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyfive/patterns/header.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-text-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-archive-news-blog.php"
+        ));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php"));
         assert!(settings
