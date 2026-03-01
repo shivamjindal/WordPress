@@ -1093,6 +1093,11 @@ GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-large-image-and-b
 GET /wp-content/themes/twentytwentytwo/inc/patterns/hidden-bird.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/query-grid.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-media-right.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/query-irregular-grid.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-pricing-table.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-blog.php
+GET /wp-content/themes/twentytwentytwo/inc/block-patterns.php
+GET /wp-content/themes/twentytwentytwo/functions.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
