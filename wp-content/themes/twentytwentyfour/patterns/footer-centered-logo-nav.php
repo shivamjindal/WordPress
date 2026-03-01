@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfour/patterns/footer-centered-logo-nav.php' );
+if ( '/wp-content/themes/twentytwentyfour/patterns/footer-centered-logo-nav.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: Footer with centered logo and navigation
  * Slug: twentytwentyfour/footer-centered-logo-nav

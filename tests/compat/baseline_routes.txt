@@ -969,6 +969,11 @@ GET /wp-content/themes/twentytwentyfour/patterns/gallery-project-layout.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-rsvp.php
 GET /wp-content/themes/twentytwentyfour/patterns/hidden-search.php
 GET /wp-content/themes/twentytwentyfour/patterns/template-archive-blogging.php
+GET /wp-content/themes/twentytwentyfour/patterns/posts-images-only-offset-4-col.php
+GET /wp-content/themes/twentytwentyfour/patterns/page-home-business.php
+GET /wp-content/themes/twentytwentyfour/patterns/hidden-portfolio-hero.php
+GET /wp-content/themes/twentytwentyfour/patterns/footer-centered-logo-nav.php
+GET /wp-content/themes/twentytwentyfour/patterns/hidden-posts-heading.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
