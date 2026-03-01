@@ -1043,6 +1043,11 @@ GET /wp-content/themes/twentytwentytwo/inc/patterns/general-video-header-details
 GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-navigation-copyright.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/header-title-and-button.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/header-centered-logo.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-video-trailer.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-query-title-citation.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-wide-image-intro-buttons.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-media-left.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-featured-posts.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php

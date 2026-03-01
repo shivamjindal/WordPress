@@ -1178,6 +1178,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentytwo/inc/patterns/footer-navigation-copyright.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-title-and-button.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-centered-logo.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-video-trailer.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/footer-query-title-citation.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-wide-image-intro-buttons.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-media-left.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-featured-posts.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3421,6 +3426,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentytwo/inc/patterns/header-centered-logo.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-video-trailer.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/footer-query-title-citation.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-wide-image-intro-buttons.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-media-left.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-featured-posts.php"
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
