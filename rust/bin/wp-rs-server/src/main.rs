@@ -3730,6 +3730,26 @@ async fn main() {
             any(wp_content_themes_twentynineteen_inc_customizer_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentynineteen/inc/block-patterns.php",
+            any(wp_content_themes_twentynineteen_inc_block_patterns_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/inc/icon-functions.php",
+            any(wp_content_themes_twentynineteen_inc_icon_functions_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/inc/helper-functions.php",
+            any(wp_content_themes_twentynineteen_inc_helper_functions_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/inc/template-tags.php",
+            any(wp_content_themes_twentynineteen_inc_template_tags_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentynineteen/inc/template-functions.php",
+            any(wp_content_themes_twentynineteen_inc_template_functions_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
             any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
         )
@@ -17160,6 +17180,36 @@ async fn wp_content_themes_twentynineteen_inc_back_compat_live_dispatch(
 }
 
 async fn wp_content_themes_twentynineteen_inc_customizer_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_inc_block_patterns_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_inc_icon_functions_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_inc_helper_functions_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_inc_template_tags_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentynineteen_inc_template_functions_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
