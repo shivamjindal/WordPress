@@ -979,6 +979,11 @@ GET /wp-content/themes/twentytwentyfour/patterns/text-centered-statement.php
 GET /wp-content/themes/twentytwentyfour/patterns/template-archive-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-subscribe-centered.php
 GET /wp-content/themes/twentytwentyfour/patterns/hidden-post-navigation.php
+GET /wp-content/themes/twentytwentyfour/patterns/footer-colophon-3-col.php
+GET /wp-content/themes/twentytwentyfour/patterns/footer.php
+GET /wp-content/themes/twentytwentyfour/patterns/cta-pricing.php
+GET /wp-content/themes/twentytwentyfour/patterns/text-centered-statement-small.php
+GET /wp-content/themes/twentytwentyfour/patterns/hidden-404.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
