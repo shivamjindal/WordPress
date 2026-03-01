@@ -4850,6 +4850,26 @@ async fn main() {
             any(wp_content_themes_twentyfourteen_404_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyfourteen/page.php",
+            any(wp_content_themes_twentyfourteen_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/content-gallery.php",
+            any(wp_content_themes_twentyfourteen_content_gallery_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/content-page.php",
+            any(wp_content_themes_twentyfourteen_content_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/image.php",
+            any(wp_content_themes_twentyfourteen_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/footer.php",
+            any(wp_content_themes_twentyfourteen_footer_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php",
             any(wp_content_themes_twentytwentyfive_patterns_footer_newsletter_live_dispatch),
         )
@@ -19644,6 +19664,30 @@ async fn wp_content_themes_twentyfourteen_content_video_live_dispatch(
 }
 
 async fn wp_content_themes_twentyfourteen_404_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_content_gallery_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_content_page_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_footer_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
