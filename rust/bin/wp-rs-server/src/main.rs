@@ -4416,6 +4416,28 @@ async fn main() {
             any(wp_content_themes_twentytwentyfive_patterns_pricing_2_col_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfive/patterns/comments.php",
+            any(wp_content_themes_twentytwentyfive_patterns_comments_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-query-loop.php",
+            any(wp_content_themes_twentytwentyfive_patterns_template_query_loop_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-landing-podcast.php",
+            any(wp_content_themes_twentytwentyfive_patterns_page_landing_podcast_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/contact-centered-social-link.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_contact_centered_social_link_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/services-3-col.php",
+            any(wp_content_themes_twentytwentyfive_patterns_services_3_col_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -18622,6 +18644,36 @@ async fn wp_content_themes_twentytwentyfive_patterns_template_home_posts_grid_ne
 }
 
 async fn wp_content_themes_twentytwentyfive_patterns_pricing_2_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_comments_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_query_loop_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_page_landing_podcast_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_contact_centered_social_link_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_services_3_col_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
