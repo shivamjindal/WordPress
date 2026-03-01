@@ -1168,6 +1168,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-image-background.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-centered-title-navigation-social.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-title-navigation-social.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/header-centered-logo-black-background.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-layout-two-columns.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-large-list-names.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-divider-light.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/header-default.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3383,6 +3388,20 @@ mod tests {
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentytwo/inc/patterns/header-title-navigation-social.php"
         ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/header-centered-logo-black-background.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-layout-two-columns.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-large-list-names.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-divider-light.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/header-default.php"));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
         ));
