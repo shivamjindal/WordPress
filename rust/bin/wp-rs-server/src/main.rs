@@ -3534,6 +3534,26 @@ async fn main() {
             any(wp_content_themes_twentytwentyfour_patterns_hidden_post_meta_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfour/patterns/template-home-business.php",
+            any(wp_content_themes_twentytwentyfour_patterns_template_home_business_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/template-single-portfolio.php",
+            any(wp_content_themes_twentytwentyfour_patterns_template_single_portfolio_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/hidden-no-results.php",
+            any(wp_content_themes_twentytwentyfour_patterns_hidden_no_results_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/text-feature-grid-3-col.php",
+            any(wp_content_themes_twentytwentyfour_patterns_text_feature_grid_3_col_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/gallery-offset-images-grid-2-col.php",
+            any(wp_content_themes_twentytwentyfour_patterns_gallery_offset_images_grid_2_col_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php",
             any(wp_content_themes_twentytwentyfive_patterns_template_single_news_blog_live_dispatch),
         )
@@ -16600,6 +16620,36 @@ async fn wp_content_themes_twentytwentyfour_patterns_template_home_blogging_live
 }
 
 async fn wp_content_themes_twentytwentyfour_patterns_hidden_post_meta_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_template_home_business_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_template_single_portfolio_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_hidden_no_results_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_text_feature_grid_3_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_gallery_offset_images_grid_2_col_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
