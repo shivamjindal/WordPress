@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentyfourteen/page-templates/full-width.php' );
+if ( '/wp-content/themes/twentyfourteen/page-templates/full-width.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Template Name: Full Width Page
  *
