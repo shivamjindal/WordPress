@@ -1188,6 +1188,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-small-dark.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/general-divider-dark.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-text-only-salmon-background.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-simple-dark.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-image-with-caption.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/header-text-only-with-tagline-black-background.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/footer-title-tagline-social.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-blog-posts.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3460,6 +3465,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentytwo/inc/patterns/header-text-only-salmon-background.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-simple-dark.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-image-with-caption.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/header-text-only-with-tagline-black-background.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/footer-title-tagline-social.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-blog-posts.php"
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
