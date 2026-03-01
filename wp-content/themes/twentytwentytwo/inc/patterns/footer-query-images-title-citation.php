@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentytwo/inc/patterns/footer-query-images-title-citation.php' );
+if ( '/wp-content/themes/twentytwentytwo/inc/patterns/footer-query-images-title-citation.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Footer with query, featured images, title, and citation
  */
