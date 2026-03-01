@@ -4462,6 +4462,28 @@ async fn main() {
             any(wp_content_themes_twentytwentyfive_patterns_event_rsvp_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-landing-event.php",
+            any(wp_content_themes_twentytwentyfive_patterns_page_landing_event_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/pricing-3-col.php",
+            any(wp_content_themes_twentytwentyfive_patterns_pricing_3_col_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/more-posts.php",
+            any(wp_content_themes_twentytwentyfive_patterns_more_posts_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-search-photo-blog.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_template_search_photo_blog_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-shop-home.php",
+            any(wp_content_themes_twentytwentyfive_patterns_page_shop_home_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -18728,6 +18750,36 @@ async fn wp_content_themes_twentytwentyfive_patterns_page_link_in_bio_wide_margi
 }
 
 async fn wp_content_themes_twentytwentyfive_patterns_event_rsvp_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_page_landing_event_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_pricing_3_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_more_posts_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_template_search_photo_blog_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_page_shop_home_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()

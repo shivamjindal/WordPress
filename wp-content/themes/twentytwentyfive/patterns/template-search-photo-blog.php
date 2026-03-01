@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfive/patterns/template-search-photo-blog.php' );
+if ( '/wp-content/themes/twentytwentyfive/patterns/template-search-photo-blog.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: Photo blog search results
  * Slug: twentytwentyfive/template-search-photo-blog
