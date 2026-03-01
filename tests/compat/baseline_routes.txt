@@ -1008,6 +1008,11 @@ GET /wp-content/themes/twentytwelve/archive.php
 GET /wp-content/themes/twentytwelve/sidebar-front.php
 GET /wp-content/themes/twentytwelve/page-templates/front-page.php
 GET /wp-content/themes/twentytwelve/page-templates/full-width.php
+GET /wp-content/themes/twentytwelve/comments.php
+GET /wp-content/themes/twentytwelve/content.php
+GET /wp-content/themes/twentytwelve/tag.php
+GET /wp-content/themes/twentytwelve/content-status.php
+GET /wp-content/themes/twentytwelve/single.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
