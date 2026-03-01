@@ -1023,6 +1023,11 @@ GET /wp-content/themes/twentytwelve/404.php
 GET /wp-content/themes/twentytwelve/page.php
 GET /wp-content/themes/twentytwelve/content-page.php
 GET /wp-content/themes/twentytwelve/image.php
+GET /wp-content/themes/twentytwelve/footer.php
+GET /wp-content/themes/twentytwelve/author.php
+GET /wp-content/themes/twentytwelve/content-image.php
+GET /wp-content/themes/twentytwelve/content-quote.php
+GET /wp-content/themes/twentytwelve/sidebar.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
