@@ -1073,6 +1073,11 @@ GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-dark.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/general-two-images-text.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-grid-posts.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-links.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/query-image-grid.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-navigation.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-links-dark.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-stacked.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-social-copyright.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
