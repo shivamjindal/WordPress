@@ -929,6 +929,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/text-faqs.php
 GET /wp-content/themes/twentytwentyfive/patterns/banner-about-book.php
 GET /wp-content/themes/twentytwentyfive/patterns/hero-overlapped-book-cover-with-links.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-large.php
+GET /wp-content/themes/twentytwentyfive/patterns/page-business-home.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-search-vertical-header-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-home-vertical-header-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/grid-videos.php
+GET /wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php

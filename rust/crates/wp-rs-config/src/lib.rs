@@ -1269,6 +1269,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/banner-about-book.php",
         "/wp-content/themes/twentytwentyfive/patterns/hero-overlapped-book-cover-with-links.php",
         "/wp-content/themes/twentytwentyfive/patterns/testimonials-large.php",
+        "/wp-content/themes/twentytwentyfive/patterns/page-business-home.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-search-vertical-header-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-home-vertical-header-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/grid-videos.php",
+        "/wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3719,6 +3724,19 @@ mod tests {
         ));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/testimonials-large.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/page-business-home.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-search-vertical-header-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-home-vertical-header-blog.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/grid-videos.php")
+        );
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));
