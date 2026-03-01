@@ -1063,6 +1063,11 @@ GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-query-images-title-ci
 GET /wp-content/themes/twentytwentytwo/inc/patterns/hidden-heading-and-bird.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/query-default.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/query-simple-blog.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-logo.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-list-events.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-default.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/query-text-grid.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-blog-posts-right.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php

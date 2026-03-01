@@ -1198,6 +1198,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentytwo/inc/patterns/hidden-heading-and-bird.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/query-default.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/query-simple-blog.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/footer-logo.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-list-events.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/footer-default.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/query-text-grid.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-blog-posts-right.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3498,6 +3503,18 @@ mod tests {
             .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/query-default.php"));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/query-simple-blog.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/footer-logo.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-list-events.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/footer-default.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentytwo/inc/patterns/query-text-grid.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-blog-posts-right.php"
+        ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
         ));

@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentytwo/inc/patterns/query-text-grid.php' );
+if ( '/wp-content/themes/twentytwentytwo/inc/patterns/query-text-grid.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Text-based grid of posts block pattern
  */
