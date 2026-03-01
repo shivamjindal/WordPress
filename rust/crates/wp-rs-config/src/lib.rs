@@ -1108,6 +1108,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentynineteen/template-parts/post/discussion-meta.php",
         "/wp-content/themes/twentynineteen/template-parts/post/author-bio.php",
         "/wp-content/themes/twentynineteen/template-parts/header/entry-header.php",
+        "/wp-content/themes/twentynineteen/template-parts/header/site-branding.php",
+        "/wp-content/themes/twentynineteen/template-parts/content/content-none.php",
+        "/wp-content/themes/twentynineteen/template-parts/content/content-single.php",
+        "/wp-content/themes/twentynineteen/template-parts/content/content.php",
+        "/wp-content/themes/twentynineteen/template-parts/content/content-excerpt.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3233,6 +3238,20 @@ mod tests {
             .should_route("/wp-content/themes/twentynineteen/template-parts/post/author-bio.php"));
         assert!(settings.should_route(
             "/wp-content/themes/twentynineteen/template-parts/header/entry-header.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentynineteen/template-parts/header/site-branding.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentynineteen/template-parts/content/content-none.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentynineteen/template-parts/content/content-single.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentynineteen/template-parts/content/content.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentynineteen/template-parts/content/content-excerpt.php"
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"

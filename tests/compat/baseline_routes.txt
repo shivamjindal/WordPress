@@ -973,6 +973,11 @@ GET /wp-content/themes/twentyseventeen/sidebar.php
 GET /wp-content/themes/twentynineteen/template-parts/post/discussion-meta.php
 GET /wp-content/themes/twentynineteen/template-parts/post/author-bio.php
 GET /wp-content/themes/twentynineteen/template-parts/header/entry-header.php
+GET /wp-content/themes/twentynineteen/template-parts/header/site-branding.php
+GET /wp-content/themes/twentynineteen/template-parts/content/content-none.php
+GET /wp-content/themes/twentynineteen/template-parts/content/content-single.php
+GET /wp-content/themes/twentynineteen/template-parts/content/content.php
+GET /wp-content/themes/twentynineteen/template-parts/content/content-excerpt.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
