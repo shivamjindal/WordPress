@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-gray-background.php' );
+if ( '/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-gray-background.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Logo and navigation header with gray background
  */

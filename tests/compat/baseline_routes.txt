@@ -1083,6 +1083,11 @@ GET /wp-content/themes/twentytwentytwo/inc/patterns/footer-about-title-logo.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/header-image-background-overlay.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-poster.php
 GET /wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-offset-tagline.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/page-about-solid-color.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/hidden-404.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-gray-background.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/header-with-tagline.php
+GET /wp-content/themes/twentytwentytwo/inc/patterns/general-layered-images-with-duotone.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php

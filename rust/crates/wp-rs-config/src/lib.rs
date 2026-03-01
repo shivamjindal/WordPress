@@ -1218,6 +1218,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-image-background-overlay.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/page-sidebar-poster.php",
         "/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-offset-tagline.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-solid-color.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/hidden-404.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-gray-background.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/header-with-tagline.php",
+        "/wp-content/themes/twentytwentytwo/inc/patterns/general-layered-images-with-duotone.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -3568,6 +3573,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-offset-tagline.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-solid-color.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentytwo/inc/patterns/hidden-404.php")
+        );
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/header-logo-navigation-gray-background.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/header-with-tagline.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/general-layered-images-with-duotone.php"
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
