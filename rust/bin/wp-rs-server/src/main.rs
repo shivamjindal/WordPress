@@ -3462,6 +3462,26 @@ async fn main() {
             any(wp_content_themes_twentythirteen_image_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentythirteen/footer.php",
+            any(wp_content_themes_twentythirteen_footer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/author.php",
+            any(wp_content_themes_twentythirteen_author_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/content-image.php",
+            any(wp_content_themes_twentythirteen_content_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/content-quote.php",
+            any(wp_content_themes_twentythirteen_content_quote_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/sidebar.php",
+            any(wp_content_themes_twentythirteen_sidebar_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/content-none.php",
             any(wp_content_themes_twentythirteen_content_none_live_dispatch),
         )
@@ -16322,6 +16342,30 @@ async fn wp_content_themes_twentythirteen_content_gallery_live_dispatch(
 }
 
 async fn wp_content_themes_twentythirteen_image_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_author_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_image_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_quote_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_sidebar_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
