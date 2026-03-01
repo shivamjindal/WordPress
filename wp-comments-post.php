@@ -5,7 +5,9 @@
  * @package WordPress
  */
 require_once __DIR__ . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-comments-post.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-comments-post.php' );
+if ( '/wp-comments-post.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 

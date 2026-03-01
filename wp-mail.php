@@ -7,7 +7,9 @@
  * @package WordPress
  */
 require_once __DIR__ . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-mail.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-mail.php' );
+if ( '/wp-mail.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
