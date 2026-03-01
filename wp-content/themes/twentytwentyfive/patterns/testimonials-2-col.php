@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php' );
+if ( '/wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: 2 columns with avatar
  * Slug: twentytwentyfive/testimonials-2-col
