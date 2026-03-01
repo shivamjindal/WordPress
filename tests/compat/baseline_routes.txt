@@ -1009,6 +1009,9 @@ GET /wp-content/themes/twentytwentyfive/patterns/header-large-title.php
 GET /wp-content/themes/twentytwentyfive/patterns/template-home-text-blog.php
 GET /wp-content/themes/twentytwentyfive/patterns/contact-info-locations.php
 GET /wp-content/themes/twentytwentyfive/patterns/binding-format.php
+GET /wp-content/themes/twentytwentyfive/patterns/cta-book-locations.php
+GET /wp-content/themes/twentytwentyfive/patterns/cta-newsletter.php
+GET /wp-content/themes/twentytwentyfive/patterns/page-cv-bio.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php

@@ -4718,6 +4718,18 @@ async fn main() {
             any(wp_content_themes_twentytwentyfive_patterns_binding_format_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfive/patterns/cta-book-locations.php",
+            any(wp_content_themes_twentytwentyfive_patterns_cta_book_locations_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/cta-newsletter.php",
+            any(wp_content_themes_twentytwentyfive_patterns_cta_newsletter_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-cv-bio.php",
+            any(wp_content_themes_twentytwentyfive_patterns_page_cv_bio_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php",
             any(wp_content_themes_twentytwentyfive_patterns_footer_newsletter_live_dispatch),
         )
@@ -19336,6 +19348,24 @@ async fn wp_content_themes_twentytwentyfive_patterns_contact_info_locations_live
 }
 
 async fn wp_content_themes_twentytwentyfive_patterns_binding_format_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_cta_book_locations_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_cta_newsletter_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_page_cv_bio_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
