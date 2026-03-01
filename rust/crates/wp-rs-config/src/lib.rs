@@ -1299,6 +1299,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/more-posts.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-search-photo-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/page-shop-home.php",
+        "/wp-content/themes/twentytwentyfive/patterns/heading-and-paragraph-with-image.php",
+        "/wp-content/themes/twentytwentyfive/patterns/cta-heading-search.php",
+        "/wp-content/themes/twentytwentyfive/patterns/footer-columns.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-photo-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-home-news-blog.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3826,6 +3831,19 @@ mod tests {
         ));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/page-shop-home.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/heading-and-paragraph-with-image.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/cta-heading-search.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/footer-columns.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-query-loop-photo-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-home-news-blog.php"
+        ));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));

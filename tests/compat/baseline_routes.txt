@@ -959,6 +959,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/pricing-3-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/more-posts.php
 GET /wp-content/themes/twentytwentyfive/patterns/template-search-photo-blog.php
 GET /wp-content/themes/twentytwentyfive/patterns/page-shop-home.php
+GET /wp-content/themes/twentytwentyfive/patterns/heading-and-paragraph-with-image.php
+GET /wp-content/themes/twentytwentyfive/patterns/cta-heading-search.php
+GET /wp-content/themes/twentytwentyfive/patterns/footer-columns.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-query-loop-photo-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-home-news-blog.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php
