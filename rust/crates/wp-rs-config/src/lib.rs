@@ -1289,6 +1289,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/page-landing-podcast.php",
         "/wp-content/themes/twentytwentyfive/patterns/contact-centered-social-link.php",
         "/wp-content/themes/twentytwentyfive/patterns/services-3-col.php",
+        "/wp-content/themes/twentytwentyfive/patterns/services-team-photos.php",
+        "/wp-content/themes/twentytwentyfive/patterns/banner-cover-big-heading.php",
+        "/wp-content/themes/twentytwentyfive/patterns/cta-book-links.php",
+        "/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-wide-margins.php",
+        "/wp-content/themes/twentytwentyfive/patterns/event-rsvp.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3790,6 +3795,19 @@ mod tests {
         ));
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/services-3-col.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/services-team-photos.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/banner-cover-big-heading.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/cta-book-links.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-wide-margins.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/event-rsvp.php")
+        );
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));

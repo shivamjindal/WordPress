@@ -949,6 +949,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/template-query-loop.php
 GET /wp-content/themes/twentytwentyfive/patterns/page-landing-podcast.php
 GET /wp-content/themes/twentytwentyfive/patterns/contact-centered-social-link.php
 GET /wp-content/themes/twentytwentyfive/patterns/services-3-col.php
+GET /wp-content/themes/twentytwentyfive/patterns/services-team-photos.php
+GET /wp-content/themes/twentytwentyfive/patterns/banner-cover-big-heading.php
+GET /wp-content/themes/twentytwentyfive/patterns/cta-book-links.php
+GET /wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-wide-margins.php
+GET /wp-content/themes/twentytwentyfive/patterns/event-rsvp.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php
