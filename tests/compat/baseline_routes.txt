@@ -1057,6 +1057,8 @@ GET /wp-content/themes/twentyfourteen/inc/widgets.php
 GET /wp-content/themes/twentyfourteen/inc/custom-header.php
 GET /wp-content/themes/twentyfourteen/inc/featured-content.php
 GET /wp-content/themes/twentyfourteen/inc/customizer.php
+GET /wp-content/themes/twentyfourteen/inc/template-tags.php
+GET /wp-content/themes/twentyfourteen/inc/block-patterns.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php

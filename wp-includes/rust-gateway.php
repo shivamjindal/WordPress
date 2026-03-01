@@ -1479,6 +1479,8 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-content/themes/twentyfourteen/inc/custom-header.php',
 			'/wp-content/themes/twentyfourteen/inc/featured-content.php',
 			'/wp-content/themes/twentyfourteen/inc/customizer.php',
+			'/wp-content/themes/twentyfourteen/inc/template-tags.php',
+			'/wp-content/themes/twentyfourteen/inc/block-patterns.php',
 			'/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php',
 			'/wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php',
 			'/wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php',
