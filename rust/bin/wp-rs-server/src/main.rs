@@ -4156,6 +4156,30 @@ async fn main() {
             ),
         )
         .route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/header-text-only-green-background.php",
+            any(
+                wp_content_themes_twentytwentytwo_inc_patterns_header_text_only_green_background_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-large-image-and-buttons.php",
+            any(
+                wp_content_themes_twentytwentytwo_inc_patterns_page_about_large_image_and_buttons_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/hidden-bird.php",
+            any(wp_content_themes_twentytwentytwo_inc_patterns_hidden_bird_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/query-grid.php",
+            any(wp_content_themes_twentytwentytwo_inc_patterns_query_grid_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentytwo/inc/patterns/page-about-media-right.php",
+            any(wp_content_themes_twentytwentytwo_inc_patterns_page_about_media_right_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
             any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
         )
@@ -18124,6 +18148,36 @@ async fn wp_content_themes_twentytwentytwo_inc_patterns_header_with_tagline_live
 }
 
 async fn wp_content_themes_twentytwentytwo_inc_patterns_general_layered_images_with_duotone_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentytwo_inc_patterns_header_text_only_green_background_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentytwo_inc_patterns_page_about_large_image_and_buttons_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentytwo_inc_patterns_hidden_bird_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentytwo_inc_patterns_query_grid_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentytwo_inc_patterns_page_about_media_right_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
