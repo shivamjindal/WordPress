@@ -16,7 +16,9 @@
  * @package WordPress
  */
 require_once __DIR__ . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-cron.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-cron.php' );
+if ( '/wp-cron.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
