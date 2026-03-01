@@ -1047,6 +1047,11 @@ GET /wp-content/themes/twentyfourteen/content-gallery.php
 GET /wp-content/themes/twentyfourteen/content-page.php
 GET /wp-content/themes/twentyfourteen/image.php
 GET /wp-content/themes/twentyfourteen/footer.php
+GET /wp-content/themes/twentyfourteen/author.php
+GET /wp-content/themes/twentyfourteen/content-image.php
+GET /wp-content/themes/twentyfourteen/content-quote.php
+GET /wp-content/themes/twentyfourteen/sidebar.php
+GET /wp-content/themes/twentyfourteen/content-link.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php

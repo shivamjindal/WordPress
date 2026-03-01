@@ -4870,6 +4870,26 @@ async fn main() {
             any(wp_content_themes_twentyfourteen_footer_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyfourteen/author.php",
+            any(wp_content_themes_twentyfourteen_author_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/content-image.php",
+            any(wp_content_themes_twentyfourteen_content_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/content-quote.php",
+            any(wp_content_themes_twentyfourteen_content_quote_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/sidebar.php",
+            any(wp_content_themes_twentyfourteen_sidebar_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyfourteen/content-link.php",
+            any(wp_content_themes_twentyfourteen_content_link_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php",
             any(wp_content_themes_twentytwentyfive_patterns_footer_newsletter_live_dispatch),
         )
@@ -19688,6 +19708,32 @@ async fn wp_content_themes_twentyfourteen_image_live_dispatch(_request: Request)
 }
 
 async fn wp_content_themes_twentyfourteen_footer_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_author_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_content_image_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_content_quote_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_sidebar_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyfourteen_content_link_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
