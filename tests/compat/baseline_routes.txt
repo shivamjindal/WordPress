@@ -1018,6 +1018,11 @@ GET /wp-content/themes/twentytwelve/inc/block-patterns.php
 GET /wp-content/themes/twentytwelve/search.php
 GET /wp-content/themes/twentytwelve/category.php
 GET /wp-content/themes/twentytwelve/functions.php
+GET /wp-content/themes/twentytwelve/header.php
+GET /wp-content/themes/twentytwelve/404.php
+GET /wp-content/themes/twentytwelve/page.php
+GET /wp-content/themes/twentytwelve/content-page.php
+GET /wp-content/themes/twentytwelve/image.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php

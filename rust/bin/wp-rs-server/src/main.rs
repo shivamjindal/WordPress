@@ -3850,6 +3850,26 @@ async fn main() {
             any(wp_content_themes_twentytwelve_functions_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwelve/header.php",
+            any(wp_content_themes_twentytwelve_header_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/404.php",
+            any(wp_content_themes_twentytwelve_404_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/page.php",
+            any(wp_content_themes_twentytwelve_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/content-page.php",
+            any(wp_content_themes_twentytwelve_content_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwelve/image.php",
+            any(wp_content_themes_twentytwelve_image_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
             any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
         )
@@ -17424,6 +17444,26 @@ async fn wp_content_themes_twentytwelve_category_live_dispatch(_request: Request
 }
 
 async fn wp_content_themes_twentytwelve_functions_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_header_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_404_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_content_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwelve_image_live_dispatch(_request: Request) -> Response {
     legacy_admin_include_empty_response()
 }
 
