@@ -3594,6 +3594,26 @@ async fn main() {
             any(wp_content_themes_twentyseventeen_single_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyseventeen/front-page.php",
+            any(wp_content_themes_twentyseventeen_front_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyseventeen/inc/back-compat.php",
+            any(wp_content_themes_twentyseventeen_inc_back_compat_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyseventeen/inc/custom-header.php",
+            any(wp_content_themes_twentyseventeen_inc_custom_header_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyseventeen/inc/customizer.php",
+            any(wp_content_themes_twentyseventeen_inc_customizer_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyseventeen/inc/block-patterns.php",
+            any(wp_content_themes_twentyseventeen_inc_block_patterns_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
             any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
         )
@@ -16782,6 +16802,34 @@ async fn wp_content_themes_twentyseventeen_comments_live_dispatch(_request: Requ
 }
 
 async fn wp_content_themes_twentyseventeen_single_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyseventeen_front_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyseventeen_inc_back_compat_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyseventeen_inc_custom_header_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyseventeen_inc_customizer_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyseventeen_inc_block_patterns_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
