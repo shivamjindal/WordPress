@@ -3594,6 +3594,26 @@ async fn main() {
             any(wp_content_themes_twentyseventeen_single_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
+            any(wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
+            any(wp_content_themes_twentytwentyfour_patterns_page_home_portfolio_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
+            any(wp_content_themes_twentytwentyfour_patterns_posts_3_col_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/text-title-left-image-right.php",
+            any(wp_content_themes_twentytwentyfour_patterns_text_title_left_image_right_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfour/patterns/hidden-sidebar.php",
+            any(wp_content_themes_twentytwentyfour_patterns_hidden_sidebar_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php",
             any(wp_content_themes_twentytwentyfive_patterns_template_single_news_blog_live_dispatch),
         )
@@ -16742,6 +16762,36 @@ async fn wp_content_themes_twentyseventeen_comments_live_dispatch(_request: Requ
 }
 
 async fn wp_content_themes_twentyseventeen_single_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_banner_project_description_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_page_home_portfolio_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_posts_3_col_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_text_title_left_image_right_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfour_patterns_hidden_sidebar_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 
