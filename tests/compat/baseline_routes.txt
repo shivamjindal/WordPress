@@ -974,6 +974,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/page-portfolio-home.php
 GET /wp-content/themes/twentytwentyfive/patterns/hidden-blog-heading.php
 GET /wp-content/themes/twentytwentyfive/patterns/grid-with-categories.php
 GET /wp-content/themes/twentytwentyfive/patterns/event-3-col.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-archive-text-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-with-tight-margins.php
+GET /wp-content/themes/twentytwentyfive/patterns/services-subscriber-only-section.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-home-photo-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/footer-social.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php

@@ -1314,6 +1314,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/hidden-blog-heading.php",
         "/wp-content/themes/twentytwentyfive/patterns/grid-with-categories.php",
         "/wp-content/themes/twentytwentyfive/patterns/event-3-col.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-archive-text-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-with-tight-margins.php",
+        "/wp-content/themes/twentytwentyfive/patterns/services-subscriber-only-section.php",
+        "/wp-content/themes/twentytwentyfive/patterns/template-home-photo-blog.php",
+        "/wp-content/themes/twentytwentyfive/patterns/footer-social.php",
         "/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php",
         "/wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php",
         "/wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php",
@@ -3884,6 +3889,21 @@ mod tests {
             .should_route("/wp-content/themes/twentytwentyfive/patterns/grid-with-categories.php"));
         assert!(
             settings.should_route("/wp-content/themes/twentytwentyfive/patterns/event-3-col.php")
+        );
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-archive-text-blog.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/page-link-in-bio-with-tight-margins.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/services-subscriber-only-section.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/template-home-photo-blog.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/footer-social.php")
         );
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php"));
