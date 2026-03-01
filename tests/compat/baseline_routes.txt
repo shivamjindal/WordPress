@@ -983,6 +983,11 @@ GET /wp-content/themes/twentynineteen/template-parts/footer/footer-widgets.php
 GET /wp-content/themes/twentynineteen/index.php
 GET /wp-content/themes/twentynineteen/archive.php
 GET /wp-content/themes/twentynineteen/comments.php
+GET /wp-content/themes/twentynineteen/classes/class-twentynineteen-svg-icons.php
+GET /wp-content/themes/twentynineteen/classes/class-twentynineteen-walker-comment.php
+GET /wp-content/themes/twentynineteen/single.php
+GET /wp-content/themes/twentynineteen/inc/back-compat.php
+GET /wp-content/themes/twentynineteen/inc/customizer.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
