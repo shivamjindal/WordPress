@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentytwentyfive/patterns/template-single-left-aligned-content.php' );
+if ( '/wp-content/themes/twentytwentyfive/patterns/template-single-left-aligned-content.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Title: Post with left-aligned content
  * Slug: twentytwentyfive/post-with-left-aligned-content

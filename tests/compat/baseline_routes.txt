@@ -999,6 +999,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/logos.php
 GET /wp-content/themes/twentytwentyfive/patterns/hidden-404.php
 GET /wp-content/themes/twentytwentyfive/patterns/cta-events-list.php
 GET /wp-content/themes/twentytwentyfive/patterns/cta-centered-heading.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-single-left-aligned-content.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-page-photo-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/template-query-loop-vertical-header-blog.php
+GET /wp-content/themes/twentytwentyfive/patterns/event-schedule.php
+GET /wp-content/themes/twentytwentyfive/patterns/testimonials-6-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php
