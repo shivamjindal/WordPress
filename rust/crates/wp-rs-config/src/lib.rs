@@ -1274,6 +1274,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/template-home-vertical-header-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/grid-videos.php",
         "/wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php",
+        "/wp-content/themes/twentytwentyfive/patterns/hero-podcast.php",
+        "/wp-content/themes/twentytwentyfive/patterns/banner-with-description-and-images-grid.php",
+        "/wp-content/themes/twentytwentyfive/patterns/banner-poster.php",
+        "/wp-content/themes/twentytwentyfive/patterns/header-centered.php",
+        "/wp-content/themes/twentytwentyfive/patterns/header-columns.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3737,6 +3742,19 @@ mod tests {
         );
         assert!(settings
             .should_route("/wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php"));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/hero-podcast.php")
+        );
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/banner-with-description-and-images-grid.php"
+        ));
+        assert!(
+            settings.should_route("/wp-content/themes/twentytwentyfive/patterns/banner-poster.php")
+        );
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/header-centered.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/header-columns.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));

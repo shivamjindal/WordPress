@@ -934,6 +934,11 @@ GET /wp-content/themes/twentytwentyfive/patterns/template-search-vertical-header
 GET /wp-content/themes/twentytwentyfive/patterns/template-home-vertical-header-blog.php
 GET /wp-content/themes/twentytwentyfive/patterns/grid-videos.php
 GET /wp-content/themes/twentytwentyfive/patterns/hidden-written-by.php
+GET /wp-content/themes/twentytwentyfive/patterns/hero-podcast.php
+GET /wp-content/themes/twentytwentyfive/patterns/banner-with-description-and-images-grid.php
+GET /wp-content/themes/twentytwentyfive/patterns/banner-poster.php
+GET /wp-content/themes/twentytwentyfive/patterns/header-centered.php
+GET /wp-content/themes/twentytwentyfive/patterns/header-columns.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php
