@@ -1022,6 +1022,11 @@ GET /wp-content/themes/twentytwentythree/patterns/hidden-comments.php
 GET /wp-content/themes/twentytwentythree/patterns/footer-default.php
 GET /wp-content/themes/twentytwentythree/patterns/hidden-no-results.php
 GET /wp-content/themes/twentytwentythree/patterns/post-meta.php
+GET /wp-content/themes/twentyfourteen/search.php
+GET /wp-content/themes/twentytwentythree/patterns/hidden-heading.php
+GET /wp-content/themes/twentyfourteen/category.php
+GET /wp-content/themes/twentytwentythree/patterns/call-to-action.php
+GET /wp-content/themes/twentyfourteen/sidebar-content.php
 GET /wp-content/themes/twentytwentyfive/patterns/footer-newsletter.php
 GET /wp-content/themes/twentytwentyfive/patterns/testimonials-2-col.php
 GET /wp-content/themes/twentytwentyfive/patterns/media-instagram-grid.php
