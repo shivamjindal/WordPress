@@ -904,6 +904,11 @@ GET /wp-content/themes/twentyten/onecolumn-page.php
 GET /wp-content/themes/twentyten/attachment.php
 GET /wp-content/themes/twentyten/search.php
 GET /wp-content/themes/twentyten/category.php
+GET /wp-content/themes/twentyten/functions.php
+GET /wp-content/themes/twentyten/header.php
+GET /wp-content/themes/twentyten/404.php
+GET /wp-content/themes/twentyten/page.php
+GET /wp-content/themes/twentyten/footer.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
