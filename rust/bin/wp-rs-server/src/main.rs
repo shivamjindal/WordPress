@@ -3398,6 +3398,22 @@ async fn main() {
             any(wp_content_themes_twentyten_single_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentyten/onecolumn-page.php",
+            any(wp_content_themes_twentyten_onecolumn_page_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/attachment.php",
+            any(wp_content_themes_twentyten_attachment_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/search.php",
+            any(wp_content_themes_twentyten_search_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentyten/category.php",
+            any(wp_content_themes_twentyten_category_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -3480,6 +3496,10 @@ async fn main() {
         .route(
             "/wp-content/themes/twentythirteen/sidebar.php",
             any(wp_content_themes_twentythirteen_sidebar_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentythirteen/content-link.php",
+            any(wp_content_themes_twentythirteen_content_link_live_dispatch),
         )
         .route(
             "/wp-content/themes/twentythirteen/content-none.php",
@@ -16265,6 +16285,22 @@ async fn wp_content_themes_twentyten_single_live_dispatch(_request: Request) -> 
     legacy_admin_include_empty_response()
 }
 
+async fn wp_content_themes_twentyten_onecolumn_page_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_attachment_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_search_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentyten_category_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
 async fn wp_content_themes_twentythirteen_inc_back_compat_live_dispatch(
     _request: Request,
 ) -> Response {
@@ -16366,6 +16402,12 @@ async fn wp_content_themes_twentythirteen_content_quote_live_dispatch(
 }
 
 async fn wp_content_themes_twentythirteen_sidebar_live_dispatch(_request: Request) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentythirteen_content_link_live_dispatch(
+    _request: Request,
+) -> Response {
     legacy_admin_include_empty_response()
 }
 

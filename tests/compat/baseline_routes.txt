@@ -899,6 +899,11 @@ GET /wp-content/themes/twentythirteen/author.php
 GET /wp-content/themes/twentythirteen/content-image.php
 GET /wp-content/themes/twentythirteen/content-quote.php
 GET /wp-content/themes/twentythirteen/sidebar.php
+GET /wp-content/themes/twentythirteen/content-link.php
+GET /wp-content/themes/twentyten/onecolumn-page.php
+GET /wp-content/themes/twentyten/attachment.php
+GET /wp-content/themes/twentyten/search.php
+GET /wp-content/themes/twentyten/category.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
