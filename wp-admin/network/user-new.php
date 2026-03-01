@@ -8,7 +8,9 @@
  */
 
 require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-admin/network/user-new.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/network/user-new.php' );
+if ( '/wp-admin/network/user-new.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
