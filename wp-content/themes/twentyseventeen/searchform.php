@@ -1,4 +1,11 @@
 <?php
+require_once dirname( dirname( dirname( __DIR__ ) ) ) . '/wp-includes/rust-gateway.php';
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-content/themes/twentyseventeen/searchform.php' );
+if ( '/wp-content/themes/twentyseventeen/searchform.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
+	exit;
+}
+
 /**
  * Template for displaying search forms in Twenty Seventeen
  *

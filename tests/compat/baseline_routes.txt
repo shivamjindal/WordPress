@@ -949,6 +949,11 @@ GET /wp-content/themes/twentytwentyfour/patterns/testimonial-centered.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-blogging.php
 GET /wp-content/themes/twentytwentyfour/patterns/template-index-blogging.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-project-details.php
+GET /wp-content/themes/twentyseventeen/index.php
+GET /wp-content/themes/twentyseventeen/archive.php
+GET /wp-content/themes/twentyseventeen/searchform.php
+GET /wp-content/themes/twentyseventeen/comments.php
+GET /wp-content/themes/twentyseventeen/single.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
