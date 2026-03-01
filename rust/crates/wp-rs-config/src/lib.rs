@@ -1059,6 +1059,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfour/patterns/hidden-comments.php",
         "/wp-content/themes/twentytwentyfour/patterns/template-search-blogging.php",
         "/wp-content/themes/twentytwentyfour/patterns/cta-services-image-left.php",
+        "/wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php",
+        "/wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php",
+        "/wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php",
+        "/wp-content/themes/twentytwentyfour/patterns/gallery-offset-images-grid-4-col.php",
+        "/wp-content/themes/twentytwentyfour/patterns/template-home-portfolio.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-single-photo-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-search-news-blog.php",
@@ -3061,6 +3066,21 @@ mod tests {
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/cta-services-image-left.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/page-portfolio-overview.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/text-alternating-images.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/cta-content-image-on-right.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/gallery-offset-images-grid-4-col.php"
+        ));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfour/patterns/template-home-portfolio.php"
         ));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php"
