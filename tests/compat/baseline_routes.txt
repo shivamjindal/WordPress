@@ -993,6 +993,11 @@ GET /wp-content/themes/twentynineteen/inc/icon-functions.php
 GET /wp-content/themes/twentynineteen/inc/helper-functions.php
 GET /wp-content/themes/twentynineteen/inc/template-tags.php
 GET /wp-content/themes/twentynineteen/inc/template-functions.php
+GET /wp-content/themes/twentynineteen/inc/color-patterns.php
+GET /wp-content/themes/twentynineteen/search.php
+GET /wp-content/themes/twentynineteen/functions.php
+GET /wp-content/themes/twentynineteen/header.php
+GET /wp-content/themes/twentynineteen/404.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
