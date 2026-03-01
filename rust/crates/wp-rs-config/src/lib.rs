@@ -1264,6 +1264,11 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfive/patterns/template-search-news-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/hero-book.php",
         "/wp-content/themes/twentytwentyfive/patterns/contact-location-and-link.php",
+        "/wp-content/themes/twentytwentyfive/patterns/banner-intro-image.php",
+        "/wp-content/themes/twentytwentyfive/patterns/text-faqs.php",
+        "/wp-content/themes/twentytwentyfive/patterns/banner-about-book.php",
+        "/wp-content/themes/twentytwentyfive/patterns/hero-overlapped-book-cover-with-links.php",
+        "/wp-content/themes/twentytwentyfive/patterns/testimonials-large.php",
         "/wp-content/themes/twentythirteen/inc/back-compat.php",
         "/wp-content/themes/twentythirteen/inc/custom-header.php",
         "/wp-content/themes/twentythirteen/inc/block-patterns.php",
@@ -3704,6 +3709,16 @@ mod tests {
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfive/patterns/contact-location-and-link.php"
         ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/banner-intro-image.php"));
+        assert!(settings.should_route("/wp-content/themes/twentytwentyfive/patterns/text-faqs.php"));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/banner-about-book.php"));
+        assert!(settings.should_route(
+            "/wp-content/themes/twentytwentyfive/patterns/hero-overlapped-book-cover-with-links.php"
+        ));
+        assert!(settings
+            .should_route("/wp-content/themes/twentytwentyfive/patterns/testimonials-large.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/back-compat.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentythirteen/inc/block-patterns.php"));

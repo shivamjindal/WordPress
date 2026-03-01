@@ -4324,6 +4324,28 @@ async fn main() {
             any(wp_content_themes_twentytwentyfive_patterns_contact_location_and_link_live_dispatch),
         )
         .route(
+            "/wp-content/themes/twentytwentyfive/patterns/banner-intro-image.php",
+            any(wp_content_themes_twentytwentyfive_patterns_banner_intro_image_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/text-faqs.php",
+            any(wp_content_themes_twentytwentyfive_patterns_text_faqs_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/banner-about-book.php",
+            any(wp_content_themes_twentytwentyfive_patterns_banner_about_book_live_dispatch),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/hero-overlapped-book-cover-with-links.php",
+            any(
+                wp_content_themes_twentytwentyfive_patterns_hero_overlapped_book_cover_with_links_live_dispatch,
+            ),
+        )
+        .route(
+            "/wp-content/themes/twentytwentyfive/patterns/testimonials-large.php",
+            any(wp_content_themes_twentytwentyfive_patterns_testimonials_large_live_dispatch),
+        )
+        .route(
             "/wp-content/themes/twentythirteen/inc/back-compat.php",
             any(wp_content_themes_twentythirteen_inc_back_compat_live_dispatch),
         )
@@ -18410,6 +18432,36 @@ async fn wp_content_themes_twentytwentyfive_patterns_hero_book_live_dispatch(
 }
 
 async fn wp_content_themes_twentytwentyfive_patterns_contact_location_and_link_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_banner_intro_image_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_text_faqs_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_banner_about_book_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_hero_overlapped_book_cover_with_links_live_dispatch(
+    _request: Request,
+) -> Response {
+    legacy_admin_include_empty_response()
+}
+
+async fn wp_content_themes_twentytwentyfive_patterns_testimonials_large_live_dispatch(
     _request: Request,
 ) -> Response {
     legacy_admin_include_empty_response()
