@@ -1094,6 +1094,10 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentyseventeen/inc/custom-header.php",
         "/wp-content/themes/twentyseventeen/inc/customizer.php",
         "/wp-content/themes/twentyseventeen/inc/block-patterns.php",
+        "/wp-content/themes/twentyseventeen/inc/icon-functions.php",
+        "/wp-content/themes/twentyseventeen/inc/template-tags.php",
+        "/wp-content/themes/twentyseventeen/inc/template-functions.php",
+        "/wp-content/themes/twentyseventeen/inc/color-patterns.php",
         "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php",
         "/wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php",
         "/wp-content/themes/twentytwentyfour/patterns/posts-3-col.php",
@@ -1119,6 +1123,7 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
         "/wp-content/themes/twentytwentyfour/patterns/cta-pricing.php",
         "/wp-content/themes/twentytwentyfour/patterns/text-centered-statement-small.php",
         "/wp-content/themes/twentytwentyfour/patterns/hidden-404.php",
+        "/wp-content/themes/twentytwentyfour/functions.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-single-photo-blog.php",
         "/wp-content/themes/twentytwentyfive/patterns/template-search-news-blog.php",
@@ -3198,6 +3203,12 @@ mod tests {
         assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/custom-header.php"));
         assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/customizer.php"));
         assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/block-patterns.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/icon-functions.php"));
+        assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/template-tags.php"));
+        assert!(
+            settings.should_route("/wp-content/themes/twentyseventeen/inc/template-functions.php")
+        );
+        assert!(settings.should_route("/wp-content/themes/twentyseventeen/inc/color-patterns.php"));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfour/patterns/banner-project-description.php"
         ));
@@ -3265,6 +3276,7 @@ mod tests {
         assert!(
             settings.should_route("/wp-content/themes/twentytwentyfour/patterns/hidden-404.php")
         );
+        assert!(settings.should_route("/wp-content/themes/twentytwentyfour/functions.php"));
         assert!(settings.should_route(
             "/wp-content/themes/twentytwentyfive/patterns/template-single-news-blog.php"
         ));

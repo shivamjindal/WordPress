@@ -959,6 +959,10 @@ GET /wp-content/themes/twentyseventeen/inc/back-compat.php
 GET /wp-content/themes/twentyseventeen/inc/custom-header.php
 GET /wp-content/themes/twentyseventeen/inc/customizer.php
 GET /wp-content/themes/twentyseventeen/inc/block-patterns.php
+GET /wp-content/themes/twentyseventeen/inc/icon-functions.php
+GET /wp-content/themes/twentyseventeen/inc/template-tags.php
+GET /wp-content/themes/twentyseventeen/inc/template-functions.php
+GET /wp-content/themes/twentyseventeen/inc/color-patterns.php
 GET /wp-content/themes/twentytwentyfour/patterns/banner-project-description.php
 GET /wp-content/themes/twentytwentyfour/patterns/page-home-portfolio.php
 GET /wp-content/themes/twentytwentyfour/patterns/posts-3-col.php
@@ -984,6 +988,7 @@ GET /wp-content/themes/twentytwentyfour/patterns/footer.php
 GET /wp-content/themes/twentytwentyfour/patterns/cta-pricing.php
 GET /wp-content/themes/twentytwentyfour/patterns/text-centered-statement-small.php
 GET /wp-content/themes/twentytwentyfour/patterns/hidden-404.php
+GET /wp-content/themes/twentytwentyfour/functions.php
 GET /wp-content/themes/twentythirteen/content-none.php
 GET /wp-content/themes/twentythirteen/content-aside.php
 GET /wp-content/themes/twentythirteen/index.php
