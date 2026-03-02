@@ -530,6 +530,18 @@ mod tests {
     }
 
     #[test]
+    fn object_cache_entries_expire_based_on_ttl() {
+        let mut cache = ObjectCache::default();
+        cache.set(
+            "post_1",
+            "posts",
+            Value::String("ephemeral".to_string()),
+            Some(Duration::from_secs(0)),
+        );
+        assert_eq!(cache.get("post_1", "posts"), None);
+    }
+
+    #[test]
     fn object_cache_replace_requires_existing_key() {
         let mut cache = ObjectCache::default();
         assert!(!cache.replace("post_1", "posts", Value::String("value".to_string()), None));
@@ -549,6 +561,22 @@ mod tests {
         assert_eq!(
             cache.get("post_1", "posts"),
             Some(Value::String("updated".to_string()))
+        );
+    }
+
+    #[test]
+    fn object_cache_add_succeeds_after_expired_entry() {
+        let mut cache = ObjectCache::default();
+        assert!(cache.add(
+            "post_1",
+            "posts",
+            Value::String("expired".to_string()),
+            Some(Duration::from_secs(0)),
+        ));
+        assert!(cache.add("post_1", "posts", Value::String("fresh".to_string()), None));
+        assert_eq!(
+            cache.get("post_1", "posts"),
+            Some(Value::String("fresh".to_string()))
         );
     }
 

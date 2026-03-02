@@ -21986,6 +21986,7 @@ struct InternalObjectCacheQuery {
     group: Option<String>,
     key: Option<String>,
     value: Option<String>,
+    ttl_seconds: Option<u64>,
 }
 
 async fn internal_object_cache(
@@ -22010,6 +22011,7 @@ async fn internal_object_cache(
         .object_cache
         .lock()
         .expect("object cache mutex poisoned");
+    let ttl = query.ttl_seconds.map(Duration::from_secs);
 
     match action.as_str() {
         "set" => {
@@ -22025,12 +22027,13 @@ async fn internal_object_cache(
             };
             let raw_value = query.value.unwrap_or_default();
             let parsed_value = parse_cache_payload_value(&raw_value);
-            cache.set(key.clone(), group.clone(), parsed_value.clone(), None);
+            cache.set(key.clone(), group.clone(), parsed_value.clone(), ttl);
             rust_handled_json(json!({
                 "action": "set",
                 "group": group,
                 "key": key,
                 "value": parsed_value,
+                "ttl_seconds": query.ttl_seconds,
             }))
             .into_response()
         }
@@ -22047,13 +22050,14 @@ async fn internal_object_cache(
             };
             let raw_value = query.value.unwrap_or_default();
             let parsed_value = parse_cache_payload_value(&raw_value);
-            let added = cache.add(key.clone(), group.clone(), parsed_value.clone(), None);
+            let added = cache.add(key.clone(), group.clone(), parsed_value.clone(), ttl);
             rust_handled_json(json!({
                 "action": "add",
                 "group": group,
                 "key": key,
                 "value": parsed_value,
                 "added": added,
+                "ttl_seconds": query.ttl_seconds,
             }))
             .into_response()
         }
@@ -22070,13 +22074,14 @@ async fn internal_object_cache(
             };
             let raw_value = query.value.unwrap_or_default();
             let parsed_value = parse_cache_payload_value(&raw_value);
-            let replaced = cache.replace(key.clone(), group.clone(), parsed_value.clone(), None);
+            let replaced = cache.replace(key.clone(), group.clone(), parsed_value.clone(), ttl);
             rust_handled_json(json!({
                 "action": "replace",
                 "group": group,
                 "key": key,
                 "value": parsed_value,
                 "replaced": replaced,
+                "ttl_seconds": query.ttl_seconds,
             }))
             .into_response()
         }
