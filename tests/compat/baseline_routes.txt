@@ -1988,6 +1988,10 @@ POST /__wp_rust/internal/options?option=rust_autoload_invalid&value=invalid&auto
 POST /__wp_rust/internal/options?option=rust_autoload_preserve&value=seed&autoload=false&mode=upsert
 POST /__wp_rust/internal/options?option=rust_autoload_preserve&value=updated-without-autoload&mode=upsert&checkpoint=preserve
 GET /__wp_rust/internal/options?option=rust_autoload_preserve&checkpoint=after-preserve
+POST /__wp_rust/internal/options?option=rust_multi_one&value=one&autoload=true&mode=upsert
+POST /__wp_rust/internal/options?option=rust_multi_two&value=two&autoload=true&mode=upsert
+DELETE /__wp_rust/internal/options?options=rust_multi_one,missing_option,rust_multi_two
+GET /__wp_rust/internal/options?options=rust_multi_one,rust_multi_two&checkpoint=after-multi-delete
 DELETE /__wp_rust/internal/options?option=rust_add_option
 DELETE /__wp_rust/internal/options?option=rust_autoload_preserve
 DELETE /__wp_rust/internal/options?option=rust_contract_option

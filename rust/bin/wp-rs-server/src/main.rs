@@ -21901,6 +21901,7 @@ struct InternalOptionsQuery {
 #[derive(Debug, Deserialize)]
 struct InternalOptionsMutationQuery {
     option: Option<String>,
+    options: Option<String>,
     value: Option<String>,
     autoload: Option<String>,
     mode: Option<String>,
@@ -22026,27 +22027,49 @@ async fn internal_options_delete(
     State(state): State<AppState>,
     Query(query): Query<InternalOptionsMutationQuery>,
 ) -> impl IntoResponse {
-    let Some(option_name) = normalize_option_name(query.option) else {
-        return rust_handled_json_with_status(
-            StatusCode::BAD_REQUEST,
-            json!({
-                "error": "missing_option",
-                "message": "option query parameter is required.",
-            }),
-        )
-        .into_response();
-    };
-
     let mut options = state.options.lock().expect("options mutex poisoned");
-    let previous = options.get_option(&option_name);
-    let deleted = options.delete_option(&option_name);
 
-    rust_handled_json(json!({
-        "scope": "delete",
-        "option": option_name,
-        "deleted": deleted,
-        "previous": previous,
-    }))
+    if let Some(option_name) = normalize_option_name(query.option) {
+        let previous = options.get_option(&option_name);
+        let deleted = options.delete_option(&option_name);
+
+        return rust_handled_json(json!({
+            "scope": "delete",
+            "option": option_name,
+            "deleted": deleted,
+            "previous": previous,
+        }))
+        .into_response();
+    }
+
+    if let Some(raw_options) = query.options {
+        let option_names = parse_csv_values(&raw_options);
+        if option_names.is_empty() {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "missing_options",
+                    "message": "options query parameter must include at least one option name.",
+                }),
+            )
+            .into_response();
+        }
+        let deleted_count = options.delete_multiple(&option_names);
+        return rust_handled_json(json!({
+            "scope": "delete_multiple",
+            "options": option_names,
+            "deleted_count": deleted_count,
+        }))
+        .into_response();
+    }
+
+    rust_handled_json_with_status(
+        StatusCode::BAD_REQUEST,
+        json!({
+            "error": "missing_option",
+            "message": "option or options query parameter is required.",
+        }),
+    )
     .into_response()
 }
 
@@ -23749,6 +23772,7 @@ mod tests {
             State(state.clone()),
             Query(InternalOptionsMutationQuery {
                 option: Some("rust_autoload_preserve_test".to_string()),
+                options: None,
                 value: Some("seed".to_string()),
                 autoload: Some("false".to_string()),
                 mode: Some("upsert".to_string()),
@@ -23768,6 +23792,7 @@ mod tests {
             State(state.clone()),
             Query(InternalOptionsMutationQuery {
                 option: Some("rust_autoload_preserve_test".to_string()),
+                options: None,
                 value: Some("updated".to_string()),
                 autoload: None,
                 mode: Some("upsert".to_string()),
@@ -23829,6 +23854,7 @@ mod tests {
             State(state.clone()),
             Query(InternalOptionsMutationQuery {
                 option: Some("existing_option".to_string()),
+                options: None,
                 value: Some("stored".to_string()),
                 autoload: Some("true".to_string()),
                 mode: Some("upsert".to_string()),
@@ -23857,6 +23883,59 @@ mod tests {
             Value::String("stored".to_string())
         );
         assert_eq!(json["values"]["missing_option"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn options_delete_multiple_removes_present_entries() {
+        let state = build_app_state();
+        for (name, value) in [("first_option", "one"), ("second_option", "two")] {
+            let response = internal_options_upsert(
+                State(state.clone()),
+                Query(InternalOptionsMutationQuery {
+                    option: Some(name.to_string()),
+                    options: None,
+                    value: Some(value.to_string()),
+                    autoload: Some("true".to_string()),
+                    mode: Some("upsert".to_string()),
+                }),
+            )
+            .await
+            .into_response();
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let delete_response = internal_options_delete(
+            State(state.clone()),
+            Query(InternalOptionsMutationQuery {
+                option: None,
+                options: Some("first_option,missing_option,second_option".to_string()),
+                value: None,
+                autoload: None,
+                mode: None,
+            }),
+        )
+        .await
+        .into_response();
+        let delete_json = response_json(delete_response).await;
+        assert_eq!(
+            delete_json["scope"],
+            Value::String("delete_multiple".to_string())
+        );
+        assert_eq!(delete_json["deleted_count"], Value::from(2));
+
+        let read_response = internal_options(
+            State(state),
+            Query(InternalOptionsQuery {
+                option: None,
+                options: Some("first_option,second_option".to_string()),
+                autoload_only: None,
+                default_value: None,
+            }),
+        )
+        .await
+        .into_response();
+        let read_json = response_json(read_response).await;
+        assert_eq!(read_json["found_count"], Value::from(0));
     }
 
     #[tokio::test]
@@ -24125,6 +24204,7 @@ mod tests {
             State(state),
             Query(InternalOptionsMutationQuery {
                 option: Some("rust_autoload_yesno_test".to_string()),
+                options: None,
                 value: Some("value".to_string()),
                 autoload: Some("no".to_string()),
                 mode: Some("upsert".to_string()),
@@ -24147,6 +24227,7 @@ mod tests {
             State(state),
             Query(InternalOptionsMutationQuery {
                 option: Some("rust_autoload_invalid_test".to_string()),
+                options: None,
                 value: Some("value".to_string()),
                 autoload: Some("maybe".to_string()),
                 mode: Some("upsert".to_string()),

@@ -266,6 +266,17 @@ impl OptionStore {
         deleted
     }
 
+    pub fn delete_multiple(&mut self, names: &[String]) -> usize {
+        let deleted_count = names
+            .iter()
+            .filter(|name| self.values.remove(name.as_str()).is_some())
+            .count();
+        if deleted_count > 0 {
+            self.alloptions_cache = None;
+        }
+        deleted_count
+    }
+
     /// Equivalent to WordPress `alloptions` cache behavior:
     /// returns autoloaded options and memoizes the snapshot.
     pub fn load_alloptions(&mut self) -> HashMap<String, String> {
@@ -712,6 +723,22 @@ mod tests {
         let values = store.get_multiple(&names);
         assert_eq!(values.get("blogname"), Some(&Some("WordPress".to_string())));
         assert_eq!(values.get("missing"), Some(&None));
+    }
+
+    #[test]
+    fn option_store_delete_multiple_removes_existing_entries() {
+        let mut store = OptionStore::default();
+        assert!(store.set_option("blogname", "WordPress", Some(true)));
+        assert!(store.set_option("blogdescription", "Test site", Some(true)));
+        let names = vec![
+            "blogname".to_string(),
+            "missing".to_string(),
+            "blogdescription".to_string(),
+        ];
+
+        assert_eq!(store.delete_multiple(&names), 2);
+        assert_eq!(store.get_option("blogname"), None);
+        assert_eq!(store.get_option("blogdescription"), None);
     }
 
     #[test]
