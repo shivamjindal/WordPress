@@ -7109,6 +7109,7 @@ async fn main() {
             "/__wp_rust/internal/cron-unschedule",
             delete(internal_cron_unschedule),
         )
+        .route("/__wp_rust/internal/cron-clear", delete(internal_cron_clear))
         .route("/__wp_rust/internal/cron-due", get(internal_cron_due))
         .route(
             "/__wp_rust/internal/multisite-resolve",
@@ -22706,6 +22707,21 @@ struct InternalCronUnscheduleQuery {
     args: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalCronClearQuery {
+    hook: Option<String>,
+    args: Option<String>,
+}
+
+fn parse_cron_args(raw_args: &str) -> Vec<String> {
+    raw_args
+        .split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| value.to_string())
+        .collect::<Vec<_>>()
+}
+
 async fn internal_cron_due(
     State(state): State<AppState>,
     Query(query): Query<InternalCronDueQuery>,
@@ -22744,12 +22760,8 @@ async fn internal_cron_next(
         .unwrap_or_else(|| "wp_scheduled_delete".to_string());
     let args = query
         .args
-        .unwrap_or_default()
-        .split(',')
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(|value| value.to_string())
-        .collect::<Vec<_>>();
+        .map(|raw| parse_cron_args(&raw))
+        .unwrap_or_default();
     let scheduler = state
         .cron_scheduler
         .lock()
@@ -22772,12 +22784,8 @@ async fn internal_cron_unschedule(
     let timestamp = query.timestamp.unwrap_or(0);
     let args = query
         .args
-        .unwrap_or_default()
-        .split(',')
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(|value| value.to_string())
-        .collect::<Vec<_>>();
+        .map(|raw| parse_cron_args(&raw))
+        .unwrap_or_default();
     let mut scheduler = state
         .cron_scheduler
         .lock()
@@ -22790,6 +22798,29 @@ async fn internal_cron_unschedule(
         "args": args,
         "removed": removed,
         "next_event_timestamp": scheduler.next_event_for(&hook, &args),
+    }))
+}
+
+async fn internal_cron_clear(
+    State(state): State<AppState>,
+    Query(query): Query<InternalCronClearQuery>,
+) -> impl IntoResponse {
+    let hook = query
+        .hook
+        .unwrap_or_else(|| "wp_scheduled_delete".to_string());
+    let parsed_args = query.args.as_ref().map(|raw| parse_cron_args(raw));
+
+    let mut scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+    let removed_count = scheduler.clear_hook(&hook, parsed_args.as_deref());
+
+    rust_handled_json(json!({
+        "hook": hook,
+        "args": parsed_args,
+        "removed_count": removed_count,
+        "next_event_timestamp": scheduler.next_event_timestamp(),
     }))
 }
 
@@ -23467,6 +23498,114 @@ mod tests {
         assert_eq!(
             json.get("error"),
             Some(&Value::String("invalid_autoload".to_string()))
+        );
+    }
+
+    #[tokio::test]
+    async fn cron_clear_without_args_removes_all_hook_events() {
+        let state = build_app_state();
+
+        for (timestamp, args) in [(100, "one"), (200, "two")] {
+            let response = internal_cron_schedule(
+                State(state.clone()),
+                Query(InternalCronScheduleQuery {
+                    hook: Some("clear_all_hook".to_string()),
+                    timestamp: Some(timestamp),
+                    schedule: Some("hourly".to_string()),
+                    args: Some(args.to_string()),
+                    query_string: None,
+                }),
+            )
+            .await
+            .into_response();
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let clear_response = internal_cron_clear(
+            State(state.clone()),
+            Query(InternalCronClearQuery {
+                hook: Some("clear_all_hook".to_string()),
+                args: None,
+            }),
+        )
+        .await
+        .into_response();
+        let clear_json = response_json(clear_response).await;
+        assert_eq!(clear_json.get("removed_count"), Some(&Value::from(2)));
+
+        let next_response = internal_cron_next(
+            State(state),
+            Query(InternalCronNextQuery {
+                hook: Some("clear_all_hook".to_string()),
+                args: Some("one".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let next_json = response_json(next_response).await;
+        assert_eq!(next_json.get("next_event_timestamp"), Some(&Value::Null));
+    }
+
+    #[tokio::test]
+    async fn cron_clear_with_args_only_removes_matching_args() {
+        let state = build_app_state();
+
+        for (timestamp, args) in [(300, "one"), (400, "two")] {
+            let response = internal_cron_schedule(
+                State(state.clone()),
+                Query(InternalCronScheduleQuery {
+                    hook: Some("clear_args_hook".to_string()),
+                    timestamp: Some(timestamp),
+                    schedule: Some("hourly".to_string()),
+                    args: Some(args.to_string()),
+                    query_string: None,
+                }),
+            )
+            .await
+            .into_response();
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let clear_response = internal_cron_clear(
+            State(state.clone()),
+            Query(InternalCronClearQuery {
+                hook: Some("clear_args_hook".to_string()),
+                args: Some("one".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let clear_json = response_json(clear_response).await;
+        assert_eq!(clear_json.get("removed_count"), Some(&Value::from(1)));
+
+        let removed_next = internal_cron_next(
+            State(state.clone()),
+            Query(InternalCronNextQuery {
+                hook: Some("clear_args_hook".to_string()),
+                args: Some("one".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let removed_next_json = response_json(removed_next).await;
+        assert_eq!(
+            removed_next_json.get("next_event_timestamp"),
+            Some(&Value::Null)
+        );
+
+        let remaining_next = internal_cron_next(
+            State(state),
+            Query(InternalCronNextQuery {
+                hook: Some("clear_args_hook".to_string()),
+                args: Some("two".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let remaining_next_json = response_json(remaining_next).await;
+        assert_eq!(
+            remaining_next_json.get("next_event_timestamp"),
+            Some(&Value::from(400))
         );
     }
 }

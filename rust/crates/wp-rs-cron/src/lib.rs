@@ -70,6 +70,21 @@ impl CronScheduler {
         self.events.len() != previous_len
     }
 
+    pub fn clear_hook(&mut self, hook: &str, args: Option<&[String]>) -> usize {
+        let previous_len = self.events.len();
+        self.events.retain(|event| {
+            if event.hook != hook {
+                return true;
+            }
+
+            match args {
+                Some(target_args) => event.args != target_args,
+                None => false,
+            }
+        });
+        previous_len.saturating_sub(self.events.len())
+    }
+
     pub fn acquire_lock(&mut self, timeout: Duration) -> bool {
         if should_run_cron(self.lock_acquired_at, timeout) {
             self.lock_acquired_at = Some(SystemTime::now());
@@ -251,5 +266,66 @@ mod tests {
         assert!(scheduler.unschedule_event("unschedule_hook", 100, &args));
         assert_eq!(scheduler.next_event_for("unschedule_hook", &args), None);
         assert!(!scheduler.unschedule_event("unschedule_hook", 100, &args));
+    }
+
+    #[test]
+    fn scheduler_clear_hook_removes_all_matching_hook_events() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "clear_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "clear_hook".to_string(),
+            timestamp: 200,
+            schedule: Some("hourly".to_string()),
+            args: vec!["two".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "other_hook".to_string(),
+            timestamp: 150,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string()],
+        });
+
+        let removed = scheduler.clear_hook("clear_hook", None);
+        assert_eq!(removed, 2);
+
+        let other_args = vec!["one".to_string()];
+        assert_eq!(scheduler.next_event_for("clear_hook", &other_args), None);
+        assert_eq!(
+            scheduler.next_event_for("other_hook", &other_args),
+            Some(150)
+        );
+    }
+
+    #[test]
+    fn scheduler_clear_hook_with_args_removes_only_matching_args() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "clear_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "clear_hook".to_string(),
+            timestamp: 200,
+            schedule: Some("hourly".to_string()),
+            args: vec!["two".to_string()],
+        });
+
+        let target_args = vec!["one".to_string()];
+        let removed = scheduler.clear_hook("clear_hook", Some(&target_args));
+        assert_eq!(removed, 1);
+
+        assert_eq!(scheduler.next_event_for("clear_hook", &target_args), None);
+        let remaining_args = vec!["two".to_string()];
+        assert_eq!(
+            scheduler.next_event_for("clear_hook", &remaining_args),
+            Some(200)
+        );
     }
 }

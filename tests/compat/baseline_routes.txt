@@ -2060,6 +2060,13 @@ GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
 GET /__wp_rust/internal/cron-schedule?hook=unschedule_hook&timestamp=1999999700&schedule=hourly&args=clear
 DELETE /__wp_rust/internal/cron-unschedule?hook=unschedule_hook&timestamp=1999999700&args=clear
 GET /__wp_rust/internal/cron-next?hook=unschedule_hook&args=clear&checkpoint=after-unschedule
+GET /__wp_rust/internal/cron-schedule?hook=clear_hook&timestamp=1999999710&schedule=hourly&args=one
+GET /__wp_rust/internal/cron-schedule?hook=clear_hook&timestamp=1999999720&schedule=hourly&args=two
+DELETE /__wp_rust/internal/cron-clear?hook=clear_hook&args=one
+GET /__wp_rust/internal/cron-next?hook=clear_hook&args=one&checkpoint=after-clear-one
+GET /__wp_rust/internal/cron-next?hook=clear_hook&args=two&checkpoint=after-clear-two
+DELETE /__wp_rust/internal/cron-clear?hook=clear_hook
+GET /__wp_rust/internal/cron-next?hook=clear_hook&args=two&checkpoint=after-clear-all
 GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=hourly&args=one,two
 GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=twicedaily&args=one,two&checkpoint=dedupe-replace
 GET /__wp_rust/internal/cron-next?hook=dedupe_hook&args=one,two&checkpoint=dedupe-next
