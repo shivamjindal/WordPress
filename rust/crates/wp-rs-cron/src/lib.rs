@@ -62,6 +62,14 @@ impl CronScheduler {
             .map(|event| event.timestamp)
     }
 
+    pub fn unschedule_event(&mut self, hook: &str, timestamp: u64, args: &[String]) -> bool {
+        let previous_len = self.events.len();
+        self.events.retain(|event| {
+            !(event.hook == hook && event.timestamp == timestamp && event.args == args)
+        });
+        self.events.len() != previous_len
+    }
+
     pub fn acquire_lock(&mut self, timeout: Duration) -> bool {
         if should_run_cron(self.lock_acquired_at, timeout) {
             self.lock_acquired_at = Some(SystemTime::now());
@@ -227,5 +235,21 @@ mod tests {
             Some(100)
         );
         assert_eq!(scheduler.next_event_for("missing_hook", &target_args), None);
+    }
+
+    #[test]
+    fn scheduler_unschedules_matching_event() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "unschedule_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string()],
+        });
+
+        let args = vec!["one".to_string()];
+        assert!(scheduler.unschedule_event("unschedule_hook", 100, &args));
+        assert_eq!(scheduler.next_event_for("unschedule_hook", &args), None);
+        assert!(!scheduler.unschedule_event("unschedule_hook", 100, &args));
     }
 }

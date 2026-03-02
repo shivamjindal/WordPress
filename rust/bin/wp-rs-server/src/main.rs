@@ -9,7 +9,7 @@ use axum::extract::{Path, Query, Request, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode};
 use axum::middleware::{self, Next};
 use axum::response::{IntoResponse, Response};
-use axum::routing::{any, get};
+use axum::routing::{any, delete, get};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -7105,6 +7105,10 @@ async fn main() {
             get(internal_cron_schedule),
         )
         .route("/__wp_rust/internal/cron-next", get(internal_cron_next))
+        .route(
+            "/__wp_rust/internal/cron-unschedule",
+            delete(internal_cron_unschedule),
+        )
         .route("/__wp_rust/internal/cron-due", get(internal_cron_due))
         .route(
             "/__wp_rust/internal/multisite-resolve",
@@ -22695,6 +22699,13 @@ struct InternalCronNextQuery {
     args: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalCronUnscheduleQuery {
+    hook: Option<String>,
+    timestamp: Option<u64>,
+    args: Option<String>,
+}
+
 async fn internal_cron_due(
     State(state): State<AppState>,
     Query(query): Query<InternalCronDueQuery>,
@@ -22747,6 +22758,37 @@ async fn internal_cron_next(
     rust_handled_json(json!({
         "hook": hook,
         "args": args,
+        "next_event_timestamp": scheduler.next_event_for(&hook, &args),
+    }))
+}
+
+async fn internal_cron_unschedule(
+    State(state): State<AppState>,
+    Query(query): Query<InternalCronUnscheduleQuery>,
+) -> impl IntoResponse {
+    let hook = query
+        .hook
+        .unwrap_or_else(|| "wp_scheduled_delete".to_string());
+    let timestamp = query.timestamp.unwrap_or(0);
+    let args = query
+        .args
+        .unwrap_or_default()
+        .split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| value.to_string())
+        .collect::<Vec<_>>();
+    let mut scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+    let removed = scheduler.unschedule_event(&hook, timestamp, &args);
+
+    rust_handled_json(json!({
+        "hook": hook,
+        "timestamp": timestamp,
+        "args": args,
+        "removed": removed,
         "next_event_timestamp": scheduler.next_event_for(&hook, &args),
     }))
 }
