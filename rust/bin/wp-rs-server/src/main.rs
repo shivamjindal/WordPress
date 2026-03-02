@@ -22542,7 +22542,53 @@ async fn internal_multisite_resolve(
     }))
 }
 
-async fn internal_hooks_contract() -> impl IntoResponse {
+#[derive(Debug, Deserialize)]
+struct InternalHooksQuery {
+    mode: Option<String>,
+}
+
+async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> impl IntoResponse {
+    let mode = query.mode.unwrap_or_else(|| "basic".to_string());
+
+    if mode.eq_ignore_ascii_case("remove") {
+        let mut dispatcher = HookDispatcher::default();
+        let action_count = Arc::new(Mutex::new(0_u32));
+        let action_count_ref = Arc::clone(&action_count);
+        let action_id = dispatcher.add_action(
+            "init",
+            10,
+            Box::new(move |_| {
+                *action_count_ref
+                    .lock()
+                    .expect("action count mutex poisoned") += 1;
+            }),
+        );
+        let action_removed = dispatcher.remove_action("init", action_id);
+        dispatcher.do_action("init", &[]);
+
+        let filter_id = dispatcher.add_filter(
+            "the_title",
+            10,
+            Box::new(|value, _| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("{current}-mutated"))
+            }),
+        );
+        let filter_removed = dispatcher.remove_filter("the_title", filter_id);
+        let filtered =
+            dispatcher.apply_filters("the_title", Value::String("Hello".to_string()), &[]);
+
+        return rust_handled_json(json!({
+            "mode": "remove",
+            "action_removed": action_removed,
+            "action_invocations_after_remove": *action_count.lock().expect("action count mutex poisoned"),
+            "filter_removed": filter_removed,
+            "filter_result_after_remove": filtered,
+            "has_action": dispatcher.has_action("init"),
+            "has_filter": dispatcher.has_filter("the_title"),
+        }));
+    }
+
     let mut dispatcher = HookDispatcher::default();
     let action_order = Arc::new(Mutex::new(Vec::<String>::new()));
 
@@ -22593,6 +22639,7 @@ async fn internal_hooks_contract() -> impl IntoResponse {
         dispatcher.apply_filters("the_title", Value::String("Hello".to_string()), &[]);
 
     rust_handled_json(json!({
+        "mode": "basic",
         "action_hook": "init",
         "action_order": action_order
             .lock()
