@@ -6,6 +6,7 @@ license.workspace = true
 
 [dependencies]
 base64 = "0.22.1"
+bcrypt = "0.17.1"
 hmac = "0.12.1"
 md5 = "0.8.0"
 serde.workspace = true

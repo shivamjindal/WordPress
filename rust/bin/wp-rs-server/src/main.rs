@@ -16,7 +16,8 @@ use serde_json::{json, Value};
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{
-    cookie_constants, resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService,
+    cookie_constants, resolve_current_user, sign_auth_cookie, verify_password, AuthScheme,
+    AuthSecrets, NonceService,
 };
 use wp_rs_config::{
     php_runtime_core_endpoints, RuntimeProfile, RustGatewaySettings, WordPressConstants,
@@ -7069,6 +7070,10 @@ async fn main() {
         .route(
             "/__wp_rust/internal/auth-session",
             get(internal_auth_session),
+        )
+        .route(
+            "/__wp_rust/internal/password-verify",
+            get(internal_password_verify),
         )
         .route("/__wp_rust/internal/nonce", get(internal_nonce))
         .route(
@@ -22434,6 +22439,28 @@ async fn internal_auth_session(
 }
 
 #[derive(Debug, Deserialize)]
+struct InternalPasswordVerifyQuery {
+    password: Option<String>,
+    hash: Option<String>,
+}
+
+async fn internal_password_verify(
+    Query(query): Query<InternalPasswordVerifyQuery>,
+) -> impl IntoResponse {
+    let password = query.password.unwrap_or_else(|| "password123".to_string());
+    let hash = query
+        .hash
+        .unwrap_or_else(|| "$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1".to_string());
+    let valid = verify_password(&password, &hash);
+
+    rust_handled_json(json!({
+        "valid": valid,
+        "hash_prefix": hash.chars().take(4).collect::<String>(),
+        "password_length": password.chars().count(),
+    }))
+}
+
+#[derive(Debug, Deserialize)]
 struct InternalNonceQuery {
     action: Option<String>,
     verify_action: Option<String>,
@@ -23607,5 +23634,29 @@ mod tests {
             remaining_next_json.get("next_event_timestamp"),
             Some(&Value::from(400))
         );
+    }
+
+    #[tokio::test]
+    async fn password_verify_accepts_legacy_phpass_hashes() {
+        let response = internal_password_verify(Query(InternalPasswordVerifyQuery {
+            password: Some("password123".to_string()),
+            hash: Some("$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("valid"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
+    async fn password_verify_rejects_mismatched_password() {
+        let response = internal_password_verify(Query(InternalPasswordVerifyQuery {
+            password: Some("wrong-password".to_string()),
+            hash: Some("$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("valid"), Some(&Value::Bool(false)));
     }
 }

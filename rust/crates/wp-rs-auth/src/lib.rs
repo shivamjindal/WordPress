@@ -3,6 +3,7 @@ use std::time::Duration;
 
 use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use base64::Engine;
+use bcrypt::verify as bcrypt_verify;
 use hmac::{Hmac, Mac};
 use serde::Serialize;
 use sha2::Sha256;
@@ -200,6 +201,111 @@ pub fn resolve_current_user(
     }
 
     None
+}
+
+/// Verifies WordPress password hashes for modern bcrypt (`$2y$`, `$2b$`, `$2a$`)
+/// and legacy phpass (`$P$`, `$H$`) formats.
+pub fn verify_password(password: &str, hash: &str) -> bool {
+    if hash.starts_with("$P$") || hash.starts_with("$H$") {
+        return verify_phpass_password(password, hash);
+    }
+
+    let normalized_hash = if hash.starts_with("$2y$") {
+        hash.replacen("$2y$", "$2b$", 1)
+    } else {
+        hash.to_string()
+    };
+
+    bcrypt_verify(password, &normalized_hash).unwrap_or(false)
+}
+
+fn verify_phpass_password(password: &str, hash: &str) -> bool {
+    if hash.len() != 34 {
+        return false;
+    }
+
+    let setting = &hash[..12];
+    let expected = crypt_private(password, setting);
+    expected == hash
+}
+
+fn crypt_private(password: &str, setting: &str) -> String {
+    const ITOA64: &[u8] = b"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    if setting.len() < 12 {
+        return "*0".to_string();
+    }
+
+    let id = &setting[..3];
+    if id != "$P$" && id != "$H$" {
+        return "*0".to_string();
+    }
+
+    let Some(count_log2) = ITOA64
+        .iter()
+        .position(|ch| *ch == setting.as_bytes()[3])
+        .map(|index| index as u8)
+    else {
+        return "*0".to_string();
+    };
+
+    if !(7..=30).contains(&count_log2) {
+        return "*0".to_string();
+    }
+
+    let count = 1u32 << count_log2;
+    let salt = &setting[4..12];
+    if salt.len() != 8 {
+        return "*0".to_string();
+    }
+
+    let password_bytes = password.as_bytes();
+    let mut digest = md5::compute([salt.as_bytes(), password_bytes].concat())
+        .0
+        .to_vec();
+    for _ in 0..count {
+        digest = md5::compute([digest.as_slice(), password_bytes].concat())
+            .0
+            .to_vec();
+    }
+
+    let mut output = setting.to_string();
+    output.push_str(&encode64(&digest, 16));
+    output
+}
+
+fn encode64(input: &[u8], count: usize) -> String {
+    const ITOA64: &[u8] = b"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    let mut output = String::new();
+    let mut i = 0usize;
+    while i < count {
+        let mut value = u32::from(input[i]);
+        i += 1;
+        output.push(ITOA64[(value & 0x3f) as usize] as char);
+
+        if i < count {
+            value |= u32::from(input[i]) << 8;
+        }
+        output.push(ITOA64[((value >> 6) & 0x3f) as usize] as char);
+        if i >= count {
+            break;
+        }
+
+        i += 1;
+        if i < count {
+            value |= u32::from(input[i]) << 16;
+        }
+        output.push(ITOA64[((value >> 12) & 0x3f) as usize] as char);
+        if i >= count {
+            break;
+        }
+
+        i += 1;
+        output.push(ITOA64[((value >> 18) & 0x3f) as usize] as char);
+    }
+
+    output
 }
 
 fn parse_cookie_pairs(cookie_header: &str) -> Vec<(String, String)> {
@@ -498,5 +604,26 @@ mod tests {
             service.verify_nonce_code(&nonce, "save-post", 7, "token", half_life + 1),
             Some(2)
         );
+    }
+
+    #[test]
+    fn verifies_modern_bcrypt_password_hashes() {
+        let hash = bcrypt::hash("s3cret-pass", 4).expect("bcrypt hash should generate");
+        assert!(verify_password("s3cret-pass", &hash));
+        assert!(!verify_password("wrong-pass", &hash));
+    }
+
+    #[test]
+    fn verifies_wordpress_2y_bcrypt_hash_prefix() {
+        let hash = bcrypt::hash("s3cret-pass", 4).expect("bcrypt hash should generate");
+        let wordpress_hash = hash.replacen("$2b$", "$2y$", 1);
+        assert!(verify_password("s3cret-pass", &wordpress_hash));
+    }
+
+    #[test]
+    fn verifies_legacy_phpass_password_hashes() {
+        let hash = "$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1";
+        assert!(verify_password("password123", hash));
+        assert!(!verify_password("not-password123", hash));
     }
 }
