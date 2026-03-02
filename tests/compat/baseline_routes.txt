@@ -2013,6 +2013,7 @@ GET /__wp_rust/internal/content-route?path=/search&query=s%3Dwordpress
 GET /__wp_rust/internal/block-parse?content=%3C!--%20wp:paragraph%20--%3E%3Cp%3EHello%3C/p%3E%3C!--%20/wp:paragraph%20--%3E%3C!--%20wp:image%20%7B%22id%22:1%7D%20/--%3E
 GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/hooks?mode=remove
+GET /__wp_rust/internal/hooks?mode=accepted_args
 GET /__wp_rust/internal/admin-contract
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=false
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=true

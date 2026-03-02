@@ -10,11 +10,13 @@ pub struct HookId(u64);
 
 struct ActionRegistration {
     id: HookId,
+    accepted_args: usize,
     callback: ActionCallback,
 }
 
 struct FilterRegistration {
     id: HookId,
+    accepted_args: usize,
     callback: FilterCallback,
 }
 
@@ -44,13 +46,27 @@ impl HookDispatcher {
         priority: i32,
         callback: ActionCallback,
     ) -> HookId {
+        self.add_action_with_accepted_args(name, priority, usize::MAX, callback)
+    }
+
+    pub fn add_action_with_accepted_args(
+        &mut self,
+        name: impl Into<String>,
+        priority: i32,
+        accepted_args: usize,
+        callback: ActionCallback,
+    ) -> HookId {
         let id = self.allocate_id();
         self.actions
             .entry(name.into())
             .or_default()
             .entry(priority)
             .or_default()
-            .push(ActionRegistration { id, callback });
+            .push(ActionRegistration {
+                id,
+                accepted_args,
+                callback,
+            });
         id
     }
 
@@ -59,7 +75,8 @@ impl HookDispatcher {
         if let Some(by_priority) = self.actions.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
-                    (callback.callback)(args);
+                    let accepted = callback.accepted_args.min(args.len());
+                    (callback.callback)(&args[..accepted]);
                 }
             }
         }
@@ -72,13 +89,27 @@ impl HookDispatcher {
         priority: i32,
         callback: FilterCallback,
     ) -> HookId {
+        self.add_filter_with_accepted_args(name, priority, usize::MAX, callback)
+    }
+
+    pub fn add_filter_with_accepted_args(
+        &mut self,
+        name: impl Into<String>,
+        priority: i32,
+        accepted_args: usize,
+        callback: FilterCallback,
+    ) -> HookId {
         let id = self.allocate_id();
         self.filters
             .entry(name.into())
             .or_default()
             .entry(priority)
             .or_default()
-            .push(FilterRegistration { id, callback });
+            .push(FilterRegistration {
+                id,
+                accepted_args,
+                callback,
+            });
         id
     }
 
@@ -87,7 +118,8 @@ impl HookDispatcher {
         if let Some(by_priority) = self.filters.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
-                    value = (callback.callback)(value, args);
+                    let accepted = callback.accepted_args.min(args.len());
+                    value = (callback.callback)(value, &args[..accepted]);
                 }
             }
         }
@@ -208,5 +240,68 @@ mod tests {
 
         let result = dispatcher.apply_filters("sample", Value::String("value".to_string()), &[]);
         assert_eq!(result, Value::String("value".to_string()));
+    }
+
+    #[test]
+    fn action_callback_honors_accepted_args_limit() {
+        let mut dispatcher = HookDispatcher::default();
+        let seen = std::sync::Arc::new(std::sync::Mutex::new(Vec::<String>::new()));
+        let seen_ref = std::sync::Arc::clone(&seen);
+        dispatcher.add_action_with_accepted_args(
+            "sample",
+            10,
+            1,
+            Box::new(move |args| {
+                let values = args
+                    .iter()
+                    .filter_map(|value| value.as_str())
+                    .map(str::to_string)
+                    .collect::<Vec<_>>();
+                *seen_ref.lock().expect("lock poisoned") = values;
+            }),
+        );
+
+        dispatcher.do_action(
+            "sample",
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        assert_eq!(
+            *seen.lock().expect("lock poisoned"),
+            vec!["first".to_string()]
+        );
+    }
+
+    #[test]
+    fn filter_callback_honors_accepted_args_limit() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_filter_with_accepted_args(
+            "sample",
+            10,
+            1,
+            Box::new(|value, args| {
+                let current = value.as_str().unwrap_or_default();
+                let joined = args
+                    .iter()
+                    .filter_map(|item| item.as_str())
+                    .collect::<Vec<_>>()
+                    .join(",");
+                Value::String(format!("{current}|{joined}"))
+            }),
+        );
+
+        let result = dispatcher.apply_filters(
+            "sample",
+            Value::String("base".to_string()),
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        assert_eq!(result, Value::String("base|first".to_string()));
     }
 }

@@ -75,3 +75,51 @@ fn filter_chain_supports_value_transforms() {
         Value::String("[prefix] Hello [suffix]".to_string())
     );
 }
+
+#[test]
+fn callbacks_can_limit_accepted_args() {
+    let mut dispatcher = HookDispatcher::default();
+    let seen = Arc::new(Mutex::new(Vec::<String>::new()));
+    let seen_ref = Arc::clone(&seen);
+    dispatcher.add_action_with_accepted_args(
+        "init",
+        10,
+        1,
+        Box::new(move |args| {
+            let observed = args
+                .iter()
+                .filter_map(|value| value.as_str())
+                .map(str::to_string)
+                .collect::<Vec<_>>();
+            *seen_ref.lock().expect("lock") = observed;
+        }),
+    );
+    dispatcher.do_action(
+        "init",
+        &[
+            Value::String("first".to_string()),
+            Value::String("second".to_string()),
+        ],
+    );
+    assert_eq!(*seen.lock().expect("lock"), vec!["first".to_string()]);
+
+    dispatcher.add_filter_with_accepted_args(
+        "sample_filter",
+        10,
+        1,
+        Box::new(|value, args| {
+            let value = value.as_str().unwrap_or_default();
+            let first = args.first().and_then(Value::as_str).unwrap_or_default();
+            Value::String(format!("{value}|{first}"))
+        }),
+    );
+    let filtered = dispatcher.apply_filters(
+        "sample_filter",
+        Value::String("body".to_string()),
+        &[
+            Value::String("alpha".to_string()),
+            Value::String("beta".to_string()),
+        ],
+    );
+    assert_eq!(filtered, Value::String("body|alpha".to_string()));
+}
