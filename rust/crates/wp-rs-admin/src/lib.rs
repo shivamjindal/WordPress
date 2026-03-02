@@ -238,6 +238,24 @@ mod tests {
     }
 
     #[test]
+    fn rejects_missing_action_parameter() {
+        let registry = core_admin_actions();
+        let request = AdminRequest::new(AdminSurface::Ajax, "");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 400);
+        assert_eq!(result.error_code.as_deref(), Some("invalid_action"));
+    }
+
+    #[test]
+    fn rejects_unknown_action_for_surface() {
+        let registry = core_admin_actions();
+        let request = AdminRequest::new(AdminSurface::Ajax, "unknown-action");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 404);
+        assert_eq!(result.error_code.as_deref(), Some("unknown_action"));
+    }
+
+    #[test]
     fn rejects_missing_nonce_for_ajax_action() {
         let registry = core_admin_actions();
         let mut request = AdminRequest::new(AdminSurface::Ajax, "heartbeat");
