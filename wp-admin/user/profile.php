@@ -8,7 +8,9 @@
  */
 
 require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-admin/user/profile.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/user/profile.php' );
+if ( '/wp-admin/user/profile.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
