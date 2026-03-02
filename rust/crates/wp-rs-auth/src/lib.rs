@@ -325,4 +325,14 @@ mod tests {
         assert!(service.verify_nonce(&nonce, "save-post", 7, "token", now));
         assert!(!service.verify_nonce(&nonce, "delete-post", 7, "token", now));
     }
+
+    #[test]
+    fn nonce_service_rejects_after_two_tick_rollovers() {
+        let service = NonceService::default();
+        let now = 100_000;
+        let nonce = service.create_nonce("save-post", 7, "token", now);
+        let half_life = service.nonce_life.as_secs() / 2;
+        let verify_now = now + (half_life * 2);
+        assert!(!service.verify_nonce(&nonce, "save-post", 7, "token", verify_now));
+    }
 }

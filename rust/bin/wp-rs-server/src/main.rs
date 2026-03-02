@@ -22240,6 +22240,7 @@ struct InternalNonceQuery {
     user_id: Option<u64>,
     token: Option<String>,
     now: Option<u64>,
+    verify_now: Option<u64>,
 }
 
 async fn internal_nonce(
@@ -22251,17 +22252,21 @@ async fn internal_nonce(
     let verify_action = query.verify_action.unwrap_or_else(|| action.clone());
     let user_id = query.user_id.unwrap_or(1);
     let token = query.token.unwrap_or_else(|| "session-token".to_string());
+    let verify_now = query.verify_now.unwrap_or(now);
 
     let nonce = state
         .nonce_service
         .create_nonce(&action, user_id, &token, now);
-    let is_valid = state
-        .nonce_service
-        .verify_nonce(&nonce, &verify_action, user_id, &token, now);
+    let is_valid =
+        state
+            .nonce_service
+            .verify_nonce(&nonce, &verify_action, user_id, &token, verify_now);
 
     rust_handled_json(json!({
         "action": action,
         "verify_action": verify_action,
+        "issued_at": now,
+        "verify_now": verify_now,
         "user_id": user_id,
         "token": token,
         "nonce": nonce,
