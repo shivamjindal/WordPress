@@ -62,7 +62,7 @@ pub struct TableDefinition {
     pub scope: TableScope,
 }
 
-pub const CORE_TABLES: [TableDefinition; 18] = [
+pub const CORE_TABLES: [TableDefinition; 19] = [
     TableDefinition {
         logical_name: "posts",
         scope: TableScope::Blog,
@@ -121,6 +121,10 @@ pub const CORE_TABLES: [TableDefinition; 18] = [
     },
     TableDefinition {
         logical_name: "registration_log",
+        scope: TableScope::Global,
+    },
+    TableDefinition {
+        logical_name: "blog_versions",
         scope: TableScope::Global,
     },
     TableDefinition {
@@ -518,6 +522,7 @@ mod tests {
         assert!(names.contains(&"wp_users".to_string()));
         assert!(names.contains(&"wp_blogmeta".to_string()));
         assert!(names.contains(&"wp_registration_log".to_string()));
+        assert!(names.contains(&"wp_blog_versions".to_string()));
         assert!(names.contains(&"wp_signups".to_string()));
         assert!(names.contains(&"wp_sitemeta".to_string()));
     }
@@ -534,8 +539,10 @@ mod tests {
         assert!(names.contains(&"wp_blogs".to_string()));
         assert!(names.contains(&"wp_blogmeta".to_string()));
         assert!(names.contains(&"wp_registration_log".to_string()));
+        assert!(names.contains(&"wp_blog_versions".to_string()));
         assert!(names.contains(&"wp_signups".to_string()));
         assert!(!names.contains(&"wp_42_blogmeta".to_string()));
+        assert!(!names.contains(&"wp_42_blog_versions".to_string()));
         assert!(!names.contains(&"wp_42_signups".to_string()));
     }
 

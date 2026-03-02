@@ -2050,6 +2050,7 @@ GET /__wp_rust/internal/xmlrpc-contract
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=blogmeta
+GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=blog_versions
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=signups
 GET /__wp_rust/internal/db-tables?table_prefix=wp-prefix&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown
