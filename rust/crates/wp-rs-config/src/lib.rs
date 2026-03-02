@@ -2085,7 +2085,7 @@ impl WordPressConstants {
         }
 
         if let Some(value) = values.get("WP_DEVELOPMENT_MODE") {
-            constants.wp_development_mode = value.trim().to_string();
+            constants.wp_development_mode = parse_wp_development_mode(value);
         }
 
         if let Some(value) = values.get("WP_DEBUG_DISPLAY") {
@@ -2292,6 +2292,14 @@ fn parse_wp_environment_type(input: &str) -> String {
     match normalized.as_str() {
         "local" | "development" | "staging" | "production" => normalized,
         _ => "production".to_string(),
+    }
+}
+
+fn parse_wp_development_mode(input: &str) -> String {
+    let normalized = input.trim().to_ascii_lowercase();
+    match normalized.as_str() {
+        "" | "core" | "plugin" | "theme" | "all" => normalized,
+        _ => "".to_string(),
     }
 }
 
@@ -5131,5 +5139,19 @@ mod tests {
             RuntimeProfile::from_constants(&constants),
             RuntimeProfile::Production
         );
+    }
+
+    #[test]
+    fn constants_normalize_development_mode_values() {
+        let values = HashMap::from([("WP_DEVELOPMENT_MODE".to_string(), "THEME".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_development_mode, "theme");
+    }
+
+    #[test]
+    fn constants_reject_invalid_development_mode_values() {
+        let values = HashMap::from([("WP_DEVELOPMENT_MODE".to_string(), "themes".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_development_mode, "");
     }
 }

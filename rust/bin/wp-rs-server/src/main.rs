@@ -24357,6 +24357,44 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn constants_normalize_development_mode() {
+        let response = internal_constants(Query(InternalConstantsQuery {
+            wp_environment_type: None,
+            wp_debug: None,
+            wp_version: None,
+            wp_development_mode: Some("THEME".to_string()),
+            wp_debug_display: None,
+            wp_debug_log: None,
+            wp_cache: None,
+            script_debug: None,
+            media_trash: None,
+            shortinit: None,
+            wp_feature_better_passwords: None,
+            wp_content_dir: None,
+            wp_plugin_dir: None,
+            wp_lang_dir: None,
+            wp_temp_dir: None,
+            wp_memory_limit: None,
+            wp_max_memory_limit: None,
+            autosave_interval: None,
+            empty_trash_days: None,
+            wp_post_revisions: None,
+            wp_cron_lock_timeout: None,
+            wp_default_theme: None,
+            is_multisite: None,
+            ini_memory_limit: None,
+            memory_limit_changeable: None,
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(
+            json["constants"]["wp_development_mode"],
+            Value::String("theme".to_string())
+        );
+    }
+
+    #[tokio::test]
     async fn hooks_all_mode_reports_action_and_filter_invocations() {
         let response = internal_hooks_contract(Query(InternalHooksQuery {
             mode: Some("all_hook".to_string()),
