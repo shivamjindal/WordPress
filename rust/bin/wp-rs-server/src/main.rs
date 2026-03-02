@@ -7055,6 +7055,10 @@ async fn main() {
                 .delete(internal_options_delete),
         )
         .route("/__wp_rust/internal/object-cache", get(internal_object_cache))
+        .route(
+            "/__wp_rust/internal/auth-roundtrip",
+            get(internal_auth_roundtrip),
+        )
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
         .route(
             "/__wp_rust/internal/auth-session",
@@ -22110,6 +22114,52 @@ fn parse_cache_payload_value(raw_value: &str) -> Value {
     }
 
     serde_json::from_str(trimmed).unwrap_or_else(|_| Value::String(raw_value.to_string()))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalAuthRoundtripQuery {
+    user_id: Option<u64>,
+    username: Option<String>,
+    token: Option<String>,
+    expiration: Option<u64>,
+    now: Option<u64>,
+    scheme: Option<String>,
+}
+
+async fn internal_auth_roundtrip(
+    State(state): State<AppState>,
+    Query(query): Query<InternalAuthRoundtripQuery>,
+) -> impl IntoResponse {
+    let now = query.now.unwrap_or_else(unix_now);
+    let user_id = query.user_id.unwrap_or(1);
+    let username = query.username.unwrap_or_else(|| "admin".to_string());
+    let token = query.token.unwrap_or_else(|| "session-token".to_string());
+    let expiration = query.expiration.unwrap_or(now + 3_600);
+    let scheme = parse_auth_scheme(query.scheme.as_deref()).unwrap_or(AuthScheme::LoggedIn);
+    let cookie_value = sign_auth_cookie(
+        user_id,
+        &username,
+        expiration,
+        &token,
+        scheme,
+        &state.auth_secrets,
+    );
+    let cookie_name = format!("{}fixture", scheme.cookie_prefix());
+    let cookie_header = format!("{cookie_name}={cookie_value}");
+    let resolved = resolve_current_user(&cookie_header, now, &state.auth_secrets);
+
+    rust_handled_json(json!({
+        "now": now,
+        "scheme": scheme.as_str(),
+        "cookie_name": cookie_name,
+        "expiration": expiration,
+        "issued_for": {
+            "user_id": user_id,
+            "username": username,
+            "token": token,
+        },
+        "resolved": resolved,
+    }))
 }
 
 #[derive(Debug, Deserialize)]

@@ -1984,6 +1984,9 @@ GET /__wp_rust/internal/object-cache?action=set&group=posts&key=post_1&value=%7B
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-set
 GET /__wp_rust/internal/object-cache?action=delete&group=posts&key=post_1
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-delete
+GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=2000003600&scheme=logged_in
+GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=1999999999&scheme=logged_in
+GET /__wp_rust/internal/nonce?action=save-post&user_id=7&token=abc123&now=2000000000
 GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
