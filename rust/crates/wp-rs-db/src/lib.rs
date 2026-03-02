@@ -522,17 +522,17 @@ pub struct MultisiteResolver {
 
 impl MultisiteResolver {
     pub fn register_site(&mut self, site: NetworkSite) {
-        self.sites.push(site);
+        let normalized_site = NetworkSite {
+            path: normalize_network_path(&site.path),
+            ..site
+        };
+        self.sites.push(normalized_site);
         self.sites
             .sort_by(|left, right| right.path.len().cmp(&left.path.len()));
     }
 
     pub fn resolve(&self, domain: &str, request_path: &str) -> Option<NetworkSite> {
-        let normalized_path = if request_path.starts_with('/') {
-            request_path.to_string()
-        } else {
-            format!("/{request_path}")
-        };
+        let normalized_path = normalize_network_path(request_path);
 
         self.sites
             .iter()
@@ -542,6 +542,23 @@ impl MultisiteResolver {
             })
             .cloned()
     }
+}
+
+fn normalize_network_path(path: &str) -> String {
+    let trimmed = path.trim();
+    if trimmed.is_empty() || trimmed == "/" {
+        return "/".to_string();
+    }
+
+    let mut normalized = if trimmed.starts_with('/') {
+        trimmed.to_string()
+    } else {
+        format!("/{trimmed}")
+    };
+    if !normalized.ends_with('/') {
+        normalized.push('/');
+    }
+    normalized
 }
 
 #[cfg(test)]
@@ -969,6 +986,23 @@ mod tests {
             .resolve("example.com", "/blog/hello-world")
             .expect("site should resolve");
         assert_eq!(resolved.blog_id, 2);
+    }
+
+    #[test]
+    fn resolves_multisite_subdirectory_without_trailing_slash() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "blog".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blog")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 2);
+        assert_eq!(resolved.path, "/blog/");
     }
 
     #[test]
