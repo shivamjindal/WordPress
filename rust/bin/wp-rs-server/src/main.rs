@@ -22883,6 +22883,7 @@ async fn internal_db_tables(Query(query): Query<InternalDbTablesQuery>) -> Respo
 #[derive(Debug, Deserialize)]
 struct InternalConstantsQuery {
     wp_debug: Option<String>,
+    wp_version: Option<String>,
     wp_development_mode: Option<String>,
     wp_debug_display: Option<String>,
     wp_debug_log: Option<String>,
@@ -22912,6 +22913,9 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
 
     if let Some(value) = query.wp_debug {
         values.insert("WP_DEBUG".to_string(), value);
+    }
+    if let Some(value) = query.wp_version {
+        values.insert("WP_VERSION".to_string(), value);
     }
     if let Some(value) = query.wp_development_mode {
         values.insert("WP_DEVELOPMENT_MODE".to_string(), value);

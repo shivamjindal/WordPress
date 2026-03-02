@@ -2046,6 +2046,8 @@ GET /__wp_rust/internal/cron-due?now=2000000001&checkpoint=after-contract-hook
 GET /__wp_rust/internal/constants?wp_debug=1&wp_content_dir=/srv/wp-content&wp_memory_limit=128M&wp_max_memory_limit=512M
 GET /__wp_rust/internal/constants?is_multisite=true
 GET /__wp_rust/internal/constants?memory_limit_changeable=false&ini_memory_limit=96M
+GET /__wp_rust/internal/constants?wp_version=6.8-src
+GET /__wp_rust/internal/constants?wp_version=6.8-src&script_debug=0
 GET /__wp_rust/internal/constants?wp_debug=1&wp_development_mode=all&wp_debug_display=0&wp_debug_log=true&wp_cache=1
 GET /__wp_rust/internal/constants?script_debug=1&shortinit=1&autosave_interval=120&empty_trash_days=10
 GET /__wp_rust/internal/constants?wp_post_revisions=false&wp_cron_lock_timeout=180&wp_default_theme=custom-theme

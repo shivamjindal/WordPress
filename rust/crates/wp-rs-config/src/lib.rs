@@ -2087,6 +2087,12 @@ impl WordPressConstants {
 
         if let Some(value) = values.get("SCRIPT_DEBUG") {
             constants.script_debug = parse_truthy(value);
+        } else if values
+            .get("WP_VERSION")
+            .map(|version| version.contains("-src"))
+            .unwrap_or(false)
+        {
+            constants.script_debug = true;
         }
 
         if let Some(value) = values.get("MEDIA_TRASH") {
@@ -4947,6 +4953,23 @@ mod tests {
         let constants = WordPressConstants::from_map(&values);
         assert_eq!(constants.wp_memory_limit, "64M");
         assert_eq!(constants.wp_max_memory_limit, "256M");
+    }
+
+    #[test]
+    fn constants_enable_script_debug_for_src_builds() {
+        let values = HashMap::from([("WP_VERSION".to_string(), "6.8-src".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert!(constants.script_debug);
+    }
+
+    #[test]
+    fn constants_allow_explicit_script_debug_override() {
+        let values = HashMap::from([
+            ("WP_VERSION".to_string(), "6.8-src".to_string()),
+            ("SCRIPT_DEBUG".to_string(), "0".to_string()),
+        ]);
+        let constants = WordPressConstants::from_map(&values);
+        assert!(!constants.script_debug);
     }
 
     #[test]
