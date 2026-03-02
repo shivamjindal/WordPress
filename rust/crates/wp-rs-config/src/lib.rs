@@ -2248,6 +2248,8 @@ pub fn parse_php_size_to_bytes(input: &str) -> Option<u64> {
         "k" | "kb" => 1024,
         "m" | "mb" => 1024_u64.pow(2),
         "g" | "gb" => 1024_u64.pow(3),
+        "t" | "tb" => 1024_u64.pow(4),
+        "p" | "pb" => 1024_u64.pow(5),
         _ => return None,
     };
     Some(value.saturating_mul(multiplier))
@@ -4992,6 +4994,8 @@ mod tests {
     fn parses_php_size_units() {
         assert_eq!(parse_php_size_to_bytes("40M"), Some(40 * 1024 * 1024));
         assert_eq!(parse_php_size_to_bytes("2g"), Some(2 * 1024 * 1024 * 1024));
+        assert_eq!(parse_php_size_to_bytes("1T"), Some(1024_u64.pow(4)));
+        assert_eq!(parse_php_size_to_bytes("1PB"), Some(1024_u64.pow(5)));
         assert_eq!(parse_php_size_to_bytes("1024"), Some(1024));
         assert_eq!(parse_php_size_to_bytes("-1"), Some(u64::MAX));
         assert_eq!(parse_php_size_to_bytes("bad"), None);

@@ -24489,6 +24489,42 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn constants_parse_terabyte_and_petabyte_memory_sizes() {
+        let response = internal_constants(Query(InternalConstantsQuery {
+            wp_environment_type: None,
+            wp_debug: None,
+            wp_version: None,
+            wp_development_mode: None,
+            wp_debug_display: None,
+            wp_debug_log: None,
+            wp_cache: None,
+            script_debug: None,
+            media_trash: None,
+            shortinit: None,
+            wp_feature_better_passwords: None,
+            wp_content_dir: None,
+            wp_plugin_dir: None,
+            wp_lang_dir: None,
+            wp_temp_dir: None,
+            wp_memory_limit: Some("1T".to_string()),
+            wp_max_memory_limit: Some("1PB".to_string()),
+            autosave_interval: None,
+            empty_trash_days: None,
+            wp_post_revisions: None,
+            wp_cron_lock_timeout: None,
+            wp_default_theme: None,
+            is_multisite: None,
+            ini_memory_limit: None,
+            memory_limit_changeable: None,
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["memory_limit_bytes"], Value::from(1024_u64.pow(4)));
+        assert_eq!(json["max_memory_limit_bytes"], Value::from(1024_u64.pow(5)));
+    }
+
+    #[tokio::test]
     async fn multisite_resolve_matches_subdirectory_without_trailing_slash() {
         let state = build_app_state();
         let response = internal_multisite_resolve(

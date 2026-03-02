@@ -2114,6 +2114,7 @@ GET /__wp_rust/internal/constants?is_multisite=true
 GET /__wp_rust/internal/constants?memory_limit_changeable=false&ini_memory_limit=96M
 GET /__wp_rust/internal/constants?wp_version=6.8-src
 GET /__wp_rust/internal/constants?wp_version=6.8-src&script_debug=0
+GET /__wp_rust/internal/constants?wp_memory_limit=1T&wp_max_memory_limit=1PB
 GET /__wp_rust/internal/constants?wp_debug=1&wp_development_mode=all&wp_debug_display=0&wp_debug_log=true&wp_cache=1
 GET /__wp_rust/internal/constants?wp_development_mode=THEME
 GET /__wp_rust/internal/constants?wp_debug_log=%2Ftmp%2Fdebug.log&wp_post_revisions=5

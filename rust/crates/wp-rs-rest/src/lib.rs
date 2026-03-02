@@ -125,6 +125,13 @@ impl RestRouteRegistry {
                     "You are not currently logged in.",
                 );
             }
+            AuthRequirement::Capability(_) if !request.authenticated => {
+                return RestDispatchResult::error(
+                    401,
+                    "rest_not_logged_in",
+                    "You are not currently logged in.",
+                );
+            }
             AuthRequirement::Capability(capability)
                 if !request.capabilities.contains(capability.as_str()) =>
             {
@@ -302,6 +309,14 @@ mod tests {
         request.capabilities.insert("edit_posts".to_string());
         let ok = registry.dispatch(&request);
         assert_eq!(ok.status_code, 200);
+    }
+
+    #[test]
+    fn capability_route_requires_authentication_before_capability_check() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("POST", "/wp-json/wp/v2/posts");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 401);
     }
 
     #[test]
