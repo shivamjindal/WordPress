@@ -460,4 +460,17 @@ mod tests {
             .expect("site should resolve");
         assert_eq!(resolved.blog_id, 2);
     }
+
+    #[test]
+    fn multisite_resolver_returns_none_for_unknown_domain() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 1,
+            domain: "example.com".to_string(),
+            path: "/".to_string(),
+            is_public: true,
+        });
+
+        assert!(resolver.resolve("invalid.example", "/").is_none());
+    }
 }
