@@ -22234,6 +22234,26 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "delete_multiple" => {
+            if keys.is_empty() {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_keys",
+                        "message": "keys query parameter is required for delete_multiple.",
+                    }),
+                )
+                .into_response();
+            }
+            let deleted_count = cache.delete_multiple(&keys, &group);
+            rust_handled_json(json!({
+                "action": "delete_multiple",
+                "group": group,
+                "keys": keys,
+                "deleted_count": deleted_count,
+            }))
+            .into_response()
+        }
         "flush_group" => {
             let flushed = cache.flush_group(&group);
             rust_handled_json(json!({
@@ -22298,7 +22318,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, get_multiple, set, add, replace, incr, decr, delete, flush_group, flush_all.",
+                "message": "action must be one of: get, get_multiple, set, add, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
                 "action": action,
             }),
         )
@@ -23656,6 +23676,60 @@ mod tests {
         assert_eq!(json["values"]["one"], Value::String("alpha".to_string()));
         assert_eq!(json["values"]["two"], Value::String("beta".to_string()));
         assert_eq!(json["values"]["missing"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn object_cache_delete_multiple_removes_present_keys() {
+        let state = build_app_state();
+
+        for (key, value) in [("one", "\"alpha\""), ("two", "\"beta\"")] {
+            let response = internal_object_cache(
+                State(state.clone()),
+                Query(InternalObjectCacheQuery {
+                    action: Some("set".to_string()),
+                    group: Some("batch-delete".to_string()),
+                    key: Some(key.to_string()),
+                    keys: None,
+                    value: Some(value.to_string()),
+                    ttl_seconds: None,
+                    offset: None,
+                }),
+            )
+            .await;
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let delete_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("delete_multiple".to_string()),
+                group: Some("batch-delete".to_string()),
+                key: None,
+                keys: Some("one,missing,two".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let delete_json = response_json(delete_response).await;
+        assert_eq!(delete_json["deleted_count"], Value::from(2));
+
+        let read_response = internal_object_cache(
+            State(state),
+            Query(InternalObjectCacheQuery {
+                action: Some("get_multiple".to_string()),
+                group: Some("batch-delete".to_string()),
+                key: None,
+                keys: Some("one,two".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let read_json = response_json(read_response).await;
+        assert_eq!(read_json["hit_count"], Value::from(0));
     }
 
     #[tokio::test]

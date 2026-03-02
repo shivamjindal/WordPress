@@ -395,6 +395,10 @@ impl ObjectCache {
             .collect()
     }
 
+    pub fn delete_multiple(&mut self, keys: &[String], group: &str) -> usize {
+        keys.iter().filter(|key| self.delete(key, group)).count()
+    }
+
     pub fn incr(&mut self, key: &str, group: &str, offset: u64) -> Option<i64> {
         let now = SystemTime::now();
         let entries = self.groups.get_mut(group)?;
@@ -695,6 +699,22 @@ mod tests {
             Some(&Some(Value::String("two".to_string())))
         );
         assert_eq!(result.get("missing"), Some(&None));
+    }
+
+    #[test]
+    fn object_cache_delete_multiple_removes_existing_keys() {
+        let mut cache = ObjectCache::default();
+        cache.set("first", "posts", Value::String("one".to_string()), None);
+        cache.set("second", "posts", Value::String("two".to_string()), None);
+
+        let keys = vec![
+            "first".to_string(),
+            "missing".to_string(),
+            "second".to_string(),
+        ];
+        assert_eq!(cache.delete_multiple(&keys, "posts"), 2);
+        assert_eq!(cache.get("first", "posts"), None);
+        assert_eq!(cache.get("second", "posts"), None);
     }
 
     #[test]
