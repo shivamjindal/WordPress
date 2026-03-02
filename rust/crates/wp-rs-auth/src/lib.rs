@@ -229,6 +229,24 @@ pub fn verify_password(password: &str, hash: &str) -> bool {
     bcrypt_verify(password, &normalized_hash).unwrap_or(false)
 }
 
+/// Mirrors WordPress `wp_password_needs_rehash()` default behavior for bcrypt:
+/// legacy md5/phpass and non-prefixed bcrypt hashes require rehashing.
+pub fn password_needs_rehash(hash: &str) -> bool {
+    if hash.len() <= 32 && hash.chars().all(|character| character.is_ascii_hexdigit()) {
+        return true;
+    }
+
+    if hash.starts_with("$P$") || hash.starts_with("$H$") {
+        return true;
+    }
+
+    if hash.starts_with("$wp$") {
+        return false;
+    }
+
+    hash.starts_with("$2")
+}
+
 fn normalize_bcrypt_hash_prefix(hash: &str) -> String {
     if hash.starts_with("$2y$") {
         hash.replacen("$2y$", "$2b$", 1)
@@ -693,5 +711,17 @@ mod tests {
 
         assert!(verify_password("password123", &wp_hash));
         assert!(!verify_password("wrong-password", &wp_hash));
+    }
+
+    #[test]
+    fn password_needs_rehash_flags_legacy_and_unprefixed_bcrypt_hashes() {
+        assert!(password_needs_rehash("482c811da5d5b4bc6d497ffa98491e38"));
+        assert!(password_needs_rehash("$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1"));
+        assert!(password_needs_rehash(
+            "$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG"
+        ));
+        assert!(!password_needs_rehash(
+            "$wp$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG"
+        ));
     }
 }

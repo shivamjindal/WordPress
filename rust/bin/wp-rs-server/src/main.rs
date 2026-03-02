@@ -16,8 +16,8 @@ use serde_json::{json, Value};
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{
-    cookie_constants, resolve_current_user, sign_auth_cookie, verify_password, AuthScheme,
-    AuthSecrets, NonceService,
+    cookie_constants, password_needs_rehash, resolve_current_user, sign_auth_cookie,
+    verify_password, AuthScheme, AuthSecrets, NonceService,
 };
 use wp_rs_config::{
     php_runtime_core_endpoints, RuntimeProfile, RustGatewaySettings, WordPressConstants,
@@ -7074,6 +7074,10 @@ async fn main() {
         .route(
             "/__wp_rust/internal/password-verify",
             get(internal_password_verify),
+        )
+        .route(
+            "/__wp_rust/internal/password-needs-rehash",
+            get(internal_password_needs_rehash),
         )
         .route("/__wp_rust/internal/nonce", get(internal_nonce))
         .route(
@@ -22624,6 +22628,20 @@ async fn internal_password_verify(
     }))
 }
 
+async fn internal_password_needs_rehash(
+    Query(query): Query<InternalPasswordVerifyQuery>,
+) -> impl IntoResponse {
+    let hash = query
+        .hash
+        .unwrap_or_else(|| "482c811da5d5b4bc6d497ffa98491e38".to_string());
+    let needs_rehash = password_needs_rehash(&hash);
+
+    rust_handled_json(json!({
+        "needs_rehash": needs_rehash,
+        "hash_prefix": hash.chars().take(4).collect::<String>(),
+    }))
+}
+
 #[derive(Debug, Deserialize)]
 struct InternalNonceQuery {
     action: Option<String>,
@@ -24300,6 +24318,32 @@ mod tests {
         .into_response();
         let json = response_json(response).await;
         assert_eq!(json.get("valid"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
+    async fn password_needs_rehash_marks_legacy_hashes() {
+        let response = internal_password_needs_rehash(Query(InternalPasswordVerifyQuery {
+            password: None,
+            hash: Some("482c811da5d5b4bc6d497ffa98491e38".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("needs_rehash"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
+    async fn password_needs_rehash_skips_wp_prefixed_hashes() {
+        let response = internal_password_needs_rehash(Query(InternalPasswordVerifyQuery {
+            password: None,
+            hash: Some(
+                "$wp$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG".to_string(),
+            ),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("needs_rehash"), Some(&Value::Bool(false)));
     }
 
     #[tokio::test]
