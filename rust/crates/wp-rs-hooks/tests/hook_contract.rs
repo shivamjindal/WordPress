@@ -106,7 +106,7 @@ fn callbacks_can_limit_accepted_args() {
     dispatcher.add_filter_with_accepted_args(
         "sample_filter",
         10,
-        1,
+        2,
         Box::new(|value, args| {
             let value = value.as_str().unwrap_or_default();
             let first = args.first().and_then(Value::as_str).unwrap_or_default();

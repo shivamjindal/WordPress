@@ -121,7 +121,7 @@ impl HookDispatcher {
         if let Some(by_priority) = self.filters.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
-                    let accepted = callback.accepted_args.min(args.len());
+                    let accepted = callback.accepted_args.saturating_sub(1).min(args.len());
                     value = (callback.callback)(value, &args[..accepted]);
                 }
             }
@@ -289,7 +289,7 @@ mod tests {
         dispatcher.add_filter_with_accepted_args(
             "sample",
             10,
-            1,
+            2,
             Box::new(|value, args| {
                 let current = value.as_str().unwrap_or_default();
                 let joined = args
@@ -311,6 +311,31 @@ mod tests {
         );
 
         assert_eq!(result, Value::String("base|first".to_string()));
+    }
+
+    #[test]
+    fn filter_callback_default_accepted_args_passes_no_extra_args() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_filter_with_accepted_args(
+            "sample",
+            10,
+            1,
+            Box::new(|value, args| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("{current}|{}", args.len()))
+            }),
+        );
+
+        let result = dispatcher.apply_filters(
+            "sample",
+            Value::String("base".to_string()),
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        assert_eq!(result, Value::String("base|0".to_string()));
     }
 
     #[test]

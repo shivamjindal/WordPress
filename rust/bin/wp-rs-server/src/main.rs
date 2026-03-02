@@ -22766,7 +22766,7 @@ async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> imp
         dispatcher.add_filter_with_accepted_args(
             "the_content",
             10,
-            1,
+            2,
             Box::new(|value, args| {
                 let current = value.as_str().unwrap_or_default();
                 let first = args.first().and_then(Value::as_str).unwrap_or_default();
