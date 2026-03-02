@@ -22004,6 +22004,7 @@ struct InternalObjectCacheQuery {
     key: Option<String>,
     value: Option<String>,
     ttl_seconds: Option<u64>,
+    offset: Option<i64>,
 }
 
 async fn internal_object_cache(
@@ -22102,6 +22103,76 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "incr" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for incr.",
+                    }),
+                )
+                .into_response();
+            };
+            let offset = query.offset.unwrap_or(1);
+            let updated = cache.incr(&key, &group, offset);
+            match updated {
+                Some(value) => rust_handled_json(json!({
+                    "action": "incr",
+                    "group": group,
+                    "key": key,
+                    "offset": offset,
+                    "value": value,
+                }))
+                .into_response(),
+                None => rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_numeric_value",
+                        "message": "key must exist and contain a numeric value for incr.",
+                        "group": group,
+                        "key": key,
+                        "offset": offset,
+                    }),
+                )
+                .into_response(),
+            }
+        }
+        "decr" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for decr.",
+                    }),
+                )
+                .into_response();
+            };
+            let offset = query.offset.unwrap_or(1);
+            let updated = cache.decr(&key, &group, offset);
+            match updated {
+                Some(value) => rust_handled_json(json!({
+                    "action": "decr",
+                    "group": group,
+                    "key": key,
+                    "offset": offset,
+                    "value": value,
+                }))
+                .into_response(),
+                None => rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_numeric_value",
+                        "message": "key must exist and contain a numeric value for decr.",
+                        "group": group,
+                        "key": key,
+                        "offset": offset,
+                    }),
+                )
+                .into_response(),
+            }
+        }
         "delete" => {
             let Some(key) = key else {
                 return rust_handled_json_with_status(
@@ -22164,7 +22235,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, set, add, replace, delete, flush_group, flush_all.",
+                "message": "action must be one of: get, set, add, replace, incr, decr, delete, flush_group, flush_all.",
                 "action": action,
             }),
         )

@@ -370,6 +370,36 @@ impl ObjectCache {
             .is_some()
     }
 
+    pub fn incr(&mut self, key: &str, group: &str, offset: i64) -> Option<i64> {
+        let now = SystemTime::now();
+        let entries = self.groups.get_mut(group)?;
+        let entry = entries.get_mut(key)?;
+        if is_cache_entry_expired(entry, now) {
+            entries.remove(key);
+            return None;
+        }
+
+        let current = parse_cache_numeric_value(&entry.value)?;
+        let updated = current.saturating_add(offset);
+        entry.value = Value::from(updated);
+        Some(updated)
+    }
+
+    pub fn decr(&mut self, key: &str, group: &str, offset: i64) -> Option<i64> {
+        let now = SystemTime::now();
+        let entries = self.groups.get_mut(group)?;
+        let entry = entries.get_mut(key)?;
+        if is_cache_entry_expired(entry, now) {
+            entries.remove(key);
+            return None;
+        }
+
+        let current = parse_cache_numeric_value(&entry.value)?;
+        let updated = (current.saturating_sub(offset)).max(0);
+        entry.value = Value::from(updated);
+        Some(updated)
+    }
+
     pub fn flush_group(&mut self, group: &str) -> bool {
         self.groups.remove(group).is_some()
     }
@@ -381,6 +411,16 @@ impl ObjectCache {
 
 fn is_cache_entry_expired(entry: &CacheEntry, now: SystemTime) -> bool {
     entry.expires_at.is_some_and(|expires_at| now >= expires_at)
+}
+
+fn parse_cache_numeric_value(value: &Value) -> Option<i64> {
+    match value {
+        Value::Number(number) => number
+            .as_i64()
+            .or_else(|| number.as_u64().and_then(|value| i64::try_from(value).ok())),
+        Value::String(text) => text.trim().parse::<i64>().ok(),
+        _ => None,
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -614,6 +654,39 @@ mod tests {
             cache.get("post_1", "posts"),
             Some(Value::String("fresh".to_string()))
         );
+    }
+
+    #[test]
+    fn object_cache_incr_and_decr_support_numeric_values() {
+        let mut cache = ObjectCache::default();
+        cache.set("counter", "stats", Value::from(10), None);
+
+        assert_eq!(cache.incr("counter", "stats", 2), Some(12));
+        assert_eq!(cache.decr("counter", "stats", 5), Some(7));
+        assert_eq!(cache.get("counter", "stats"), Some(Value::from(7)));
+    }
+
+    #[test]
+    fn object_cache_decr_floors_at_zero() {
+        let mut cache = ObjectCache::default();
+        cache.set("counter", "stats", Value::from(3), None);
+
+        assert_eq!(cache.decr("counter", "stats", 10), Some(0));
+        assert_eq!(cache.get("counter", "stats"), Some(Value::from(0)));
+    }
+
+    #[test]
+    fn object_cache_incr_rejects_non_numeric_values() {
+        let mut cache = ObjectCache::default();
+        cache.set(
+            "counter",
+            "stats",
+            Value::String("not-a-number".to_string()),
+            None,
+        );
+
+        assert_eq!(cache.incr("counter", "stats", 1), None);
+        assert_eq!(cache.decr("counter", "stats", 1), None);
     }
 
     #[test]

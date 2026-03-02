@@ -1993,6 +1993,10 @@ GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoin
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=post_1&value=%7B%22cached%22%3A%22replaced%22%7D
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-replace
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=missing&value=%7B%22cached%22%3A%22none%22%7D
+GET /__wp_rust/internal/object-cache?action=set&group=stats&key=counter&value=10
+GET /__wp_rust/internal/object-cache?action=incr&group=stats&key=counter&offset=2
+GET /__wp_rust/internal/object-cache?action=decr&group=stats&key=counter&offset=20
+GET /__wp_rust/internal/object-cache?action=get&group=stats&key=counter&checkpoint=after-decr-floor
 GET /__wp_rust/internal/object-cache?action=set&group=posts&key=ephemeral&value=%7B%22cached%22%3A%22ephemeral%22%7D&ttl_seconds=0
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=ephemeral&checkpoint=after-ttl-expired
 GET /__wp_rust/internal/object-cache?action=delete&group=posts&key=post_1
