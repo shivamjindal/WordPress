@@ -242,6 +242,11 @@ impl OptionStore {
         self.values.get(name).map(|record| record.value.clone())
     }
 
+    pub fn get_option_with_default(&self, name: &str, default: Option<&str>) -> Option<String> {
+        self.get_option(name)
+            .or_else(|| default.map(|value| value.to_string()))
+    }
+
     pub fn get_option_record(&self, name: &str) -> Option<OptionRecord> {
         self.values.get(name).cloned()
     }
@@ -606,6 +611,16 @@ mod tests {
             .expect("option should exist");
         assert_eq!(option.value, "WordPress");
         assert!(option.autoload);
+    }
+
+    #[test]
+    fn option_store_returns_default_for_missing_option() {
+        let store = OptionStore::default();
+        assert_eq!(
+            store.get_option_with_default("missing", Some("fallback")),
+            Some("fallback".to_string())
+        );
+        assert_eq!(store.get_option_with_default("missing", None), None);
     }
 
     #[test]

@@ -21890,6 +21890,7 @@ fn build_app_state() -> AppState {
 struct InternalOptionsQuery {
     option: Option<String>,
     autoload_only: Option<bool>,
+    default_value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -21908,11 +21909,15 @@ async fn internal_options(
 
     if let Some(option_name) = query.option {
         let record = options.get_option_record(&option_name);
+        let resolved =
+            options.get_option_with_default(&option_name, query.default_value.as_deref());
         return rust_handled_json(json!({
             "scope": "single",
             "option": option_name,
             "found": record.is_some(),
             "value": record.as_ref().map(|record| record.value.clone()),
+            "resolved_value": resolved,
+            "default_value": query.default_value,
             "autoload": record.as_ref().map(|record| record.autoload),
         }));
     }
@@ -23522,6 +23527,7 @@ mod tests {
             Query(InternalOptionsQuery {
                 option: Some("rust_autoload_preserve_test".to_string()),
                 autoload_only: None,
+                default_value: None,
             }),
         )
         .await
@@ -23533,6 +23539,27 @@ mod tests {
             Some(&Value::String("updated".to_string()))
         );
         assert_eq!(read_json.get("autoload"), Some(&Value::Bool(false)));
+    }
+
+    #[tokio::test]
+    async fn options_read_returns_default_value_for_missing_option() {
+        let state = build_app_state();
+        let response = internal_options(
+            State(state),
+            Query(InternalOptionsQuery {
+                option: Some("missing_option".to_string()),
+                autoload_only: None,
+                default_value: Some("fallback".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("found"), Some(&Value::Bool(false)));
+        assert_eq!(
+            json.get("resolved_value"),
+            Some(&Value::String("fallback".to_string()))
+        );
     }
 
     #[tokio::test]
