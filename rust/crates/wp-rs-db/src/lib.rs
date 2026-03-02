@@ -36,6 +36,10 @@ pub enum DatabaseError {
 
 /// Validates a WordPress table prefix using core-compatible constraints.
 pub fn validate_table_prefix(prefix: &str) -> Result<(), DatabaseError> {
+    if prefix.is_empty() {
+        return Err(DatabaseError::InvalidTablePrefix(prefix.to_string()));
+    }
+
     if !prefix
         .chars()
         .all(|character| character.is_ascii_alphanumeric() || character == '_')
@@ -478,6 +482,11 @@ mod tests {
     #[test]
     fn rejects_invalid_prefix() {
         assert!(validate_table_prefix("wp-prefix").is_err());
+    }
+
+    #[test]
+    fn rejects_empty_prefix() {
+        assert!(validate_table_prefix("").is_err());
     }
 
     #[test]
