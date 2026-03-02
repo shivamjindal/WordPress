@@ -12,18 +12,7 @@ type HmacSha256 = Hmac<Sha256>;
 
 /// Parses an HTTP Cookie header into a key/value map.
 pub fn parse_cookie_header(cookie_header: &str) -> HashMap<String, String> {
-    cookie_header
-        .split(';')
-        .filter_map(|pair| {
-            let mut pieces = pair.trim().splitn(2, '=');
-            let key = pieces.next()?.trim();
-            let value = pieces.next().unwrap_or_default().trim();
-            if key.is_empty() {
-                return None;
-            }
-            Some((key.to_string(), value.to_string()))
-        })
-        .collect()
+    parse_cookie_pairs(cookie_header).into_iter().collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -189,7 +178,7 @@ pub fn resolve_current_user(
     now_timestamp: u64,
     secrets: &AuthSecrets,
 ) -> Option<AuthenticatedUser> {
-    let cookies = parse_cookie_header(cookie_header);
+    let cookies = parse_cookie_pairs(cookie_header);
     let candidates = [
         (AuthScheme::LoggedIn, "wordpress_logged_in_"),
         (AuthScheme::SecureAuth, "wordpress_sec_"),
@@ -197,12 +186,13 @@ pub fn resolve_current_user(
     ];
 
     for (scheme, prefix) in candidates {
-        let matching_cookie = cookies
+        let matching_cookies = cookies
             .iter()
-            .find(|(name, _)| name.starts_with(prefix))
-            .map(|(_, value)| value);
+            .filter(|(name, _)| name.starts_with(prefix))
+            .map(|(_, value)| value)
+            .collect::<Vec<_>>();
 
-        if let Some(cookie_value) = matching_cookie {
+        for cookie_value in matching_cookies {
             if let Ok(user) = verify_auth_cookie(cookie_value, scheme, now_timestamp, secrets) {
                 return Some(user);
             }
@@ -210,6 +200,21 @@ pub fn resolve_current_user(
     }
 
     None
+}
+
+fn parse_cookie_pairs(cookie_header: &str) -> Vec<(String, String)> {
+    cookie_header
+        .split(';')
+        .filter_map(|pair| {
+            let mut pieces = pair.trim().splitn(2, '=');
+            let key = pieces.next()?.trim();
+            let value = pieces.next().unwrap_or_default().trim();
+            if key.is_empty() {
+                return None;
+            }
+            Some((key.to_string(), value.to_string()))
+        })
+        .collect()
 }
 
 #[derive(Debug, Clone)]
@@ -426,6 +431,21 @@ mod tests {
         let resolved = resolve_current_user(&header, 4_999, &secrets).expect("user should resolve");
         assert_eq!(resolved.user_id, 33);
         assert_eq!(resolved.username, "author");
+    }
+
+    #[test]
+    fn resolves_user_when_invalid_prefixed_cookie_is_present() {
+        let secrets = AuthSecrets::default();
+        let valid_cookie =
+            sign_auth_cookie(44, "manager", 5_000, "token-2", AuthScheme::Auth, &secrets);
+        let header = format!(
+            "wordpress_test_cookie=WP+Cookie+check; wordpress_fixture=invalid; wordpress_fixture_auth={valid_cookie}"
+        );
+        let resolved = resolve_current_user(&header, 4_999, &secrets)
+            .expect("user should resolve despite malformed prefixed cookies");
+        assert_eq!(resolved.user_id, 44);
+        assert_eq!(resolved.username, "manager");
+        assert_eq!(resolved.scheme, AuthScheme::Auth);
     }
 
     #[test]

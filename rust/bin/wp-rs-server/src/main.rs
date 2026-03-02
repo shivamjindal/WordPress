@@ -22272,6 +22272,7 @@ struct InternalAuthRoundtripQuery {
     now: Option<u64>,
     scheme: Option<String>,
     tamper: Option<bool>,
+    include_noise_cookie: Option<bool>,
 }
 
 async fn internal_auth_roundtrip(
@@ -22299,7 +22300,14 @@ async fn internal_auth_roundtrip(
         cookie_value
     };
     let cookie_name = format!("{}fixture", scheme.cookie_prefix());
-    let cookie_header = format!("{cookie_name}={cookie_value}");
+    let include_noise_cookie = query.include_noise_cookie.unwrap_or(false);
+    let cookie_header = if include_noise_cookie {
+        format!(
+            "wordpress_test_cookie=WP+Cookie+check; wordpress_fixture=invalid; {cookie_name}={cookie_value}; other=1"
+        )
+    } else {
+        format!("{cookie_name}={cookie_value}")
+    };
     let resolved = resolve_current_user(&cookie_header, now, &state.auth_secrets);
 
     rust_handled_json(json!({
@@ -22313,6 +22321,7 @@ async fn internal_auth_roundtrip(
             "token": token,
         },
         "tampered": tampered,
+        "include_noise_cookie": include_noise_cookie,
         "resolved": resolved,
     }))
 }

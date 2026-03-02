@@ -2007,6 +2007,7 @@ GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&no
 GET /__wp_rust/internal/auth-cookie-constants?siteurl=https%3A%2F%2Fexample.com
 GET /__wp_rust/internal/auth-cookie-constants
 GET /__wp_rust/internal/auth-roundtrip?user_id=9&username=editor&token=auth-token&now=2000000000&expiration=2000003600&scheme=auth
+GET /__wp_rust/internal/auth-roundtrip?user_id=9&username=editor&token=auth-token&now=2000000000&expiration=2000003600&scheme=auth&include_noise_cookie=true
 GET /__wp_rust/internal/auth-roundtrip?user_id=11&username=admin&token=secure-token&now=2000000000&expiration=2000003600&scheme=secure_auth
 GET /__wp_rust/internal/nonce?action=save-post&user_id=7&token=abc123&now=2000000000
 GET /__wp_rust/internal/nonce?action=save-post&verify_action=delete-post&user_id=7&token=abc123&now=2000000000
