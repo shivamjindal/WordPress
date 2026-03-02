@@ -24428,6 +24428,24 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn rest_dispatch_requires_login_for_capability_routes() {
+        let response = internal_rest_dispatch(Query(InternalRestDispatchQuery {
+            method: Some("POST".to_string()),
+            path: Some("/wp-json/wp/v2/posts".to_string()),
+            authenticated: Some(false),
+            capabilities: None,
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["status_code"], Value::from(401));
+        assert_eq!(
+            json["error_code"],
+            Value::String("rest_not_logged_in".to_string())
+        );
+    }
+
+    #[tokio::test]
     async fn auth_roundtrip_resolves_urlencoded_cookie_values() {
         let state = build_app_state();
         let response = internal_auth_roundtrip(

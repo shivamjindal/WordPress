@@ -2058,6 +2058,7 @@ GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authe
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true&capabilities=edit_posts
 GET /__wp_rust/internal/rest-contract
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/posts
+GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=false
 GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=true&capabilities=edit_posts
 GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=true
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&authenticated=false
