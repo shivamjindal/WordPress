@@ -8792,7 +8792,7 @@ async fn options_live_dispatch(State(state): State<AppState>, request: Request) 
         {
             continue;
         }
-        options.set_option(&key, &value, false);
+        options.set_option(&key, &value, Some(false));
         updated_count += 1;
     }
 
@@ -12067,12 +12067,12 @@ async fn network_settings_live_dispatch(
         let registration = params.get("registration").cloned().unwrap_or_default();
         {
             let mut options = state.options.lock().expect("options mutex poisoned");
-            options.set_option("network_site_name", &site_name, false);
+            options.set_option("network_site_name", &site_name, Some(false));
             if !new_admin_email.is_empty() {
-                options.set_option("network_admin_email", &new_admin_email, false);
+                options.set_option("network_admin_email", &new_admin_email, Some(false));
             }
             if !registration.is_empty() {
-                options.set_option("network_registration", &registration, false);
+                options.set_option("network_registration", &registration, Some(false));
             }
         }
         return rust_handled_redirect("/wp-admin/network/settings.php?updated=true")
@@ -12371,7 +12371,7 @@ async fn network_site_settings_live_dispatch(
                         continue;
                     }
                     let namespaced_key = format!("site_{site_id}_{option_name}");
-                    options.set_option(&namespaced_key, value, false);
+                    options.set_option(&namespaced_key, value, Some(false));
                     updated_count += 1;
                 }
             }
@@ -21837,11 +21837,11 @@ async fn read_request_body(body: axum::body::Body) -> Bytes {
 
 fn build_app_state() -> AppState {
     let mut options = OptionStore::default();
-    options.set_option("blogname", "WordPress", true);
-    options.set_option("blogdescription", "Just another WordPress site", true);
-    options.set_option("home", "http://localhost", true);
-    options.set_option("siteurl", "http://localhost", true);
-    options.set_option("recently_edited", "[]", false);
+    options.set_option("blogname", "WordPress", Some(true));
+    options.set_option("blogdescription", "Just another WordPress site", Some(true));
+    options.set_option("home", "http://localhost", Some(true));
+    options.set_option("siteurl", "http://localhost", Some(true));
+    options.set_option("recently_edited", "[]", Some(false));
 
     let mut scheduler = CronScheduler::default();
     scheduler.schedule_event(CronEvent {
@@ -21939,12 +21939,12 @@ async fn internal_options_upsert(
     let mut options = state.options.lock().expect("options mutex poisoned");
     let previous = options.get_option(&option_name);
     let value = query.value.unwrap_or_default();
-    let autoload = query.autoload.unwrap_or(true);
+    let autoload = query.autoload;
     let mode = query.mode.unwrap_or_else(|| "upsert".to_string());
     let changed = if mode.eq_ignore_ascii_case("upsert") {
         options.set_option(option_name.clone(), value.clone(), autoload)
     } else if mode.eq_ignore_ascii_case("add") {
-        options.add_option(option_name.clone(), value.clone(), autoload)
+        options.add_option(option_name.clone(), value.clone(), autoload.unwrap_or(true))
     } else {
         return rust_handled_json_with_status(
             StatusCode::BAD_REQUEST,
@@ -21963,7 +21963,10 @@ async fn internal_options_upsert(
         "option": option_name,
         "previous": previous,
         "value": value,
-        "autoload": autoload,
+        "autoload": options
+            .get_option_record(&option_name)
+            .map(|record| record.autoload),
+        "autoload_input": autoload,
         "changed": changed,
     }))
     .into_response()
@@ -23208,4 +23211,70 @@ fn unix_now() -> u64 {
         .duration_since(UNIX_EPOCH)
         .expect("system time should be after unix epoch")
         .as_secs()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    async fn response_json(response: Response) -> Value {
+        let body = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("response body should read");
+        serde_json::from_slice(&body).expect("response body should be valid json")
+    }
+
+    #[tokio::test]
+    async fn options_upsert_preserves_existing_autoload_when_unspecified() {
+        let state = build_app_state();
+
+        let first_response = internal_options_upsert(
+            State(state.clone()),
+            Query(InternalOptionsMutationQuery {
+                option: Some("rust_autoload_preserve_test".to_string()),
+                value: Some("seed".to_string()),
+                autoload: Some(false),
+                mode: Some("upsert".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let first_json = response_json(first_response).await;
+        assert_eq!(first_json.get("changed"), Some(&Value::Bool(true)));
+        assert_eq!(first_json.get("autoload"), Some(&Value::Bool(false)));
+        assert_eq!(first_json.get("autoload_input"), Some(&Value::Bool(false)));
+
+        let second_response = internal_options_upsert(
+            State(state.clone()),
+            Query(InternalOptionsMutationQuery {
+                option: Some("rust_autoload_preserve_test".to_string()),
+                value: Some("updated".to_string()),
+                autoload: None,
+                mode: Some("upsert".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let second_json = response_json(second_response).await;
+        assert_eq!(second_json.get("changed"), Some(&Value::Bool(true)));
+        assert_eq!(second_json.get("autoload"), Some(&Value::Bool(false)));
+        assert_eq!(second_json.get("autoload_input"), Some(&Value::Null));
+
+        let read_response = internal_options(
+            State(state),
+            Query(InternalOptionsQuery {
+                option: Some("rust_autoload_preserve_test".to_string()),
+                autoload_only: None,
+            }),
+        )
+        .await
+        .into_response();
+        let read_json = response_json(read_response).await;
+        assert_eq!(read_json.get("found"), Some(&Value::Bool(true)));
+        assert_eq!(
+            read_json.get("value"),
+            Some(&Value::String("updated".to_string()))
+        );
+        assert_eq!(read_json.get("autoload"), Some(&Value::Bool(false)));
+    }
 }

@@ -202,12 +202,18 @@ impl OptionStore {
         &mut self,
         name: impl Into<String>,
         value: impl Into<String>,
-        autoload: bool,
+        autoload: Option<bool>,
     ) -> bool {
         let name = name.into();
         let value = value.into();
+        let resolved_autoload = autoload.unwrap_or_else(|| {
+            self.values
+                .get(&name)
+                .map(|existing| existing.autoload)
+                .unwrap_or(true)
+        });
         if let Some(existing) = self.values.get(&name) {
-            if existing.value == value && existing.autoload == autoload {
+            if existing.value == value && existing.autoload == resolved_autoload {
                 return false;
             }
         }
@@ -217,7 +223,7 @@ impl OptionStore {
             OptionRecord {
                 name,
                 value,
-                autoload,
+                autoload: resolved_autoload,
             },
         );
         self.alloptions_cache = None;
@@ -527,8 +533,8 @@ mod tests {
     #[test]
     fn option_store_tracks_autoload_cache() {
         let mut store = OptionStore::default();
-        store.set_option("blogname", "Example", true);
-        store.set_option("transient_timeout", "12345", false);
+        store.set_option("blogname", "Example", Some(true));
+        store.set_option("transient_timeout", "12345", Some(false));
         let alloptions = store.load_alloptions();
         assert_eq!(alloptions.get("blogname"), Some(&"Example".to_string()));
         assert!(!alloptions.contains_key("transient_timeout"));
@@ -537,11 +543,11 @@ mod tests {
     #[test]
     fn option_store_invalidates_alloptions_after_mutations() {
         let mut store = OptionStore::default();
-        store.set_option("blogname", "WordPress", true);
+        store.set_option("blogname", "WordPress", Some(true));
         let initial = store.load_alloptions();
         assert_eq!(initial.get("blogname"), Some(&"WordPress".to_string()));
 
-        store.set_option("blogname", "WordPress Rust", true);
+        store.set_option("blogname", "WordPress Rust", Some(true));
         let updated = store.load_alloptions();
         assert_eq!(updated.get("blogname"), Some(&"WordPress Rust".to_string()));
 
@@ -553,10 +559,22 @@ mod tests {
     #[test]
     fn option_store_reports_noop_updates() {
         let mut store = OptionStore::default();
-        assert!(store.set_option("blogname", "WordPress", true));
-        assert!(!store.set_option("blogname", "WordPress", true));
-        assert!(store.set_option("blogname", "WordPress Rust", true));
-        assert!(store.set_option("blogname", "WordPress Rust", false));
+        assert!(store.set_option("blogname", "WordPress", Some(true)));
+        assert!(!store.set_option("blogname", "WordPress", Some(true)));
+        assert!(store.set_option("blogname", "WordPress Rust", Some(true)));
+        assert!(store.set_option("blogname", "WordPress Rust", Some(false)));
+    }
+
+    #[test]
+    fn option_store_preserves_autoload_when_unspecified() {
+        let mut store = OptionStore::default();
+        assert!(store.set_option("blogname", "WordPress", Some(false)));
+        assert!(store.set_option("blogname", "WordPress 2", None));
+        let record = store
+            .get_option_record("blogname")
+            .expect("option should exist");
+        assert_eq!(record.value, "WordPress 2");
+        assert!(!record.autoload);
     }
 
     #[test]

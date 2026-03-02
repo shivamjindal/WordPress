@@ -1979,7 +1979,11 @@ GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-noo
 POST /__wp_rust/internal/options?option=rust_add_option&value=first&autoload=true&mode=add
 POST /__wp_rust/internal/options?option=rust_add_option&value=second&autoload=false&mode=add&checkpoint=duplicate
 GET /__wp_rust/internal/options?option=rust_add_option&checkpoint=after-add-duplicate
+POST /__wp_rust/internal/options?option=rust_autoload_preserve&value=seed&autoload=false&mode=upsert
+POST /__wp_rust/internal/options?option=rust_autoload_preserve&value=updated-without-autoload&mode=upsert&checkpoint=preserve
+GET /__wp_rust/internal/options?option=rust_autoload_preserve&checkpoint=after-preserve
 DELETE /__wp_rust/internal/options?option=rust_add_option
+DELETE /__wp_rust/internal/options?option=rust_autoload_preserve
 DELETE /__wp_rust/internal/options?option=rust_contract_option
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-delete
 POST /__wp_rust/internal/options?option=rust_autoload_option&value=autoloaded&autoload=true
