@@ -21885,7 +21885,7 @@ struct InternalOptionsQuery {
 struct InternalOptionsMutationQuery {
     option: Option<String>,
     value: Option<String>,
-    autoload: Option<bool>,
+    autoload: Option<String>,
     mode: Option<String>,
 }
 
@@ -21939,7 +21939,23 @@ async fn internal_options_upsert(
     let mut options = state.options.lock().expect("options mutex poisoned");
     let previous = options.get_option(&option_name);
     let value = query.value.unwrap_or_default();
-    let autoload = query.autoload;
+    let autoload = match query.autoload.as_deref() {
+        Some(raw) => match parse_boolish(raw) {
+            Some(parsed) => Some(parsed),
+            None => {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_autoload",
+                        "message": "autoload must be a boolean-like value (true/false, 1/0, yes/no, on/off).",
+                        "autoload": raw,
+                    }),
+                )
+                .into_response();
+            }
+        },
+        None => None,
+    };
     let mode = query.mode.unwrap_or_else(|| "upsert".to_string());
     let changed = if mode.eq_ignore_ascii_case("upsert") {
         options.set_option(option_name.clone(), value.clone(), autoload)
@@ -21966,7 +21982,7 @@ async fn internal_options_upsert(
         "autoload": options
             .get_option_record(&option_name)
             .map(|record| record.autoload),
-        "autoload_input": autoload,
+        "autoload_input": query.autoload,
         "changed": changed,
     }))
     .into_response()
@@ -22255,6 +22271,14 @@ fn normalize_option_name(option: Option<String>) -> Option<String> {
             Some(normalized.to_string())
         }
     })
+}
+
+fn parse_boolish(value: &str) -> Option<bool> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "1" | "true" | "yes" | "on" => Some(true),
+        "0" | "false" | "no" | "off" => Some(false),
+        _ => None,
+    }
 }
 
 fn parse_cache_payload_value(raw_value: &str) -> Value {
@@ -23233,7 +23257,7 @@ mod tests {
             Query(InternalOptionsMutationQuery {
                 option: Some("rust_autoload_preserve_test".to_string()),
                 value: Some("seed".to_string()),
-                autoload: Some(false),
+                autoload: Some("false".to_string()),
                 mode: Some("upsert".to_string()),
             }),
         )
@@ -23242,7 +23266,10 @@ mod tests {
         let first_json = response_json(first_response).await;
         assert_eq!(first_json.get("changed"), Some(&Value::Bool(true)));
         assert_eq!(first_json.get("autoload"), Some(&Value::Bool(false)));
-        assert_eq!(first_json.get("autoload_input"), Some(&Value::Bool(false)));
+        assert_eq!(
+            first_json.get("autoload_input"),
+            Some(&Value::String("false".to_string()))
+        );
 
         let second_response = internal_options_upsert(
             State(state.clone()),
@@ -23276,5 +23303,49 @@ mod tests {
             Some(&Value::String("updated".to_string()))
         );
         assert_eq!(read_json.get("autoload"), Some(&Value::Bool(false)));
+    }
+
+    #[tokio::test]
+    async fn options_upsert_accepts_yes_no_autoload_values() {
+        let state = build_app_state();
+        let response = internal_options_upsert(
+            State(state),
+            Query(InternalOptionsMutationQuery {
+                option: Some("rust_autoload_yesno_test".to_string()),
+                value: Some("value".to_string()),
+                autoload: Some("no".to_string()),
+                mode: Some("upsert".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("autoload"), Some(&Value::Bool(false)));
+        assert_eq!(
+            json.get("autoload_input"),
+            Some(&Value::String("no".to_string()))
+        );
+    }
+
+    #[tokio::test]
+    async fn options_upsert_rejects_invalid_autoload_values() {
+        let state = build_app_state();
+        let response = internal_options_upsert(
+            State(state),
+            Query(InternalOptionsMutationQuery {
+                option: Some("rust_autoload_invalid_test".to_string()),
+                value: Some("value".to_string()),
+                autoload: Some("maybe".to_string()),
+                mode: Some("upsert".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        let json = response_json(response).await;
+        assert_eq!(
+            json.get("error"),
+            Some(&Value::String("invalid_autoload".to_string()))
+        );
     }
 }
