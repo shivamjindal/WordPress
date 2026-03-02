@@ -22765,6 +22765,51 @@ async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> imp
         }));
     }
 
+    if mode.eq_ignore_ascii_case("default_accepted_args") {
+        let mut dispatcher = HookDispatcher::default();
+        let action_seen = Arc::new(Mutex::new(Vec::<String>::new()));
+        let action_seen_ref = Arc::clone(&action_seen);
+        dispatcher.add_action(
+            "init",
+            10,
+            Box::new(move |args| {
+                let observed = args
+                    .iter()
+                    .filter_map(|value| value.as_str())
+                    .map(str::to_string)
+                    .collect::<Vec<_>>();
+                *action_seen_ref.lock().expect("action seen mutex poisoned") = observed;
+            }),
+        );
+        dispatcher.do_action(
+            "init",
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        dispatcher.add_filter(
+            "the_content",
+            10,
+            Box::new(|value, args| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("{current}|{}", args.len()))
+            }),
+        );
+        let filtered = dispatcher.apply_filters(
+            "the_content",
+            Value::String("body".to_string()),
+            &[Value::String("extra".to_string())],
+        );
+
+        return rust_handled_json(json!({
+            "mode": "default_accepted_args",
+            "action_seen": action_seen.lock().expect("action seen mutex poisoned").clone(),
+            "filter_result": filtered,
+        }));
+    }
+
     if mode.eq_ignore_ascii_case("accepted_args") {
         let mut dispatcher = HookDispatcher::default();
         let action_seen = Arc::new(Mutex::new(Vec::<String>::new()));

@@ -48,7 +48,7 @@ impl HookDispatcher {
         priority: i32,
         callback: ActionCallback,
     ) -> HookId {
-        self.add_action_with_accepted_args(name, priority, usize::MAX, callback)
+        self.add_action_with_accepted_args(name, priority, 1, callback)
     }
 
     pub fn add_action_with_accepted_args(
@@ -92,7 +92,7 @@ impl HookDispatcher {
         priority: i32,
         callback: FilterCallback,
     ) -> HookId {
-        self.add_filter_with_accepted_args(name, priority, usize::MAX, callback)
+        self.add_filter_with_accepted_args(name, priority, 1, callback)
     }
 
     pub fn add_filter_with_accepted_args(
@@ -351,5 +351,59 @@ mod tests {
         assert_eq!(dispatcher.did_hook("init"), 2);
         assert_eq!(dispatcher.did_hook("the_title"), 1);
         assert_eq!(dispatcher.did_hook("missing"), 0);
+    }
+
+    #[test]
+    fn action_default_accepted_args_passes_only_first_argument() {
+        let mut dispatcher = HookDispatcher::default();
+        let seen = std::sync::Arc::new(std::sync::Mutex::new(Vec::<String>::new()));
+        let seen_ref = std::sync::Arc::clone(&seen);
+
+        dispatcher.add_action(
+            "sample",
+            10,
+            Box::new(move |args| {
+                let observed = args
+                    .iter()
+                    .filter_map(|value| value.as_str())
+                    .map(str::to_string)
+                    .collect::<Vec<_>>();
+                *seen_ref.lock().expect("lock poisoned") = observed;
+            }),
+        );
+
+        dispatcher.do_action(
+            "sample",
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        assert_eq!(
+            *seen.lock().expect("lock poisoned"),
+            vec!["first".to_string()]
+        );
+    }
+
+    #[test]
+    fn filter_default_accepted_args_passes_no_extra_arguments() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_filter(
+            "sample",
+            10,
+            Box::new(|value, args| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("{current}|{}", args.len()))
+            }),
+        );
+
+        let result = dispatcher.apply_filters(
+            "sample",
+            Value::String("base".to_string()),
+            &[Value::String("extra".to_string())],
+        );
+
+        assert_eq!(result, Value::String("base|0".to_string()));
     }
 }
