@@ -22415,10 +22415,11 @@ async fn internal_nonce(
     let nonce = state
         .nonce_service
         .create_nonce(&action, user_id, &token, now);
-    let is_valid =
+    let verification_code =
         state
             .nonce_service
-            .verify_nonce(&nonce, &verify_action, user_id, &token, verify_now);
+            .verify_nonce_code(&nonce, &verify_action, user_id, &token, verify_now);
+    let is_valid = verification_code.is_some();
 
     rust_handled_json(json!({
         "action": action,
@@ -22429,6 +22430,7 @@ async fn internal_nonce(
         "token": token,
         "nonce": nonce,
         "valid": is_valid,
+        "verification_code": verification_code,
     }))
 }
 

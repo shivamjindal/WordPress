@@ -247,6 +247,22 @@ impl NonceService {
         session_token: &str,
         now_timestamp: u64,
     ) -> bool {
+        self.verify_nonce_code(nonce, action, user_id, session_token, now_timestamp)
+            .is_some()
+    }
+
+    /// Mirrors `wp_verify_nonce()` semantics:
+    /// - `Some(1)` current tick
+    /// - `Some(2)` previous tick
+    /// - `None` invalid
+    pub fn verify_nonce_code(
+        &self,
+        nonce: &str,
+        action: &str,
+        user_id: u64,
+        session_token: &str,
+        now_timestamp: u64,
+    ) -> Option<u8> {
         let current_tick = self.tick(now_timestamp);
         let current = self.nonce_for_tick(current_tick, action, user_id, session_token);
         let previous = self.nonce_for_tick(
@@ -255,7 +271,13 @@ impl NonceService {
             user_id,
             session_token,
         );
-        nonce == current || nonce == previous
+        if nonce == current {
+            Some(1)
+        } else if nonce == previous {
+            Some(2)
+        } else {
+            None
+        }
     }
 
     fn tick(&self, now_timestamp: u64) -> u64 {
@@ -412,7 +434,23 @@ mod tests {
         let now = 100_000;
         let nonce = service.create_nonce("save-post", 7, "token", now);
         assert!(service.verify_nonce(&nonce, "save-post", 7, "token", now));
+        assert_eq!(
+            service.verify_nonce_code(&nonce, "save-post", 7, "token", now),
+            Some(1)
+        );
         assert!(!service.verify_nonce(&nonce, "delete-post", 7, "token", now));
+    }
+
+    #[test]
+    fn nonce_service_returns_previous_tick_code() {
+        let service = NonceService::default();
+        let issued_at = 100_000;
+        let nonce = service.create_nonce("save-post", 7, "token", issued_at);
+        let verify_now = issued_at + service.nonce_life.as_secs() / 2;
+        assert_eq!(
+            service.verify_nonce_code(&nonce, "save-post", 7, "token", verify_now),
+            Some(2)
+        );
     }
 
     #[test]
