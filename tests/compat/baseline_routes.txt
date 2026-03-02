@@ -1976,6 +1976,10 @@ POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&aut
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-write
 POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&autoload=false&checkpoint=noop
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-noop
+POST /__wp_rust/internal/options?option=rust_add_option&value=first&autoload=true&mode=add
+POST /__wp_rust/internal/options?option=rust_add_option&value=second&autoload=false&mode=add&checkpoint=duplicate
+GET /__wp_rust/internal/options?option=rust_add_option&checkpoint=after-add-duplicate
+DELETE /__wp_rust/internal/options?option=rust_add_option
 DELETE /__wp_rust/internal/options?option=rust_contract_option
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-delete
 POST /__wp_rust/internal/options?option=rust_autoload_option&value=autoloaded&autoload=true

@@ -21886,6 +21886,7 @@ struct InternalOptionsMutationQuery {
     option: Option<String>,
     value: Option<String>,
     autoload: Option<bool>,
+    mode: Option<String>,
 }
 
 async fn internal_options(
@@ -21939,10 +21940,26 @@ async fn internal_options_upsert(
     let previous = options.get_option(&option_name);
     let value = query.value.unwrap_or_default();
     let autoload = query.autoload.unwrap_or(true);
-    let changed = options.set_option(option_name.clone(), value.clone(), autoload);
+    let mode = query.mode.unwrap_or_else(|| "upsert".to_string());
+    let changed = if mode.eq_ignore_ascii_case("upsert") {
+        options.set_option(option_name.clone(), value.clone(), autoload)
+    } else if mode.eq_ignore_ascii_case("add") {
+        options.add_option(option_name.clone(), value.clone(), autoload)
+    } else {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_mode",
+                "message": "mode must be one of: upsert, add.",
+                "mode": mode,
+            }),
+        )
+        .into_response();
+    };
 
     rust_handled_json(json!({
         "scope": "write",
+        "mode": mode,
         "option": option_name,
         "previous": previous,
         "value": value,

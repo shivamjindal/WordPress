@@ -175,6 +175,29 @@ pub struct OptionStore {
 }
 
 impl OptionStore {
+    pub fn add_option(
+        &mut self,
+        name: impl Into<String>,
+        value: impl Into<String>,
+        autoload: bool,
+    ) -> bool {
+        let name = name.into();
+        if self.values.contains_key(&name) {
+            return false;
+        }
+
+        self.values.insert(
+            name.clone(),
+            OptionRecord {
+                name,
+                value: value.into(),
+                autoload,
+            },
+        );
+        self.alloptions_cache = None;
+        true
+    }
+
     pub fn set_option(
         &mut self,
         name: impl Into<String>,
@@ -494,6 +517,19 @@ mod tests {
         assert!(!store.set_option("blogname", "WordPress", true));
         assert!(store.set_option("blogname", "WordPress Rust", true));
         assert!(store.set_option("blogname", "WordPress Rust", false));
+    }
+
+    #[test]
+    fn option_store_add_option_only_writes_when_missing() {
+        let mut store = OptionStore::default();
+        assert!(store.add_option("blogname", "WordPress", true));
+        assert!(!store.add_option("blogname", "Different", false));
+
+        let option = store
+            .get_option_record("blogname")
+            .expect("option should exist");
+        assert_eq!(option.value, "WordPress");
+        assert!(option.autoload);
     }
 
     #[test]
