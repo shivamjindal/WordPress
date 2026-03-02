@@ -287,7 +287,7 @@ impl NonceService {
 
     fn tick(&self, now_timestamp: u64) -> u64 {
         let half_life = (self.nonce_life.as_secs() / 2).max(1);
-        now_timestamp / half_life
+        now_timestamp.saturating_add(half_life.saturating_sub(1)) / half_life
     }
 
     fn nonce_for_tick(&self, tick: u64, action: &str, user_id: u64, session_token: &str) -> String {
@@ -481,5 +481,22 @@ mod tests {
         let half_life = service.nonce_life.as_secs() / 2;
         let verify_now = now + (half_life * 2);
         assert!(!service.verify_nonce(&nonce, "save-post", 7, "token", verify_now));
+    }
+
+    #[test]
+    fn nonce_service_uses_wordpress_tick_boundary_semantics() {
+        let service = NonceService::default();
+        let half_life = service.nonce_life.as_secs() / 2;
+        let issued_at = 1;
+        let nonce = service.create_nonce("save-post", 7, "token", issued_at);
+
+        assert_eq!(
+            service.verify_nonce_code(&nonce, "save-post", 7, "token", half_life),
+            Some(1)
+        );
+        assert_eq!(
+            service.verify_nonce_code(&nonce, "save-post", 7, "token", half_life + 1),
+            Some(2)
+        );
     }
 }
