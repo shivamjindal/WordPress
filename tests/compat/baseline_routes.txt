@@ -1998,6 +1998,14 @@ GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticat
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=false
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true&capabilities=edit_posts
+GET /__wp_rust/internal/rest-contract
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/posts
+GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=true&capabilities=edit_posts
+GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=true
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&authenticated=false
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&authenticated=true
+GET /__wp_rust/internal/rest-dispatch?method=DELETE&path=/wp-json/wp/v2/posts
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/unknown
 GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/hooks?mode=remove
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=false

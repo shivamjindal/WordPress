@@ -248,11 +248,41 @@ mod tests {
     }
 
     #[test]
+    fn authenticated_route_allows_logged_in_request() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("GET", "/wp-json/wp/v2/users/me");
+        request.authenticated = true;
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+    }
+
+    #[test]
     fn returns_method_not_allowed_for_known_path() {
         let registry = core_seed_routes();
         let request = RestRequest::new("DELETE", "/wp-json/wp/v2/posts");
         let result = registry.dispatch(&request);
         assert_eq!(result.status_code, 405);
+    }
+
+    #[test]
+    fn returns_not_found_for_unknown_path() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("GET", "/wp-json/wp/v2/unknown");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 404);
+    }
+
+    #[test]
+    fn settings_route_requires_manage_options_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("GET", "/wp-json/wp/v2/settings");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("manage_options".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
     }
 
     #[test]
