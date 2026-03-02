@@ -59,7 +59,7 @@ impl RustGatewaySettings {
         let mut settings = Self::default();
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_ENABLED") {
-            settings.enabled = parse_truthy(&value);
+            settings.enabled = parse_gateway_truthy(&value);
         }
 
         if let Ok(value) = env::var("WP_RUST_DEPLOYMENT_PROFILE") {
@@ -70,7 +70,7 @@ impl RustGatewaySettings {
         }
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_FALLBACK_ENABLED") {
-            settings.fallback_enabled = parse_truthy(&value);
+            settings.fallback_enabled = parse_gateway_truthy(&value);
         }
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_BACKEND_URL") {
@@ -1982,7 +1982,14 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
     ]
 }
 
-fn parse_truthy(value: &str) -> bool {
+fn parse_gateway_truthy(value: &str) -> bool {
+    matches!(
+        value.trim().to_ascii_lowercase().as_str(),
+        "1" | "true" | "yes" | "on"
+    )
+}
+
+fn parse_php_truthy(value: &str) -> bool {
     let normalized = value.trim().to_ascii_lowercase();
     !matches!(normalized.as_str(), "" | "0" | "false" | "off" | "no")
 }
@@ -2053,7 +2060,7 @@ impl WordPressConstants {
         let mut constants = Self::default();
         let memory_limit_changeable = values
             .get("MEMORY_LIMIT_CHANGEABLE")
-            .map(|value| parse_truthy(value))
+            .map(|value| parse_php_truthy(value))
             .unwrap_or(true);
         let ini_memory_limit = values
             .get("INI_MEMORY_LIMIT")
@@ -2062,11 +2069,11 @@ impl WordPressConstants {
             .map(str::to_string);
         let is_multisite = values
             .get("IS_MULTISITE")
-            .map(|value| parse_truthy(value))
+            .map(|value| parse_php_truthy(value))
             .unwrap_or(false);
 
         if let Some(value) = values.get("WP_DEBUG") {
-            constants.wp_debug = parse_truthy(value);
+            constants.wp_debug = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("WP_DEVELOPMENT_MODE") {
@@ -2074,19 +2081,19 @@ impl WordPressConstants {
         }
 
         if let Some(value) = values.get("WP_DEBUG_DISPLAY") {
-            constants.wp_debug_display = parse_truthy(value);
+            constants.wp_debug_display = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("WP_DEBUG_LOG") {
-            constants.wp_debug_log = parse_truthy(value);
+            constants.wp_debug_log = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("WP_CACHE") {
-            constants.wp_cache = parse_truthy(value);
+            constants.wp_cache = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("SCRIPT_DEBUG") {
-            constants.script_debug = parse_truthy(value);
+            constants.script_debug = parse_php_truthy(value);
         } else if values
             .get("WP_VERSION")
             .map(|version| version.contains("-src"))
@@ -2096,15 +2103,15 @@ impl WordPressConstants {
         }
 
         if let Some(value) = values.get("MEDIA_TRASH") {
-            constants.media_trash = parse_truthy(value);
+            constants.media_trash = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("SHORTINIT") {
-            constants.shortinit = parse_truthy(value);
+            constants.shortinit = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("WP_FEATURE_BETTER_PASSWORDS") {
-            constants.wp_feature_better_passwords = parse_truthy(value);
+            constants.wp_feature_better_passwords = parse_php_truthy(value);
         }
 
         if let Some(value) = values.get("WP_CONTENT_DIR") {
@@ -2250,7 +2257,7 @@ fn parse_wp_post_revisions(input: &str) -> (bool, Option<u64>) {
         };
     }
 
-    (parse_truthy(trimmed), None)
+    (parse_php_truthy(trimmed), None)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4915,6 +4922,22 @@ mod tests {
 
         assert!(settings.should_route("/wp-json/wp/v2/posts"));
         assert!(!settings.should_route("/xmlrpc.php"));
+    }
+
+    #[test]
+    fn gateway_truthy_parser_is_strict() {
+        assert!(parse_gateway_truthy("1"));
+        assert!(parse_gateway_truthy("true"));
+        assert!(!parse_gateway_truthy("2"));
+        assert!(!parse_gateway_truthy("maybe"));
+    }
+
+    #[test]
+    fn php_truthy_parser_treats_non_empty_strings_as_true() {
+        assert!(parse_php_truthy("/tmp/debug.log"));
+        assert!(parse_php_truthy("2"));
+        assert!(!parse_php_truthy("0"));
+        assert!(!parse_php_truthy(""));
     }
 
     #[test]
