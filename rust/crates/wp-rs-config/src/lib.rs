@@ -1993,24 +1993,50 @@ fn parse_truthy(value: &str) -> bool {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WordPressConstants {
     pub wp_debug: bool,
+    pub wp_development_mode: String,
+    pub wp_debug_display: bool,
+    pub wp_debug_log: bool,
+    pub wp_cache: bool,
+    pub script_debug: bool,
+    pub media_trash: bool,
+    pub shortinit: bool,
+    pub wp_feature_better_passwords: bool,
     pub wp_content_dir: String,
     pub wp_plugins_dir: String,
     pub wp_lang_dir: String,
     pub wp_temp_dir: String,
     pub wp_memory_limit: String,
     pub wp_max_memory_limit: String,
+    pub autosave_interval: u64,
+    pub empty_trash_days: u64,
+    pub wp_post_revisions: bool,
+    pub wp_cron_lock_timeout: u64,
+    pub wp_default_theme: String,
 }
 
 impl Default for WordPressConstants {
     fn default() -> Self {
         Self {
             wp_debug: false,
+            wp_development_mode: "".to_string(),
+            wp_debug_display: true,
+            wp_debug_log: false,
+            wp_cache: false,
+            script_debug: false,
+            media_trash: false,
+            shortinit: false,
+            wp_feature_better_passwords: true,
             wp_content_dir: "wp-content".to_string(),
             wp_plugins_dir: "wp-content/plugins".to_string(),
             wp_lang_dir: "wp-content/languages".to_string(),
             wp_temp_dir: "wp-content/uploads".to_string(),
             wp_memory_limit: "40M".to_string(),
             wp_max_memory_limit: "256M".to_string(),
+            autosave_interval: 60,
+            empty_trash_days: 30,
+            wp_post_revisions: true,
+            wp_cron_lock_timeout: 60,
+            wp_default_theme: "twentytwentyfive".to_string(),
         }
     }
 }
@@ -2025,9 +2051,54 @@ impl WordPressConstants {
     /// Builds constants from key/value map.
     pub fn from_map(values: &HashMap<String, String>) -> Self {
         let mut constants = Self::default();
+        let memory_limit_changeable = values
+            .get("MEMORY_LIMIT_CHANGEABLE")
+            .map(|value| parse_truthy(value))
+            .unwrap_or(true);
+        let ini_memory_limit = values
+            .get("INI_MEMORY_LIMIT")
+            .map(|value| value.trim())
+            .filter(|value| !value.is_empty())
+            .map(str::to_string);
+        let is_multisite = values
+            .get("IS_MULTISITE")
+            .map(|value| parse_truthy(value))
+            .unwrap_or(false);
 
         if let Some(value) = values.get("WP_DEBUG") {
             constants.wp_debug = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("WP_DEVELOPMENT_MODE") {
+            constants.wp_development_mode = value.trim().to_string();
+        }
+
+        if let Some(value) = values.get("WP_DEBUG_DISPLAY") {
+            constants.wp_debug_display = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("WP_DEBUG_LOG") {
+            constants.wp_debug_log = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("WP_CACHE") {
+            constants.wp_cache = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("SCRIPT_DEBUG") {
+            constants.script_debug = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("MEDIA_TRASH") {
+            constants.media_trash = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("SHORTINIT") {
+            constants.shortinit = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("WP_FEATURE_BETTER_PASSWORDS") {
+            constants.wp_feature_better_passwords = parse_truthy(value);
         }
 
         if let Some(value) = values.get("WP_CONTENT_DIR") {
@@ -2058,11 +2129,62 @@ impl WordPressConstants {
             if !value.trim().is_empty() {
                 constants.wp_memory_limit = value.trim().to_string();
             }
+        } else if !memory_limit_changeable {
+            if let Some(value) = ini_memory_limit.as_deref() {
+                constants.wp_memory_limit = value.to_string();
+            }
+        } else if is_multisite {
+            constants.wp_memory_limit = "64M".to_string();
         }
 
         if let Some(value) = values.get("WP_MAX_MEMORY_LIMIT") {
             if !value.trim().is_empty() {
                 constants.wp_max_memory_limit = value.trim().to_string();
+            }
+        } else if !memory_limit_changeable {
+            if let Some(value) = ini_memory_limit.as_deref() {
+                constants.wp_max_memory_limit = value.to_string();
+            }
+        } else {
+            let max_limit_bytes = 256 * 1024 * 1024;
+            let memory_limit_bytes = parse_php_size_to_bytes(&constants.wp_memory_limit);
+            let ini_memory_limit_bytes = ini_memory_limit
+                .as_deref()
+                .and_then(parse_php_size_to_bytes);
+            if ini_memory_limit_bytes.is_some_and(|value| value > max_limit_bytes) {
+                if let Some(value) = ini_memory_limit.as_deref() {
+                    constants.wp_max_memory_limit = value.to_string();
+                }
+            } else if memory_limit_bytes.is_some_and(|value| value > max_limit_bytes) {
+                constants.wp_max_memory_limit = constants.wp_memory_limit.clone();
+            }
+        }
+
+        if let Some(value) = values.get("AUTOSAVE_INTERVAL") {
+            if let Ok(parsed) = value.trim().parse::<u64>() {
+                constants.autosave_interval = parsed;
+            }
+        }
+
+        if let Some(value) = values.get("EMPTY_TRASH_DAYS") {
+            if let Ok(parsed) = value.trim().parse::<u64>() {
+                constants.empty_trash_days = parsed;
+            }
+        }
+
+        if let Some(value) = values.get("WP_POST_REVISIONS") {
+            constants.wp_post_revisions = parse_truthy(value);
+        }
+
+        if let Some(value) = values.get("WP_CRON_LOCK_TIMEOUT") {
+            if let Ok(parsed) = value.trim().parse::<u64>() {
+                constants.wp_cron_lock_timeout = parsed;
+            }
+        }
+
+        if let Some(value) = values.get("WP_DEFAULT_THEME") {
+            if !value.trim().is_empty() {
+                constants.wp_default_theme = value.trim().to_string();
             }
         }
 
@@ -2084,8 +2206,17 @@ pub fn parse_php_size_to_bytes(input: &str) -> Option<u64> {
         return None;
     }
 
-    let (digits, suffix) =
-        trimmed.split_at(trimmed.find(|character: char| !character.is_ascii_digit())?);
+    if trimmed == "-1" {
+        return Some(u64::MAX);
+    }
+
+    let split_index = trimmed
+        .find(|character: char| !character.is_ascii_digit())
+        .unwrap_or(trimmed.len());
+    let (digits, suffix) = trimmed.split_at(split_index);
+    if digits.is_empty() {
+        return None;
+    }
     let value = digits.parse::<u64>().ok()?;
     let multiplier = match suffix.trim().to_ascii_lowercase().as_str() {
         "" => 1,
@@ -4765,6 +4896,8 @@ mod tests {
     fn parses_php_size_units() {
         assert_eq!(parse_php_size_to_bytes("40M"), Some(40 * 1024 * 1024));
         assert_eq!(parse_php_size_to_bytes("2g"), Some(2 * 1024 * 1024 * 1024));
+        assert_eq!(parse_php_size_to_bytes("1024"), Some(1024));
+        assert_eq!(parse_php_size_to_bytes("-1"), Some(u64::MAX));
         assert_eq!(parse_php_size_to_bytes("bad"), None);
     }
 
@@ -4772,18 +4905,59 @@ mod tests {
     fn constants_map_overrides_defaults() {
         let values = HashMap::from([
             ("WP_DEBUG".to_string(), "1".to_string()),
+            ("WP_DEVELOPMENT_MODE".to_string(), "all".to_string()),
+            ("WP_DEBUG_DISPLAY".to_string(), "0".to_string()),
+            ("WP_DEBUG_LOG".to_string(), "true".to_string()),
+            ("WP_CACHE".to_string(), "1".to_string()),
+            ("SCRIPT_DEBUG".to_string(), "1".to_string()),
+            ("SHORTINIT".to_string(), "1".to_string()),
             ("WP_MEMORY_LIMIT".to_string(), "128M".to_string()),
             ("WP_MAX_MEMORY_LIMIT".to_string(), "512M".to_string()),
             ("WP_CONTENT_DIR".to_string(), "/srv/wp-content".to_string()),
+            ("AUTOSAVE_INTERVAL".to_string(), "120".to_string()),
+            ("EMPTY_TRASH_DAYS".to_string(), "10".to_string()),
+            ("WP_POST_REVISIONS".to_string(), "false".to_string()),
+            ("WP_CRON_LOCK_TIMEOUT".to_string(), "180".to_string()),
+            ("WP_DEFAULT_THEME".to_string(), "custom-theme".to_string()),
         ]);
         let constants = WordPressConstants::from_map(&values);
         assert!(constants.wp_debug);
+        assert_eq!(constants.wp_development_mode, "all");
+        assert!(!constants.wp_debug_display);
+        assert!(constants.wp_debug_log);
+        assert!(constants.wp_cache);
+        assert!(constants.script_debug);
+        assert!(constants.shortinit);
         assert_eq!(constants.wp_content_dir, "/srv/wp-content");
         assert_eq!(constants.memory_limit_bytes(), Some(128 * 1024 * 1024));
+        assert_eq!(constants.autosave_interval, 120);
+        assert_eq!(constants.empty_trash_days, 10);
+        assert!(!constants.wp_post_revisions);
+        assert_eq!(constants.wp_cron_lock_timeout, 180);
+        assert_eq!(constants.wp_default_theme, "custom-theme");
         assert_eq!(
             RuntimeProfile::from_constants(&constants),
             RuntimeProfile::Development
         );
+    }
+
+    #[test]
+    fn constants_support_multisite_memory_defaults() {
+        let values = HashMap::from([("IS_MULTISITE".to_string(), "true".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_memory_limit, "64M");
+        assert_eq!(constants.wp_max_memory_limit, "256M");
+    }
+
+    #[test]
+    fn constants_use_ini_limit_when_memory_not_changeable() {
+        let values = HashMap::from([
+            ("MEMORY_LIMIT_CHANGEABLE".to_string(), "0".to_string()),
+            ("INI_MEMORY_LIMIT".to_string(), "96M".to_string()),
+        ]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_memory_limit, "96M");
+        assert_eq!(constants.wp_max_memory_limit, "96M");
     }
 
     #[test]
@@ -4795,5 +4969,8 @@ mod tests {
         );
         assert_eq!(constants.memory_limit_bytes(), Some(40 * 1024 * 1024));
         assert_eq!(constants.max_memory_limit_bytes(), Some(256 * 1024 * 1024));
+        assert_eq!(constants.autosave_interval, 60);
+        assert_eq!(constants.wp_cron_lock_timeout, 60);
+        assert_eq!(constants.wp_default_theme, "twentytwentyfive");
     }
 }

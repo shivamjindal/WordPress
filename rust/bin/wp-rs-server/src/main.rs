@@ -22745,12 +22745,28 @@ async fn internal_db_tables(Query(query): Query<InternalDbTablesQuery>) -> Respo
 #[derive(Debug, Deserialize)]
 struct InternalConstantsQuery {
     wp_debug: Option<String>,
+    wp_development_mode: Option<String>,
+    wp_debug_display: Option<String>,
+    wp_debug_log: Option<String>,
+    wp_cache: Option<String>,
+    script_debug: Option<String>,
+    media_trash: Option<String>,
+    shortinit: Option<String>,
+    wp_feature_better_passwords: Option<String>,
     wp_content_dir: Option<String>,
     wp_plugin_dir: Option<String>,
     wp_lang_dir: Option<String>,
     wp_temp_dir: Option<String>,
     wp_memory_limit: Option<String>,
     wp_max_memory_limit: Option<String>,
+    autosave_interval: Option<String>,
+    empty_trash_days: Option<String>,
+    wp_post_revisions: Option<String>,
+    wp_cron_lock_timeout: Option<String>,
+    wp_default_theme: Option<String>,
+    is_multisite: Option<String>,
+    ini_memory_limit: Option<String>,
+    memory_limit_changeable: Option<String>,
 }
 
 async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl IntoResponse {
@@ -22758,6 +22774,30 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
 
     if let Some(value) = query.wp_debug {
         values.insert("WP_DEBUG".to_string(), value);
+    }
+    if let Some(value) = query.wp_development_mode {
+        values.insert("WP_DEVELOPMENT_MODE".to_string(), value);
+    }
+    if let Some(value) = query.wp_debug_display {
+        values.insert("WP_DEBUG_DISPLAY".to_string(), value);
+    }
+    if let Some(value) = query.wp_debug_log {
+        values.insert("WP_DEBUG_LOG".to_string(), value);
+    }
+    if let Some(value) = query.wp_cache {
+        values.insert("WP_CACHE".to_string(), value);
+    }
+    if let Some(value) = query.script_debug {
+        values.insert("SCRIPT_DEBUG".to_string(), value);
+    }
+    if let Some(value) = query.media_trash {
+        values.insert("MEDIA_TRASH".to_string(), value);
+    }
+    if let Some(value) = query.shortinit {
+        values.insert("SHORTINIT".to_string(), value);
+    }
+    if let Some(value) = query.wp_feature_better_passwords {
+        values.insert("WP_FEATURE_BETTER_PASSWORDS".to_string(), value);
     }
     if let Some(value) = query.wp_content_dir {
         values.insert("WP_CONTENT_DIR".to_string(), value);
@@ -22777,6 +22817,30 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
     if let Some(value) = query.wp_max_memory_limit {
         values.insert("WP_MAX_MEMORY_LIMIT".to_string(), value);
     }
+    if let Some(value) = query.autosave_interval {
+        values.insert("AUTOSAVE_INTERVAL".to_string(), value);
+    }
+    if let Some(value) = query.empty_trash_days {
+        values.insert("EMPTY_TRASH_DAYS".to_string(), value);
+    }
+    if let Some(value) = query.wp_post_revisions {
+        values.insert("WP_POST_REVISIONS".to_string(), value);
+    }
+    if let Some(value) = query.wp_cron_lock_timeout {
+        values.insert("WP_CRON_LOCK_TIMEOUT".to_string(), value);
+    }
+    if let Some(value) = query.wp_default_theme {
+        values.insert("WP_DEFAULT_THEME".to_string(), value);
+    }
+    if let Some(value) = query.is_multisite {
+        values.insert("IS_MULTISITE".to_string(), value);
+    }
+    if let Some(value) = query.ini_memory_limit {
+        values.insert("INI_MEMORY_LIMIT".to_string(), value);
+    }
+    if let Some(value) = query.memory_limit_changeable {
+        values.insert("MEMORY_LIMIT_CHANGEABLE".to_string(), value);
+    }
 
     let constants = WordPressConstants::from_map(&values);
     let runtime_profile = match RuntimeProfile::from_constants(&constants) {
@@ -22788,12 +22852,33 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
         "runtime_profile": runtime_profile,
         "constants": {
             "wp_debug": constants.wp_debug,
+            "wp_development_mode": constants.wp_development_mode,
+            "wp_debug_display": constants.wp_debug_display,
+            "wp_debug_log": constants.wp_debug_log,
+            "wp_cache": constants.wp_cache,
+            "script_debug": constants.script_debug,
+            "media_trash": constants.media_trash,
+            "shortinit": constants.shortinit,
+            "wp_feature_better_passwords": constants.wp_feature_better_passwords,
             "wp_content_dir": constants.wp_content_dir,
             "wp_plugins_dir": constants.wp_plugins_dir,
             "wp_lang_dir": constants.wp_lang_dir,
             "wp_temp_dir": constants.wp_temp_dir,
             "wp_memory_limit": constants.wp_memory_limit,
             "wp_max_memory_limit": constants.wp_max_memory_limit,
+            "autosave_interval": constants.autosave_interval,
+            "empty_trash_days": constants.empty_trash_days,
+            "wp_post_revisions": constants.wp_post_revisions,
+            "wp_cron_lock_timeout": constants.wp_cron_lock_timeout,
+            "wp_default_theme": constants.wp_default_theme,
+        },
+        "intervals": {
+            "minute_in_seconds": 60,
+            "hour_in_seconds": 3600,
+            "day_in_seconds": 86400,
+            "week_in_seconds": 604800,
+            "month_in_seconds": 2592000,
+            "year_in_seconds": 31536000,
         },
         "memory_limit_bytes": constants.memory_limit_bytes(),
         "max_memory_limit_bytes": constants.max_memory_limit_bytes(),
