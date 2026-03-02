@@ -22,8 +22,8 @@ use wp_rs_config::{
 use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::{
-    all_core_table_names, resolve_table_name, MultisiteResolver, NetworkSite, OptionStore,
-    CORE_TABLES,
+    all_core_table_names, resolve_table_name, MultisiteResolver, NetworkSite, ObjectCache,
+    OptionStore, CORE_TABLES,
 };
 use wp_rs_hooks::HookDispatcher;
 use wp_rs_http::{
@@ -35,6 +35,7 @@ use wp_rs_rest::{core_seed_routes, RestRequest};
 #[derive(Debug, Clone)]
 struct AppState {
     options: Arc<Mutex<OptionStore>>,
+    object_cache: Arc<Mutex<ObjectCache>>,
     auth_secrets: AuthSecrets,
     nonce_service: NonceService,
     cron_scheduler: Arc<Mutex<CronScheduler>>,
@@ -7053,6 +7054,7 @@ async fn main() {
                 .post(internal_options_upsert)
                 .delete(internal_options_delete),
         )
+        .route("/__wp_rust/internal/object-cache", get(internal_object_cache))
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
         .route(
             "/__wp_rust/internal/auth-session",
@@ -21855,6 +21857,7 @@ fn build_app_state() -> AppState {
 
     AppState {
         options: Arc::new(Mutex::new(options)),
+        object_cache: Arc::new(Mutex::new(ObjectCache::default())),
         auth_secrets: AuthSecrets::default(),
         nonce_service: NonceService::default(),
         cron_scheduler: Arc::new(Mutex::new(scheduler)),
@@ -21965,6 +21968,130 @@ async fn internal_options_delete(
     .into_response()
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalObjectCacheQuery {
+    action: Option<String>,
+    group: Option<String>,
+    key: Option<String>,
+    value: Option<String>,
+}
+
+async fn internal_object_cache(
+    State(state): State<AppState>,
+    Query(query): Query<InternalObjectCacheQuery>,
+) -> Response {
+    let action = query
+        .action
+        .as_deref()
+        .unwrap_or("get")
+        .trim()
+        .to_ascii_lowercase();
+    let group = query.group.unwrap_or_else(|| "default".to_string());
+    let key = query
+        .key
+        .as_deref()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(ToOwned::to_owned);
+
+    let mut cache = state
+        .object_cache
+        .lock()
+        .expect("object cache mutex poisoned");
+
+    match action.as_str() {
+        "set" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for set.",
+                    }),
+                )
+                .into_response();
+            };
+            let raw_value = query.value.unwrap_or_default();
+            let parsed_value = parse_cache_payload_value(&raw_value);
+            cache.set(key.clone(), group.clone(), parsed_value.clone(), None);
+            rust_handled_json(json!({
+                "action": "set",
+                "group": group,
+                "key": key,
+                "value": parsed_value,
+            }))
+            .into_response()
+        }
+        "delete" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for delete.",
+                    }),
+                )
+                .into_response();
+            };
+            let deleted = cache.delete(&key, &group);
+            rust_handled_json(json!({
+                "action": "delete",
+                "group": group,
+                "key": key,
+                "deleted": deleted,
+            }))
+            .into_response()
+        }
+        "flush_group" => {
+            let flushed = cache.flush_group(&group);
+            rust_handled_json(json!({
+                "action": "flush_group",
+                "group": group,
+                "flushed": flushed,
+            }))
+            .into_response()
+        }
+        "flush_all" => {
+            cache.flush_all();
+            rust_handled_json(json!({
+                "action": "flush_all",
+                "flushed": true,
+            }))
+            .into_response()
+        }
+        "get" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for get.",
+                    }),
+                )
+                .into_response();
+            };
+            let value = cache.get(&key, &group);
+            rust_handled_json(json!({
+                "action": "get",
+                "group": group,
+                "key": key,
+                "found": value.is_some(),
+                "value": value,
+            }))
+            .into_response()
+        }
+        _ => rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "invalid_action",
+                "message": "action must be one of: get, set, delete, flush_group, flush_all.",
+                "action": action,
+            }),
+        )
+        .into_response(),
+    }
+}
+
 fn normalize_option_name(option: Option<String>) -> Option<String> {
     option.and_then(|value| {
         let normalized = value.trim();
@@ -21974,6 +22101,15 @@ fn normalize_option_name(option: Option<String>) -> Option<String> {
             Some(normalized.to_string())
         }
     })
+}
+
+fn parse_cache_payload_value(raw_value: &str) -> Value {
+    let trimmed = raw_value.trim();
+    if trimmed.is_empty() {
+        return Value::String(String::new());
+    }
+
+    serde_json::from_str(trimmed).unwrap_or_else(|_| Value::String(raw_value.to_string()))
 }
 
 #[derive(Debug, Deserialize)]

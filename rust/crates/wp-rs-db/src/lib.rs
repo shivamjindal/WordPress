@@ -388,6 +388,42 @@ mod tests {
     }
 
     #[test]
+    fn object_cache_flush_group_clears_only_target_group() {
+        let mut cache = ObjectCache::default();
+        cache.set("post_1", "posts", Value::String("cached".to_string()), None);
+        cache.set(
+            "user_1",
+            "users",
+            Value::String("cached-user".to_string()),
+            None,
+        );
+
+        assert!(cache.flush_group("posts"));
+        assert_eq!(cache.get("post_1", "posts"), None);
+        assert_eq!(
+            cache.get("user_1", "users"),
+            Some(Value::String("cached-user".to_string()))
+        );
+    }
+
+    #[test]
+    fn object_cache_flush_all_clears_every_group() {
+        let mut cache = ObjectCache::default();
+        cache.set("post_1", "posts", Value::String("cached".to_string()), None);
+        cache.set(
+            "user_1",
+            "users",
+            Value::String("cached-user".to_string()),
+            None,
+        );
+
+        cache.flush_all();
+
+        assert_eq!(cache.get("post_1", "posts"), None);
+        assert_eq!(cache.get("user_1", "users"), None);
+    }
+
+    #[test]
     fn resolves_multisite_by_domain_and_path() {
         let mut resolver = MultisiteResolver::default();
         resolver.register_site(NetworkSite {
