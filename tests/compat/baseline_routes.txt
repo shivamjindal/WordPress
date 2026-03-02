@@ -2089,6 +2089,7 @@ GET /__wp_rust/internal/constants?wp_version=6.8-src
 GET /__wp_rust/internal/constants?wp_version=6.8-src&script_debug=0
 GET /__wp_rust/internal/constants?wp_debug=1&wp_development_mode=all&wp_debug_display=0&wp_debug_log=true&wp_cache=1
 GET /__wp_rust/internal/constants?wp_debug_log=%2Ftmp%2Fdebug.log&wp_post_revisions=5
+GET /__wp_rust/internal/constants?wp_environment_type=staging
 GET /__wp_rust/internal/constants?script_debug=1&shortinit=1&autosave_interval=120&empty_trash_days=10
 GET /__wp_rust/internal/constants?wp_post_revisions=false&wp_cron_lock_timeout=180&wp_default_theme=custom-theme
 GET /__wp_rust/internal/maintenance-status?upgrading=1

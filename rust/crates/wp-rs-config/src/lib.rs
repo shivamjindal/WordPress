@@ -1997,6 +1997,7 @@ fn parse_php_truthy(value: &str) -> bool {
 /// Subset of WordPress default constants used by migration foundation services.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WordPressConstants {
+    pub wp_environment_type: String,
     pub wp_debug: bool,
     pub wp_development_mode: String,
     pub wp_debug_display: bool,
@@ -2024,6 +2025,7 @@ pub struct WordPressConstants {
 impl Default for WordPressConstants {
     fn default() -> Self {
         Self {
+            wp_environment_type: "production".to_string(),
             wp_debug: false,
             wp_development_mode: "".to_string(),
             wp_debug_display: true,
@@ -2073,6 +2075,10 @@ impl WordPressConstants {
             .get("IS_MULTISITE")
             .map(|value| parse_php_truthy(value))
             .unwrap_or(false);
+
+        if let Some(value) = values.get("WP_ENVIRONMENT_TYPE") {
+            constants.wp_environment_type = parse_wp_environment_type(value);
+        }
 
         if let Some(value) = values.get("WP_DEBUG") {
             constants.wp_debug = parse_php_truthy(value);
@@ -2281,6 +2287,14 @@ fn parse_wp_debug_log(input: &str) -> (bool, Option<String>) {
     (true, Some(trimmed.to_string()))
 }
 
+fn parse_wp_environment_type(input: &str) -> String {
+    let normalized = input.trim().to_ascii_lowercase();
+    match normalized.as_str() {
+        "local" | "development" | "staging" | "production" => normalized,
+        _ => "production".to_string(),
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeProfile {
     Production,
@@ -2289,7 +2303,12 @@ pub enum RuntimeProfile {
 
 impl RuntimeProfile {
     pub fn from_constants(constants: &WordPressConstants) -> Self {
-        if constants.wp_debug {
+        if constants.wp_debug
+            || matches!(
+                constants.wp_environment_type.as_str(),
+                "local" | "development" | "staging"
+            )
+        {
             Self::Development
         } else {
             Self::Production
@@ -4973,6 +4992,7 @@ mod tests {
     #[test]
     fn constants_map_overrides_defaults() {
         let values = HashMap::from([
+            ("WP_ENVIRONMENT_TYPE".to_string(), "development".to_string()),
             ("WP_DEBUG".to_string(), "1".to_string()),
             ("WP_DEVELOPMENT_MODE".to_string(), "all".to_string()),
             ("WP_DEBUG_DISPLAY".to_string(), "0".to_string()),
@@ -4990,6 +5010,7 @@ mod tests {
             ("WP_DEFAULT_THEME".to_string(), "custom-theme".to_string()),
         ]);
         let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_environment_type, "development");
         assert!(constants.wp_debug);
         assert_eq!(constants.wp_development_mode, "all");
         assert!(!constants.wp_debug_display);
@@ -5078,6 +5099,7 @@ mod tests {
     #[test]
     fn constants_defaults_resolve_production_profile() {
         let constants = WordPressConstants::default();
+        assert_eq!(constants.wp_environment_type, "production");
         assert_eq!(
             RuntimeProfile::from_constants(&constants),
             RuntimeProfile::Production
@@ -5087,5 +5109,27 @@ mod tests {
         assert_eq!(constants.autosave_interval, 60);
         assert_eq!(constants.wp_cron_lock_timeout, 60);
         assert_eq!(constants.wp_default_theme, "twentytwentyfive");
+    }
+
+    #[test]
+    fn constants_accept_known_environment_types() {
+        let values = HashMap::from([("WP_ENVIRONMENT_TYPE".to_string(), "staging".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_environment_type, "staging");
+        assert_eq!(
+            RuntimeProfile::from_constants(&constants),
+            RuntimeProfile::Development
+        );
+    }
+
+    #[test]
+    fn constants_fallback_to_production_for_unknown_environment_type() {
+        let values = HashMap::from([("WP_ENVIRONMENT_TYPE".to_string(), "qa-preview".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert_eq!(constants.wp_environment_type, "production");
+        assert_eq!(
+            RuntimeProfile::from_constants(&constants),
+            RuntimeProfile::Production
+        );
     }
 }
