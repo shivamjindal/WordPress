@@ -22467,6 +22467,7 @@ struct InternalAuthRoundtripQuery {
     scheme: Option<String>,
     tamper: Option<bool>,
     include_noise_cookie: Option<bool>,
+    encode_cookie: Option<bool>,
 }
 
 async fn internal_auth_roundtrip(
@@ -22493,6 +22494,12 @@ async fn internal_auth_roundtrip(
     } else {
         cookie_value
     };
+    let encode_cookie = query.encode_cookie.unwrap_or(false);
+    let cookie_value = if encode_cookie {
+        encode_cookie_value_for_header(&cookie_value)
+    } else {
+        cookie_value
+    };
     let cookie_name = format!("{}fixture", scheme.cookie_prefix());
     let include_noise_cookie = query.include_noise_cookie.unwrap_or(false);
     let cookie_header = if include_noise_cookie {
@@ -22516,6 +22523,7 @@ async fn internal_auth_roundtrip(
         },
         "tampered": tampered,
         "include_noise_cookie": include_noise_cookie,
+        "encode_cookie": encode_cookie,
         "resolved": resolved,
     }))
 }
@@ -22669,6 +22677,10 @@ fn tamper_cookie_value(value: &str) -> String {
         *last = if *last == 'a' { 'b' } else { 'a' };
     }
     chars.into_iter().collect()
+}
+
+fn encode_cookie_value_for_header(value: &str) -> String {
+    value.replace('%', "%25").replace('|', "%7C")
 }
 
 #[derive(Debug, Deserialize)]
@@ -24274,6 +24286,30 @@ mod tests {
         .into_response();
         let json = response_json(response).await;
         assert_eq!(json.get("valid"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
+    async fn auth_roundtrip_resolves_urlencoded_cookie_values() {
+        let state = build_app_state();
+        let response = internal_auth_roundtrip(
+            State(state),
+            Query(InternalAuthRoundtripQuery {
+                user_id: Some(7),
+                username: Some("editor".to_string()),
+                token: Some("abc123".to_string()),
+                expiration: Some(2_000_003_600),
+                now: Some(2_000_000_000),
+                scheme: Some("logged_in".to_string()),
+                tamper: Some(false),
+                include_noise_cookie: Some(false),
+                encode_cookie: Some(true),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["encode_cookie"], Value::Bool(true));
+        assert_eq!(json["resolved"]["user_id"], Value::from(7));
     }
 
     #[tokio::test]

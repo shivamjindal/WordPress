@@ -323,9 +323,16 @@ fn parse_cookie_pairs(cookie_header: &str) -> Vec<(String, String)> {
             if key.is_empty() {
                 return None;
             }
-            Some((key.to_string(), value.to_string()))
+            Some((key.to_string(), decode_cookie_value(value)))
         })
         .collect()
+}
+
+fn decode_cookie_value(value: &str) -> String {
+    let wrapped = format!("value={value}");
+    form_urlencoded::parse(wrapped.as_bytes())
+        .find_map(|(key, decoded)| (key == "value").then(|| decoded.into_owned()))
+        .unwrap_or_else(|| value.to_string())
 }
 
 #[derive(Debug, Clone)]
@@ -436,6 +443,12 @@ mod tests {
     }
 
     #[test]
+    fn parses_cookie_header_decodes_urlencoded_values() {
+        let cookies = parse_cookie_header("auth=user%7C123%7Ctoken");
+        assert_eq!(cookies.get("auth"), Some(&"user|123|token".to_string()));
+    }
+
+    #[test]
     fn signs_and_verifies_logged_in_cookie() {
         let secrets = AuthSecrets::default();
         let cookie = sign_auth_cookie(
@@ -539,6 +552,24 @@ mod tests {
             &secrets,
         );
         let header = format!("wordpress_logged_in_fixture={cookie}; other=1");
+        let resolved = resolve_current_user(&header, 4_999, &secrets).expect("user should resolve");
+        assert_eq!(resolved.user_id, 33);
+        assert_eq!(resolved.username, "author");
+    }
+
+    #[test]
+    fn resolves_user_from_urlencoded_cookie_header() {
+        let secrets = AuthSecrets::default();
+        let cookie = sign_auth_cookie(
+            33,
+            "author",
+            5_000,
+            "token-1",
+            AuthScheme::LoggedIn,
+            &secrets,
+        );
+        let encoded_cookie = cookie.replace('|', "%7C");
+        let header = format!("wordpress_logged_in_fixture={encoded_cookie}; other=1");
         let resolved = resolve_current_user(&header, 4_999, &secrets).expect("user should resolve");
         assert_eq!(resolved.user_id, 33);
         assert_eq!(resolved.username, "author");

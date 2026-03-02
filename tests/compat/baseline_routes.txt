@@ -2027,6 +2027,7 @@ GET /__wp_rust/internal/object-cache?action=get&group=posts&key=ephemeral&checkp
 GET /__wp_rust/internal/object-cache?action=delete&group=posts&key=post_1
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-delete
 GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=2000003600&scheme=logged_in
+GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=2000003600&scheme=logged_in&encode_cookie=true
 GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=1999999999&scheme=logged_in
 GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=2000003600&scheme=logged_in&tamper=true
 GET /__wp_rust/internal/auth-cookie-constants?siteurl=https%3A%2F%2Fexample.com

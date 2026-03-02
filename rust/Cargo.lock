@@ -940,6 +940,7 @@ version = "0.1.0"
 dependencies = [
  "base64",
  "bcrypt",
+ "form_urlencoded",
  "hmac",
  "md5",
  "serde",
