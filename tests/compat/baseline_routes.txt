@@ -1984,6 +1984,11 @@ DELETE /__wp_rust/internal/options?option=rust_autoload_option
 GET /__wp_rust/internal/options?autoload_only=true&checkpoint=autoload-after-delete
 GET /__wp_rust/internal/object-cache?action=set&group=posts&key=post_1&value=%7B%22cached%22%3Atrue%7D
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-set
+GET /__wp_rust/internal/object-cache?action=add&group=posts&key=post_1&value=%7B%22cached%22%3Afalse%7D&checkpoint=add-existing
+GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-add-existing
+GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=post_1&value=%7B%22cached%22%3A%22replaced%22%7D
+GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-replace
+GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=missing&value=%7B%22cached%22%3A%22none%22%7D
 GET /__wp_rust/internal/object-cache?action=delete&group=posts&key=post_1
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-delete
 GET /__wp_rust/internal/auth-roundtrip?user_id=7&username=editor&token=abc123&now=2000000000&expiration=2000003600&scheme=logged_in

@@ -271,15 +271,69 @@ impl ObjectCache {
             .insert(key.into(), entry);
     }
 
+    pub fn add(
+        &mut self,
+        key: impl Into<String>,
+        group: impl Into<String>,
+        value: Value,
+        ttl: Option<Duration>,
+    ) -> bool {
+        let key = key.into();
+        let group = group.into();
+        let now = SystemTime::now();
+        let entries = self.groups.entry(group).or_default();
+
+        if let Some(existing) = entries.get(&key) {
+            if !is_cache_entry_expired(existing, now) {
+                return false;
+            }
+            entries.remove(&key);
+        }
+
+        let entry = CacheEntry {
+            value,
+            expires_at: ttl.map(|duration| now + duration),
+        };
+        entries.insert(key, entry);
+        true
+    }
+
+    pub fn replace(
+        &mut self,
+        key: impl Into<String>,
+        group: impl Into<String>,
+        value: Value,
+        ttl: Option<Duration>,
+    ) -> bool {
+        let key = key.into();
+        let group = group.into();
+        let now = SystemTime::now();
+        let entries = self.groups.entry(group).or_default();
+
+        if let Some(existing) = entries.get(&key) {
+            if is_cache_entry_expired(existing, now) {
+                entries.remove(&key);
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        let entry = CacheEntry {
+            value,
+            expires_at: ttl.map(|duration| now + duration),
+        };
+        entries.insert(key, entry);
+        true
+    }
+
     pub fn get(&mut self, key: &str, group: &str) -> Option<Value> {
         let now = SystemTime::now();
         let entries = self.groups.get_mut(group)?;
         if let Some(entry) = entries.get(key) {
-            if let Some(expires_at) = entry.expires_at {
-                if now >= expires_at {
-                    entries.remove(key);
-                    return None;
-                }
+            if is_cache_entry_expired(entry, now) {
+                entries.remove(key);
+                return None;
             }
             return Some(entry.value.clone());
         }
@@ -300,6 +354,10 @@ impl ObjectCache {
     pub fn flush_all(&mut self) {
         self.groups.clear();
     }
+}
+
+fn is_cache_entry_expired(entry: &CacheEntry, now: SystemTime) -> bool {
+    entry.expires_at.is_some_and(|expires_at| now >= expires_at)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -448,6 +506,50 @@ mod tests {
         );
         assert!(cache.delete("post_1", "posts"));
         assert_eq!(cache.get("post_1", "posts"), None);
+    }
+
+    #[test]
+    fn object_cache_add_only_stores_when_key_missing() {
+        let mut cache = ObjectCache::default();
+        assert!(cache.add(
+            "post_1",
+            "posts",
+            Value::String("initial".to_string()),
+            None
+        ));
+        assert!(!cache.add(
+            "post_1",
+            "posts",
+            Value::String("new-value".to_string()),
+            None
+        ));
+        assert_eq!(
+            cache.get("post_1", "posts"),
+            Some(Value::String("initial".to_string()))
+        );
+    }
+
+    #[test]
+    fn object_cache_replace_requires_existing_key() {
+        let mut cache = ObjectCache::default();
+        assert!(!cache.replace("post_1", "posts", Value::String("value".to_string()), None));
+
+        cache.set(
+            "post_1",
+            "posts",
+            Value::String("initial".to_string()),
+            None,
+        );
+        assert!(cache.replace(
+            "post_1",
+            "posts",
+            Value::String("updated".to_string()),
+            None
+        ));
+        assert_eq!(
+            cache.get("post_1", "posts"),
+            Some(Value::String("updated".to_string()))
+        );
     }
 
     #[test]

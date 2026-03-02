@@ -22034,6 +22034,52 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "add" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for add.",
+                    }),
+                )
+                .into_response();
+            };
+            let raw_value = query.value.unwrap_or_default();
+            let parsed_value = parse_cache_payload_value(&raw_value);
+            let added = cache.add(key.clone(), group.clone(), parsed_value.clone(), None);
+            rust_handled_json(json!({
+                "action": "add",
+                "group": group,
+                "key": key,
+                "value": parsed_value,
+                "added": added,
+            }))
+            .into_response()
+        }
+        "replace" => {
+            let Some(key) = key else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_key",
+                        "message": "key query parameter is required for replace.",
+                    }),
+                )
+                .into_response();
+            };
+            let raw_value = query.value.unwrap_or_default();
+            let parsed_value = parse_cache_payload_value(&raw_value);
+            let replaced = cache.replace(key.clone(), group.clone(), parsed_value.clone(), None);
+            rust_handled_json(json!({
+                "action": "replace",
+                "group": group,
+                "key": key,
+                "value": parsed_value,
+                "replaced": replaced,
+            }))
+            .into_response()
+        }
         "delete" => {
             let Some(key) = key else {
                 return rust_handled_json_with_status(
@@ -22096,7 +22142,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, set, delete, flush_group, flush_all.",
+                "message": "action must be one of: get, set, add, replace, delete, flush_group, flush_all.",
                 "action": action,
             }),
         )
