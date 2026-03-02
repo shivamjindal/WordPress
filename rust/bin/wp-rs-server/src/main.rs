@@ -7104,6 +7104,7 @@ async fn main() {
             "/__wp_rust/internal/cron-schedule",
             get(internal_cron_schedule),
         )
+        .route("/__wp_rust/internal/cron-next", get(internal_cron_next))
         .route("/__wp_rust/internal/cron-due", get(internal_cron_due))
         .route(
             "/__wp_rust/internal/multisite-resolve",
@@ -22688,6 +22689,12 @@ struct InternalCronDueQuery {
     now: Option<u64>,
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalCronNextQuery {
+    hook: Option<String>,
+    args: Option<String>,
+}
+
 async fn internal_cron_due(
     State(state): State<AppState>,
     Query(query): Query<InternalCronDueQuery>,
@@ -22714,6 +22721,33 @@ async fn internal_cron_due(
         "due_count": due.len(),
         "events": due,
         "next_event_timestamp": scheduler.next_event_timestamp(),
+    }))
+}
+
+async fn internal_cron_next(
+    State(state): State<AppState>,
+    Query(query): Query<InternalCronNextQuery>,
+) -> impl IntoResponse {
+    let hook = query
+        .hook
+        .unwrap_or_else(|| "wp_scheduled_delete".to_string());
+    let args = query
+        .args
+        .unwrap_or_default()
+        .split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| value.to_string())
+        .collect::<Vec<_>>();
+    let scheduler = state
+        .cron_scheduler
+        .lock()
+        .expect("cron scheduler mutex poisoned");
+
+    rust_handled_json(json!({
+        "hook": hook,
+        "args": args,
+        "next_event_timestamp": scheduler.next_event_for(&hook, &args),
     }))
 }
 

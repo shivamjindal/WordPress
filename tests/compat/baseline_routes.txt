@@ -2059,9 +2059,11 @@ GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog/hello-wo
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
 GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=hourly&args=one,two
 GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=twicedaily&args=one,two&checkpoint=dedupe-replace
+GET /__wp_rust/internal/cron-next?hook=dedupe_hook&args=one,two&checkpoint=dedupe-next
 GET /__wp_rust/internal/cron-due?now=1999999901&checkpoint=dedupe-drain
 GET /__wp_rust/internal/cron-schedule?hook=contract_hook&timestamp=2000000000&schedule=hourly&args=one,two&query_string=doing_wp_cron%3D173847
 GET /__wp_rust/internal/cron-schedule?hook=encoded_cron_hook&timestamp=2000000100&schedule=hourly&args=encoded&query_string=doing_wp_cron%3D173847%252E123456
+GET /__wp_rust/internal/cron-next?hook=contract_hook&args=one,two&checkpoint=contract-next
 GET /__wp_rust/internal/cron-due?now=1999999999&checkpoint=before-contract-hook
 GET /__wp_rust/internal/cron-due?now=2000000001&checkpoint=after-contract-hook
 GET /__wp_rust/internal/constants?wp_debug=1&wp_content_dir=/srv/wp-content&wp_memory_limit=128M&wp_max_memory_limit=512M

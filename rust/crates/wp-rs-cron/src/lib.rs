@@ -55,6 +55,13 @@ impl CronScheduler {
         self.events.first().map(|event| event.timestamp)
     }
 
+    pub fn next_event_for(&self, hook: &str, args: &[String]) -> Option<u64> {
+        self.events
+            .iter()
+            .find(|event| event.hook == hook && event.args == args)
+            .map(|event| event.timestamp)
+    }
+
     pub fn acquire_lock(&mut self, timeout: Duration) -> bool {
         if should_run_cron(self.lock_acquired_at, timeout) {
             self.lock_acquired_at = Some(SystemTime::now());
@@ -190,5 +197,35 @@ mod tests {
 
         let due = scheduler.due_events(101);
         assert_eq!(due.len(), 2);
+    }
+
+    #[test]
+    fn scheduler_reports_next_event_for_hook_and_args() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "target_hook".to_string(),
+            timestamp: 300,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string(), "two".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "target_hook".to_string(),
+            timestamp: 200,
+            schedule: Some("hourly".to_string()),
+            args: vec!["different".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "target_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string(), "two".to_string()],
+        });
+
+        let target_args = vec!["one".to_string(), "two".to_string()];
+        assert_eq!(
+            scheduler.next_event_for("target_hook", &target_args),
+            Some(100)
+        );
+        assert_eq!(scheduler.next_event_for("missing_hook", &target_args), None);
     }
 }
