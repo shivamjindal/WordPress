@@ -2000,6 +2000,9 @@ GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog/hello-world
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
+GET /__wp_rust/internal/cron-schedule?hook=contract_hook&timestamp=2000000000&schedule=hourly&args=one,two&query_string=doing_wp_cron%3D173847
+GET /__wp_rust/internal/cron-due?now=1999999999&checkpoint=before-contract-hook
+GET /__wp_rust/internal/cron-due?now=2000000001&checkpoint=after-contract-hook
 GET /__wp_rust/internal/constants?wp_debug=1&wp_content_dir=/srv/wp-content&wp_memory_limit=128M&wp_max_memory_limit=512M
 GET /__wp_rust/internal/maintenance-status?upgrading=1
 GET /__wp_rust/internal/plugin-compat-matrix

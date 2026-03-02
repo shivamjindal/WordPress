@@ -118,4 +118,16 @@ mod tests {
         let token = parse_doing_wp_cron("foo=1&doing_wp_cron=173847");
         assert_eq!(token, Some("173847".to_string()));
     }
+
+    #[test]
+    fn parse_doing_wp_cron_ignores_empty_value() {
+        let token = parse_doing_wp_cron("foo=1&doing_wp_cron=&bar=2");
+        assert_eq!(token, None);
+    }
+
+    #[test]
+    fn should_run_cron_allows_when_lock_in_future() {
+        let future_lock = SystemTime::now() + Duration::from_secs(30);
+        assert!(should_run_cron(Some(future_lock), Duration::from_secs(60)));
+    }
 }
