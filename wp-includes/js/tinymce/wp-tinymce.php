@@ -5,7 +5,9 @@
  */
 
 require_once dirname( dirname( __DIR__ ) ) . '/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-includes/js/tinymce/wp-tinymce.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-includes/js/tinymce/wp-tinymce.php' );
+if ( '/wp-includes/js/tinymce/wp-tinymce.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 

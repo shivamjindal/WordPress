@@ -6,7 +6,9 @@
  * @subpackage Database
  */
 require_once dirname( __DIR__, 2 ) . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-admin/maint/repair.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/maint/repair.php' );
+if ( '/wp-admin/maint/repair.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
