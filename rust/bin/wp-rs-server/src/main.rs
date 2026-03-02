@@ -22124,6 +22124,7 @@ struct InternalAuthRoundtripQuery {
     expiration: Option<u64>,
     now: Option<u64>,
     scheme: Option<String>,
+    tamper: Option<bool>,
 }
 
 async fn internal_auth_roundtrip(
@@ -22144,6 +22145,12 @@ async fn internal_auth_roundtrip(
         scheme,
         &state.auth_secrets,
     );
+    let tampered = query.tamper.unwrap_or(false);
+    let cookie_value = if tampered {
+        tamper_cookie_value(&cookie_value)
+    } else {
+        cookie_value
+    };
     let cookie_name = format!("{}fixture", scheme.cookie_prefix());
     let cookie_header = format!("{cookie_name}={cookie_value}");
     let resolved = resolve_current_user(&cookie_header, now, &state.auth_secrets);
@@ -22158,6 +22165,7 @@ async fn internal_auth_roundtrip(
             "username": username,
             "token": token,
         },
+        "tampered": tampered,
         "resolved": resolved,
     }))
 }
@@ -22228,6 +22236,7 @@ async fn internal_auth_session(
 #[derive(Debug, Deserialize)]
 struct InternalNonceQuery {
     action: Option<String>,
+    verify_action: Option<String>,
     user_id: Option<u64>,
     token: Option<String>,
     now: Option<u64>,
@@ -22239,6 +22248,7 @@ async fn internal_nonce(
 ) -> impl IntoResponse {
     let now = query.now.unwrap_or_else(unix_now);
     let action = query.action.unwrap_or_else(|| "sample-action".to_string());
+    let verify_action = query.verify_action.unwrap_or_else(|| action.clone());
     let user_id = query.user_id.unwrap_or(1);
     let token = query.token.unwrap_or_else(|| "session-token".to_string());
 
@@ -22247,15 +22257,28 @@ async fn internal_nonce(
         .create_nonce(&action, user_id, &token, now);
     let is_valid = state
         .nonce_service
-        .verify_nonce(&nonce, &action, user_id, &token, now);
+        .verify_nonce(&nonce, &verify_action, user_id, &token, now);
 
     rust_handled_json(json!({
         "action": action,
+        "verify_action": verify_action,
         "user_id": user_id,
         "token": token,
         "nonce": nonce,
         "valid": is_valid,
     }))
+}
+
+fn tamper_cookie_value(value: &str) -> String {
+    if value.is_empty() {
+        return "tampered".to_string();
+    }
+
+    let mut chars = value.chars().collect::<Vec<_>>();
+    if let Some(last) = chars.last_mut() {
+        *last = if *last == 'a' { 'b' } else { 'a' };
+    }
+    chars.into_iter().collect()
 }
 
 #[derive(Debug, Deserialize)]
