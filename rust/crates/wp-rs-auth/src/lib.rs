@@ -286,6 +286,44 @@ mod tests {
     }
 
     #[test]
+    fn signs_and_verifies_auth_cookie() {
+        let secrets = AuthSecrets::default();
+        let cookie = sign_auth_cookie(
+            9,
+            "editor",
+            2_000_000_000,
+            "auth-token",
+            AuthScheme::Auth,
+            &secrets,
+        );
+        let user = verify_auth_cookie(&cookie, AuthScheme::Auth, 1_999_999_999, &secrets)
+            .expect("auth cookie should verify");
+
+        assert_eq!(user.user_id, 9);
+        assert_eq!(user.username, "editor");
+        assert_eq!(user.scheme, AuthScheme::Auth);
+    }
+
+    #[test]
+    fn signs_and_verifies_secure_auth_cookie() {
+        let secrets = AuthSecrets::default();
+        let cookie = sign_auth_cookie(
+            11,
+            "admin",
+            2_000_000_000,
+            "secure-token",
+            AuthScheme::SecureAuth,
+            &secrets,
+        );
+        let user = verify_auth_cookie(&cookie, AuthScheme::SecureAuth, 1_999_999_999, &secrets)
+            .expect("secure auth cookie should verify");
+
+        assert_eq!(user.user_id, 11);
+        assert_eq!(user.username, "admin");
+        assert_eq!(user.scheme, AuthScheme::SecureAuth);
+    }
+
+    #[test]
     fn rejects_expired_cookie() {
         let secrets = AuthSecrets::default();
         let cookie = sign_auth_cookie(
