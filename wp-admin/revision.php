@@ -10,7 +10,9 @@
  */
 
 require_once dirname( __DIR__ ) . '/wp-includes/rust-gateway.php';
-if ( wp_rust_gateway_try_proxy( '/wp-admin/revision.php' ) ) {
+$rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/revision.php' );
+if ( '/wp-admin/revision.php' === $rust_gateway_request_path
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
