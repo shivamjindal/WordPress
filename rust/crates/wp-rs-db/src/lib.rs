@@ -247,6 +247,13 @@ impl OptionStore {
             .or_else(|| default.map(|value| value.to_string()))
     }
 
+    pub fn get_multiple(&self, names: &[String]) -> HashMap<String, Option<String>> {
+        names
+            .iter()
+            .map(|name| (name.clone(), self.get_option(name)))
+            .collect()
+    }
+
     pub fn get_option_record(&self, name: &str) -> Option<OptionRecord> {
         self.values.get(name).cloned()
     }
@@ -677,6 +684,17 @@ mod tests {
             Some("fallback".to_string())
         );
         assert_eq!(store.get_option_with_default("missing", None), None);
+    }
+
+    #[test]
+    fn option_store_get_multiple_reports_missing_entries() {
+        let mut store = OptionStore::default();
+        assert!(store.set_option("blogname", "WordPress", Some(true)));
+        let names = vec!["blogname".to_string(), "missing".to_string()];
+
+        let values = store.get_multiple(&names);
+        assert_eq!(values.get("blogname"), Some(&Some("WordPress".to_string())));
+        assert_eq!(values.get("missing"), Some(&None));
     }
 
     #[test]

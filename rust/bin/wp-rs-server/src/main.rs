@@ -21889,6 +21889,7 @@ fn build_app_state() -> AppState {
 #[derive(Debug, Deserialize)]
 struct InternalOptionsQuery {
     option: Option<String>,
+    options: Option<String>,
     autoload_only: Option<bool>,
     default_value: Option<String>,
 }
@@ -21919,6 +21920,19 @@ async fn internal_options(
             "resolved_value": resolved,
             "default_value": query.default_value,
             "autoload": record.as_ref().map(|record| record.autoload),
+        }));
+    }
+
+    if let Some(raw_options) = query.options {
+        let option_names = parse_csv_values(&raw_options);
+        let values = options.get_multiple(&option_names);
+        let found_count = values.values().filter(|value| value.is_some()).count();
+
+        return rust_handled_json(json!({
+            "scope": "multiple",
+            "options": option_names,
+            "found_count": found_count,
+            "values": values,
         }));
     }
 
@@ -23740,6 +23754,7 @@ mod tests {
             State(state),
             Query(InternalOptionsQuery {
                 option: Some("rust_autoload_preserve_test".to_string()),
+                options: None,
                 autoload_only: None,
                 default_value: None,
             }),
@@ -23762,6 +23777,7 @@ mod tests {
             State(state),
             Query(InternalOptionsQuery {
                 option: Some("missing_option".to_string()),
+                options: None,
                 autoload_only: None,
                 default_value: Some("fallback".to_string()),
             }),
@@ -23774,6 +23790,43 @@ mod tests {
             json.get("resolved_value"),
             Some(&Value::String("fallback".to_string()))
         );
+    }
+
+    #[tokio::test]
+    async fn options_read_multiple_reports_found_and_missing_values() {
+        let state = build_app_state();
+        let seed_response = internal_options_upsert(
+            State(state.clone()),
+            Query(InternalOptionsMutationQuery {
+                option: Some("existing_option".to_string()),
+                value: Some("stored".to_string()),
+                autoload: Some("true".to_string()),
+                mode: Some("upsert".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        assert_eq!(seed_response.status(), StatusCode::OK);
+
+        let response = internal_options(
+            State(state),
+            Query(InternalOptionsQuery {
+                option: None,
+                options: Some("existing_option,missing_option".to_string()),
+                autoload_only: None,
+                default_value: None,
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["scope"], Value::String("multiple".to_string()));
+        assert_eq!(json["found_count"], Value::from(1));
+        assert_eq!(
+            json["values"]["existing_option"],
+            Value::String("stored".to_string())
+        );
+        assert_eq!(json["values"]["missing_option"], Value::Null);
     }
 
     #[tokio::test]

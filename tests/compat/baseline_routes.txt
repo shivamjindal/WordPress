@@ -1972,6 +1972,7 @@ GET /__wp_rust/health
 GET /__wp_rust/echo
 GET /__wp_rust/maintenance
 GET /__wp_rust/internal/options?option=blogname
+GET /__wp_rust/internal/options?options=blogname,missing_option
 GET /__wp_rust/internal/options?option=rust_missing_default&default_value=fallback
 POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&autoload=false
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-write
