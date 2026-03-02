@@ -2021,6 +2021,8 @@ GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3E
 GET /__wp_rust/internal/xmlrpc-contract
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
+GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=blogmeta
+GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=signups
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog/hello-world
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/

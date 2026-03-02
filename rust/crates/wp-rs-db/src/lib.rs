@@ -58,7 +58,7 @@ pub struct TableDefinition {
     pub scope: TableScope,
 }
 
-pub const CORE_TABLES: [TableDefinition; 15] = [
+pub const CORE_TABLES: [TableDefinition; 18] = [
     TableDefinition {
         logical_name: "posts",
         scope: TableScope::Blog,
@@ -112,11 +112,23 @@ pub const CORE_TABLES: [TableDefinition; 15] = [
         scope: TableScope::Global,
     },
     TableDefinition {
+        logical_name: "blogmeta",
+        scope: TableScope::Global,
+    },
+    TableDefinition {
+        logical_name: "registration_log",
+        scope: TableScope::Global,
+    },
+    TableDefinition {
         logical_name: "site",
         scope: TableScope::Global,
     },
     TableDefinition {
         logical_name: "sitemeta",
+        scope: TableScope::Global,
+    },
+    TableDefinition {
+        logical_name: "signups",
         scope: TableScope::Global,
     },
 ];
@@ -356,6 +368,9 @@ mod tests {
         assert!(names.contains(&"wp_3_posts".to_string()));
         assert!(names.contains(&"wp_3_options".to_string()));
         assert!(names.contains(&"wp_users".to_string()));
+        assert!(names.contains(&"wp_blogmeta".to_string()));
+        assert!(names.contains(&"wp_registration_log".to_string()));
+        assert!(names.contains(&"wp_signups".to_string()));
         assert!(names.contains(&"wp_sitemeta".to_string()));
     }
 
@@ -363,6 +378,17 @@ mod tests {
     fn all_core_table_names_reject_invalid_blog_id() {
         let result = all_core_table_names("wp_", Some(0));
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn multisite_global_tables_do_not_include_blog_id_prefix() {
+        let names = all_core_table_names("wp_", Some(42)).expect("table names should resolve");
+        assert!(names.contains(&"wp_blogs".to_string()));
+        assert!(names.contains(&"wp_blogmeta".to_string()));
+        assert!(names.contains(&"wp_registration_log".to_string()));
+        assert!(names.contains(&"wp_signups".to_string()));
+        assert!(!names.contains(&"wp_42_blogmeta".to_string()));
+        assert!(!names.contains(&"wp_42_signups".to_string()));
     }
 
     #[test]
