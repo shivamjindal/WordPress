@@ -23075,6 +23075,25 @@ async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> imp
         }));
     }
 
+    if mode.eq_ignore_ascii_case("remove_all") {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_action("init", 10, Box::new(|_| {}));
+        dispatcher.add_action("init", 20, Box::new(|_| {}));
+        dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+        dispatcher.add_filter("the_title", 20, Box::new(|value, _| value));
+
+        let removed_actions = dispatcher.remove_all_actions("init");
+        let removed_filters = dispatcher.remove_all_filters("the_title");
+
+        return rust_handled_json(json!({
+            "mode": "remove_all",
+            "removed_actions": removed_actions,
+            "removed_filters": removed_filters,
+            "has_action": dispatcher.has_action("init"),
+            "has_filter": dispatcher.has_filter("the_title"),
+        }));
+    }
+
     if mode.eq_ignore_ascii_case("all_hook") {
         let mut dispatcher = HookDispatcher::default();
         let all_seen = Arc::new(Mutex::new(Vec::<String>::new()));
@@ -23918,5 +23937,19 @@ mod tests {
 
         assert_eq!(json["action_seen"], json!(["init", "alpha", "beta"]));
         assert_eq!(json["filter_seen"], json!(["the_title", "hello", "extra"]));
+    }
+
+    #[tokio::test]
+    async fn hooks_remove_all_mode_clears_registrations() {
+        let response = internal_hooks_contract(Query(InternalHooksQuery {
+            mode: Some("remove_all".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["removed_actions"], Value::from(2));
+        assert_eq!(json["removed_filters"], Value::from(2));
+        assert_eq!(json["has_action"], Value::Bool(false));
+        assert_eq!(json["has_filter"], Value::Bool(false));
     }
 }

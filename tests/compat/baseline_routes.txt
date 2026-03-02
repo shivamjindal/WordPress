@@ -2054,6 +2054,7 @@ GET /__wp_rust/internal/hooks?mode=default_accepted_args
 GET /__wp_rust/internal/hooks?mode=accepted_args
 GET /__wp_rust/internal/hooks?mode=did_count
 GET /__wp_rust/internal/hooks?mode=all_hook
+GET /__wp_rust/internal/hooks?mode=remove_all
 GET /__wp_rust/internal/admin-contract
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=false
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=true

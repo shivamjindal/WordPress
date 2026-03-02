@@ -169,6 +169,14 @@ impl HookDispatcher {
         remove_registration(&mut self.filters, name, id)
     }
 
+    pub fn remove_all_actions(&mut self, name: &str) -> usize {
+        remove_all_registrations(&mut self.actions, name)
+    }
+
+    pub fn remove_all_filters(&mut self, name: &str) -> usize {
+        remove_all_registrations(&mut self.filters, name)
+    }
+
     pub fn has_action(&self, name: &str) -> bool {
         self.actions
             .get(name)
@@ -232,6 +240,17 @@ fn remove_registration<T: HookRegistration>(
         }
     }
     removed
+}
+
+fn remove_all_registrations<T>(
+    hooks: &mut BTreeMap<String, BTreeMap<i32, Vec<T>>>,
+    name: &str,
+) -> usize {
+    let Some(by_priority) = hooks.remove(name) else {
+        return 0;
+    };
+
+    by_priority.values().map(Vec::len).sum()
 }
 
 #[cfg(test)]
@@ -514,5 +533,27 @@ mod tests {
                 "extra".to_string()
             ]
         );
+    }
+
+    #[test]
+    fn remove_all_actions_clears_hook_callbacks() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_action("init", 10, Box::new(|_| {}));
+        dispatcher.add_action("init", 20, Box::new(|_| {}));
+
+        assert_eq!(dispatcher.remove_all_actions("init"), 2);
+        assert!(!dispatcher.has_action("init"));
+        assert_eq!(dispatcher.remove_all_actions("init"), 0);
+    }
+
+    #[test]
+    fn remove_all_filters_clears_hook_callbacks() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+        dispatcher.add_filter("the_title", 20, Box::new(|value, _| value));
+
+        assert_eq!(dispatcher.remove_all_filters("the_title"), 2);
+        assert!(!dispatcher.has_filter("the_title"));
+        assert_eq!(dispatcher.remove_all_filters("the_title"), 0);
     }
 }
