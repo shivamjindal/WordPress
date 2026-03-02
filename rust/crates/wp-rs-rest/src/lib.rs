@@ -76,6 +76,7 @@ impl RestRouteRegistry {
             .iter()
             .filter(|route| normalize_path(&route.path) == request_path)
             .collect::<Vec<_>>();
+        let allowed_methods = collect_allowed_methods(&matching_path_routes);
         if matching_path_routes.is_empty() {
             return RestDispatchResult::error(
                 404,
@@ -85,18 +86,12 @@ impl RestRouteRegistry {
         }
 
         if request_method == "OPTIONS" {
-            let mut allowed_methods = BTreeSet::new();
-            for route in &matching_path_routes {
-                for method in &route.methods {
-                    allowed_methods.insert(method.trim().to_ascii_uppercase());
-                }
-            }
             return RestDispatchResult {
                 status_code: 200,
                 body: json!({
                     "route": request_path,
                     "method": "OPTIONS",
-                    "allow": allowed_methods.into_iter().collect::<Vec<_>>(),
+                    "allow": allowed_methods,
                     "ok": true,
                 }),
                 error_code: None,
@@ -109,11 +104,15 @@ impl RestRouteRegistry {
         {
             Some(route) => route,
             None => {
-                return RestDispatchResult::error(
-                    405,
-                    "rest_no_route",
-                    "No route was found matching the URL and request method.",
-                );
+                return RestDispatchResult {
+                    status_code: 405,
+                    body: json!({
+                        "code": "rest_no_route",
+                        "message": "No route was found matching the URL and request method.",
+                        "allow": allowed_methods,
+                    }),
+                    error_code: Some("rest_no_route".to_string()),
+                };
             }
         };
 
@@ -258,6 +257,22 @@ fn method_allowed(route: &RestRoute, request_method: &str) -> bool {
     })
 }
 
+fn collect_allowed_methods(routes: &[&RestRoute]) -> Vec<String> {
+    let mut allowed_methods = BTreeSet::new();
+    for route in routes {
+        for method in &route.methods {
+            allowed_methods.insert(method.trim().to_ascii_uppercase());
+        }
+    }
+    if allowed_methods.contains("GET") {
+        allowed_methods.insert("HEAD".to_string());
+    }
+    if !routes.is_empty() {
+        allowed_methods.insert("OPTIONS".to_string());
+    }
+    allowed_methods.into_iter().collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -312,6 +327,13 @@ mod tests {
         let request = RestRequest::new("DELETE", "/wp-json/wp/v2/posts");
         let result = registry.dispatch(&request);
         assert_eq!(result.status_code, 405);
+        let allow = result.body["allow"]
+            .as_array()
+            .expect("allow list should be present");
+        assert!(allow.contains(&Value::String("GET".to_string())));
+        assert!(allow.contains(&Value::String("POST".to_string())));
+        assert!(allow.contains(&Value::String("HEAD".to_string())));
+        assert!(allow.contains(&Value::String("OPTIONS".to_string())));
     }
 
     #[test]
@@ -369,6 +391,8 @@ mod tests {
             .expect("allow list should be present");
         assert!(allow.contains(&Value::String("GET".to_string())));
         assert!(allow.contains(&Value::String("POST".to_string())));
+        assert!(allow.contains(&Value::String("HEAD".to_string())));
+        assert!(allow.contains(&Value::String("OPTIONS".to_string())));
     }
 
     #[test]
