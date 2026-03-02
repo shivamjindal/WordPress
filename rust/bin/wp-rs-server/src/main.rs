@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -16,7 +16,9 @@ use serde_json::{json, Value};
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
-use wp_rs_config::{php_runtime_core_endpoints, RustGatewaySettings};
+use wp_rs_config::{
+    php_runtime_core_endpoints, RuntimeProfile, RustGatewaySettings, WordPressConstants,
+};
 use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::{
@@ -7097,6 +7099,7 @@ async fn main() {
         )
         .route("/__wp_rust/internal/hooks", get(internal_hooks_contract))
         .route("/__wp_rust/internal/db-tables", get(internal_db_tables))
+        .route("/__wp_rust/internal/constants", get(internal_constants))
         .route(
             "/__wp_rust/internal/maintenance-status",
             get(internal_maintenance_status),
@@ -22476,6 +22479,64 @@ async fn internal_db_tables(Query(query): Query<InternalDbTablesQuery>) -> Respo
         "tables": mapping,
     }))
     .into_response()
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalConstantsQuery {
+    wp_debug: Option<String>,
+    wp_content_dir: Option<String>,
+    wp_plugin_dir: Option<String>,
+    wp_lang_dir: Option<String>,
+    wp_temp_dir: Option<String>,
+    wp_memory_limit: Option<String>,
+    wp_max_memory_limit: Option<String>,
+}
+
+async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl IntoResponse {
+    let mut values = HashMap::new();
+
+    if let Some(value) = query.wp_debug {
+        values.insert("WP_DEBUG".to_string(), value);
+    }
+    if let Some(value) = query.wp_content_dir {
+        values.insert("WP_CONTENT_DIR".to_string(), value);
+    }
+    if let Some(value) = query.wp_plugin_dir {
+        values.insert("WP_PLUGIN_DIR".to_string(), value);
+    }
+    if let Some(value) = query.wp_lang_dir {
+        values.insert("WP_LANG_DIR".to_string(), value);
+    }
+    if let Some(value) = query.wp_temp_dir {
+        values.insert("WP_TEMP_DIR".to_string(), value);
+    }
+    if let Some(value) = query.wp_memory_limit {
+        values.insert("WP_MEMORY_LIMIT".to_string(), value);
+    }
+    if let Some(value) = query.wp_max_memory_limit {
+        values.insert("WP_MAX_MEMORY_LIMIT".to_string(), value);
+    }
+
+    let constants = WordPressConstants::from_map(&values);
+    let runtime_profile = match RuntimeProfile::from_constants(&constants) {
+        RuntimeProfile::Production => "production",
+        RuntimeProfile::Development => "development",
+    };
+
+    rust_handled_json(json!({
+        "runtime_profile": runtime_profile,
+        "constants": {
+            "wp_debug": constants.wp_debug,
+            "wp_content_dir": constants.wp_content_dir,
+            "wp_plugins_dir": constants.wp_plugins_dir,
+            "wp_lang_dir": constants.wp_lang_dir,
+            "wp_temp_dir": constants.wp_temp_dir,
+            "wp_memory_limit": constants.wp_memory_limit,
+            "wp_max_memory_limit": constants.wp_max_memory_limit,
+        },
+        "memory_limit_bytes": constants.memory_limit_bytes(),
+        "max_memory_limit_bytes": constants.max_memory_limit_bytes(),
+    }))
 }
 
 #[derive(Debug, Deserialize)]

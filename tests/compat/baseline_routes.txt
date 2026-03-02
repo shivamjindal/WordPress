@@ -1979,5 +1979,6 @@ GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-del
 GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
+GET /__wp_rust/internal/constants?wp_debug=1&wp_content_dir=/srv/wp-content&wp_memory_limit=128M&wp_max_memory_limit=512M
 GET /__wp_rust/internal/maintenance-status?upgrading=1
 GET /__wp_rust/internal/plugin-compat-matrix

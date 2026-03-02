@@ -4785,4 +4785,15 @@ mod tests {
             RuntimeProfile::Development
         );
     }
+
+    #[test]
+    fn constants_defaults_resolve_production_profile() {
+        let constants = WordPressConstants::default();
+        assert_eq!(
+            RuntimeProfile::from_constants(&constants),
+            RuntimeProfile::Production
+        );
+        assert_eq!(constants.memory_limit_bytes(), Some(40 * 1024 * 1024));
+        assert_eq!(constants.max_memory_limit_bytes(), Some(256 * 1024 * 1024));
+    }
 }
