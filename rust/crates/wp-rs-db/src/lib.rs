@@ -325,6 +325,23 @@ impl ObjectCache {
         entries.len()
     }
 
+    pub fn add_multiple(
+        &mut self,
+        entries: &HashMap<String, Value>,
+        group: &str,
+        ttl: Option<Duration>,
+    ) -> HashMap<String, bool> {
+        entries
+            .iter()
+            .map(|(key, value)| {
+                (
+                    key.clone(),
+                    self.add(key.clone(), group.to_string(), value.clone(), ttl),
+                )
+            })
+            .collect()
+    }
+
     pub fn add(
         &mut self,
         key: impl Into<String>,
@@ -729,6 +746,28 @@ mod tests {
         assert_eq!(
             cache.get("second", "posts"),
             Some(Value::String("two".to_string()))
+        );
+    }
+
+    #[test]
+    fn object_cache_add_multiple_only_adds_missing_keys() {
+        let mut cache = ObjectCache::default();
+        cache.set("existing", "posts", Value::String("seed".to_string()), None);
+        let entries = HashMap::from([
+            ("existing".to_string(), Value::String("new".to_string())),
+            ("fresh".to_string(), Value::String("value".to_string())),
+        ]);
+
+        let result = cache.add_multiple(&entries, "posts", None);
+        assert_eq!(result.get("existing"), Some(&false));
+        assert_eq!(result.get("fresh"), Some(&true));
+        assert_eq!(
+            cache.get("existing", "posts"),
+            Some(Value::String("seed".to_string()))
+        );
+        assert_eq!(
+            cache.get("fresh", "posts"),
+            Some(Value::String("value".to_string()))
         );
     }
 

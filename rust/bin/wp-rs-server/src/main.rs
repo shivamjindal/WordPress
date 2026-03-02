@@ -22118,6 +22118,30 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "add_multiple" => {
+            let raw_entries = query.value.unwrap_or_default();
+            let Some(entries) = parse_cache_payload_map(&raw_entries) else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_entries",
+                        "message": "value must be a JSON object for add_multiple.",
+                    }),
+                )
+                .into_response();
+            };
+            let added = cache.add_multiple(&entries, &group, ttl);
+            let added_count = added.values().filter(|value| **value).count();
+            rust_handled_json(json!({
+                "action": "add_multiple",
+                "group": group,
+                "entries": entries,
+                "added": added,
+                "added_count": added_count,
+                "ttl_seconds": query.ttl_seconds,
+            }))
+            .into_response()
+        }
         "add" => {
             let Some(key) = key else {
                 return rust_handled_json_with_status(
@@ -22340,7 +22364,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, get_multiple, set, set_multiple, add, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
+                "message": "action must be one of: get, get_multiple, set, set_multiple, add, add_multiple, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
                 "action": action,
             }),
         )
@@ -23753,6 +23777,67 @@ mod tests {
         assert_eq!(
             read_json["values"]["two"],
             Value::String("beta".to_string())
+        );
+    }
+
+    #[tokio::test]
+    async fn object_cache_add_multiple_only_writes_missing_keys() {
+        let state = build_app_state();
+
+        let seed_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("set".to_string()),
+                group: Some("batch-add".to_string()),
+                key: Some("existing".to_string()),
+                keys: None,
+                value: Some("\"seed\"".to_string()),
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        assert_eq!(seed_response.status(), StatusCode::OK);
+
+        let add_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("add_multiple".to_string()),
+                group: Some("batch-add".to_string()),
+                key: None,
+                keys: None,
+                value: Some("{\"existing\":\"new\",\"fresh\":\"value\"}".to_string()),
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let add_json = response_json(add_response).await;
+        assert_eq!(add_json["added_count"], Value::from(1));
+        assert_eq!(add_json["added"]["existing"], Value::Bool(false));
+        assert_eq!(add_json["added"]["fresh"], Value::Bool(true));
+
+        let read_response = internal_object_cache(
+            State(state),
+            Query(InternalObjectCacheQuery {
+                action: Some("get_multiple".to_string()),
+                group: Some("batch-add".to_string()),
+                key: None,
+                keys: Some("existing,fresh".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let read_json = response_json(read_response).await;
+        assert_eq!(
+            read_json["values"]["existing"],
+            Value::String("seed".to_string())
+        );
+        assert_eq!(
+            read_json["values"]["fresh"],
+            Value::String("value".to_string())
         );
     }
 
