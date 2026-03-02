@@ -244,7 +244,7 @@ pub fn password_needs_rehash(hash: &str) -> bool {
         return false;
     }
 
-    hash.starts_with("$2")
+    true
 }
 
 fn normalize_bcrypt_hash_prefix(hash: &str) -> String {
@@ -719,6 +719,9 @@ mod tests {
         assert!(password_needs_rehash("$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1"));
         assert!(password_needs_rehash(
             "$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG"
+        ));
+        assert!(password_needs_rehash(
+            "$argon2id$v=19$m=65536,t=2,p=1$abc$def"
         ));
         assert!(!password_needs_rehash(
             "$wp$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG"

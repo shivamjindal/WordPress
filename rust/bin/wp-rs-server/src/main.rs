@@ -24414,6 +24414,18 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn password_needs_rehash_marks_non_prefixed_modern_hashes() {
+        let response = internal_password_needs_rehash(Query(InternalPasswordVerifyQuery {
+            password: None,
+            hash: Some("$argon2id$v=19$m=65536,t=2,p=1$abc$def".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("needs_rehash"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
     async fn password_needs_rehash_skips_wp_prefixed_hashes() {
         let response = internal_password_needs_rehash(Query(InternalPasswordVerifyQuery {
             password: None,
