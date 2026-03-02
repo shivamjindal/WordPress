@@ -926,6 +926,7 @@ dependencies = [
  "wp-rs-content",
  "wp-rs-cron",
  "wp-rs-db",
+ "wp-rs-hooks",
  "wp-rs-http",
  "wp-rs-rest",
 ]

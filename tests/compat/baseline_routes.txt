@@ -1976,5 +1976,6 @@ POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&aut
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-write
 DELETE /__wp_rust/internal/options?option=rust_contract_option
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-delete
+GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/maintenance-status?upgrading=1
 GET /__wp_rust/internal/plugin-compat-matrix

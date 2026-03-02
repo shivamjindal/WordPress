@@ -12,7 +12,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::{any, get};
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
+use serde_json::{json, Value};
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
@@ -20,6 +20,7 @@ use wp_rs_config::{php_runtime_core_endpoints, RustGatewaySettings};
 use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
 use wp_rs_db::{MultisiteResolver, NetworkSite, OptionStore};
+use wp_rs_hooks::HookDispatcher;
 use wp_rs_http::{
     core_xmlrpc_registry, detect_endpoint_kind, parse_xmlrpc_method_name, xmlrpc_fault_response,
     xmlrpc_success_response,
@@ -7091,6 +7092,7 @@ async fn main() {
             "/__wp_rust/internal/multisite-resolve",
             get(internal_multisite_resolve),
         )
+        .route("/__wp_rust/internal/hooks", get(internal_hooks_contract))
         .route(
             "/__wp_rust/internal/maintenance-status",
             get(internal_maintenance_status),
@@ -22316,6 +22318,71 @@ async fn internal_multisite_resolve(
         "domain": domain,
         "path": path,
         "resolved": resolved,
+    }))
+}
+
+async fn internal_hooks_contract() -> impl IntoResponse {
+    let mut dispatcher = HookDispatcher::default();
+    let action_order = Arc::new(Mutex::new(Vec::<String>::new()));
+
+    let action_order_late = Arc::clone(&action_order);
+    dispatcher.add_action(
+        "init",
+        20,
+        Box::new(move |_| {
+            action_order_late
+                .lock()
+                .expect("action order mutex poisoned")
+                .push("late".to_string());
+        }),
+    );
+
+    let action_order_early = Arc::clone(&action_order);
+    dispatcher.add_action(
+        "init",
+        10,
+        Box::new(move |_| {
+            action_order_early
+                .lock()
+                .expect("action order mutex poisoned")
+                .push("early".to_string());
+        }),
+    );
+
+    let action_args = vec![Value::String("contract".to_string())];
+    dispatcher.do_action("init", &action_args);
+
+    dispatcher.add_filter(
+        "the_title",
+        10,
+        Box::new(|value, _| {
+            let value = value.as_str().unwrap_or_default();
+            Value::String(format!("[prefix] {value}"))
+        }),
+    );
+    dispatcher.add_filter(
+        "the_title",
+        20,
+        Box::new(|value, _| {
+            let value = value.as_str().unwrap_or_default();
+            Value::String(format!("{value} [suffix]"))
+        }),
+    );
+    let filter_result =
+        dispatcher.apply_filters("the_title", Value::String("Hello".to_string()), &[]);
+
+    rust_handled_json(json!({
+        "action_hook": "init",
+        "action_order": action_order
+            .lock()
+            .expect("action order mutex poisoned")
+            .clone(),
+        "filter_hook": "the_title",
+        "filter_result": filter_result,
+        "has_action": dispatcher.has_action("init"),
+        "has_filter": dispatcher.has_filter("the_title"),
+        "current_hook": dispatcher.current_hook(),
+        "doing_init_after_dispatch": dispatcher.doing_hook("init"),
     }))
 }
 

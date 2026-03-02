@@ -17,5 +17,6 @@ wp-rs-auth = { path = "../../crates/wp-rs-auth" }
 wp-rs-content = { path = "../../crates/wp-rs-content" }
 wp-rs-cron = { path = "../../crates/wp-rs-cron" }
 wp-rs-db = { path = "../../crates/wp-rs-db" }
+wp-rs-hooks = { path = "../../crates/wp-rs-hooks" }
 wp-rs-http = { path = "../../crates/wp-rs-http" }
 wp-rs-rest = { path = "../../crates/wp-rs-rest" }
