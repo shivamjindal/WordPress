@@ -376,6 +376,22 @@ mod tests {
     }
 
     #[test]
+    fn option_store_invalidates_alloptions_after_mutations() {
+        let mut store = OptionStore::default();
+        store.set_option("blogname", "WordPress", true);
+        let initial = store.load_alloptions();
+        assert_eq!(initial.get("blogname"), Some(&"WordPress".to_string()));
+
+        store.set_option("blogname", "WordPress Rust", true);
+        let updated = store.load_alloptions();
+        assert_eq!(updated.get("blogname"), Some(&"WordPress Rust".to_string()));
+
+        assert!(store.delete_option("blogname"));
+        let after_delete = store.load_alloptions();
+        assert!(!after_delete.contains_key("blogname"));
+    }
+
+    #[test]
     fn object_cache_supports_groups() {
         let mut cache = ObjectCache::default();
         cache.set("post_1", "posts", Value::String("cached".to_string()), None);
