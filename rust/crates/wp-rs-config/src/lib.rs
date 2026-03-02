@@ -129,8 +129,8 @@ impl RustGatewaySettings {
     }
 
     pub fn allows_method(&self, method: &str) -> bool {
-        self.method_allowlist
-            .contains(&method.trim().to_ascii_uppercase())
+        let normalized = method.trim().to_ascii_uppercase();
+        self.method_allowlist.contains(&normalized) || self.method_allowlist.contains("*")
     }
 
     fn plugin_mode_allows_endpoint(&self, endpoint: &str) -> bool {
@@ -2150,6 +2150,15 @@ mod tests {
     }
 
     #[test]
+    fn method_allowlist_supports_wildcard_entry() {
+        let mut settings = RustGatewaySettings::default();
+        settings.method_allowlist = ["*".to_string()].into_iter().collect();
+        assert!(settings.allows_method("get"));
+        assert!(settings.allows_method("post"));
+        assert!(settings.allows_method("delete"));
+    }
+
+    #[test]
     fn production_profile_forces_full_cutover() {
         let mut settings = RustGatewaySettings::default();
         settings.deployment_profile = "production-rust".to_string();
@@ -2160,6 +2169,7 @@ mod tests {
         assert!(settings.endpoint_allowlist.contains("*"));
         assert!(settings.method_allowlist.contains("*"));
         assert_eq!(settings.plugin_compat_mode, "rust-only");
+        assert!(settings.allows_method("post"));
     }
 
     #[test]
