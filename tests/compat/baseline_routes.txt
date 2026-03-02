@@ -1995,6 +1995,10 @@ GET /__wp_rust/internal/nonce?action=save-post&verify_action=save-post&user_id=7
 GET /__wp_rust/internal/nonce?action=save-post&verify_action=save-post&user_id=7&token=abc123&now=2000000000&verify_now=2000086400
 GET /__wp_rust/internal/hooks
 GET /__wp_rust/internal/hooks?mode=remove
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=false
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=true
+GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3Edemo.sayHello%3C%2FmethodName%3E%3C%2FmethodCall%3E
+GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3E%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=options
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown

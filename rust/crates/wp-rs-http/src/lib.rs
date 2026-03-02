@@ -209,6 +209,13 @@ mod tests {
     }
 
     #[test]
+    fn empty_xmlrpc_method_name_returns_none() {
+        let payload =
+            "<?xml version=\"1.0\"?><methodCall><methodName>   </methodName></methodCall>";
+        assert_eq!(parse_xmlrpc_method_name(payload), None);
+    }
+
+    #[test]
     fn xmlrpc_dispatch_requires_auth_when_needed() {
         let registry = core_xmlrpc_registry();
         let anonymous = registry.dispatch("wp.getUsersBlogs", false);
@@ -217,6 +224,14 @@ mod tests {
 
         let authenticated = registry.dispatch("wp.getUsersBlogs", true);
         assert!(authenticated.success);
+    }
+
+    #[test]
+    fn xmlrpc_public_method_dispatches_without_auth() {
+        let registry = core_xmlrpc_registry();
+        let result = registry.dispatch("demo.sayHello", false);
+        assert!(result.success);
+        assert_eq!(result.method_name, "demo.sayHello");
     }
 
     #[test]
