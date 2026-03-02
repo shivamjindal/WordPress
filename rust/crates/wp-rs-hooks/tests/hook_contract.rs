@@ -123,3 +123,17 @@ fn callbacks_can_limit_accepted_args() {
     );
     assert_eq!(filtered, Value::String("body|alpha".to_string()));
 }
+
+#[test]
+fn did_hook_reports_dispatch_totals() {
+    let mut dispatcher = HookDispatcher::default();
+    dispatcher.add_action("init", 10, Box::new(|_| {}));
+    dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+
+    dispatcher.do_action("init", &[]);
+    dispatcher.do_action("init", &[]);
+    let _ = dispatcher.apply_filters("the_title", Value::String("Hello".to_string()), &[]);
+
+    assert_eq!(dispatcher.did_hook("init"), 2);
+    assert_eq!(dispatcher.did_hook("the_title"), 1);
+}

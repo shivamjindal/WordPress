@@ -22637,6 +22637,25 @@ struct InternalHooksQuery {
 async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> impl IntoResponse {
     let mode = query.mode.unwrap_or_else(|| "basic".to_string());
 
+    if mode.eq_ignore_ascii_case("did_count") {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_action("init", 10, Box::new(|_| {}));
+        dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+
+        dispatcher.do_action("init", &[]);
+        dispatcher.do_action("init", &[]);
+        let filtered =
+            dispatcher.apply_filters("the_title", Value::String("Hello".to_string()), &[]);
+
+        return rust_handled_json(json!({
+            "mode": "did_count",
+            "did_init": dispatcher.did_hook("init"),
+            "did_the_title": dispatcher.did_hook("the_title"),
+            "did_missing": dispatcher.did_hook("missing"),
+            "filter_result": filtered,
+        }));
+    }
+
     if mode.eq_ignore_ascii_case("accepted_args") {
         let mut dispatcher = HookDispatcher::default();
         let action_seen = Arc::new(Mutex::new(Vec::<String>::new()));

@@ -25,6 +25,7 @@ pub struct HookDispatcher {
     actions: BTreeMap<String, BTreeMap<i32, Vec<ActionRegistration>>>,
     filters: BTreeMap<String, BTreeMap<i32, Vec<FilterRegistration>>>,
     current_stack: Vec<String>,
+    dispatch_counts: BTreeMap<String, u64>,
     next_id: u64,
 }
 
@@ -34,6 +35,7 @@ impl Default for HookDispatcher {
             actions: BTreeMap::new(),
             filters: BTreeMap::new(),
             current_stack: Vec::new(),
+            dispatch_counts: BTreeMap::new(),
             next_id: 1,
         }
     }
@@ -81,6 +83,7 @@ impl HookDispatcher {
             }
         }
         self.current_stack.pop();
+        *self.dispatch_counts.entry(name.to_string()).or_insert(0) += 1;
     }
 
     pub fn add_filter(
@@ -125,6 +128,7 @@ impl HookDispatcher {
         }
 
         self.current_stack.pop();
+        *self.dispatch_counts.entry(name.to_string()).or_insert(0) += 1;
         value
     }
 
@@ -154,6 +158,10 @@ impl HookDispatcher {
 
     pub fn doing_hook(&self, name: &str) -> bool {
         self.current_stack.iter().any(|current| current == name)
+    }
+
+    pub fn did_hook(&self, name: &str) -> u64 {
+        self.dispatch_counts.get(name).copied().unwrap_or(0)
     }
 
     fn allocate_id(&mut self) -> HookId {
@@ -303,5 +311,20 @@ mod tests {
         );
 
         assert_eq!(result, Value::String("base|first".to_string()));
+    }
+
+    #[test]
+    fn did_hook_counts_action_and_filter_dispatches() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_action("init", 10, Box::new(|_| {}));
+        dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+
+        dispatcher.do_action("init", &[]);
+        dispatcher.do_action("init", &[]);
+        let _ = dispatcher.apply_filters("the_title", Value::String("hello".to_string()), &[]);
+
+        assert_eq!(dispatcher.did_hook("init"), 2);
+        assert_eq!(dispatcher.did_hook("the_title"), 1);
+        assert_eq!(dispatcher.did_hook("missing"), 0);
     }
 }
