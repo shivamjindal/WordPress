@@ -23816,6 +23816,18 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn password_verify_accepts_legacy_md5_hashes() {
+        let response = internal_password_verify(Query(InternalPasswordVerifyQuery {
+            password: Some("password123".to_string()),
+            hash: Some("482c811da5d5b4bc6d497ffa98491e38".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("valid"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
     async fn constants_include_debug_log_path_when_provided() {
         let response = internal_constants(Query(InternalConstantsQuery {
             wp_environment_type: None,

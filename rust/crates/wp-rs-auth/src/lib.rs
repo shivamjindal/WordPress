@@ -206,6 +206,11 @@ pub fn resolve_current_user(
 /// Verifies WordPress password hashes for modern bcrypt (`$2y$`, `$2b$`, `$2a$`)
 /// and legacy phpass (`$P$`, `$H$`) formats.
 pub fn verify_password(password: &str, hash: &str) -> bool {
+    if hash.len() <= 32 && hash.chars().all(|character| character.is_ascii_hexdigit()) {
+        let md5_hash = format!("{:x}", md5::compute(password.as_bytes()));
+        return md5_hash.eq_ignore_ascii_case(hash);
+    }
+
     if hash.starts_with("$P$") || hash.starts_with("$H$") {
         return verify_phpass_password(password, hash);
     }
@@ -625,5 +630,12 @@ mod tests {
         let hash = "$P$B/x5z53S8OFO34SWjip8BphQFAhFsJ1";
         assert!(verify_password("password123", hash));
         assert!(!verify_password("not-password123", hash));
+    }
+
+    #[test]
+    fn verifies_legacy_md5_password_hashes() {
+        let hash = "482c811da5d5b4bc6d497ffa98491e38";
+        assert!(verify_password("password123", hash));
+        assert!(!verify_password("incorrect-password", hash));
     }
 }
