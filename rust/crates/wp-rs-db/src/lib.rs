@@ -350,6 +350,22 @@ mod tests {
     }
 
     #[test]
+    fn all_core_table_names_include_multisite_and_global_prefixes() {
+        let names = all_core_table_names("wp_", Some(3)).expect("table names should resolve");
+        assert_eq!(names.len(), CORE_TABLES.len());
+        assert!(names.contains(&"wp_3_posts".to_string()));
+        assert!(names.contains(&"wp_3_options".to_string()));
+        assert!(names.contains(&"wp_users".to_string()));
+        assert!(names.contains(&"wp_sitemeta".to_string()));
+    }
+
+    #[test]
+    fn all_core_table_names_reject_invalid_blog_id() {
+        let result = all_core_table_names("wp_", Some(0));
+        assert!(result.is_err());
+    }
+
+    #[test]
     fn option_store_tracks_autoload_cache() {
         let mut store = OptionStore::default();
         store.set_option("blogname", "Example", true);

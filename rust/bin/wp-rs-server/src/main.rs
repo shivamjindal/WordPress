@@ -19,7 +19,10 @@ use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets
 use wp_rs_config::{php_runtime_core_endpoints, RustGatewaySettings};
 use wp_rs_content::{extract_block_names, parse_front_route, FrontRouteKind};
 use wp_rs_cron::{parse_doing_wp_cron, CronEvent, CronScheduler};
-use wp_rs_db::{MultisiteResolver, NetworkSite, OptionStore};
+use wp_rs_db::{
+    all_core_table_names, resolve_table_name, MultisiteResolver, NetworkSite, OptionStore,
+    CORE_TABLES,
+};
 use wp_rs_hooks::HookDispatcher;
 use wp_rs_http::{
     core_xmlrpc_registry, detect_endpoint_kind, parse_xmlrpc_method_name, xmlrpc_fault_response,
@@ -7093,6 +7096,7 @@ async fn main() {
             get(internal_multisite_resolve),
         )
         .route("/__wp_rust/internal/hooks", get(internal_hooks_contract))
+        .route("/__wp_rust/internal/db-tables", get(internal_db_tables))
         .route(
             "/__wp_rust/internal/maintenance-status",
             get(internal_maintenance_status),
@@ -22384,6 +22388,94 @@ async fn internal_hooks_contract() -> impl IntoResponse {
         "current_hook": dispatcher.current_hook(),
         "doing_init_after_dispatch": dispatcher.doing_hook("init"),
     }))
+}
+
+#[derive(Debug, Deserialize)]
+struct InternalDbTablesQuery {
+    table_prefix: Option<String>,
+    blog_id: Option<u64>,
+    table: Option<String>,
+}
+
+async fn internal_db_tables(Query(query): Query<InternalDbTablesQuery>) -> Response {
+    let table_prefix = query
+        .table_prefix
+        .as_deref()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .unwrap_or("wp_")
+        .to_string();
+    let blog_id = query.blog_id.unwrap_or(1);
+
+    if let Some(logical_table_name) = query.table.as_deref().map(str::trim) {
+        let Some(definition) = CORE_TABLES
+            .iter()
+            .find(|definition| definition.logical_name == logical_table_name)
+        else {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "unknown_table",
+                    "message": "table must match a known WordPress core table logical name.",
+                    "table": logical_table_name,
+                }),
+            )
+            .into_response();
+        };
+
+        return match resolve_table_name(&table_prefix, definition, Some(blog_id)) {
+            Ok(resolved) => rust_handled_json(json!({
+                "scope": "single",
+                "table_prefix": table_prefix,
+                "blog_id": blog_id,
+                "logical_name": definition.logical_name,
+                "resolved_name": resolved,
+            }))
+            .into_response(),
+            Err(error) => rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_table_lookup",
+                    "message": error.to_string(),
+                    "table_prefix": table_prefix,
+                    "blog_id": blog_id,
+                    "logical_name": definition.logical_name,
+                }),
+            )
+            .into_response(),
+        };
+    }
+
+    let names = match all_core_table_names(&table_prefix, Some(blog_id)) {
+        Ok(names) => names,
+        Err(error) => {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_table_lookup",
+                    "message": error.to_string(),
+                    "table_prefix": table_prefix,
+                    "blog_id": blog_id,
+                }),
+            )
+            .into_response();
+        }
+    };
+
+    let mapping = CORE_TABLES
+        .iter()
+        .zip(names.iter())
+        .map(|(definition, resolved)| (definition.logical_name.to_string(), resolved.clone()))
+        .collect::<BTreeMap<_, _>>();
+
+    rust_handled_json(json!({
+        "scope": "bulk",
+        "table_prefix": table_prefix,
+        "blog_id": blog_id,
+        "count": mapping.len(),
+        "tables": mapping,
+    }))
+    .into_response()
 }
 
 #[derive(Debug, Deserialize)]
