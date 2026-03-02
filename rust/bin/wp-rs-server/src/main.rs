@@ -22037,6 +22037,7 @@ struct InternalObjectCacheQuery {
     action: Option<String>,
     group: Option<String>,
     key: Option<String>,
+    keys: Option<String>,
     value: Option<String>,
     ttl_seconds: Option<u64>,
     offset: Option<u64>,
@@ -22059,6 +22060,11 @@ async fn internal_object_cache(
         .map(str::trim)
         .filter(|value| !value.is_empty())
         .map(ToOwned::to_owned);
+    let keys = query
+        .keys
+        .as_deref()
+        .map(parse_csv_values)
+        .unwrap_or_default();
 
     let mut cache = state
         .object_cache
@@ -22266,11 +22272,33 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "get_multiple" => {
+            if keys.is_empty() {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "missing_keys",
+                        "message": "keys query parameter is required for get_multiple.",
+                    }),
+                )
+                .into_response();
+            }
+            let values = cache.get_multiple(&keys, &group);
+            let hit_count = values.values().filter(|value| value.is_some()).count();
+            rust_handled_json(json!({
+                "action": "get_multiple",
+                "group": group,
+                "keys": keys,
+                "hit_count": hit_count,
+                "values": values,
+            }))
+            .into_response()
+        }
         _ => rust_handled_json_with_status(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, set, add, replace, incr, decr, delete, flush_group, flush_all.",
+                "message": "action must be one of: get, get_multiple, set, add, replace, incr, decr, delete, flush_group, flush_all.",
                 "action": action,
             }),
         )
@@ -22304,6 +22332,14 @@ fn parse_cache_payload_value(raw_value: &str) -> Value {
     }
 
     serde_json::from_str(trimmed).unwrap_or_else(|_| Value::String(raw_value.to_string()))
+}
+
+fn parse_csv_values(raw: &str) -> Vec<String> {
+    raw.split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| value.to_string())
+        .collect()
 }
 
 #[derive(Debug, Deserialize)]
@@ -23560,6 +23596,47 @@ mod tests {
             json.get("resolved_value"),
             Some(&Value::String("fallback".to_string()))
         );
+    }
+
+    #[tokio::test]
+    async fn object_cache_get_multiple_returns_hits_and_misses() {
+        let state = build_app_state();
+
+        for (key, value) in [("one", "\"alpha\""), ("two", "\"beta\"")] {
+            let response = internal_object_cache(
+                State(state.clone()),
+                Query(InternalObjectCacheQuery {
+                    action: Some("set".to_string()),
+                    group: Some("batch".to_string()),
+                    key: Some(key.to_string()),
+                    keys: None,
+                    value: Some(value.to_string()),
+                    ttl_seconds: None,
+                    offset: None,
+                }),
+            )
+            .await;
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let response = internal_object_cache(
+            State(state),
+            Query(InternalObjectCacheQuery {
+                action: Some("get_multiple".to_string()),
+                group: Some("batch".to_string()),
+                key: None,
+                keys: Some("one,two,missing".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let json = response_json(response).await;
+        assert_eq!(json.get("hit_count"), Some(&Value::from(2)));
+        assert_eq!(json["values"]["one"], Value::String("alpha".to_string()));
+        assert_eq!(json["values"]["two"], Value::String("beta".to_string()));
+        assert_eq!(json["values"]["missing"], Value::Null);
     }
 
     #[tokio::test]

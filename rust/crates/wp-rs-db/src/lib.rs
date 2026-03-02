@@ -389,6 +389,12 @@ impl ObjectCache {
             .is_some()
     }
 
+    pub fn get_multiple(&mut self, keys: &[String], group: &str) -> HashMap<String, Option<Value>> {
+        keys.iter()
+            .map(|key| (key.clone(), self.get(key, group)))
+            .collect()
+    }
+
     pub fn incr(&mut self, key: &str, group: &str, offset: u64) -> Option<i64> {
         let now = SystemTime::now();
         let entries = self.groups.get_mut(group)?;
@@ -666,6 +672,29 @@ mod tests {
             Some(Duration::from_secs(0)),
         );
         assert_eq!(cache.get("post_1", "posts"), None);
+    }
+
+    #[test]
+    fn object_cache_get_multiple_reports_hits_and_misses() {
+        let mut cache = ObjectCache::default();
+        cache.set("first", "posts", Value::String("one".to_string()), None);
+        cache.set("second", "posts", Value::String("two".to_string()), None);
+
+        let keys = vec![
+            "first".to_string(),
+            "second".to_string(),
+            "missing".to_string(),
+        ];
+        let result = cache.get_multiple(&keys, "posts");
+        assert_eq!(
+            result.get("first"),
+            Some(&Some(Value::String("one".to_string())))
+        );
+        assert_eq!(
+            result.get("second"),
+            Some(&Some(Value::String("two".to_string())))
+        );
+        assert_eq!(result.get("missing"), Some(&None));
     }
 
     #[test]

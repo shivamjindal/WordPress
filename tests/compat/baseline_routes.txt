@@ -2002,6 +2002,9 @@ GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoin
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=post_1&value=%7B%22cached%22%3A%22replaced%22%7D
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-replace
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=missing&value=%7B%22cached%22%3A%22none%22%7D
+GET /__wp_rust/internal/object-cache?action=set&group=batch&key=one&value=%22alpha%22
+GET /__wp_rust/internal/object-cache?action=set&group=batch&key=two&value=%22beta%22
+GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch&keys=one,two,missing
 GET /__wp_rust/internal/object-cache?action=set&group=stats&key=counter&value=10
 GET /__wp_rust/internal/object-cache?action=incr&group=stats&key=counter&offset=2
 GET /__wp_rust/internal/object-cache?action=decr&group=stats&key=counter&offset=20
