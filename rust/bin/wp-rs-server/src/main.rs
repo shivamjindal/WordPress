@@ -15,7 +15,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
-use wp_rs_auth::{resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService};
+use wp_rs_auth::{
+    cookie_constants, resolve_current_user, sign_auth_cookie, AuthScheme, AuthSecrets, NonceService,
+};
 use wp_rs_config::{
     php_runtime_core_endpoints, RuntimeProfile, RustGatewaySettings, WordPressConstants,
 };
@@ -7060,6 +7062,10 @@ async fn main() {
             get(internal_auth_roundtrip),
         )
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
+        .route(
+            "/__wp_rust/internal/auth-cookie-constants",
+            get(internal_auth_cookie_constants),
+        )
         .route(
             "/__wp_rust/internal/auth-session",
             get(internal_auth_session),
@@ -22179,6 +22185,11 @@ struct InternalAuthCookieQuery {
     scheme: Option<String>,
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalAuthCookieConstantsQuery {
+    siteurl: Option<String>,
+}
+
 async fn internal_auth_cookie(
     State(state): State<AppState>,
     Query(query): Query<InternalAuthCookieQuery>,
@@ -22207,6 +22218,12 @@ async fn internal_auth_cookie(
         "username": username,
         "expiration": expiration,
     }))
+}
+
+async fn internal_auth_cookie_constants(
+    Query(query): Query<InternalAuthCookieConstantsQuery>,
+) -> impl IntoResponse {
+    rust_handled_json(cookie_constants(query.siteurl.as_deref()))
 }
 
 #[derive(Debug, Deserialize)]

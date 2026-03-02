@@ -26,6 +26,37 @@ pub fn parse_cookie_header(cookie_header: &str) -> HashMap<String, String> {
         .collect()
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct CookieConstants {
+    pub cookiehash: String,
+    pub user_cookie: String,
+    pub pass_cookie: String,
+    pub auth_cookie: String,
+    pub secure_auth_cookie: String,
+    pub logged_in_cookie: String,
+    pub test_cookie: String,
+    pub recovery_mode_cookie: String,
+}
+
+pub fn cookie_constants(site_url: Option<&str>) -> CookieConstants {
+    let cookiehash = site_url
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(|value| format!("{:x}", md5::compute(value.as_bytes())))
+        .unwrap_or_default();
+
+    CookieConstants {
+        user_cookie: format!("wordpressuser_{cookiehash}"),
+        pass_cookie: format!("wordpresspass_{cookiehash}"),
+        auth_cookie: format!("wordpress_{cookiehash}"),
+        secure_auth_cookie: format!("wordpress_sec_{cookiehash}"),
+        logged_in_cookie: format!("wordpress_logged_in_{cookiehash}"),
+        test_cookie: "wordpress_test_cookie".to_string(),
+        recovery_mode_cookie: format!("wordpress_rec_{cookiehash}"),
+        cookiehash,
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub enum AuthScheme {
     Auth,
@@ -283,6 +314,26 @@ mod tests {
         assert_eq!(user.user_id, 15);
         assert_eq!(user.username, "admin");
         assert_eq!(user.scheme, AuthScheme::LoggedIn);
+    }
+
+    #[test]
+    fn cookie_constants_include_site_hash() {
+        let constants = cookie_constants(Some("https://example.com"));
+        assert_eq!(constants.cookiehash, "c984d06aafbecf6bc55569f964148ea3");
+        assert_eq!(
+            constants.logged_in_cookie,
+            "wordpress_logged_in_c984d06aafbecf6bc55569f964148ea3"
+        );
+        assert_eq!(constants.test_cookie, "wordpress_test_cookie");
+    }
+
+    #[test]
+    fn cookie_constants_allow_empty_hash_for_missing_site_url() {
+        let constants = cookie_constants(None);
+        assert_eq!(constants.cookiehash, "");
+        assert_eq!(constants.auth_cookie, "wordpress_");
+        assert_eq!(constants.secure_auth_cookie, "wordpress_sec_");
+        assert_eq!(constants.recovery_mode_cookie, "wordpress_rec_");
     }
 
     #[test]
