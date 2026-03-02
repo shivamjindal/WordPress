@@ -23195,6 +23195,64 @@ async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> imp
         }));
     }
 
+    if mode.eq_ignore_ascii_case("remove_priority") {
+        let mut dispatcher = HookDispatcher::default();
+        let action_hits = Arc::new(Mutex::new(Vec::<String>::new()));
+        let action_hits_low = Arc::clone(&action_hits);
+        dispatcher.add_action(
+            "init",
+            10,
+            Box::new(move |_| {
+                action_hits_low
+                    .lock()
+                    .expect("action hits mutex poisoned")
+                    .push("low".to_string());
+            }),
+        );
+        let action_hits_high = Arc::clone(&action_hits);
+        dispatcher.add_action(
+            "init",
+            20,
+            Box::new(move |_| {
+                action_hits_high
+                    .lock()
+                    .expect("action hits mutex poisoned")
+                    .push("high".to_string());
+            }),
+        );
+
+        let removed_actions = dispatcher.remove_all_actions_at_priority("init", 10);
+        dispatcher.do_action("init", &[]);
+
+        dispatcher.add_filter(
+            "the_title",
+            10,
+            Box::new(|value, _| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("low-{current}"))
+            }),
+        );
+        dispatcher.add_filter(
+            "the_title",
+            20,
+            Box::new(|value, _| {
+                let current = value.as_str().unwrap_or_default();
+                Value::String(format!("high-{current}"))
+            }),
+        );
+        let removed_filters = dispatcher.remove_all_filters_at_priority("the_title", 10);
+        let filtered =
+            dispatcher.apply_filters("the_title", Value::String("base".to_string()), &[]);
+
+        return rust_handled_json(json!({
+            "mode": "remove_priority",
+            "removed_actions": removed_actions,
+            "removed_filters": removed_filters,
+            "action_hits": action_hits.lock().expect("action hits mutex poisoned").clone(),
+            "filter_result": filtered,
+        }));
+    }
+
     if mode.eq_ignore_ascii_case("all_hook") {
         let mut dispatcher = HookDispatcher::default();
         let all_seen = Arc::new(Mutex::new(Vec::<String>::new()));
@@ -24270,5 +24328,22 @@ mod tests {
         assert_eq!(json["removed_filters"], Value::from(2));
         assert_eq!(json["has_action"], Value::Bool(false));
         assert_eq!(json["has_filter"], Value::Bool(false));
+    }
+
+    #[tokio::test]
+    async fn hooks_remove_priority_mode_clears_single_priority_callbacks() {
+        let response = internal_hooks_contract(Query(InternalHooksQuery {
+            mode: Some("remove_priority".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["removed_actions"], Value::from(1));
+        assert_eq!(json["removed_filters"], Value::from(1));
+        assert_eq!(json["action_hits"], json!(["high"]));
+        assert_eq!(
+            json["filter_result"],
+            Value::String("high-base".to_string())
+        );
     }
 }

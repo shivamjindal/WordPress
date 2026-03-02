@@ -177,6 +177,14 @@ impl HookDispatcher {
         remove_all_registrations(&mut self.filters, name)
     }
 
+    pub fn remove_all_actions_at_priority(&mut self, name: &str, priority: i32) -> usize {
+        remove_registrations_at_priority(&mut self.actions, name, priority)
+    }
+
+    pub fn remove_all_filters_at_priority(&mut self, name: &str, priority: i32) -> usize {
+        remove_registrations_at_priority(&mut self.filters, name, priority)
+    }
+
     pub fn has_action(&self, name: &str) -> bool {
         self.actions
             .get(name)
@@ -251,6 +259,24 @@ fn remove_all_registrations<T>(
     };
 
     by_priority.values().map(Vec::len).sum()
+}
+
+fn remove_registrations_at_priority<T>(
+    hooks: &mut BTreeMap<String, BTreeMap<i32, Vec<T>>>,
+    name: &str,
+    priority: i32,
+) -> usize {
+    let Some(by_priority) = hooks.get_mut(name) else {
+        return 0;
+    };
+
+    let removed = by_priority
+        .remove(&priority)
+        .map_or(0, |callbacks| callbacks.len());
+    if by_priority.is_empty() {
+        hooks.remove(name);
+    }
+    removed
 }
 
 #[cfg(test)]
@@ -555,5 +581,35 @@ mod tests {
         assert_eq!(dispatcher.remove_all_filters("the_title"), 2);
         assert!(!dispatcher.has_filter("the_title"));
         assert_eq!(dispatcher.remove_all_filters("the_title"), 0);
+    }
+
+    #[test]
+    fn remove_all_actions_at_priority_only_removes_matching_priority() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_action("init", 10, Box::new(|_| {}));
+        dispatcher.add_action("init", 20, Box::new(|_| {}));
+
+        assert_eq!(dispatcher.remove_all_actions_at_priority("init", 10), 1);
+        assert!(dispatcher.has_action("init"));
+        assert_eq!(dispatcher.remove_all_actions_at_priority("init", 10), 0);
+        assert_eq!(dispatcher.remove_all_actions("init"), 1);
+    }
+
+    #[test]
+    fn remove_all_filters_at_priority_only_removes_matching_priority() {
+        let mut dispatcher = HookDispatcher::default();
+        dispatcher.add_filter("the_title", 10, Box::new(|value, _| value));
+        dispatcher.add_filter("the_title", 20, Box::new(|value, _| value));
+
+        assert_eq!(
+            dispatcher.remove_all_filters_at_priority("the_title", 10),
+            1
+        );
+        assert!(dispatcher.has_filter("the_title"));
+        assert_eq!(
+            dispatcher.remove_all_filters_at_priority("the_title", 10),
+            0
+        );
+        assert_eq!(dispatcher.remove_all_filters("the_title"), 1);
     }
 }
