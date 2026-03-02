@@ -2001,6 +2001,7 @@ pub struct WordPressConstants {
     pub wp_development_mode: String,
     pub wp_debug_display: bool,
     pub wp_debug_log: bool,
+    pub wp_debug_log_path: Option<String>,
     pub wp_cache: bool,
     pub script_debug: bool,
     pub media_trash: bool,
@@ -2027,6 +2028,7 @@ impl Default for WordPressConstants {
             wp_development_mode: "".to_string(),
             wp_debug_display: true,
             wp_debug_log: false,
+            wp_debug_log_path: None,
             wp_cache: false,
             script_debug: false,
             media_trash: false,
@@ -2085,7 +2087,9 @@ impl WordPressConstants {
         }
 
         if let Some(value) = values.get("WP_DEBUG_LOG") {
-            constants.wp_debug_log = parse_php_truthy(value);
+            let (enabled, path) = parse_wp_debug_log(value);
+            constants.wp_debug_log = enabled;
+            constants.wp_debug_log_path = path;
         }
 
         if let Some(value) = values.get("WP_CACHE") {
@@ -2258,6 +2262,23 @@ fn parse_wp_post_revisions(input: &str) -> (bool, Option<u64>) {
     }
 
     (parse_php_truthy(trimmed), None)
+}
+
+fn parse_wp_debug_log(input: &str) -> (bool, Option<String>) {
+    let trimmed = input.trim();
+    if trimmed.is_empty() {
+        return (false, None);
+    }
+
+    let normalized = trimmed.to_ascii_lowercase();
+    if matches!(normalized.as_str(), "0" | "false" | "off" | "no") {
+        return (false, None);
+    }
+    if matches!(normalized.as_str(), "1" | "true" | "on" | "yes") {
+        return (true, None);
+    }
+
+    (true, Some(trimmed.to_string()))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4973,6 +4994,7 @@ mod tests {
         assert_eq!(constants.wp_development_mode, "all");
         assert!(!constants.wp_debug_display);
         assert!(constants.wp_debug_log);
+        assert_eq!(constants.wp_debug_log_path, None);
         assert!(constants.wp_cache);
         assert!(constants.script_debug);
         assert!(constants.shortinit);
@@ -5031,6 +5053,18 @@ mod tests {
         let values = HashMap::from([("WP_DEBUG_LOG".to_string(), "/tmp/debug.log".to_string())]);
         let constants = WordPressConstants::from_map(&values);
         assert!(constants.wp_debug_log);
+        assert_eq!(
+            constants.wp_debug_log_path,
+            Some("/tmp/debug.log".to_string())
+        );
+    }
+
+    #[test]
+    fn constants_disable_debug_log_for_false_values() {
+        let values = HashMap::from([("WP_DEBUG_LOG".to_string(), "false".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert!(!constants.wp_debug_log);
+        assert_eq!(constants.wp_debug_log_path, None);
     }
 
     #[test]

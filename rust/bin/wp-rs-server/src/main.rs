@@ -23304,6 +23304,7 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
             "wp_development_mode": constants.wp_development_mode,
             "wp_debug_display": constants.wp_debug_display,
             "wp_debug_log": constants.wp_debug_log,
+            "wp_debug_log_path": constants.wp_debug_log_path,
             "wp_cache": constants.wp_cache,
             "script_debug": constants.script_debug,
             "media_trash": constants.media_trash,
@@ -23658,5 +23659,42 @@ mod tests {
         .into_response();
         let json = response_json(response).await;
         assert_eq!(json.get("valid"), Some(&Value::Bool(false)));
+    }
+
+    #[tokio::test]
+    async fn constants_include_debug_log_path_when_provided() {
+        let response = internal_constants(Query(InternalConstantsQuery {
+            wp_debug: None,
+            wp_version: None,
+            wp_development_mode: None,
+            wp_debug_display: None,
+            wp_debug_log: Some("/tmp/debug.log".to_string()),
+            wp_cache: None,
+            script_debug: None,
+            media_trash: None,
+            shortinit: None,
+            wp_feature_better_passwords: None,
+            wp_content_dir: None,
+            wp_plugin_dir: None,
+            wp_lang_dir: None,
+            wp_temp_dir: None,
+            wp_memory_limit: None,
+            wp_max_memory_limit: None,
+            autosave_interval: None,
+            empty_trash_days: None,
+            wp_post_revisions: None,
+            wp_cron_lock_timeout: None,
+            wp_default_theme: None,
+            is_multisite: None,
+            ini_memory_limit: None,
+            memory_limit_changeable: None,
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(
+            json["constants"]["wp_debug_log_path"],
+            Value::String("/tmp/debug.log".to_string())
+        );
     }
 }
