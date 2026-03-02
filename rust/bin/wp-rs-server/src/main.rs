@@ -22096,6 +22096,28 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "set_multiple" => {
+            let raw_entries = query.value.unwrap_or_default();
+            let Some(entries) = parse_cache_payload_map(&raw_entries) else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_entries",
+                        "message": "value must be a JSON object for set_multiple.",
+                    }),
+                )
+                .into_response();
+            };
+            let stored_count = cache.set_multiple(&entries, &group, ttl);
+            rust_handled_json(json!({
+                "action": "set_multiple",
+                "group": group,
+                "entries": entries,
+                "stored_count": stored_count,
+                "ttl_seconds": query.ttl_seconds,
+            }))
+            .into_response()
+        }
         "add" => {
             let Some(key) = key else {
                 return rust_handled_json_with_status(
@@ -22318,7 +22340,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, get_multiple, set, add, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
+                "message": "action must be one of: get, get_multiple, set, set_multiple, add, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
                 "action": action,
             }),
         )
@@ -22352,6 +22374,17 @@ fn parse_cache_payload_value(raw_value: &str) -> Value {
     }
 
     serde_json::from_str(trimmed).unwrap_or_else(|_| Value::String(raw_value.to_string()))
+}
+
+fn parse_cache_payload_map(raw_value: &str) -> Option<HashMap<String, Value>> {
+    let parsed = serde_json::from_str::<Value>(raw_value).ok()?;
+    let object = parsed.as_object()?;
+    Some(
+        object
+            .iter()
+            .map(|(key, value)| (key.clone(), value.clone()))
+            .collect(),
+    )
 }
 
 fn parse_csv_values(raw: &str) -> Vec<String> {
@@ -23676,6 +23709,51 @@ mod tests {
         assert_eq!(json["values"]["one"], Value::String("alpha".to_string()));
         assert_eq!(json["values"]["two"], Value::String("beta".to_string()));
         assert_eq!(json["values"]["missing"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn object_cache_set_multiple_stores_entries() {
+        let state = build_app_state();
+
+        let set_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("set_multiple".to_string()),
+                group: Some("batch-set".to_string()),
+                key: None,
+                keys: None,
+                value: Some("{\"one\":\"alpha\",\"two\":\"beta\"}".to_string()),
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let set_json = response_json(set_response).await;
+        assert_eq!(set_json["stored_count"], Value::from(2));
+
+        let read_response = internal_object_cache(
+            State(state),
+            Query(InternalObjectCacheQuery {
+                action: Some("get_multiple".to_string()),
+                group: Some("batch-set".to_string()),
+                key: None,
+                keys: Some("one,two".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let read_json = response_json(read_response).await;
+        assert_eq!(read_json["hit_count"], Value::from(2));
+        assert_eq!(
+            read_json["values"]["one"],
+            Value::String("alpha".to_string())
+        );
+        assert_eq!(
+            read_json["values"]["two"],
+            Value::String("beta".to_string())
+        );
     }
 
     #[tokio::test]

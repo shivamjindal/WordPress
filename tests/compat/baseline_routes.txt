@@ -2002,9 +2002,13 @@ GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoin
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=post_1&value=%7B%22cached%22%3A%22replaced%22%7D
 GET /__wp_rust/internal/object-cache?action=get&group=posts&key=post_1&checkpoint=after-replace
 GET /__wp_rust/internal/object-cache?action=replace&group=posts&key=missing&value=%7B%22cached%22%3A%22none%22%7D
+GET /__wp_rust/internal/object-cache?action=set_multiple&group=batch-set&value=%7B%22one%22%3A%22alpha%22%2C%22two%22%3A%22beta%22%7D
+GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch-set&keys=one,two&checkpoint=after-set-multiple
 GET /__wp_rust/internal/object-cache?action=set&group=batch&key=one&value=%22alpha%22
 GET /__wp_rust/internal/object-cache?action=set&group=batch&key=two&value=%22beta%22
 GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch&keys=one,two,missing
+GET /__wp_rust/internal/object-cache?action=set_multiple&group=batch-set&value=%7B%22one%22%3A%22alpha%22%2C%22two%22%3A%22beta%22%7D
+GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch-set&keys=one,two&checkpoint=after-set-multiple
 GET /__wp_rust/internal/object-cache?action=delete_multiple&group=batch&keys=one,missing,two
 GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch&keys=one,two&checkpoint=after-delete-multiple
 GET /__wp_rust/internal/object-cache?action=set&group=stats&key=counter&value=10

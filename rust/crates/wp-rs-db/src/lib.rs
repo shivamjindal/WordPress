@@ -313,6 +313,18 @@ impl ObjectCache {
             .insert(key.into(), entry);
     }
 
+    pub fn set_multiple(
+        &mut self,
+        entries: &HashMap<String, Value>,
+        group: &str,
+        ttl: Option<Duration>,
+    ) -> usize {
+        for (key, value) in entries {
+            self.set(key.clone(), group.to_string(), value.clone(), ttl);
+        }
+        entries.len()
+    }
+
     pub fn add(
         &mut self,
         key: impl Into<String>,
@@ -699,6 +711,25 @@ mod tests {
             Some(&Some(Value::String("two".to_string())))
         );
         assert_eq!(result.get("missing"), Some(&None));
+    }
+
+    #[test]
+    fn object_cache_set_multiple_stores_all_entries() {
+        let mut cache = ObjectCache::default();
+        let entries = HashMap::from([
+            ("first".to_string(), Value::String("one".to_string())),
+            ("second".to_string(), Value::String("two".to_string())),
+        ]);
+
+        assert_eq!(cache.set_multiple(&entries, "posts", None), 2);
+        assert_eq!(
+            cache.get("first", "posts"),
+            Some(Value::String("one".to_string()))
+        );
+        assert_eq!(
+            cache.get("second", "posts"),
+            Some(Value::String("two".to_string()))
+        );
     }
 
     #[test]
