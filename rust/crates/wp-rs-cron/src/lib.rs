@@ -65,10 +65,8 @@ impl CronScheduler {
 }
 
 pub fn parse_doing_wp_cron(query_string: &str) -> Option<String> {
-    query_string
-        .split('&')
-        .filter_map(|entry| entry.split_once('='))
-        .find(|(key, _)| key.trim() == "doing_wp_cron")
+    form_urlencoded::parse(query_string.trim_start_matches('?').as_bytes())
+        .find(|(key, _)| key == "doing_wp_cron")
         .map(|(_, value)| value.trim().to_string())
         .filter(|value| !value.is_empty())
 }
@@ -123,6 +121,18 @@ mod tests {
     fn parse_doing_wp_cron_ignores_empty_value() {
         let token = parse_doing_wp_cron("foo=1&doing_wp_cron=&bar=2");
         assert_eq!(token, None);
+    }
+
+    #[test]
+    fn parse_doing_wp_cron_decodes_percent_encoded_value() {
+        let token = parse_doing_wp_cron("foo=1&doing_wp_cron=173847%2E123456");
+        assert_eq!(token, Some("173847.123456".to_string()));
+    }
+
+    #[test]
+    fn parse_doing_wp_cron_decodes_plus_as_space() {
+        let token = parse_doing_wp_cron("?doing_wp_cron=173847+123456");
+        assert_eq!(token, Some("173847 123456".to_string()));
     }
 
     #[test]
