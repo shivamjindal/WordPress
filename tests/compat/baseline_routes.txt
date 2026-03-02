@@ -2057,6 +2057,9 @@ GET /__wp_rust/internal/db-tables?table_prefix=wp-prefix&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog/hello-world
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
+GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=hourly&args=one,two
+GET /__wp_rust/internal/cron-schedule?hook=dedupe_hook&timestamp=1999999900&schedule=twicedaily&args=one,two&checkpoint=dedupe-replace
+GET /__wp_rust/internal/cron-due?now=1999999901&checkpoint=dedupe-drain
 GET /__wp_rust/internal/cron-schedule?hook=contract_hook&timestamp=2000000000&schedule=hourly&args=one,two&query_string=doing_wp_cron%3D173847
 GET /__wp_rust/internal/cron-schedule?hook=encoded_cron_hook&timestamp=2000000100&schedule=hourly&args=encoded&query_string=doing_wp_cron%3D173847%252E123456
 GET /__wp_rust/internal/cron-due?now=1999999999&checkpoint=before-contract-hook

@@ -29,6 +29,15 @@ pub struct CronScheduler {
 
 impl CronScheduler {
     pub fn schedule_event(&mut self, event: CronEvent) {
+        if let Some(existing) = self.events.iter_mut().find(|existing| {
+            existing.timestamp == event.timestamp
+                && existing.hook == event.hook
+                && existing.args == event.args
+        }) {
+            *existing = event;
+            return;
+        }
+
         self.events.push(event);
         self.events.sort_by_key(|event| event.timestamp);
     }
@@ -139,5 +148,47 @@ mod tests {
     fn should_run_cron_allows_when_lock_in_future() {
         let future_lock = SystemTime::now() + Duration::from_secs(30);
         assert!(should_run_cron(Some(future_lock), Duration::from_secs(60)));
+    }
+
+    #[test]
+    fn scheduler_replaces_duplicate_hook_timestamp_and_args() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "dedupe_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string(), "two".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "dedupe_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("twicedaily".to_string()),
+            args: vec!["one".to_string(), "two".to_string()],
+        });
+
+        let due = scheduler.due_events(101);
+        assert_eq!(due.len(), 1);
+        assert_eq!(due[0].hook, "dedupe_hook");
+        assert_eq!(due[0].schedule.as_deref(), Some("twicedaily"));
+    }
+
+    #[test]
+    fn scheduler_keeps_events_with_different_args() {
+        let mut scheduler = CronScheduler::default();
+        scheduler.schedule_event(CronEvent {
+            hook: "dedupe_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["one".to_string()],
+        });
+        scheduler.schedule_event(CronEvent {
+            hook: "dedupe_hook".to_string(),
+            timestamp: 100,
+            schedule: Some("hourly".to_string()),
+            args: vec!["two".to_string()],
+        });
+
+        let due = scheduler.due_events(101);
+        assert_eq!(due.len(), 2);
     }
 }
