@@ -7041,7 +7041,12 @@ async fn main() {
         .route("/wp-admin/async-upload.php", any(async_upload_dispatch))
         .route("/xmlrpc.php", any(xmlrpc_live_dispatch))
         .route("/wp-cron.php", any(cron_live_dispatch))
-        .route("/__wp_rust/internal/options", get(internal_options))
+        .route(
+            "/__wp_rust/internal/options",
+            get(internal_options)
+                .post(internal_options_upsert)
+                .delete(internal_options_delete),
+        )
         .route("/__wp_rust/internal/auth-cookie", get(internal_auth_cookie))
         .route(
             "/__wp_rust/internal/auth-session",
@@ -21854,6 +21859,13 @@ struct InternalOptionsQuery {
     autoload_only: Option<bool>,
 }
 
+#[derive(Debug, Deserialize)]
+struct InternalOptionsMutationQuery {
+    option: Option<String>,
+    value: Option<String>,
+    autoload: Option<bool>,
+}
+
 async fn internal_options(
     State(state): State<AppState>,
     Query(query): Query<InternalOptionsQuery>,
@@ -21883,6 +21895,76 @@ async fn internal_options(
         "count": values.len(),
         "values": values,
     }))
+}
+
+async fn internal_options_upsert(
+    State(state): State<AppState>,
+    Query(query): Query<InternalOptionsMutationQuery>,
+) -> impl IntoResponse {
+    let Some(option_name) = normalize_option_name(query.option) else {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "missing_option",
+                "message": "option query parameter is required.",
+            }),
+        )
+        .into_response();
+    };
+
+    let mut options = state.options.lock().expect("options mutex poisoned");
+    let previous = options.get_option(&option_name);
+    let value = query.value.unwrap_or_default();
+    let autoload = query.autoload.unwrap_or(true);
+    options.set_option(option_name.clone(), value.clone(), autoload);
+
+    rust_handled_json(json!({
+        "scope": "write",
+        "option": option_name,
+        "previous": previous,
+        "value": value,
+        "autoload": autoload,
+    }))
+    .into_response()
+}
+
+async fn internal_options_delete(
+    State(state): State<AppState>,
+    Query(query): Query<InternalOptionsMutationQuery>,
+) -> impl IntoResponse {
+    let Some(option_name) = normalize_option_name(query.option) else {
+        return rust_handled_json_with_status(
+            StatusCode::BAD_REQUEST,
+            json!({
+                "error": "missing_option",
+                "message": "option query parameter is required.",
+            }),
+        )
+        .into_response();
+    };
+
+    let mut options = state.options.lock().expect("options mutex poisoned");
+    let previous = options.get_option(&option_name);
+    let deleted = options.delete_option(&option_name);
+
+    rust_handled_json(json!({
+        "scope": "delete",
+        "option": option_name,
+        "deleted": deleted,
+        "previous": previous,
+    }))
+    .into_response()
+}
+
+fn normalize_option_name(option: Option<String>) -> Option<String> {
+    option.and_then(|value| {
+        let normalized = value.trim();
+        if normalized.is_empty() {
+            None
+        } else {
+            Some(normalized.to_string())
+        }
+    })
 }
 
 #[derive(Debug, Deserialize)]
