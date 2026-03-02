@@ -23034,6 +23034,51 @@ async fn internal_hooks_contract(Query(query): Query<InternalHooksQuery>) -> imp
         }));
     }
 
+    if mode.eq_ignore_ascii_case("all_hook") {
+        let mut dispatcher = HookDispatcher::default();
+        let all_seen = Arc::new(Mutex::new(Vec::<String>::new()));
+        let all_seen_ref = Arc::clone(&all_seen);
+        dispatcher.add_action_with_accepted_args(
+            "all",
+            10,
+            99,
+            Box::new(move |args| {
+                let observed = args
+                    .iter()
+                    .map(|value| {
+                        value
+                            .as_str()
+                            .map(str::to_string)
+                            .unwrap_or_else(|| value.to_string())
+                    })
+                    .collect::<Vec<_>>();
+                *all_seen_ref.lock().expect("all seen mutex poisoned") = observed;
+            }),
+        );
+
+        dispatcher.do_action(
+            "init",
+            &[
+                Value::String("alpha".to_string()),
+                Value::String("beta".to_string()),
+            ],
+        );
+        let action_seen = all_seen.lock().expect("all seen mutex poisoned").clone();
+
+        let _ = dispatcher.apply_filters(
+            "the_title",
+            Value::String("hello".to_string()),
+            &[Value::String("extra".to_string())],
+        );
+        let filter_seen = all_seen.lock().expect("all seen mutex poisoned").clone();
+
+        return rust_handled_json(json!({
+            "mode": "all_hook",
+            "action_seen": action_seen,
+            "filter_seen": filter_seen,
+        }));
+    }
+
     let mut dispatcher = HookDispatcher::default();
     let action_order = Arc::new(Mutex::new(Vec::<String>::new()));
 
@@ -23696,5 +23741,18 @@ mod tests {
             json["constants"]["wp_debug_log_path"],
             Value::String("/tmp/debug.log".to_string())
         );
+    }
+
+    #[tokio::test]
+    async fn hooks_all_mode_reports_action_and_filter_invocations() {
+        let response = internal_hooks_contract(Query(InternalHooksQuery {
+            mode: Some("all_hook".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+
+        assert_eq!(json["action_seen"], json!(["init", "alpha", "beta"]));
+        assert_eq!(json["filter_seen"], json!(["the_title", "hello", "extra"]));
     }
 }

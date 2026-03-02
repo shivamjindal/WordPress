@@ -42,6 +42,28 @@ impl Default for HookDispatcher {
 }
 
 impl HookDispatcher {
+    fn dispatch_action_callbacks(&self, name: &str, args: &[Value]) {
+        if let Some(by_priority) = self.actions.get(name) {
+            for callbacks in by_priority.values() {
+                for callback in callbacks {
+                    let accepted = callback.accepted_args.min(args.len());
+                    (callback.callback)(&args[..accepted]);
+                }
+            }
+        }
+    }
+
+    fn dispatch_all_actions(&self, hook_name: &str, args: &[Value]) {
+        if hook_name == "all" {
+            return;
+        }
+
+        let mut all_args = Vec::with_capacity(args.len() + 1);
+        all_args.push(Value::String(hook_name.to_string()));
+        all_args.extend(args.iter().cloned());
+        self.dispatch_action_callbacks("all", &all_args);
+    }
+
     pub fn add_action(
         &mut self,
         name: impl Into<String>,
@@ -74,14 +96,8 @@ impl HookDispatcher {
 
     pub fn do_action(&mut self, name: &str, args: &[Value]) {
         self.current_stack.push(name.to_string());
-        if let Some(by_priority) = self.actions.get(name) {
-            for callbacks in by_priority.values() {
-                for callback in callbacks {
-                    let accepted = callback.accepted_args.min(args.len());
-                    (callback.callback)(&args[..accepted]);
-                }
-            }
-        }
+        self.dispatch_all_actions(name, args);
+        self.dispatch_action_callbacks(name, args);
         self.current_stack.pop();
         *self.dispatch_counts.entry(name.to_string()).or_insert(0) += 1;
     }
@@ -118,6 +134,19 @@ impl HookDispatcher {
 
     pub fn apply_filters(&mut self, name: &str, mut value: Value, args: &[Value]) -> Value {
         self.current_stack.push(name.to_string());
+        let all_args = if name == "all" {
+            None
+        } else {
+            let mut all_args = Vec::with_capacity(args.len() + 2);
+            all_args.push(Value::String(name.to_string()));
+            all_args.push(value.clone());
+            all_args.extend(args.iter().cloned());
+            Some(all_args)
+        };
+        if let Some(all_args) = all_args.as_ref() {
+            self.dispatch_action_callbacks("all", all_args);
+        }
+
         if let Some(by_priority) = self.filters.get(name) {
             for callbacks in by_priority.values() {
                 for callback in callbacks {
@@ -405,5 +434,85 @@ mod tests {
         );
 
         assert_eq!(result, Value::String("base|0".to_string()));
+    }
+
+    #[test]
+    fn all_action_receives_hook_name_and_arguments() {
+        let mut dispatcher = HookDispatcher::default();
+        let seen = std::sync::Arc::new(std::sync::Mutex::new(Vec::<String>::new()));
+        let seen_ref = std::sync::Arc::clone(&seen);
+        dispatcher.add_action_with_accepted_args(
+            "all",
+            10,
+            99,
+            Box::new(move |args| {
+                let observed = args
+                    .iter()
+                    .map(|value| {
+                        value
+                            .as_str()
+                            .map(str::to_string)
+                            .unwrap_or_else(|| value.to_string())
+                    })
+                    .collect::<Vec<_>>();
+                *seen_ref.lock().expect("lock poisoned") = observed;
+            }),
+        );
+
+        dispatcher.do_action(
+            "init",
+            &[
+                Value::String("first".to_string()),
+                Value::String("second".to_string()),
+            ],
+        );
+
+        assert_eq!(
+            *seen.lock().expect("lock poisoned"),
+            vec![
+                "init".to_string(),
+                "first".to_string(),
+                "second".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn all_action_receives_filter_name_and_values() {
+        let mut dispatcher = HookDispatcher::default();
+        let seen = std::sync::Arc::new(std::sync::Mutex::new(Vec::<String>::new()));
+        let seen_ref = std::sync::Arc::clone(&seen);
+        dispatcher.add_action_with_accepted_args(
+            "all",
+            10,
+            99,
+            Box::new(move |args| {
+                let observed = args
+                    .iter()
+                    .map(|value| {
+                        value
+                            .as_str()
+                            .map(str::to_string)
+                            .unwrap_or_else(|| value.to_string())
+                    })
+                    .collect::<Vec<_>>();
+                *seen_ref.lock().expect("lock poisoned") = observed;
+            }),
+        );
+
+        let result = dispatcher.apply_filters(
+            "the_title",
+            Value::String("hello".to_string()),
+            &[Value::String("extra".to_string())],
+        );
+        assert_eq!(result, Value::String("hello".to_string()));
+        assert_eq!(
+            *seen.lock().expect("lock poisoned"),
+            vec![
+                "the_title".to_string(),
+                "hello".to_string(),
+                "extra".to_string()
+            ]
+        );
     }
 }
