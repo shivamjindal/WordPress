@@ -24,7 +24,13 @@ pub struct RustGatewaySettings {
 
 impl Default for RustGatewaySettings {
     fn default() -> Self {
-        let endpoint_allowlist = ["/__wp_rust/health".to_string()].into_iter().collect();
+        let endpoint_allowlist = [
+            "/__wp_rust/health".to_string(),
+            "/__wp_rust/echo".to_string(),
+            "/__wp_rust/maintenance".to_string(),
+        ]
+        .into_iter()
+        .collect();
         let method_allowlist = ["GET".to_string(), "HEAD".to_string()]
             .into_iter()
             .collect();
@@ -2118,6 +2124,10 @@ mod tests {
         assert_eq!(settings.deployment_profile, "legacy-safe");
         assert!(settings.fallback_enabled);
         assert!(settings.endpoint_allowlist.contains("/__wp_rust/health"));
+        assert!(settings.endpoint_allowlist.contains("/__wp_rust/echo"));
+        assert!(settings
+            .endpoint_allowlist
+            .contains("/__wp_rust/maintenance"));
         assert!(settings.method_allowlist.contains("GET"));
         assert!(!settings.should_route("/wp-login.php"));
     }

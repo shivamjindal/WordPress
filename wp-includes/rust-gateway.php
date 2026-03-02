@@ -69,7 +69,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 		$allowlist_raw = defined( 'WP_RUST_ENDPOINT_ALLOWLIST' ) ? WP_RUST_ENDPOINT_ALLOWLIST : '';
 		if ( ! $allowlist_raw ) {
 			$allowlist_env = getenv( 'WP_RUST_ENDPOINT_ALLOWLIST' );
-			$allowlist_raw = false !== $allowlist_env ? $allowlist_env : '/__wp_rust/health';
+			$allowlist_raw = false !== $allowlist_env ? $allowlist_env : '/__wp_rust/health,/__wp_rust/echo,/__wp_rust/maintenance';
 		}
 
 		$endpoint_allowlist = array_values(
@@ -82,7 +82,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 		);
 
 		if ( empty( $endpoint_allowlist ) ) {
-			$endpoint_allowlist = array( '/__wp_rust/health' );
+			$endpoint_allowlist = array( '/__wp_rust/health', '/__wp_rust/echo', '/__wp_rust/maintenance' );
 		}
 
 		$method_allowlist_raw = defined( 'WP_RUST_METHOD_ALLOWLIST' ) ? WP_RUST_METHOD_ALLOWLIST : '';

@@ -100,7 +100,7 @@ define( 'WP_RUST_DEPLOYMENT_PROFILE', 'legacy-safe' );
 define( 'WP_RUST_GATEWAY_FALLBACK_ENABLED', true );
 define( 'WP_RUST_GATEWAY_BACKEND_URL', 'http://127.0.0.1:8088' );
 define( 'WP_RUST_GATEWAY_TIMEOUT_MS', 1500 );
-define( 'WP_RUST_ENDPOINT_ALLOWLIST', '/__wp_rust/health' );
+define( 'WP_RUST_ENDPOINT_ALLOWLIST', '/__wp_rust/health,/__wp_rust/echo,/__wp_rust/maintenance' );
 define( 'WP_RUST_METHOD_ALLOWLIST', 'GET,HEAD' );
 define( 'WP_RUST_PLUGIN_COMPAT_MODE', 'php-runtime' );
 
