@@ -342,6 +342,23 @@ impl ObjectCache {
             .collect()
     }
 
+    pub fn replace_multiple(
+        &mut self,
+        entries: &HashMap<String, Value>,
+        group: &str,
+        ttl: Option<Duration>,
+    ) -> HashMap<String, bool> {
+        entries
+            .iter()
+            .map(|(key, value)| {
+                (
+                    key.clone(),
+                    self.replace(key.clone(), group.to_string(), value.clone(), ttl),
+                )
+            })
+            .collect()
+    }
+
     pub fn add(
         &mut self,
         key: impl Into<String>,
@@ -769,6 +786,25 @@ mod tests {
             cache.get("fresh", "posts"),
             Some(Value::String("value".to_string()))
         );
+    }
+
+    #[test]
+    fn object_cache_replace_multiple_only_replaces_existing_keys() {
+        let mut cache = ObjectCache::default();
+        cache.set("existing", "posts", Value::String("seed".to_string()), None);
+        let entries = HashMap::from([
+            ("existing".to_string(), Value::String("updated".to_string())),
+            ("missing".to_string(), Value::String("value".to_string())),
+        ]);
+
+        let result = cache.replace_multiple(&entries, "posts", None);
+        assert_eq!(result.get("existing"), Some(&true));
+        assert_eq!(result.get("missing"), Some(&false));
+        assert_eq!(
+            cache.get("existing", "posts"),
+            Some(Value::String("updated".to_string()))
+        );
+        assert_eq!(cache.get("missing", "posts"), None);
     }
 
     #[test]

@@ -22142,6 +22142,30 @@ async fn internal_object_cache(
             }))
             .into_response()
         }
+        "replace_multiple" => {
+            let raw_entries = query.value.unwrap_or_default();
+            let Some(entries) = parse_cache_payload_map(&raw_entries) else {
+                return rust_handled_json_with_status(
+                    StatusCode::BAD_REQUEST,
+                    json!({
+                        "error": "invalid_entries",
+                        "message": "value must be a JSON object for replace_multiple.",
+                    }),
+                )
+                .into_response();
+            };
+            let replaced = cache.replace_multiple(&entries, &group, ttl);
+            let replaced_count = replaced.values().filter(|value| **value).count();
+            rust_handled_json(json!({
+                "action": "replace_multiple",
+                "group": group,
+                "entries": entries,
+                "replaced": replaced,
+                "replaced_count": replaced_count,
+                "ttl_seconds": query.ttl_seconds,
+            }))
+            .into_response()
+        }
         "add" => {
             let Some(key) = key else {
                 return rust_handled_json_with_status(
@@ -22364,7 +22388,7 @@ async fn internal_object_cache(
             StatusCode::BAD_REQUEST,
             json!({
                 "error": "invalid_action",
-                "message": "action must be one of: get, get_multiple, set, set_multiple, add, add_multiple, replace, incr, decr, delete, delete_multiple, flush_group, flush_all.",
+                "message": "action must be one of: get, get_multiple, set, set_multiple, add, add_multiple, replace, replace_multiple, incr, decr, delete, delete_multiple, flush_group, flush_all.",
                 "action": action,
             }),
         )
@@ -23839,6 +23863,64 @@ mod tests {
             read_json["values"]["fresh"],
             Value::String("value".to_string())
         );
+    }
+
+    #[tokio::test]
+    async fn object_cache_replace_multiple_only_updates_existing_keys() {
+        let state = build_app_state();
+
+        let seed_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("set".to_string()),
+                group: Some("batch-replace".to_string()),
+                key: Some("existing".to_string()),
+                keys: None,
+                value: Some("\"seed\"".to_string()),
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        assert_eq!(seed_response.status(), StatusCode::OK);
+
+        let replace_response = internal_object_cache(
+            State(state.clone()),
+            Query(InternalObjectCacheQuery {
+                action: Some("replace_multiple".to_string()),
+                group: Some("batch-replace".to_string()),
+                key: None,
+                keys: None,
+                value: Some("{\"existing\":\"updated\",\"missing\":\"value\"}".to_string()),
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let replace_json = response_json(replace_response).await;
+        assert_eq!(replace_json["replaced_count"], Value::from(1));
+        assert_eq!(replace_json["replaced"]["existing"], Value::Bool(true));
+        assert_eq!(replace_json["replaced"]["missing"], Value::Bool(false));
+
+        let read_response = internal_object_cache(
+            State(state),
+            Query(InternalObjectCacheQuery {
+                action: Some("get_multiple".to_string()),
+                group: Some("batch-replace".to_string()),
+                key: None,
+                keys: Some("existing,missing".to_string()),
+                value: None,
+                ttl_seconds: None,
+                offset: None,
+            }),
+        )
+        .await;
+        let read_json = response_json(read_response).await;
+        assert_eq!(
+            read_json["values"]["existing"],
+            Value::String("updated".to_string())
+        );
+        assert_eq!(read_json["values"]["missing"], Value::Null);
     }
 
     #[tokio::test]

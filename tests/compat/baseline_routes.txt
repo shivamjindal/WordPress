@@ -2007,6 +2007,9 @@ GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch-set&keys=on
 GET /__wp_rust/internal/object-cache?action=set&group=batch-add&key=existing&value=%22seed%22
 GET /__wp_rust/internal/object-cache?action=add_multiple&group=batch-add&value=%7B%22existing%22%3A%22new%22%2C%22fresh%22%3A%22value%22%7D
 GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch-add&keys=existing,fresh&checkpoint=after-add-multiple
+GET /__wp_rust/internal/object-cache?action=set&group=batch-replace&key=existing&value=%22seed%22
+GET /__wp_rust/internal/object-cache?action=replace_multiple&group=batch-replace&value=%7B%22existing%22%3A%22updated%22%2C%22missing%22%3A%22value%22%7D
+GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch-replace&keys=existing,missing&checkpoint=after-replace-multiple
 GET /__wp_rust/internal/object-cache?action=set&group=batch&key=one&value=%22alpha%22
 GET /__wp_rust/internal/object-cache?action=set&group=batch&key=two&value=%22beta%22
 GET /__wp_rust/internal/object-cache?action=get_multiple&group=batch&keys=one,two,missing
