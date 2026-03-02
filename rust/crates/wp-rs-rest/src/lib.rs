@@ -69,24 +69,48 @@ impl RestRouteRegistry {
     }
 
     pub fn dispatch(&self, request: &RestRequest) -> RestDispatchResult {
-        let route = match self.routes.iter().find(|route| {
-            route.path == request.path
-                && route
-                    .methods
-                    .iter()
-                    .any(|method| method.eq_ignore_ascii_case(&request.method))
-        }) {
+        let request_method = request.method.trim().to_ascii_uppercase();
+        let request_path = normalize_path(&request.path);
+        let matching_path_routes = self
+            .routes
+            .iter()
+            .filter(|route| normalize_path(&route.path) == request_path)
+            .collect::<Vec<_>>();
+        if matching_path_routes.is_empty() {
+            return RestDispatchResult::error(
+                404,
+                "rest_no_route",
+                "No route was found matching the URL and request method.",
+            );
+        }
+
+        if request_method == "OPTIONS" {
+            let mut allowed_methods = BTreeSet::new();
+            for route in &matching_path_routes {
+                for method in &route.methods {
+                    allowed_methods.insert(method.trim().to_ascii_uppercase());
+                }
+            }
+            return RestDispatchResult {
+                status_code: 200,
+                body: json!({
+                    "route": request_path,
+                    "method": "OPTIONS",
+                    "allow": allowed_methods.into_iter().collect::<Vec<_>>(),
+                    "ok": true,
+                }),
+                error_code: None,
+            };
+        }
+
+        let route = match matching_path_routes
+            .into_iter()
+            .find(|route| method_allowed(route, &request_method))
+        {
             Some(route) => route,
             None => {
-                if self.routes.iter().any(|route| route.path == request.path) {
-                    return RestDispatchResult::error(
-                        405,
-                        "rest_no_route",
-                        "No route was found matching the URL and request method.",
-                    );
-                }
                 return RestDispatchResult::error(
-                    404,
+                    405,
                     "rest_no_route",
                     "No route was found matching the URL and request method.",
                 );
@@ -117,8 +141,8 @@ impl RestRouteRegistry {
         RestDispatchResult {
             status_code: 200,
             body: json!({
-                "route": route.path,
-                "method": request.method.to_ascii_uppercase(),
+                "route": request_path,
+                "method": request_method,
                 "ok": true,
             }),
             error_code: None,
@@ -208,6 +232,32 @@ fn format_auth_requirement(requirement: &AuthRequirement) -> String {
     }
 }
 
+fn normalize_path(path: &str) -> String {
+    let trimmed = path.trim();
+    if trimmed.is_empty() {
+        return "/".to_string();
+    }
+
+    let prefixed = if trimmed.starts_with('/') {
+        trimmed.to_string()
+    } else {
+        format!("/{trimmed}")
+    };
+
+    if prefixed.len() > 1 {
+        prefixed.trim_end_matches('/').to_string()
+    } else {
+        prefixed
+    }
+}
+
+fn method_allowed(route: &RestRoute, request_method: &str) -> bool {
+    route.methods.iter().any(|method| {
+        let registered = method.trim().to_ascii_uppercase();
+        registered == request_method || (request_method == "HEAD" && registered == "GET")
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -283,6 +333,42 @@ mod tests {
         request.capabilities.insert("manage_options".to_string());
         let allowed = registry.dispatch(&request);
         assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn head_request_dispatches_against_get_routes() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("HEAD", "/wp-json/wp/v2/posts");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        assert_eq!(result.body["method"], Value::String("HEAD".to_string()));
+    }
+
+    #[test]
+    fn dispatch_normalizes_trailing_slashes() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("GET", "/wp-json/wp/v2/posts/");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        assert_eq!(
+            result.body["route"],
+            Value::String("/wp-json/wp/v2/posts".to_string())
+        );
+    }
+
+    #[test]
+    fn options_request_returns_allowed_methods_for_matching_path() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("OPTIONS", "/wp-json/wp/v2/posts");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        assert_eq!(result.body["method"], Value::String("OPTIONS".to_string()));
+
+        let allow = result.body["allow"]
+            .as_array()
+            .expect("allow list should be present");
+        assert!(allow.contains(&Value::String("GET".to_string())));
+        assert!(allow.contains(&Value::String("POST".to_string())));
     }
 
     #[test]
