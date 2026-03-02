@@ -21895,12 +21895,13 @@ async fn internal_options(
     let mut options = state.options.lock().expect("options mutex poisoned");
 
     if let Some(option_name) = query.option {
-        let value = options.get_option(&option_name);
+        let record = options.get_option_record(&option_name);
         return rust_handled_json(json!({
             "scope": "single",
             "option": option_name,
-            "found": value.is_some(),
-            "value": value,
+            "found": record.is_some(),
+            "value": record.as_ref().map(|record| record.value.clone()),
+            "autoload": record.as_ref().map(|record| record.autoload),
         }));
     }
 
@@ -21938,7 +21939,7 @@ async fn internal_options_upsert(
     let previous = options.get_option(&option_name);
     let value = query.value.unwrap_or_default();
     let autoload = query.autoload.unwrap_or(true);
-    options.set_option(option_name.clone(), value.clone(), autoload);
+    let changed = options.set_option(option_name.clone(), value.clone(), autoload);
 
     rust_handled_json(json!({
         "scope": "write",
@@ -21946,6 +21947,7 @@ async fn internal_options_upsert(
         "previous": previous,
         "value": value,
         "autoload": autoload,
+        "changed": changed,
     }))
     .into_response()
 }

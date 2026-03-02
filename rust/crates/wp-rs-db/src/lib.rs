@@ -180,21 +180,33 @@ impl OptionStore {
         name: impl Into<String>,
         value: impl Into<String>,
         autoload: bool,
-    ) {
+    ) -> bool {
         let name = name.into();
+        let value = value.into();
+        if let Some(existing) = self.values.get(&name) {
+            if existing.value == value && existing.autoload == autoload {
+                return false;
+            }
+        }
+
         self.values.insert(
             name.clone(),
             OptionRecord {
                 name,
-                value: value.into(),
+                value,
                 autoload,
             },
         );
         self.alloptions_cache = None;
+        true
     }
 
     pub fn get_option(&self, name: &str) -> Option<String> {
         self.values.get(name).map(|record| record.value.clone())
+    }
+
+    pub fn get_option_record(&self, name: &str) -> Option<OptionRecord> {
+        self.values.get(name).cloned()
     }
 
     pub fn delete_option(&mut self, name: &str) -> bool {
@@ -415,6 +427,15 @@ mod tests {
         assert!(store.delete_option("blogname"));
         let after_delete = store.load_alloptions();
         assert!(!after_delete.contains_key("blogname"));
+    }
+
+    #[test]
+    fn option_store_reports_noop_updates() {
+        let mut store = OptionStore::default();
+        assert!(store.set_option("blogname", "WordPress", true));
+        assert!(!store.set_option("blogname", "WordPress", true));
+        assert!(store.set_option("blogname", "WordPress Rust", true));
+        assert!(store.set_option("blogname", "WordPress Rust", false));
     }
 
     #[test]

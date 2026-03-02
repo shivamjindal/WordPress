@@ -1974,6 +1974,8 @@ GET /__wp_rust/maintenance
 GET /__wp_rust/internal/options?option=blogname
 POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&autoload=false
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-write
+POST /__wp_rust/internal/options?option=rust_contract_option&value=roundtrip&autoload=false&checkpoint=noop
+GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-noop
 DELETE /__wp_rust/internal/options?option=rust_contract_option
 GET /__wp_rust/internal/options?option=rust_contract_option&checkpoint=after-delete
 POST /__wp_rust/internal/options?option=rust_autoload_option&value=autoloaded&autoload=true
