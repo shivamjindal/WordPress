@@ -1,15 +1,16 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use base64::engine::general_purpose::URL_SAFE_NO_PAD;
+use base64::engine::general_purpose::{STANDARD, URL_SAFE_NO_PAD};
 use base64::Engine;
 use bcrypt::verify as bcrypt_verify;
 use hmac::{Hmac, Mac};
 use serde::Serialize;
-use sha2::Sha256;
+use sha2::{Sha256, Sha384};
 use thiserror::Error;
 
 type HmacSha256 = Hmac<Sha256>;
+type HmacSha384 = Hmac<Sha384>;
 
 /// Parses an HTTP Cookie header into a key/value map.
 pub fn parse_cookie_header(cookie_header: &str) -> HashMap<String, String> {
@@ -211,17 +212,29 @@ pub fn verify_password(password: &str, hash: &str) -> bool {
         return md5_hash.eq_ignore_ascii_case(hash);
     }
 
+    if let Some(prefixed_hash) = hash.strip_prefix("$wp") {
+        let mut hmac = HmacSha384::new_from_slice(b"wp-sha384").expect("HMAC key should be valid");
+        hmac.update(password.as_bytes());
+        let transformed = STANDARD.encode(hmac.finalize().into_bytes());
+        let normalized_hash = normalize_bcrypt_hash_prefix(prefixed_hash);
+        return bcrypt_verify(&transformed, &normalized_hash).unwrap_or(false);
+    }
+
     if hash.starts_with("$P$") || hash.starts_with("$H$") {
         return verify_phpass_password(password, hash);
     }
 
-    let normalized_hash = if hash.starts_with("$2y$") {
+    let normalized_hash = normalize_bcrypt_hash_prefix(hash);
+
+    bcrypt_verify(password, &normalized_hash).unwrap_or(false)
+}
+
+fn normalize_bcrypt_hash_prefix(hash: &str) -> String {
+    if hash.starts_with("$2y$") {
         hash.replacen("$2y$", "$2b$", 1)
     } else {
         hash.to_string()
-    };
-
-    bcrypt_verify(password, &normalized_hash).unwrap_or(false)
+    }
 }
 
 fn verify_phpass_password(password: &str, hash: &str) -> bool {
@@ -668,5 +681,17 @@ mod tests {
         let hash = "482c811da5d5b4bc6d497ffa98491e38";
         assert!(verify_password("password123", hash));
         assert!(!verify_password("incorrect-password", hash));
+    }
+
+    #[test]
+    fn verifies_wp_prefixed_bcrypt_password_hashes() {
+        let mut hmac = HmacSha384::new_from_slice(b"wp-sha384").expect("HMAC key should be valid");
+        hmac.update("password123".as_bytes());
+        let transformed = STANDARD.encode(hmac.finalize().into_bytes());
+        let bcrypt_hash = bcrypt::hash(&transformed, 4).expect("bcrypt hash should generate");
+        let wp_hash = format!("$wp{bcrypt_hash}");
+
+        assert!(verify_password("password123", &wp_hash));
+        assert!(!verify_password("wrong-password", &wp_hash));
     }
 }

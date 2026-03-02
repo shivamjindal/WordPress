@@ -2039,6 +2039,8 @@ GET /__wp_rust/internal/password-verify?password=password123&hash=%24P%24B%2Fx5z
 GET /__wp_rust/internal/password-verify?password=wrong-password&hash=%24P%24B%2Fx5z53S8OFO34SWjip8BphQFAhFsJ1
 GET /__wp_rust/internal/password-verify?password=password123&hash=482c811da5d5b4bc6d497ffa98491e38
 GET /__wp_rust/internal/password-verify?password=wrong-password&hash=482c811da5d5b4bc6d497ffa98491e38
+GET /__wp_rust/internal/password-verify?password=password123&hash=%24wp%242y%2404%24vYwbi8PAi%2FC6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG
+GET /__wp_rust/internal/password-verify?password=wrong-password&hash=%24wp%242y%2404%24vYwbi8PAi%2FC6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG
 GET /__wp_rust/internal/nonce?action=save-post&user_id=7&token=abc123&now=2000000000
 GET /__wp_rust/internal/nonce?action=save-post&verify_action=delete-post&user_id=7&token=abc123&now=2000000000
 GET /__wp_rust/internal/nonce?action=save-post&verify_action=save-post&user_id=7&token=abc123&now=2000000000&verify_now=2000043200

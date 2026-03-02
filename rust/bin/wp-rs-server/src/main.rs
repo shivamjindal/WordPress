@@ -24289,6 +24289,20 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn password_verify_accepts_wp_prefixed_bcrypt_hashes() {
+        let response = internal_password_verify(Query(InternalPasswordVerifyQuery {
+            password: Some("password123".to_string()),
+            hash: Some(
+                "$wp$2y$04$vYwbi8PAi/C6aSx5LVikLetY8UzH0Dfljt1jT7OqvzuA1mJjseLlG".to_string(),
+            ),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json.get("valid"), Some(&Value::Bool(true)));
+    }
+
+    #[tokio::test]
     async fn auth_roundtrip_resolves_urlencoded_cookie_values() {
         let state = build_app_state();
         let response = internal_auth_roundtrip(
