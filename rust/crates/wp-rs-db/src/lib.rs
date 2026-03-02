@@ -384,7 +384,7 @@ impl ObjectCache {
             .is_some()
     }
 
-    pub fn incr(&mut self, key: &str, group: &str, offset: i64) -> Option<i64> {
+    pub fn incr(&mut self, key: &str, group: &str, offset: u64) -> Option<i64> {
         let now = SystemTime::now();
         let entries = self.groups.get_mut(group)?;
         let entry = entries.get_mut(key)?;
@@ -394,12 +394,13 @@ impl ObjectCache {
         }
 
         let current = parse_cache_numeric_value(&entry.value)?;
+        let offset = i64::try_from(offset).unwrap_or(i64::MAX);
         let updated = current.saturating_add(offset);
         entry.value = Value::from(updated);
         Some(updated)
     }
 
-    pub fn decr(&mut self, key: &str, group: &str, offset: i64) -> Option<i64> {
+    pub fn decr(&mut self, key: &str, group: &str, offset: u64) -> Option<i64> {
         let now = SystemTime::now();
         let entries = self.groups.get_mut(group)?;
         let entry = entries.get_mut(key)?;
@@ -409,6 +410,7 @@ impl ObjectCache {
         }
 
         let current = parse_cache_numeric_value(&entry.value)?;
+        let offset = i64::try_from(offset).unwrap_or(i64::MAX);
         let updated = (current.saturating_sub(offset)).max(0);
         entry.value = Value::from(updated);
         Some(updated)

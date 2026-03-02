@@ -22023,7 +22023,7 @@ struct InternalObjectCacheQuery {
     key: Option<String>,
     value: Option<String>,
     ttl_seconds: Option<u64>,
-    offset: Option<i64>,
+    offset: Option<u64>,
 }
 
 async fn internal_object_cache(
