@@ -23112,6 +23112,7 @@ async fn internal_constants(Query(query): Query<InternalConstantsQuery>) -> impl
             "autosave_interval": constants.autosave_interval,
             "empty_trash_days": constants.empty_trash_days,
             "wp_post_revisions": constants.wp_post_revisions,
+            "wp_post_revisions_limit": constants.wp_post_revisions_limit,
             "wp_cron_lock_timeout": constants.wp_cron_lock_timeout,
             "wp_default_theme": constants.wp_default_theme,
         },

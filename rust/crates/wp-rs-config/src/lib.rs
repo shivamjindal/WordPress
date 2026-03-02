@@ -1983,10 +1983,8 @@ pub fn php_runtime_core_endpoints() -> &'static [&'static str] {
 }
 
 fn parse_truthy(value: &str) -> bool {
-    matches!(
-        value.trim().to_ascii_lowercase().as_str(),
-        "1" | "true" | "yes" | "on"
-    )
+    let normalized = value.trim().to_ascii_lowercase();
+    !matches!(normalized.as_str(), "" | "0" | "false" | "off" | "no")
 }
 
 /// Subset of WordPress default constants used by migration foundation services.
@@ -2010,6 +2008,7 @@ pub struct WordPressConstants {
     pub autosave_interval: u64,
     pub empty_trash_days: u64,
     pub wp_post_revisions: bool,
+    pub wp_post_revisions_limit: Option<u64>,
     pub wp_cron_lock_timeout: u64,
     pub wp_default_theme: String,
 }
@@ -2035,6 +2034,7 @@ impl Default for WordPressConstants {
             autosave_interval: 60,
             empty_trash_days: 30,
             wp_post_revisions: true,
+            wp_post_revisions_limit: None,
             wp_cron_lock_timeout: 60,
             wp_default_theme: "twentytwentyfive".to_string(),
         }
@@ -2179,7 +2179,9 @@ impl WordPressConstants {
         }
 
         if let Some(value) = values.get("WP_POST_REVISIONS") {
-            constants.wp_post_revisions = parse_truthy(value);
+            let (enabled, limit) = parse_wp_post_revisions(value);
+            constants.wp_post_revisions = enabled;
+            constants.wp_post_revisions_limit = limit;
         }
 
         if let Some(value) = values.get("WP_CRON_LOCK_TIMEOUT") {
@@ -2232,6 +2234,23 @@ pub fn parse_php_size_to_bytes(input: &str) -> Option<u64> {
         _ => return None,
     };
     Some(value.saturating_mul(multiplier))
+}
+
+fn parse_wp_post_revisions(input: &str) -> (bool, Option<u64>) {
+    let trimmed = input.trim();
+    if trimmed.is_empty() {
+        return (false, None);
+    }
+
+    if let Ok(parsed) = trimmed.parse::<i64>() {
+        return match parsed {
+            ..=-1 => (true, None),
+            0 => (false, None),
+            value => (true, Some(value as u64)),
+        };
+    }
+
+    (parse_truthy(trimmed), None)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4939,6 +4958,7 @@ mod tests {
         assert_eq!(constants.autosave_interval, 120);
         assert_eq!(constants.empty_trash_days, 10);
         assert!(!constants.wp_post_revisions);
+        assert_eq!(constants.wp_post_revisions_limit, None);
         assert_eq!(constants.wp_cron_lock_timeout, 180);
         assert_eq!(constants.wp_default_theme, "custom-theme");
         assert_eq!(
@@ -4981,6 +5001,21 @@ mod tests {
         let constants = WordPressConstants::from_map(&values);
         assert_eq!(constants.wp_memory_limit, "96M");
         assert_eq!(constants.wp_max_memory_limit, "96M");
+    }
+
+    #[test]
+    fn constants_treat_non_empty_debug_log_path_as_truthy() {
+        let values = HashMap::from([("WP_DEBUG_LOG".to_string(), "/tmp/debug.log".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert!(constants.wp_debug_log);
+    }
+
+    #[test]
+    fn constants_capture_post_revision_numeric_limits() {
+        let values = HashMap::from([("WP_POST_REVISIONS".to_string(), "5".to_string())]);
+        let constants = WordPressConstants::from_map(&values);
+        assert!(constants.wp_post_revisions);
+        assert_eq!(constants.wp_post_revisions_limit, Some(5));
     }
 
     #[test]
