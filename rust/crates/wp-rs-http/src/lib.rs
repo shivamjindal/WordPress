@@ -247,6 +247,25 @@ mod tests {
     }
 
     #[test]
+    fn parses_xmlrpc_method_name_with_benign_attributes() {
+        let payload =
+            "<?xml version=\"1.0\"?><methodCall><methodName type=\"string\">demo.sayHello</methodName></methodCall>";
+        assert_eq!(
+            parse_xmlrpc_method_name(payload),
+            Some("demo.sayHello".to_string())
+        );
+    }
+
+    #[test]
+    fn parses_xmlrpc_method_name_with_tag_attributes() {
+        let payload = "<?xml version=\"1.0\"?><methodCall><methodName class=\"legacy\">demo.sayHello</methodName></methodCall>";
+        assert_eq!(
+            parse_xmlrpc_method_name(payload),
+            Some("demo.sayHello".to_string())
+        );
+    }
+
+    #[test]
     fn empty_xmlrpc_method_name_returns_none() {
         let payload =
             "<?xml version=\"1.0\"?><methodCall><methodName>   </methodName></methodCall>";

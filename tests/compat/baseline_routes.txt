@@ -2154,6 +2154,7 @@ GET /__wp_rust/internal/xmlrpc-dispatch?method=unknown.method&authenticated=true
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3Edemo.sayHello%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CMETHODNAME%3Edemo.sayHello%3C%2FMETHODNAME%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%20%3Edemo.sayHello%3C%2FmethodName%20%3E%3C%2FmethodCall%3E
+GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%20type%3D%22string%22%3Edemo.sayHello%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3E%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-contract
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3
