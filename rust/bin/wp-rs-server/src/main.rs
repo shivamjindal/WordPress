@@ -8920,7 +8920,7 @@ async fn options_writing_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -8963,7 +8963,7 @@ async fn options_reading_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -9014,7 +9014,7 @@ async fn options_discussion_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -9066,7 +9066,7 @@ async fn options_media_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -9129,7 +9129,7 @@ async fn options_permalink_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -9176,7 +9176,7 @@ async fn options_privacy_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_manage_privacy = authenticated
         && (capabilities.contains("manage_privacy_options")
             || capabilities.contains("manage_options"));
@@ -9233,7 +9233,7 @@ async fn privacy_policy_guide_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_manage_privacy = authenticated
         && (capabilities.contains("manage_privacy_options")
             || capabilities.contains("manage_options"));
@@ -9302,7 +9302,7 @@ async fn admin_information_page_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_view = authenticated
         && (capabilities.contains("read")
             || capabilities.contains("manage_options")
@@ -25004,6 +25004,57 @@ mod tests {
         let post_logout_network_response =
             network_index_live_dispatch(State(state), post_logout_network_request).await;
         assert_eq!(post_logout_network_response.status(), StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
+    async fn options_writing_rejects_stale_cookie_after_logout() {
+        let state = build_app_state();
+        let login_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+        let login_response = login_live_dispatch(State(state.clone()), login_request).await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include auth cookie");
+
+        let settings_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/options-writing.php")
+            .header("cookie", login_cookie.clone())
+            .header("x-wp-rust-capabilities", "manage_options")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let settings_response = options_writing_live_dispatch(State(state.clone()), settings_request).await;
+        assert_eq!(settings_response.status(), StatusCode::OK);
+
+        let logout_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-login.php?action=logout")
+            .header("cookie", login_cookie.clone())
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let logout_response = login_live_dispatch(State(state.clone()), logout_request).await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_settings_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/options-writing.php")
+            .header("cookie", login_cookie)
+            .header("x-wp-rust-capabilities", "manage_options")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let post_logout_settings_response =
+            options_writing_live_dispatch(State(state), post_logout_settings_request).await;
+        assert_eq!(post_logout_settings_response.status(), StatusCode::FORBIDDEN);
     }
 
     #[tokio::test]
