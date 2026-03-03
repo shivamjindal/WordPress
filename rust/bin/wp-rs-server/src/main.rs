@@ -22731,6 +22731,36 @@ async fn internal_auth_session(
             }))
             .into_response();
         }
+        "create_replace" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let token = query.token.unwrap_or_else(|| "session-token".to_string());
+            let expiration = query.expiration.unwrap_or(now.saturating_add(3600));
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let (changed, removed_count) = sessions.replace_with_session(
+                user_id,
+                &token,
+                expiration,
+                now,
+                query.ip,
+                query.user_agent,
+            );
+            let session = sessions.verify_session(user_id, &token, now);
+            let active_sessions = sessions.count_active_sessions(user_id, now);
+            return rust_handled_json(json!({
+                "action": "create_replace",
+                "user_id": user_id,
+                "token": token,
+                "expiration": expiration,
+                "changed": changed,
+                "removed_count": removed_count,
+                "active_sessions": active_sessions,
+                "session": session,
+            }))
+            .into_response();
+        }
         "verify" => {
             let user_id = query.user_id.unwrap_or(1);
             let token = query.token.unwrap_or_else(|| "session-token".to_string());
@@ -22806,7 +22836,7 @@ async fn internal_auth_session(
                 StatusCode::BAD_REQUEST,
                 json!({
                     "error": "invalid_auth_session_action",
-                    "message": "auth-session action must be one of resolve, create, verify, destroy, destroy_others, destroy_all.",
+                    "message": "auth-session action must be one of resolve, create, create_replace, verify, destroy, destroy_others, destroy_all.",
                 }),
             )
             .into_response();
@@ -24808,6 +24838,102 @@ mod tests {
             json["error"],
             Value::String("invalid_auth_session_action".to_string())
         );
+    }
+
+    #[tokio::test]
+    async fn auth_session_create_replace_keeps_single_token() {
+        let state = build_app_state();
+
+        for token in ["alpha", "beta"] {
+            let response = internal_auth_session(
+                State(state.clone()),
+                Query(InternalAuthSessionQuery {
+                    action: Some("create".to_string()),
+                    user_id: Some(7),
+                    token: Some(token.to_string()),
+                    expiration: Some(2_000_003_600),
+                    ip: None,
+                    user_agent: None,
+                    now: Some(2_000_000_000),
+                }),
+                Request::builder()
+                    .uri("/__wp_rust/internal/auth-session")
+                    .body(axum::body::Body::empty())
+                    .expect("request should build"),
+            )
+            .await
+            .into_response();
+            assert_eq!(response.status(), StatusCode::OK);
+        }
+
+        let replace_response = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("create_replace".to_string()),
+                user_id: Some(7),
+                token: Some("gamma".to_string()),
+                expiration: Some(2_000_003_600),
+                ip: Some("198.51.100.20".to_string()),
+                user_agent: Some("Edge".to_string()),
+                now: Some(2_000_000_010),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let replace_json = response_json(replace_response).await;
+        assert_eq!(replace_json["changed"], Value::Bool(true));
+        assert_eq!(replace_json["removed_count"], Value::from(2));
+        assert_eq!(replace_json["active_sessions"], Value::from(1));
+        assert_eq!(
+            replace_json["session"]["user_agent"],
+            Value::String("Edge".to_string())
+        );
+
+        let verify_alpha = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("verify".to_string()),
+                user_id: Some(7),
+                token: Some("alpha".to_string()),
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_011),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let verify_alpha_json = response_json(verify_alpha).await;
+        assert_eq!(verify_alpha_json["valid"], Value::Bool(false));
+
+        let verify_gamma = internal_auth_session(
+            State(state),
+            Query(InternalAuthSessionQuery {
+                action: Some("verify".to_string()),
+                user_id: Some(7),
+                token: Some("gamma".to_string()),
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_011),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let verify_gamma_json = response_json(verify_gamma).await;
+        assert_eq!(verify_gamma_json["valid"], Value::Bool(true));
     }
 
     #[tokio::test]

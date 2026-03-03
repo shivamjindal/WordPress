@@ -2046,6 +2046,11 @@ GET /__wp_rust/internal/auth-session?action=destroy_others&user_id=7&token=beta&
 GET /__wp_rust/internal/auth-session?action=verify&user_id=7&token=alpha&now=2000000001
 GET /__wp_rust/internal/auth-session?action=verify&user_id=7&token=beta&now=2000000001
 GET /__wp_rust/internal/auth-session?action=destroy_all&user_id=7&now=2000000001
+GET /__wp_rust/internal/auth-session?action=create&user_id=9&token=one&now=2000000000&expiration=2000003600
+GET /__wp_rust/internal/auth-session?action=create&user_id=9&token=two&now=2000000000&expiration=2000003600
+GET /__wp_rust/internal/auth-session?action=create_replace&user_id=9&token=three&now=2000000010&expiration=2000003600&ip=198.51.100.20&user_agent=Edge
+GET /__wp_rust/internal/auth-session?action=verify&user_id=9&token=one&now=2000000011
+GET /__wp_rust/internal/auth-session?action=verify&user_id=9&token=three&now=2000000011
 GET /__wp_rust/internal/auth-session?action=invalid
 GET /__wp_rust/internal/password-verify?password=password123&hash=%24P%24B%2Fx5z53S8OFO34SWjip8BphQFAhFsJ1
 GET /__wp_rust/internal/password-verify?password=wrong-password&hash=%24P%24B%2Fx5z53S8OFO34SWjip8BphQFAhFsJ1

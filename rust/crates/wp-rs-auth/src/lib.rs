@@ -405,6 +405,27 @@ impl SessionTokenStore {
         changed
     }
 
+    pub fn replace_with_session(
+        &mut self,
+        user_id: u64,
+        token: &str,
+        expiration: u64,
+        now_timestamp: u64,
+        ip: Option<String>,
+        user_agent: Option<String>,
+    ) -> (bool, usize) {
+        let changed = self.upsert_session(
+            user_id,
+            token,
+            expiration,
+            now_timestamp,
+            ip,
+            user_agent,
+        );
+        let removed_count = self.destroy_other_sessions(user_id, token, now_timestamp);
+        (changed, removed_count)
+    }
+
     pub fn verify_session(
         &mut self,
         user_id: u64,
@@ -847,6 +868,37 @@ mod tests {
             .is_none());
         assert!(sessions
             .verify_session(7, "session-c", 2_000_000_100)
+            .is_none());
+    }
+
+    #[test]
+    fn session_token_store_replace_with_session_keeps_single_token() {
+        let mut sessions = SessionTokenStore::default();
+        sessions.upsert_session(7, "session-a", 2_000_003_600, 2_000_000_000, None, None);
+        sessions.upsert_session(7, "session-b", 2_000_003_600, 2_000_000_000, None, None);
+
+        let (changed, removed_count) = sessions.replace_with_session(
+            7,
+            "session-c",
+            2_000_003_600,
+            2_000_000_200,
+            Some("198.51.100.15".to_string()),
+            Some("Safari".to_string()),
+        );
+        assert!(changed);
+        assert_eq!(removed_count, 2);
+        assert_eq!(sessions.count_active_sessions(7, 2_000_000_201), 1);
+
+        let replacement = sessions
+            .verify_session(7, "session-c", 2_000_000_201)
+            .expect("replacement session should remain");
+        assert_eq!(replacement.ip, Some("198.51.100.15".to_string()));
+        assert_eq!(replacement.user_agent, Some("Safari".to_string()));
+        assert!(sessions
+            .verify_session(7, "session-a", 2_000_000_201)
+            .is_none());
+        assert!(sessions
+            .verify_session(7, "session-b", 2_000_000_201)
             .is_none());
     }
 
