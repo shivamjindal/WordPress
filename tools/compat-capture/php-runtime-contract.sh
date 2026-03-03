@@ -2096,6 +2096,8 @@ assert_rust_handled "/wp-admin/ms-delete-site.php" "yes" "POST" "application/x-w
 assert_rust_handled "/__wp_rust/internal/plugin-compat-matrix" "yes"
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"core_surface_flags\""
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"core_endpoint_family_counts\""
+assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"cutover_readiness\""
+assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"ready_for_full_cutover\""
 assert_rust_handled "/wp-content/plugins/hello.php" "yes"
 assert_rust_handled "/wp-content/plugins/hello.php" "yes" "POST" "application/x-www-form-urlencoded" "foo=bar"
 assert_rust_handled "/wp-content/themes/twentytwentyfive/style.css" "no"

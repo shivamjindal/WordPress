@@ -24052,6 +24052,23 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
                 && !endpoint.starts_with("/wp-content/")
         })
         .count();
+    let core_routable_count = core_endpoint_list
+        .iter()
+        .filter(|endpoint| settings.should_route(endpoint))
+        .count();
+    let core_endpoint_total = core_endpoint_list.len();
+    let core_endpoint_coverage_complete = core_routable_count == core_endpoint_total;
+    let rust_only_plugins = !settings
+        .plugin_compat_mode
+        .eq_ignore_ascii_case("php-runtime");
+    let production_profile = settings
+        .deployment_profile
+        .eq_ignore_ascii_case("production-rust");
+    let ready_for_full_cutover = settings.enabled
+        && !settings.fallback_enabled
+        && rust_only_plugins
+        && production_profile
+        && core_endpoint_coverage_complete;
 
     rust_handled_json(json!({
         "plugin_compat_mode": settings.plugin_compat_mode,
@@ -24071,6 +24088,18 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
             "wp_includes": wp_includes_count,
             "wp_content": wp_content_count,
             "root": root_count,
+        },
+        "cutover_readiness": {
+            "gateway_enabled": settings.enabled,
+            "fallback_disabled": !settings.fallback_enabled,
+            "rust_only_plugins": rust_only_plugins,
+            "production_profile": production_profile,
+            "core_endpoint_coverage": {
+                "routable": core_routable_count,
+                "total": core_endpoint_total,
+                "complete": core_endpoint_coverage_complete,
+            },
+            "ready_for_full_cutover": ready_for_full_cutover,
         },
     }))
 }
@@ -26550,6 +26579,42 @@ mod tests {
         assert!(json["core_endpoint_family_counts"]["root"]
             .as_u64()
             .is_some_and(|count| count > 0));
+
+        let coverage_total = json["cutover_readiness"]["core_endpoint_coverage"]["total"]
+            .as_u64()
+            .expect("core endpoint coverage total should be present");
+        let coverage_routable = json["cutover_readiness"]["core_endpoint_coverage"]["routable"]
+            .as_u64()
+            .expect("core endpoint coverage routable should be present");
+        assert!(coverage_total > 0);
+        assert!(coverage_routable <= coverage_total);
+
+        let gateway_enabled = json["cutover_readiness"]["gateway_enabled"]
+            .as_bool()
+            .expect("gateway_enabled should be a bool");
+        let fallback_disabled = json["cutover_readiness"]["fallback_disabled"]
+            .as_bool()
+            .expect("fallback_disabled should be a bool");
+        let rust_only_plugins = json["cutover_readiness"]["rust_only_plugins"]
+            .as_bool()
+            .expect("rust_only_plugins should be a bool");
+        let production_profile = json["cutover_readiness"]["production_profile"]
+            .as_bool()
+            .expect("production_profile should be a bool");
+        let coverage_complete = json["cutover_readiness"]["core_endpoint_coverage"]["complete"]
+            .as_bool()
+            .expect("coverage complete should be a bool");
+
+        assert_eq!(
+            json["cutover_readiness"]["ready_for_full_cutover"],
+            Value::Bool(
+                gateway_enabled
+                    && fallback_disabled
+                    && rust_only_plugins
+                    && production_profile
+                    && coverage_complete
+            )
+        );
     }
 
     #[tokio::test]
