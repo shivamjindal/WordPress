@@ -2113,6 +2113,10 @@ if ( ! function_exists( 'wp_rust_gateway_try_proxy' ) ) {
 		$proxy_uri   = $request_uri;
 		if ( 0 === strpos( $endpoint, '/__wp_rust/' ) ) {
 			$proxy_uri = $endpoint;
+			$parsed_request_uri = parse_url( $request_uri );
+			if ( isset( $parsed_request_uri['query'] ) && '' !== $parsed_request_uri['query'] ) {
+				$proxy_uri .= '?' . $parsed_request_uri['query'];
+			}
 		}
 		$target_url  = $settings['backend_url'] . $proxy_uri;
 		$request_body = '';
