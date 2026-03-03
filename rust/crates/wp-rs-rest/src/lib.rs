@@ -285,6 +285,24 @@ pub fn core_seed_routes() -> RestRouteRegistry {
         AuthRequirement::Capability("delete_pages".to_string()),
     );
     registry.register(
+        "/wp-json/wp/v2/users",
+        &["GET"],
+        "List users",
+        AuthRequirement::Capability("list_users".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/plugins",
+        &["GET"],
+        "List plugins",
+        AuthRequirement::Capability("activate_plugins".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/themes",
+        &["GET"],
+        "List themes",
+        AuthRequirement::Capability("switch_themes".to_string()),
+    );
+    registry.register(
         "/wp-json/wp/v2/categories",
         &["GET"],
         "List categories",
@@ -553,6 +571,42 @@ mod tests {
             allowed.body["params"]["id"],
             Value::String("15".to_string())
         );
+    }
+
+    #[test]
+    fn users_collection_route_requires_list_users_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("GET", "/wp-json/wp/v2/users");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("list_users".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn plugins_and_themes_routes_require_management_capabilities() {
+        let registry = core_seed_routes();
+
+        let mut plugins_request = RestRequest::new("GET", "/wp-json/wp/v2/plugins");
+        plugins_request.authenticated = true;
+        let plugins_forbidden = registry.dispatch(&plugins_request);
+        assert_eq!(plugins_forbidden.status_code, 403);
+        plugins_request
+            .capabilities
+            .insert("activate_plugins".to_string());
+        assert_eq!(registry.dispatch(&plugins_request).status_code, 200);
+
+        let mut themes_request = RestRequest::new("GET", "/wp-json/wp/v2/themes");
+        themes_request.authenticated = true;
+        let themes_forbidden = registry.dispatch(&themes_request);
+        assert_eq!(themes_forbidden.status_code, 403);
+        themes_request
+            .capabilities
+            .insert("switch_themes".to_string());
+        assert_eq!(registry.dispatch(&themes_request).status_code, 200);
     }
 
     #[test]
