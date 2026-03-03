@@ -74,9 +74,16 @@ impl RestRouteRegistry {
         let matching_path_routes = self
             .routes
             .iter()
-            .filter(|route| normalize_path(&route.path) == request_path)
+            .filter_map(|route| {
+                let pattern = normalize_path(&route.path);
+                path_params(&pattern, &request_path).map(|params| (route, params))
+            })
             .collect::<Vec<_>>();
-        let allowed_methods = collect_allowed_methods(&matching_path_routes);
+        let allowed_route_refs = matching_path_routes
+            .iter()
+            .map(|(route, _)| *route)
+            .collect::<Vec<_>>();
+        let allowed_methods = collect_allowed_methods(&allowed_route_refs);
         if matching_path_routes.is_empty() {
             return RestDispatchResult::error(
                 404,
@@ -92,15 +99,16 @@ impl RestRouteRegistry {
                     "route": request_path,
                     "method": "OPTIONS",
                     "allow": allowed_methods,
+                    "params": json!({}),
                     "ok": true,
                 }),
                 error_code: None,
             };
         }
 
-        let route = match matching_path_routes
+        let (route, params) = match matching_path_routes
             .into_iter()
-            .find(|route| method_allowed(route, &request_method))
+            .find(|(route, _)| method_allowed(route, &request_method))
         {
             Some(route) => route,
             None => {
@@ -149,6 +157,7 @@ impl RestRouteRegistry {
             body: json!({
                 "route": request_path,
                 "method": request_method,
+                "params": params,
                 "ok": true,
             }),
             error_code: None,
@@ -216,6 +225,36 @@ pub fn core_seed_routes() -> RestRouteRegistry {
         AuthRequirement::Capability("edit_posts".to_string()),
     );
     registry.register(
+        "/wp-json/wp/v2/posts/{id}",
+        &["GET"],
+        "Read post",
+        AuthRequirement::Public,
+    );
+    registry.register(
+        "/wp-json/wp/v2/posts/{id}",
+        &["DELETE"],
+        "Delete post",
+        AuthRequirement::Capability("delete_posts".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/comments",
+        &["GET"],
+        "List comments",
+        AuthRequirement::Public,
+    );
+    registry.register(
+        "/wp-json/wp/v2/comments/{id}",
+        &["DELETE"],
+        "Delete comment",
+        AuthRequirement::Capability("moderate_comments".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/categories",
+        &["GET"],
+        "List categories",
+        AuthRequirement::Public,
+    );
+    registry.register(
         "/wp-json/wp/v2/users/me",
         &["GET"],
         "Current user profile",
@@ -278,6 +317,41 @@ fn collect_allowed_methods(routes: &[&RestRoute]) -> Vec<String> {
         allowed_methods.insert("OPTIONS".to_string());
     }
     allowed_methods.into_iter().collect()
+}
+
+fn path_params(pattern: &str, path: &str) -> Option<BTreeMap<String, String>> {
+    let pattern_segments = split_segments(pattern);
+    let path_segments = split_segments(path);
+    if pattern_segments.len() != path_segments.len() {
+        return None;
+    }
+
+    let mut params = BTreeMap::new();
+    for (pattern_segment, path_segment) in pattern_segments.iter().zip(path_segments.iter()) {
+        if let Some(param_name) = pattern_segment
+            .strip_prefix('{')
+            .and_then(|value| value.strip_suffix('}'))
+            .filter(|name| !name.is_empty())
+        {
+            params.insert(param_name.to_string(), (*path_segment).to_string());
+            continue;
+        }
+        if pattern_segment != path_segment {
+            return None;
+        }
+    }
+
+    Some(params)
+}
+
+fn split_segments(path: &str) -> Vec<&str> {
+    if path == "/" {
+        return Vec::new();
+    }
+    path.trim_matches('/')
+        .split('/')
+        .filter(|segment| !segment.is_empty())
+        .collect()
 }
 
 #[cfg(test)]
@@ -370,6 +444,32 @@ mod tests {
         request.capabilities.insert("manage_options".to_string());
         let allowed = registry.dispatch(&request);
         assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn dynamic_post_route_extracts_path_parameter() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("GET", "/wp-json/wp/v2/posts/42");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        assert_eq!(result.body["params"]["id"], Value::String("42".to_string()));
+    }
+
+    #[test]
+    fn dynamic_delete_route_requires_delete_posts_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("DELETE", "/wp-json/wp/v2/posts/42");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("delete_posts".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+        assert_eq!(
+            allowed.body["params"]["id"],
+            Value::String("42".to_string())
+        );
     }
 
     #[test]

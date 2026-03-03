@@ -2081,6 +2081,10 @@ GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&auth
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&authenticated=false
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&authenticated=true
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/users/me&use_cookie_auth=true
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/posts/42
+GET /__wp_rust/internal/rest-dispatch?method=DELETE&path=/wp-json/wp/v2/posts/42&authenticated=true
+GET /__wp_rust/internal/rest-dispatch?method=DELETE&path=/wp-json/wp/v2/posts/42&authenticated=true&capabilities=delete_posts
+GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/comments
 GET /__wp_rust/internal/rest-dispatch?method=DELETE&path=/wp-json/wp/v2/posts
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/unknown
 GET /__wp_rust/internal/rest-dispatch?method=HEAD&path=/wp-json/wp/v2/posts
