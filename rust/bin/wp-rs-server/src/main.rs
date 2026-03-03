@@ -24056,6 +24056,11 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
         .iter()
         .filter(|endpoint| settings.should_route(endpoint))
         .count();
+    let uncovered_core_endpoints = core_endpoint_list
+        .iter()
+        .filter(|endpoint| !settings.should_route(endpoint))
+        .map(|endpoint| endpoint.to_string())
+        .collect::<Vec<_>>();
     let core_endpoint_total = core_endpoint_list.len();
     let core_endpoint_coverage_complete = core_routable_count == core_endpoint_total;
     let rust_only_plugins = !settings
@@ -24098,6 +24103,8 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
                 "routable": core_routable_count,
                 "total": core_endpoint_total,
                 "complete": core_endpoint_coverage_complete,
+                "uncovered_count": uncovered_core_endpoints.len(),
+                "uncovered_examples": uncovered_core_endpoints.iter().take(10).cloned().collect::<Vec<_>>(),
             },
             "ready_for_full_cutover": ready_for_full_cutover,
         },
@@ -26586,8 +26593,18 @@ mod tests {
         let coverage_routable = json["cutover_readiness"]["core_endpoint_coverage"]["routable"]
             .as_u64()
             .expect("core endpoint coverage routable should be present");
+        let uncovered_count = json["cutover_readiness"]["core_endpoint_coverage"]
+            ["uncovered_count"]
+            .as_u64()
+            .expect("core endpoint uncovered count should be present");
+        let uncovered_examples = json["cutover_readiness"]["core_endpoint_coverage"]
+            ["uncovered_examples"]
+            .as_array()
+            .expect("core endpoint uncovered examples should be an array");
         assert!(coverage_total > 0);
         assert!(coverage_routable <= coverage_total);
+        assert_eq!(coverage_total, coverage_routable + uncovered_count);
+        assert!(uncovered_examples.len() <= 10);
 
         let gateway_enabled = json["cutover_readiness"]["gateway_enabled"]
             .as_bool()
