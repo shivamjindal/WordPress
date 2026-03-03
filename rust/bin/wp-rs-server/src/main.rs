@@ -24027,10 +24027,31 @@ async fn internal_maintenance_status(
 
 async fn internal_plugin_compat_matrix() -> impl IntoResponse {
     let settings = RustGatewaySettings::from_env();
-    let core_endpoints = php_runtime_core_endpoints()
+    let core_endpoint_list = php_runtime_core_endpoints();
+    let core_endpoints = core_endpoint_list
         .iter()
         .map(|endpoint| endpoint.to_string())
         .collect::<Vec<_>>();
+    let wp_admin_count = core_endpoint_list
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-admin/"))
+        .count();
+    let wp_includes_count = core_endpoint_list
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-includes/"))
+        .count();
+    let wp_content_count = core_endpoint_list
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-content/"))
+        .count();
+    let root_count = core_endpoint_list
+        .iter()
+        .filter(|endpoint| {
+            !endpoint.starts_with("/wp-admin/")
+                && !endpoint.starts_with("/wp-includes/")
+                && !endpoint.starts_with("/wp-content/")
+        })
+        .count();
 
     rust_handled_json(json!({
         "plugin_compat_mode": settings.plugin_compat_mode,
@@ -24038,6 +24059,19 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
         "endpoint_allowlist": settings.endpoint_allowlist,
         "method_allowlist": settings.method_allowlist,
         "php_runtime_core_endpoints": core_endpoints,
+        "core_surface_flags": {
+            "xmlrpc": core_endpoint_list.contains(&"/xmlrpc.php"),
+            "cron": core_endpoint_list.contains(&"/wp-cron.php"),
+            "admin_ajax": core_endpoint_list.contains(&"/wp-admin/admin-ajax.php"),
+            "admin_post": core_endpoint_list.contains(&"/wp-admin/admin-post.php"),
+            "async_upload": core_endpoint_list.contains(&"/wp-admin/async-upload.php"),
+        },
+        "core_endpoint_family_counts": {
+            "wp_admin": wp_admin_count,
+            "wp_includes": wp_includes_count,
+            "wp_content": wp_content_count,
+            "root": root_count,
+        },
     }))
 }
 
@@ -26491,6 +26525,31 @@ mod tests {
         .into_response();
         let json = response_json(response).await;
         assert_eq!(json["constants"]["wp_cron_lock_timeout"], Value::from(0));
+    }
+
+    #[tokio::test]
+    async fn plugin_compat_matrix_reports_core_surface_flags_and_family_counts() {
+        let response = internal_plugin_compat_matrix().await.into_response();
+        let json = response_json(response).await;
+
+        assert_eq!(json["core_surface_flags"]["xmlrpc"], Value::Bool(true));
+        assert_eq!(json["core_surface_flags"]["cron"], Value::Bool(true));
+        assert_eq!(json["core_surface_flags"]["admin_ajax"], Value::Bool(true));
+        assert_eq!(json["core_surface_flags"]["admin_post"], Value::Bool(true));
+        assert_eq!(
+            json["core_surface_flags"]["async_upload"],
+            Value::Bool(true)
+        );
+
+        assert!(json["core_endpoint_family_counts"]["wp_admin"]
+            .as_u64()
+            .is_some_and(|count| count > 0));
+        assert!(json["core_endpoint_family_counts"]["wp_includes"]
+            .as_u64()
+            .is_some_and(|count| count > 0));
+        assert!(json["core_endpoint_family_counts"]["root"]
+            .as_u64()
+            .is_some_and(|count| count > 0));
     }
 
     #[tokio::test]
