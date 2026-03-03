@@ -26257,6 +26257,22 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn multisite_resolve_normalizes_domain_port_and_case() {
+        let state = build_app_state();
+        let response = internal_multisite_resolve(
+            State(state),
+            Query(InternalMultisiteResolveQuery {
+                domain: Some("EXAMPLE.COM:8080".to_string()),
+                path: Some("/".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["resolved"]["blog_id"], Value::from(1));
+    }
+
+    #[tokio::test]
     async fn hooks_all_mode_reports_action_and_filter_invocations() {
         let response = internal_hooks_contract(Query(InternalHooksQuery {
             mode: Some("all_hook".to_string()),

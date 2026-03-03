@@ -534,6 +534,7 @@ pub struct MultisiteResolver {
 impl MultisiteResolver {
     pub fn register_site(&mut self, site: NetworkSite) {
         let normalized_site = NetworkSite {
+            domain: normalize_network_domain(&site.domain),
             path: normalize_network_path(&site.path),
             ..site
         };
@@ -543,16 +544,37 @@ impl MultisiteResolver {
     }
 
     pub fn resolve(&self, domain: &str, request_path: &str) -> Option<NetworkSite> {
+        let normalized_domain = normalize_network_domain(domain);
         let normalized_path = normalize_network_path(request_path);
 
         self.sites
             .iter()
             .find(|site| {
-                site.domain.eq_ignore_ascii_case(domain)
-                    && normalized_path.starts_with(site.path.as_str())
+                site.domain == normalized_domain && normalized_path.starts_with(site.path.as_str())
             })
             .cloned()
     }
+}
+
+fn normalize_network_domain(domain: &str) -> String {
+    let trimmed = domain.trim().trim_end_matches('.').to_ascii_lowercase();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+
+    if let Some(stripped) = trimmed.strip_prefix('[') {
+        if let Some(end) = stripped.find(']') {
+            return stripped[..end].to_string();
+        }
+    }
+
+    if let Some((host, _port)) = trimmed.rsplit_once(':') {
+        if !host.is_empty() && !host.contains(':') {
+            return host.to_string();
+        }
+    }
+
+    trimmed
 }
 
 fn normalize_network_path(path: &str) -> String {
@@ -1030,6 +1052,23 @@ mod tests {
             .expect("site should resolve");
         assert_eq!(resolved.blog_id, 2);
         assert_eq!(resolved.path, "/blog/");
+    }
+
+    #[test]
+    fn resolves_multisite_domain_with_port_and_case_variants() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 1,
+            domain: "Example.com.".to_string(),
+            path: "/".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("EXAMPLE.COM:8080", "/")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 1);
+        assert_eq!(resolved.domain, "example.com".to_string());
     }
 
     #[test]

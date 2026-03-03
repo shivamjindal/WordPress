@@ -2162,6 +2162,7 @@ GET /__wp_rust/internal/db-tables?table_prefix=wp-prefix&blog_id=3
 GET /__wp_rust/internal/db-tables?table_prefix=wp_&blog_id=3&table=unknown
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog/hello-world
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog
+GET /__wp_rust/internal/multisite-resolve?domain=EXAMPLE.COM%3A8080&path=/
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
 GET /__wp_rust/internal/cron-schedule?hook=unschedule_hook&timestamp=1999999700&schedule=hourly&args=clear
 DELETE /__wp_rust/internal/cron-unschedule?hook=unschedule_hook&timestamp=1999999700&args=clear
