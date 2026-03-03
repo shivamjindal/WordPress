@@ -473,6 +473,20 @@ mod tests {
     }
 
     #[test]
+    fn dynamic_comment_delete_route_requires_moderate_comments_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("DELETE", "/wp-json/wp/v2/comments/9");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("moderate_comments".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+        assert_eq!(allowed.body["params"]["id"], Value::String("9".to_string()));
+    }
+
+    #[test]
     fn head_request_dispatches_against_get_routes() {
         let registry = core_seed_routes();
         let request = RestRequest::new("HEAD", "/wp-json/wp/v2/posts");
@@ -508,6 +522,46 @@ mod tests {
         assert!(allow.contains(&Value::String("POST".to_string())));
         assert!(allow.contains(&Value::String("HEAD".to_string())));
         assert!(allow.contains(&Value::String("OPTIONS".to_string())));
+    }
+
+    #[test]
+    fn options_request_reports_allowed_methods_for_dynamic_path() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("OPTIONS", "/wp-json/wp/v2/posts/42");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        let allow = result.body["allow"]
+            .as_array()
+            .expect("allow list should be present");
+        assert!(allow.contains(&Value::String("GET".to_string())));
+        assert!(allow.contains(&Value::String("DELETE".to_string())));
+        assert!(allow.contains(&Value::String("HEAD".to_string())));
+        assert!(allow.contains(&Value::String("OPTIONS".to_string())));
+    }
+
+    #[test]
+    fn method_not_allowed_for_dynamic_path_includes_allow_matrix() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("POST", "/wp-json/wp/v2/posts/42");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 405);
+        let allow = result.body["allow"]
+            .as_array()
+            .expect("allow list should be present");
+        assert!(allow.contains(&Value::String("GET".to_string())));
+        assert!(allow.contains(&Value::String("DELETE".to_string())));
+        assert!(allow.contains(&Value::String("HEAD".to_string())));
+        assert!(allow.contains(&Value::String("OPTIONS".to_string())));
+    }
+
+    #[test]
+    fn head_request_matches_dynamic_get_routes() {
+        let registry = core_seed_routes();
+        let request = RestRequest::new("HEAD", "/wp-json/wp/v2/posts/42");
+        let result = registry.dispatch(&request);
+        assert_eq!(result.status_code, 200);
+        assert_eq!(result.body["method"], Value::String("HEAD".to_string()));
+        assert_eq!(result.body["params"]["id"], Value::String("42".to_string()));
     }
 
     #[test]
