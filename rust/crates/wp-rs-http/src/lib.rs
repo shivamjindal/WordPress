@@ -300,6 +300,16 @@ mod tests {
 
         let authenticated = registry.dispatch("wp.newPost", true);
         assert!(authenticated.success);
+
+        let anonymous_edit = registry.dispatch("wp.editPost", false);
+        assert!(!anonymous_edit.success);
+        assert_eq!(anonymous_edit.fault_code, Some(403));
+        assert!(registry.dispatch("wp.editPost", true).success);
+
+        let anonymous_delete = registry.dispatch("wp.deletePost", false);
+        assert!(!anonymous_delete.success);
+        assert_eq!(anonymous_delete.fault_code, Some(403));
+        assert!(registry.dispatch("wp.deletePost", true).success);
     }
 
     #[test]

@@ -25854,6 +25854,49 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn internal_xmlrpc_dispatch_enforces_edit_and_delete_post_authentication() {
+        for method in ["wp.editPost", "wp.deletePost"] {
+            let anonymous_response = internal_xmlrpc_dispatch(
+                State(build_app_state()),
+                Query(InternalXmlRpcDispatchQuery {
+                    method: Some(method.to_string()),
+                    payload: None,
+                    authenticated: Some(false),
+                    use_cookie_auth: None,
+                }),
+                Request::builder()
+                    .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                    .body(axum::body::Body::empty())
+                    .expect("request should build"),
+            )
+            .await
+            .into_response();
+            let anonymous_json = response_json(anonymous_response).await;
+            assert_eq!(anonymous_json["status_code"], Value::from(403));
+            assert_eq!(anonymous_json["result"]["fault_code"], Value::from(403));
+
+            let authenticated_response = internal_xmlrpc_dispatch(
+                State(build_app_state()),
+                Query(InternalXmlRpcDispatchQuery {
+                    method: Some(method.to_string()),
+                    payload: None,
+                    authenticated: Some(true),
+                    use_cookie_auth: None,
+                }),
+                Request::builder()
+                    .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                    .body(axum::body::Body::empty())
+                    .expect("request should build"),
+            )
+            .await
+            .into_response();
+            let authenticated_json = response_json(authenticated_response).await;
+            assert_eq!(authenticated_json["status_code"], Value::from(200));
+            assert_eq!(authenticated_json["result"]["success"], Value::Bool(true));
+        }
+    }
+
+    #[tokio::test]
     async fn internal_xmlrpc_dispatch_unknown_method_uses_http_ok_fault_status_code() {
         let response = internal_xmlrpc_dispatch(
             State(build_app_state()),

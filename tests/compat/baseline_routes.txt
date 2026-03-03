@@ -2149,6 +2149,10 @@ GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=tr
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&use_cookie_auth=true
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.newPost&authenticated=false
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.newPost&authenticated=true
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.editPost&authenticated=false
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.editPost&authenticated=true
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.deletePost&authenticated=false
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.deletePost&authenticated=true
 GET /__wp_rust/internal/xmlrpc-dispatch?method=pingback.ping&authenticated=false
 GET /__wp_rust/internal/xmlrpc-dispatch?method=unknown.method&authenticated=true
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3Edemo.sayHello%3C%2FmethodName%3E%3C%2FmethodCall%3E
