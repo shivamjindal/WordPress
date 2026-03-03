@@ -7383,6 +7383,14 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
                 "wordpress_logged_in_rust=deleted; Path=/; HttpOnly; Max-Age=0",
             ),
         );
+        headers.append(
+            "Set-Cookie",
+            HeaderValue::from_static("wordpress_rust=deleted; Path=/; HttpOnly; Max-Age=0"),
+        );
+        headers.append(
+            "Set-Cookie",
+            HeaderValue::from_static("wordpress_sec_rust=deleted; Path=/; HttpOnly; Max-Age=0"),
+        );
         return (StatusCode::FOUND, headers, String::new()).into_response();
     }
 
@@ -7452,6 +7460,22 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
         AuthScheme::LoggedIn,
         &state.auth_secrets,
     );
+    let auth_cookie_value = sign_auth_cookie(
+        user_id,
+        &username,
+        expiration,
+        &session_token,
+        AuthScheme::Auth,
+        &state.auth_secrets,
+    );
+    let secure_auth_cookie_value = sign_auth_cookie(
+        user_id,
+        &username,
+        expiration,
+        &session_token,
+        AuthScheme::SecureAuth,
+        &state.auth_secrets,
+    );
     let ip = parts
         .headers
         .get("x-forwarded-for")
@@ -7482,6 +7506,16 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
     headers.insert("Location", HeaderValue::from_static("/wp-admin/"));
     if let Ok(cookie_header) = HeaderValue::from_str(&format!(
         "wordpress_logged_in_rust={cookie_value}; Path=/; HttpOnly"
+    )) {
+        headers.append("Set-Cookie", cookie_header);
+    }
+    if let Ok(cookie_header) = HeaderValue::from_str(&format!(
+        "wordpress_rust={auth_cookie_value}; Path=/; HttpOnly"
+    )) {
+        headers.append("Set-Cookie", cookie_header);
+    }
+    if let Ok(cookie_header) = HeaderValue::from_str(&format!(
+        "wordpress_sec_rust={secure_auth_cookie_value}; Path=/; HttpOnly"
     )) {
         headers.append("Set-Cookie", cookie_header);
     }
@@ -24965,6 +24999,37 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn login_sets_all_wordpress_auth_cookie_variants() {
+        let response = login_live_dispatch(
+            State(build_app_state()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let cookie_headers = response
+            .headers()
+            .get_all("set-cookie")
+            .iter()
+            .filter_map(|value| value.to_str().ok())
+            .collect::<Vec<_>>();
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_logged_in_rust=")));
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_rust=")));
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_sec_rust=")));
+    }
+
+    #[tokio::test]
     async fn logout_removes_active_session_token_entry() {
         let state = build_app_state();
         let login_request = Request::builder()
@@ -25008,6 +25073,56 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn logout_clears_all_wordpress_auth_cookie_variants() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+
+        let logout_response = login_live_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        let cookie_headers = logout_response
+            .headers()
+            .get_all("set-cookie")
+            .iter()
+            .filter_map(|value| value.to_str().ok())
+            .collect::<Vec<_>>();
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_logged_in_rust=deleted")));
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_rust=deleted")));
+        assert!(cookie_headers
+            .iter()
+            .any(|value| value.starts_with("wordpress_sec_rust=deleted")));
+    }
+
+    #[tokio::test]
     async fn admin_dashboard_rejects_cookie_after_logout_session_invalidation() {
         let state = build_app_state();
         let login_request = Request::builder()
@@ -25033,7 +25148,8 @@ mod tests {
             .header("cookie", login_cookie.clone())
             .body(axum::body::Body::empty())
             .expect("request should build");
-        let dashboard_response = admin_dashboard_live(State(state.clone()), dashboard_request).await;
+        let dashboard_response =
+            admin_dashboard_live(State(state.clone()), dashboard_request).await;
         assert_eq!(dashboard_response.status(), StatusCode::OK);
 
         let logout_request = Request::builder()
@@ -25053,7 +25169,10 @@ mod tests {
             .expect("request should build");
         let post_logout_dashboard_response =
             admin_dashboard_live(State(state), post_logout_dashboard_request).await;
-        assert_eq!(post_logout_dashboard_response.status(), StatusCode::MOVED_PERMANENTLY);
+        assert_eq!(
+            post_logout_dashboard_response.status(),
+            StatusCode::MOVED_PERMANENTLY
+        );
         assert_eq!(
             post_logout_dashboard_response
                 .headers()
@@ -25090,7 +25209,8 @@ mod tests {
             .header("x-wp-rust-capabilities", "manage_network")
             .body(axum::body::Body::empty())
             .expect("request should build");
-        let network_response = network_index_live_dispatch(State(state.clone()), network_request).await;
+        let network_response =
+            network_index_live_dispatch(State(state.clone()), network_request).await;
         assert_eq!(network_response.status(), StatusCode::OK);
 
         let logout_request = Request::builder()
@@ -25141,7 +25261,8 @@ mod tests {
             .header("x-wp-rust-capabilities", "manage_options")
             .body(axum::body::Body::empty())
             .expect("request should build");
-        let settings_response = options_writing_live_dispatch(State(state.clone()), settings_request).await;
+        let settings_response =
+            options_writing_live_dispatch(State(state.clone()), settings_request).await;
         assert_eq!(settings_response.status(), StatusCode::OK);
 
         let logout_request = Request::builder()
@@ -25162,7 +25283,10 @@ mod tests {
             .expect("request should build");
         let post_logout_settings_response =
             options_writing_live_dispatch(State(state), post_logout_settings_request).await;
-        assert_eq!(post_logout_settings_response.status(), StatusCode::FORBIDDEN);
+        assert_eq!(
+            post_logout_settings_response.status(),
+            StatusCode::FORBIDDEN
+        );
     }
 
     #[tokio::test]

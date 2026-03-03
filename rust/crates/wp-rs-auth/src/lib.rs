@@ -414,14 +414,8 @@ impl SessionTokenStore {
         ip: Option<String>,
         user_agent: Option<String>,
     ) -> (bool, usize) {
-        let changed = self.upsert_session(
-            user_id,
-            token,
-            expiration,
-            now_timestamp,
-            ip,
-            user_agent,
-        );
+        let changed =
+            self.upsert_session(user_id, token, expiration, now_timestamp, ip, user_agent);
         let removed_count = self.destroy_other_sessions(user_id, token, now_timestamp);
         (changed, removed_count)
     }
