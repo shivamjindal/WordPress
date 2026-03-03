@@ -48,9 +48,28 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
 
     if request.path == "/" {
         kind = FrontRouteKind::Home;
+    } else if request.path == "/comments/feed" || request.path == "/comments/feed/" {
+        kind = FrontRouteKind::Feed;
+        query_vars.insert("feed".to_string(), "rss2".to_string());
+        query_vars.insert("withcomments".to_string(), "1".to_string());
     } else if request.path == "/feed" || request.path == "/feed/" {
         kind = FrontRouteKind::Feed;
         query_vars.insert("feed".to_string(), "rss2".to_string());
+    } else if segments.len() == 2 && segments[0] == "feed" && is_supported_feed(segments[1]) {
+        kind = FrontRouteKind::Feed;
+        query_vars.insert("feed".to_string(), segments[1].to_string());
+    } else if let Some(feed_type) = query_pairs
+        .get("feed")
+        .filter(|value| is_supported_feed(value.as_str()))
+    {
+        kind = FrontRouteKind::Feed;
+        query_vars.insert("feed".to_string(), feed_type.to_string());
+        if query_pairs
+            .get("withcomments")
+            .is_some_and(|value| value == "1")
+        {
+            query_vars.insert("withcomments".to_string(), "1".to_string());
+        }
     } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
@@ -91,6 +110,24 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
             query_vars.insert("year".to_string(), segments[0].to_string());
             query_vars.insert("monthnum".to_string(), segments[1].to_string());
             query_vars.insert("name".to_string(), segments[2].to_string());
+        } else if segments.len() == 4
+            && is_year(segments[0])
+            && is_month(segments[1])
+            && segments[2] == "page"
+            && is_positive_integer(segments[3])
+        {
+            kind = FrontRouteKind::Archive;
+            query_vars.insert("year".to_string(), segments[0].to_string());
+            query_vars.insert("monthnum".to_string(), segments[1].to_string());
+            query_vars.insert("paged".to_string(), segments[3].to_string());
+        } else if segments.len() == 3
+            && is_year(segments[0])
+            && segments[1] == "page"
+            && is_positive_integer(segments[2])
+        {
+            kind = FrontRouteKind::Archive;
+            query_vars.insert("year".to_string(), segments[0].to_string());
+            query_vars.insert("paged".to_string(), segments[2].to_string());
         } else if segments.len() == 2 && segments[0] == "page" && is_positive_integer(segments[1]) {
             kind = FrontRouteKind::Home;
             query_vars.insert("paged".to_string(), segments[1].to_string());
@@ -188,11 +225,23 @@ fn template_candidates(kind: FrontRouteKind, query_vars: &BTreeMap<String, Strin
             templates
         }
         FrontRouteKind::Search => vec!["search.php".to_string(), "index.php".to_string()],
-        FrontRouteKind::Feed => vec![
-            "feed-rss2.php".to_string(),
-            "feed.php".to_string(),
-            "index.php".to_string(),
-        ],
+        FrontRouteKind::Feed => {
+            let feed_type = query_vars
+                .get("feed")
+                .cloned()
+                .unwrap_or_else(|| "rss2".to_string());
+            let mut templates = Vec::new();
+            if query_vars
+                .get("withcomments")
+                .is_some_and(|value| value == "1")
+            {
+                templates.push(format!("feed-{feed_type}-comments.php"));
+            }
+            templates.push(format!("feed-{feed_type}.php"));
+            templates.push("feed.php".to_string());
+            templates.push("index.php".to_string());
+            templates
+        }
         FrontRouteKind::NotFound => vec!["404.php".to_string(), "index.php".to_string()],
     }
 }
@@ -270,6 +319,10 @@ fn is_day(value: &str) -> bool {
 
 fn is_positive_integer(value: &str) -> bool {
     !value.is_empty() && matches!(value.parse::<u32>(), Ok(number) if number > 0)
+}
+
+fn is_supported_feed(value: &str) -> bool {
+    matches!(value, "rss2" | "rss" | "rdf" | "atom")
 }
 
 fn taxonomy_archive_from_segments(segments: &[&str], base: &str) -> Option<(String, Option<u32>)> {
@@ -413,6 +466,49 @@ mod tests {
         let matched = parse_front_route("/feed/", "");
         assert_eq!(matched.kind, FrontRouteKind::Feed);
         assert_eq!(matched.query_vars.get("feed"), Some(&"rss2".to_string()));
+    }
+
+    #[test]
+    fn parses_feed_route_with_format_suffix() {
+        let matched = parse_front_route("/feed/atom", "");
+        assert_eq!(matched.kind, FrontRouteKind::Feed);
+        assert_eq!(matched.query_vars.get("feed"), Some(&"atom".to_string()));
+        assert_eq!(
+            matched.template_candidates,
+            vec![
+                "feed-atom.php".to_string(),
+                "feed.php".to_string(),
+                "index.php".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_comments_feed_route() {
+        let matched = parse_front_route("/comments/feed", "");
+        assert_eq!(matched.kind, FrontRouteKind::Feed);
+        assert_eq!(
+            matched.query_vars.get("withcomments"),
+            Some(&"1".to_string())
+        );
+        assert_eq!(
+            matched.template_candidates,
+            vec![
+                "feed-rss2-comments.php".to_string(),
+                "feed-rss2.php".to_string(),
+                "feed.php".to_string(),
+                "index.php".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_month_archive_pagination_route() {
+        let matched = parse_front_route("/2025/02/page/4", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(matched.query_vars.get("year"), Some(&"2025".to_string()));
+        assert_eq!(matched.query_vars.get("monthnum"), Some(&"02".to_string()));
+        assert_eq!(matched.query_vars.get("paged"), Some(&"4".to_string()));
     }
 
     #[test]
