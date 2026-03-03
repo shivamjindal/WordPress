@@ -588,6 +588,9 @@ fn normalize_network_path(path: &str) -> String {
     } else {
         format!("/{trimmed}")
     };
+    while normalized.contains("//") {
+        normalized = normalized.replace("//", "/");
+    }
     if !normalized.ends_with('/') {
         normalized.push('/');
     }
@@ -1082,5 +1085,44 @@ mod tests {
         });
 
         assert!(resolver.resolve("invalid.example", "/").is_none());
+    }
+
+    #[test]
+    fn resolves_multisite_when_registered_path_contains_duplicate_slashes() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "//blog//".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blog/hello-world")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 2);
+        assert_eq!(resolved.path, "/blog/");
+    }
+
+    #[test]
+    fn resolves_root_site_for_sibling_prefix_paths() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 1,
+            domain: "example.com".to_string(),
+            path: "/".to_string(),
+            is_public: true,
+        });
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "/blog/".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blogger/post")
+            .expect("root site should resolve");
+        assert_eq!(resolved.blog_id, 1);
     }
 }
