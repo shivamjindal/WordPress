@@ -164,11 +164,23 @@ pub fn core_xmlrpc_registry() -> XmlRpcRegistry {
 
 pub fn parse_xmlrpc_method_name(payload: &str) -> Option<String> {
     let lower_payload = payload.to_ascii_lowercase();
-    let start_tag = "<methodname>";
-    let end_tag = "</methodname>";
-    let start = lower_payload.find(start_tag)? + start_tag.len();
-    let end = lower_payload[start..].find(end_tag)? + start;
-    let method_name = payload[start..end].trim();
+    let open_tag_start = lower_payload.find("<methodname")?;
+    let open_name_end = open_tag_start + "<methodname".len();
+    let open_next = lower_payload.as_bytes().get(open_name_end)?;
+    if !open_next.is_ascii_whitespace() && *open_next != b'>' {
+        return None;
+    }
+
+    let open_tag_end = lower_payload[open_name_end..].find('>')? + open_name_end + 1;
+    let close_tag_start = lower_payload[open_tag_end..].find("</methodname")? + open_tag_end;
+    let close_name_end = close_tag_start + "</methodname".len();
+    let close_next = lower_payload.as_bytes().get(close_name_end)?;
+    if !close_next.is_ascii_whitespace() && *close_next != b'>' {
+        return None;
+    }
+    let _close_tag_end = lower_payload[close_name_end..].find('>')? + close_name_end + 1;
+
+    let method_name = payload[open_tag_end..close_tag_start].trim();
     if method_name.is_empty() {
         None
     } else {
@@ -219,6 +231,15 @@ mod tests {
     fn parses_xmlrpc_method_name_with_case_variant_tags() {
         let payload =
             "<?xml version=\"1.0\"?><methodCall><METHODNAME>demo.sayHello</METHODNAME></methodCall>";
+        assert_eq!(
+            parse_xmlrpc_method_name(payload),
+            Some("demo.sayHello".to_string())
+        );
+    }
+
+    #[test]
+    fn parses_xmlrpc_method_name_with_whitespace_in_tags() {
+        let payload = "<?xml version=\"1.0\"?><methodCall><methodName >demo.sayHello</methodName ></methodCall>";
         assert_eq!(
             parse_xmlrpc_method_name(payload),
             Some("demo.sayHello".to_string())
