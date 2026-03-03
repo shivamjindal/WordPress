@@ -150,9 +150,15 @@ impl XmlRpcRegistry {
 pub fn core_xmlrpc_registry() -> XmlRpcRegistry {
     let mut registry = XmlRpcRegistry::default();
     registry.register("system.listMethods", XmlRpcPermission::Public);
+    registry.register("system.multicall", XmlRpcPermission::Public);
     registry.register("demo.sayHello", XmlRpcPermission::Public);
+    registry.register("pingback.ping", XmlRpcPermission::Public);
     registry.register("wp.getUsersBlogs", XmlRpcPermission::Authenticated);
     registry.register("metaWeblog.getRecentPosts", XmlRpcPermission::Authenticated);
+    registry.register("wp.getMediaLibrary", XmlRpcPermission::Authenticated);
+    registry.register("wp.newPost", XmlRpcPermission::Authenticated);
+    registry.register("wp.editPost", XmlRpcPermission::Authenticated);
+    registry.register("wp.deletePost", XmlRpcPermission::Authenticated);
     registry
 }
 
@@ -232,6 +238,30 @@ mod tests {
         let result = registry.dispatch("demo.sayHello", false);
         assert!(result.success);
         assert_eq!(result.method_name, "demo.sayHello");
+    }
+
+    #[test]
+    fn xmlrpc_authenticated_content_methods_require_auth() {
+        let registry = core_xmlrpc_registry();
+        let anonymous = registry.dispatch("wp.newPost", false);
+        assert!(!anonymous.success);
+        assert_eq!(anonymous.fault_code, Some(403));
+
+        let authenticated = registry.dispatch("wp.newPost", true);
+        assert!(authenticated.success);
+    }
+
+    #[test]
+    fn xmlrpc_registry_contains_core_post_methods() {
+        let registry = core_xmlrpc_registry();
+        let method_names = registry
+            .methods()
+            .iter()
+            .map(|method| method.name.as_str())
+            .collect::<Vec<_>>();
+        assert!(method_names.contains(&"wp.newPost"));
+        assert!(method_names.contains(&"wp.editPost"));
+        assert!(method_names.contains(&"wp.deletePost"));
     }
 
     #[test]
