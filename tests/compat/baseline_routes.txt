@@ -2100,6 +2100,9 @@ GET /__wp_rust/internal/content-route?path=/2025/02/page/4
 GET /__wp_rust/internal/content-route?path=/&query=feed%3Drdf%26withcomments%3D1
 GET /__wp_rust/internal/content-route?path=/search&query=s%3Drust%252Flang%2Bcore%26paged%3D3
 GET /__wp_rust/internal/content-route?path=/&query=s%3Dwordpress%26paged%3D2
+GET /__wp_rust/internal/content-route?path=/&query=category_name%3Dnews
+GET /__wp_rust/internal/content-route?path=/&query=author_name%3Dadmin%26paged%3D2
+GET /__wp_rust/internal/content-route?path=/&query=year%3D2025%26monthnum%3D02%26day%3D03
 GET /__wp_rust/internal/content-route?path=/2025/02/hello-world/comment-page-2
 GET /__wp_rust/internal/content-route?path=/2025/02/hello-world&query=cpage%3D4
 GET /__wp_rust/internal/content-route?path=/2025/02/hello-world/attachment/hero-image

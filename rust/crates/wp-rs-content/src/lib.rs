@@ -71,6 +71,39 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
+    } else if let Some(category_name) = query_pairs
+        .get("category_name")
+        .filter(|value| !value.is_empty())
+    {
+        kind = FrontRouteKind::Archive;
+        query_vars.insert("category_name".to_string(), category_name.to_string());
+    } else if let Some(tag_name) = query_pairs.get("tag").filter(|value| !value.is_empty()) {
+        kind = FrontRouteKind::Archive;
+        query_vars.insert("tag".to_string(), tag_name.to_string());
+    } else if let Some(author_name) = query_pairs
+        .get("author_name")
+        .filter(|value| !value.is_empty())
+    {
+        kind = FrontRouteKind::Archive;
+        query_vars.insert("author_name".to_string(), author_name.to_string());
+    } else if let Some(year) = query_pairs
+        .get("year")
+        .filter(|value| is_year(value.as_str()))
+    {
+        kind = FrontRouteKind::Archive;
+        query_vars.insert("year".to_string(), year.to_string());
+        if let Some(month) = query_pairs
+            .get("monthnum")
+            .filter(|value| is_month(value.as_str()))
+        {
+            query_vars.insert("monthnum".to_string(), month.to_string());
+            if let Some(day) = query_pairs
+                .get("day")
+                .filter(|value| is_day(value.as_str()))
+            {
+                query_vars.insert("day".to_string(), day.to_string());
+            }
+        }
     } else if request.path == "/" {
         kind = FrontRouteKind::Home;
     } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "category") {
@@ -518,6 +551,16 @@ mod tests {
     }
 
     #[test]
+    fn parses_category_archive_from_query_route() {
+        let matched = parse_front_route("/", "category_name=news");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(
+            matched.query_vars.get("category_name"),
+            Some(&"news".to_string())
+        );
+    }
+
+    #[test]
     fn parses_author_archive_route() {
         let matched = parse_front_route("/author/admin", "");
         assert_eq!(matched.kind, FrontRouteKind::Archive);
@@ -531,6 +574,17 @@ mod tests {
         assert!(matched
             .template_candidates
             .contains(&"author.php".to_string()));
+    }
+
+    #[test]
+    fn parses_author_archive_from_query_route() {
+        let matched = parse_front_route("/", "author_name=admin&paged=2");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(
+            matched.query_vars.get("author_name"),
+            Some(&"admin".to_string())
+        );
+        assert_eq!(matched.query_vars.get("paged"), Some(&"2".to_string()));
     }
 
     #[test]
@@ -573,6 +627,15 @@ mod tests {
         assert!(matched
             .template_candidates
             .contains(&"date.php".to_string()));
+    }
+
+    #[test]
+    fn parses_date_archive_from_query_route() {
+        let matched = parse_front_route("/", "year=2025&monthnum=02&day=03");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(matched.query_vars.get("year"), Some(&"2025".to_string()));
+        assert_eq!(matched.query_vars.get("monthnum"), Some(&"02".to_string()));
+        assert_eq!(matched.query_vars.get("day"), Some(&"03".to_string()));
     }
 
     #[test]
