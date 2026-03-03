@@ -249,6 +249,36 @@ pub fn core_seed_routes() -> RestRouteRegistry {
         AuthRequirement::Capability("moderate_comments".to_string()),
     );
     registry.register(
+        "/wp-json/wp/v2/media",
+        &["GET"],
+        "List media",
+        AuthRequirement::Public,
+    );
+    registry.register(
+        "/wp-json/wp/v2/media",
+        &["POST"],
+        "Create media item",
+        AuthRequirement::Capability("upload_files".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/pages",
+        &["GET"],
+        "List pages",
+        AuthRequirement::Public,
+    );
+    registry.register(
+        "/wp-json/wp/v2/pages",
+        &["POST"],
+        "Create page",
+        AuthRequirement::Capability("edit_pages".to_string()),
+    );
+    registry.register(
+        "/wp-json/wp/v2/pages/{id}",
+        &["DELETE"],
+        "Delete page",
+        AuthRequirement::Capability("delete_pages".to_string()),
+    );
+    registry.register(
         "/wp-json/wp/v2/categories",
         &["GET"],
         "List categories",
@@ -484,6 +514,36 @@ mod tests {
         let allowed = registry.dispatch(&request);
         assert_eq!(allowed.status_code, 200);
         assert_eq!(allowed.body["params"]["id"], Value::String("9".to_string()));
+    }
+
+    #[test]
+    fn media_create_route_requires_upload_files_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("POST", "/wp-json/wp/v2/media");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("upload_files".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn page_delete_route_requires_delete_pages_capability() {
+        let registry = core_seed_routes();
+        let mut request = RestRequest::new("DELETE", "/wp-json/wp/v2/pages/15");
+        request.authenticated = true;
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("delete_pages".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+        assert_eq!(
+            allowed.body["params"]["id"],
+            Value::String("15".to_string())
+        );
     }
 
     #[test]
