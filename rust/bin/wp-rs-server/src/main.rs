@@ -24773,6 +24773,52 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn rest_dispatch_enforces_users_route_capability_contract() {
+        let forbidden = internal_rest_dispatch(
+            State(build_app_state()),
+            Query(InternalRestDispatchQuery {
+                method: Some("GET".to_string()),
+                path: Some("/wp-json/wp/v2/users".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/rest-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let forbidden_json = response_json(forbidden).await;
+        assert_eq!(forbidden_json["status_code"], Value::from(403));
+        assert_eq!(
+            forbidden_json["error_code"],
+            Value::String("rest_forbidden".to_string())
+        );
+
+        let allowed = internal_rest_dispatch(
+            State(build_app_state()),
+            Query(InternalRestDispatchQuery {
+                method: Some("GET".to_string()),
+                path: Some("/wp-json/wp/v2/users".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                capabilities: Some("list_users".to_string()),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/rest-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let allowed_json = response_json(allowed).await;
+        assert_eq!(allowed_json["status_code"], Value::from(200));
+        assert_eq!(allowed_json["error_code"], Value::Null);
+    }
+
+    #[tokio::test]
     async fn auth_roundtrip_resolves_urlencoded_cookie_values() {
         let state = build_app_state();
         let response = internal_auth_roundtrip(
@@ -25310,6 +25356,56 @@ mod tests {
         let valid_json = response_json(valid_response).await;
         assert_eq!(valid_json["status_code"], Value::from(200));
         assert_eq!(valid_json["error_code"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn internal_admin_dispatch_enforces_delete_comment_capability() {
+        let forbidden = internal_admin_dispatch(
+            State(build_app_state()),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("delete-comment".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                nonce_present: Some(true),
+                nonce_valid: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let forbidden_json = response_json(forbidden).await;
+        assert_eq!(forbidden_json["status_code"], Value::from(403));
+        assert_eq!(
+            forbidden_json["error_code"],
+            Value::String("forbidden".to_string())
+        );
+
+        let allowed = internal_admin_dispatch(
+            State(build_app_state()),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("delete-comment".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                nonce_present: Some(true),
+                nonce_valid: Some(true),
+                capabilities: Some("moderate_comments".to_string()),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let allowed_json = response_json(allowed).await;
+        assert_eq!(allowed_json["status_code"], Value::from(200));
+        assert_eq!(allowed_json["error_code"], Value::Null);
     }
 
     #[tokio::test]
