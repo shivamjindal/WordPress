@@ -124,7 +124,16 @@ assert_header_contains() {
   body_file="$(mktemp)"
   capture_headers "${route}" "${method}" "${content_type}" "${payload}" "${header_file}" "${body_file}"
 
-  if ! awk -v needle="${expected_header_fragment}" 'index($0, needle) > 0 { found=1 } END { exit(found ? 0 : 1) }' "${header_file}"; then
+  if ! awk -v needle="${expected_header_fragment}" '
+      BEGIN { needle_lc = tolower(needle) }
+      {
+        line = tolower($0)
+        if (index(line, needle_lc) > 0) {
+          found = 1
+        }
+      }
+      END { exit(found ? 0 : 1) }
+    ' "${header_file}"; then
     echo "Expected header fragment '${expected_header_fragment}' for ${method} ${route}" >&2
     rm -f "${header_file}" "${body_file}"
     exit 1

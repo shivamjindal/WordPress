@@ -91,7 +91,7 @@ impl AdminActionRegistry {
             }
         };
 
-        if registered.requires_nonce && !request.nonce_present {
+        if registered.requires_nonce && !request.nonce_valid {
             return AdminDispatchResult::error(403, "invalid_nonce", "Nonce validation failed.");
         }
 
@@ -152,6 +152,7 @@ pub struct AdminRequest {
     pub action: String,
     pub authenticated: bool,
     pub nonce_present: bool,
+    pub nonce_valid: bool,
     pub capabilities: BTreeSet<String>,
 }
 
@@ -162,6 +163,7 @@ impl AdminRequest {
             action: action.into(),
             authenticated: false,
             nonce_present: false,
+            nonce_valid: false,
             capabilities: BTreeSet::new(),
         }
     }
@@ -278,6 +280,7 @@ mod tests {
         let mut request = AdminRequest::new(AdminSurface::AdminPost, "save_post");
         request.authenticated = true;
         request.nonce_present = true;
+        request.nonce_valid = true;
         let forbidden = registry.dispatch(&request);
         assert_eq!(forbidden.status_code, 403);
 

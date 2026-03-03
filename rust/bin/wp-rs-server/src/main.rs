@@ -21516,6 +21516,7 @@ async fn admin_dispatch_inner(
 ) -> impl IntoResponse {
     let registry = core_admin_actions();
     let (parts, body) = request.into_parts();
+    let now = unix_now();
     let body_bytes = read_request_body(body).await;
     let content_type = parts
         .headers
@@ -21535,15 +21536,43 @@ async fn admin_dispatch_inner(
             _ => String::new(),
         });
 
-    let nonce_present = params
-        .get("_ajax_nonce")
-        .or_else(|| params.get("_wpnonce"))
-        .is_some_and(|value| !value.trim().is_empty());
+    let nonce_value = params.get("_ajax_nonce").or_else(|| params.get("_wpnonce"));
+    let nonce_present = nonce_value.is_some_and(|value| !value.trim().is_empty());
+    let nonce_action = params
+        .get("nonce_action")
+        .cloned()
+        .unwrap_or_else(|| action.clone());
+    let nonce_valid = match nonce_value {
+        Some(nonce) if !nonce.trim().is_empty() => {
+            let cookie_header = parts
+                .headers
+                .get("cookie")
+                .and_then(|value| value.to_str().ok())
+                .unwrap_or_default();
+            if let Some(user) = resolve_current_user(cookie_header, now, &state.auth_secrets) {
+                let session_active = state
+                    .session_tokens
+                    .lock()
+                    .expect("session token mutex poisoned")
+                    .verify_session(user.user_id, &user.token, now)
+                    .is_some();
+                session_active
+                    && state
+                        .nonce_service
+                        .verify_nonce_code(nonce, &nonce_action, user.user_id, &user.token, now)
+                        .is_some()
+            } else {
+                authenticated_from_header_override(&parts.headers)
+            }
+        }
+        _ => false,
+    };
 
     let mut admin_request = AdminRequest::new(surface, action);
     admin_request.authenticated = authenticated;
     admin_request.capabilities = capabilities;
     admin_request.nonce_present = nonce_present;
+    admin_request.nonce_valid = nonce_valid;
 
     let result = registry.dispatch(&admin_request);
     rust_handled_json_with_status(
@@ -23052,6 +23081,7 @@ struct InternalAdminDispatchQuery {
     action: Option<String>,
     authenticated: Option<bool>,
     nonce_present: Option<bool>,
+    nonce_valid: Option<bool>,
     capabilities: Option<String>,
 }
 
@@ -23063,6 +23093,7 @@ async fn internal_admin_dispatch(
     let mut request = AdminRequest::new(surface, query.action.unwrap_or_default());
     request.authenticated = query.authenticated.unwrap_or(false);
     request.nonce_present = query.nonce_present.unwrap_or(false);
+    request.nonce_valid = query.nonce_valid.unwrap_or(request.nonce_present);
 
     if let Some(capabilities) = query.capabilities {
         for capability in capabilities
@@ -25120,6 +25151,80 @@ mod tests {
         assert!(cookie_headers
             .iter()
             .any(|value| value.starts_with("wordpress_sec_rust=deleted")));
+    }
+
+    #[tokio::test]
+    async fn admin_ajax_nonce_rejects_stale_cookie_after_logout() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+
+        let nonce = state
+            .nonce_service
+            .create_nonce("heartbeat", 7, "rust-session-7", unix_now());
+        let request_body = format!("action=heartbeat&_ajax_nonce={nonce}");
+
+        let pre_logout_response = admin_ajax_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-admin/admin-ajax.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::from(request_body.clone()))
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(pre_logout_response.status(), StatusCode::OK);
+
+        let logout_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_response = admin_ajax_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-admin/admin-ajax.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::from(request_body))
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(post_logout_response.status(), StatusCode::FORBIDDEN);
+        let json = response_json(post_logout_response).await;
+        assert_eq!(
+            json["error_code"],
+            Value::String("invalid_nonce".to_string())
+        );
     }
 
     #[tokio::test]
