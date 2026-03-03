@@ -112,6 +112,27 @@ assert_rust_handled() {
   fi
 }
 
+assert_header_contains() {
+  local route="$1"
+  local expected_header_fragment="$2"
+  local method="${3:-GET}"
+  local content_type="${4:-}"
+  local payload="${5:-}"
+  local header_file
+  local body_file
+  header_file="$(mktemp)"
+  body_file="$(mktemp)"
+  capture_headers "${route}" "${method}" "${content_type}" "${payload}" "${header_file}" "${body_file}"
+
+  if ! awk -v needle="${expected_header_fragment}" 'index($0, needle) > 0 { found=1 } END { exit(found ? 0 : 1) }' "${header_file}"; then
+    echo "Expected header fragment '${expected_header_fragment}' for ${method} ${route}" >&2
+    rm -f "${header_file}" "${body_file}"
+    exit 1
+  fi
+
+  rm -f "${header_file}" "${body_file}"
+}
+
 assert_rust_handled "/" "yes"
 assert_rust_handled "/index.php" "yes"
 assert_rust_handled "/search?s=rust" "yes"
@@ -1965,6 +1986,12 @@ assert_rust_handled "/wp-admin/update-core.php" "yes"
 assert_rust_handled "/wp-admin/update-core.php?action=do-plugin-upgrade" "yes"
 assert_rust_handled "/wp-admin/admin.php" "yes"
 assert_rust_handled "/wp-login.php" "yes" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
+assert_header_contains "/wp-login.php" "Set-Cookie: wordpress_logged_in_rust=" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
+assert_header_contains "/wp-login.php" "Set-Cookie: wordpress_rust=" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
+assert_header_contains "/wp-login.php" "Set-Cookie: wordpress_sec_rust=" "POST" "application/x-www-form-urlencoded" "log=admin&pwd=secret"
+assert_header_contains "/wp-login.php?action=logout" "Set-Cookie: wordpress_logged_in_rust=deleted"
+assert_header_contains "/wp-login.php?action=logout" "Set-Cookie: wordpress_rust=deleted"
+assert_header_contains "/wp-login.php?action=logout" "Set-Cookie: wordpress_sec_rust=deleted"
 assert_rust_handled "/wp-comments-post.php" "yes" "POST" "application/x-www-form-urlencoded" "comment_post_ID=123&comment=hello"
 assert_rust_handled "/wp-admin/setup-config.php" "yes" "POST" "application/x-www-form-urlencoded" "dbname=wordpress&uname=wp_user&pwd=secret"
 assert_rust_handled "/wp-admin/profile.php" "yes" "POST" "application/x-www-form-urlencoded" "action=update-user&nickname=rustadmin"
