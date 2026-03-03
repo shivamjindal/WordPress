@@ -8,6 +8,7 @@ GET /search?s=rust
 GET /feed
 GET /Admin
 GET /wp-login.php
+GET /wp-login.php?action=logout
 GET /wp-login.php?action=lostpassword
 GET /wp-login.php?action=rp&key=abc123&login=admin
 POST /wp-login.php

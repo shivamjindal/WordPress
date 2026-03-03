@@ -7352,8 +7352,27 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
     }
 
     if action == "logout" {
+        let cookie_header = parts
+            .headers
+            .get("cookie")
+            .and_then(|value| value.to_str().ok())
+            .unwrap_or_default();
+        let session_removed =
+            if let Some(user) = resolve_current_user(cookie_header, now, &state.auth_secrets) {
+                state
+                    .session_tokens
+                    .lock()
+                    .expect("session token mutex poisoned")
+                    .destroy_session(user.user_id, &user.token)
+            } else {
+                false
+            };
+
         let mut headers = HeaderMap::new();
         headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
+        if let Ok(value) = HeaderValue::from_str(if session_removed { "1" } else { "0" }) {
+            headers.insert("X-WP-Rust-Session-Removed", value);
+        }
         headers.insert(
             "Location",
             HeaderValue::from_static("/wp-login.php?loggedout=true"),
@@ -7433,6 +7452,30 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
         AuthScheme::LoggedIn,
         &state.auth_secrets,
     );
+    let ip = parts
+        .headers
+        .get("x-forwarded-for")
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| {
+            value
+                .split(',')
+                .next()
+                .map(str::trim)
+                .filter(|candidate| !candidate.is_empty())
+        })
+        .map(str::to_string);
+    let user_agent = parts
+        .headers
+        .get("user-agent")
+        .and_then(|value| value.to_str().ok())
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(str::to_string);
+    state
+        .session_tokens
+        .lock()
+        .expect("session token mutex poisoned")
+        .upsert_session(user_id, &session_token, expiration, now, ip, user_agent);
 
     let mut headers = HeaderMap::new();
     headers.insert("X-WP-Rust-Handled", HeaderValue::from_static("1"));
@@ -24748,6 +24791,77 @@ mod tests {
             json["error"],
             Value::String("invalid_auth_session_action".to_string())
         );
+    }
+
+    #[tokio::test]
+    async fn login_creates_session_token_entry() {
+        let state = build_app_state();
+        let request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .header("user-agent", "Firefox")
+            .header("x-forwarded-for", "203.0.113.10")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+
+        let response = login_live_dispatch(State(state.clone()), request).await;
+        assert_eq!(response.status(), StatusCode::FOUND);
+
+        let mut sessions = state
+            .session_tokens
+            .lock()
+            .expect("session token mutex poisoned");
+        let stored = sessions
+            .verify_session(7, "rust-session-7", 0)
+            .expect("session should be persisted after login");
+        assert_eq!(stored.ip, Some("203.0.113.10".to_string()));
+        assert_eq!(stored.user_agent, Some("Firefox".to_string()));
+    }
+
+    #[tokio::test]
+    async fn logout_removes_active_session_token_entry() {
+        let state = build_app_state();
+        let login_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+        let login_response = login_live_dispatch(State(state.clone()), login_request).await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include auth cookie");
+
+        let logout_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-login.php?action=logout")
+            .header("cookie", login_cookie)
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let logout_response = login_live_dispatch(State(state.clone()), logout_request).await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+        assert_eq!(
+            logout_response
+                .headers()
+                .get("x-wp-rust-session-removed")
+                .and_then(|value| value.to_str().ok()),
+            Some("1")
+        );
+
+        let mut sessions = state
+            .session_tokens
+            .lock()
+            .expect("session token mutex poisoned");
+        assert!(sessions.verify_session(7, "rust-session-7", 0).is_none());
     }
 
     #[tokio::test]
