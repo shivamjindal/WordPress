@@ -24089,6 +24089,22 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
     let production_profile = settings
         .deployment_profile
         .eq_ignore_ascii_case("production-rust");
+    let mut blocking_conditions = Vec::new();
+    if !settings.enabled {
+        blocking_conditions.push("gateway_disabled".to_string());
+    }
+    if settings.fallback_enabled {
+        blocking_conditions.push("fallback_enabled".to_string());
+    }
+    if !rust_only_plugins {
+        blocking_conditions.push("plugin_compat_php_runtime".to_string());
+    }
+    if !production_profile {
+        blocking_conditions.push("not_production_profile".to_string());
+    }
+    if !core_endpoint_coverage_complete {
+        blocking_conditions.push("core_endpoint_coverage_incomplete".to_string());
+    }
     let ready_for_full_cutover = settings.enabled
         && !settings.fallback_enabled
         && rust_only_plugins
@@ -24132,6 +24148,7 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
                     "root": uncovered_root_count,
                 },
             },
+            "blocking_conditions": blocking_conditions,
             "ready_for_full_cutover": ready_for_full_cutover,
         },
     }))
@@ -26640,6 +26657,9 @@ mod tests {
             .map(|value| value.as_u64().unwrap_or_default())
             .sum();
         assert_eq!(uncovered_family_sum, uncovered_count);
+        let blocking_conditions = json["cutover_readiness"]["blocking_conditions"]
+            .as_array()
+            .expect("blocking_conditions should be an array");
 
         let gateway_enabled = json["cutover_readiness"]["gateway_enabled"]
             .as_bool()
@@ -26667,6 +26687,10 @@ mod tests {
                     && coverage_complete
             )
         );
+        let ready_for_full_cutover = json["cutover_readiness"]["ready_for_full_cutover"]
+            .as_bool()
+            .expect("ready_for_full_cutover should be a bool");
+        assert_eq!(blocking_conditions.is_empty(), ready_for_full_cutover);
     }
 
     #[tokio::test]
