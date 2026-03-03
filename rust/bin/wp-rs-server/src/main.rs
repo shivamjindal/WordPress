@@ -31,7 +31,7 @@ use wp_rs_db::{
 use wp_rs_hooks::HookDispatcher;
 use wp_rs_http::{
     core_xmlrpc_registry, detect_endpoint_kind, parse_xmlrpc_method_name, xmlrpc_fault_response,
-    xmlrpc_success_response,
+    xmlrpc_success_response, XmlRpcDispatchResult,
 };
 use wp_rs_rest::{core_seed_routes, RestRequest};
 
@@ -21600,8 +21600,7 @@ async fn xmlrpc_live_dispatch(
             } else {
                 xmlrpc_fault_response(result.fault_code.unwrap_or(-32603), &result.message)
             };
-            let status = StatusCode::from_u16(if result.success { 200 } else { 403 })
-                .unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
+            let status = xmlrpc_http_status_from_result(&result);
             (result, status, xml_body)
         }
         None => (
@@ -21612,6 +21611,16 @@ async fn xmlrpc_live_dispatch(
     };
 
     rust_handled_xml(status_code, xml_body, result.success)
+}
+
+fn xmlrpc_http_status_from_result(result: &XmlRpcDispatchResult) -> StatusCode {
+    if result.success {
+        return StatusCode::OK;
+    }
+    if result.fault_code == Some(403) {
+        return StatusCode::FORBIDDEN;
+    }
+    StatusCode::OK
 }
 
 async fn cron_live_dispatch(State(state): State<AppState>, request: Request) -> impl IntoResponse {
@@ -23178,9 +23187,10 @@ async fn internal_xmlrpc_dispatch(
     } else {
         xmlrpc_fault_response(result.fault_code.unwrap_or(-32603), &result.message)
     };
+    let status_code = xmlrpc_http_status_from_result(&result).as_u16();
 
     rust_handled_json(json!({
-        "status_code": if result.success { 200 } else { 403 },
+        "status_code": status_code,
         "result": result,
         "xml": xml,
     }))
@@ -24069,6 +24079,13 @@ mod tests {
             .await
             .expect("response body should read");
         serde_json::from_slice(&body).expect("response body should be valid json")
+    }
+
+    async fn response_text(response: Response) -> String {
+        let body = to_bytes(response.into_body(), usize::MAX)
+            .await
+            .expect("response body should read");
+        String::from_utf8(body.to_vec()).expect("response body should be utf-8")
     }
 
     #[tokio::test]
@@ -25741,6 +25758,26 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn xmlrpc_unknown_method_returns_fault_body_with_http_ok() {
+        let response = xmlrpc_live_dispatch(
+            State(build_app_state()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/xmlrpc.php")
+                .header("content-type", "text/xml")
+                .body(axum::body::Body::from(
+                    "<methodCall><methodName>unknown.method</methodName></methodCall>".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::OK);
+        let body = response_text(response).await;
+        assert!(body.contains("<int>-32601</int>"));
+    }
+
+    #[tokio::test]
     async fn internal_xmlrpc_dispatch_enforces_new_post_authentication() {
         let anonymous_response = internal_xmlrpc_dispatch(
             State(build_app_state()),
@@ -25779,6 +25816,28 @@ mod tests {
         let authenticated_json = response_json(authenticated_response).await;
         assert_eq!(authenticated_json["status_code"], Value::from(200));
         assert_eq!(authenticated_json["result"]["success"], Value::Bool(true));
+    }
+
+    #[tokio::test]
+    async fn internal_xmlrpc_dispatch_unknown_method_uses_http_ok_fault_status_code() {
+        let response = internal_xmlrpc_dispatch(
+            State(build_app_state()),
+            Query(InternalXmlRpcDispatchQuery {
+                method: Some("unknown.method".to_string()),
+                payload: None,
+                authenticated: Some(true),
+                use_cookie_auth: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["status_code"], Value::from(200));
+        assert_eq!(json["result"]["fault_code"], Value::from(-32601));
     }
 
     #[tokio::test]
