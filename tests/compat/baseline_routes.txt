@@ -1938,6 +1938,7 @@ POST /wp-admin/update-core.php?action=do-plugin-upgrade
 GET /wp-admin/maint/repair.php
 GET /wp-admin/maint/repair.php?repair=1
 GET /wp-cron.php?doing_wp_cron=1
+GET /wp-cron.php?doing_wp_cron=173847%2E123456
 POST /xmlrpc.php
 GET /wp-mail.php
 GET /wp-trackback.php
@@ -2178,6 +2179,7 @@ GET /__wp_rust/internal/cron-next?hook=dedupe_hook&args=one,two&checkpoint=dedup
 GET /__wp_rust/internal/cron-due?now=1999999901&checkpoint=dedupe-drain
 GET /__wp_rust/internal/cron-schedule?hook=contract_hook&timestamp=2000000000&schedule=hourly&args=one,two&query_string=doing_wp_cron%3D173847
 GET /__wp_rust/internal/cron-schedule?hook=encoded_cron_hook&timestamp=2000000100&schedule=hourly&args=encoded&query_string=doing_wp_cron%3D173847%252E123456
+GET /__wp_rust/internal/cron-schedule?hook=plus_cron_hook&timestamp=2000000110&schedule=hourly&args=encoded&query_string=doing_wp_cron%3D173847%2B123456
 GET /__wp_rust/internal/cron-next?hook=contract_hook&args=one,two&checkpoint=contract-next
 GET /__wp_rust/internal/cron-due?now=1999999999&checkpoint=before-contract-hook
 GET /__wp_rust/internal/cron-due?now=2000000001&checkpoint=after-contract-hook

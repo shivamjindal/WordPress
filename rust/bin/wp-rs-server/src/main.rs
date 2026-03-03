@@ -24551,6 +24551,27 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn internal_cron_schedule_decodes_plus_in_doing_wp_cron_token() {
+        let response = internal_cron_schedule(
+            State(build_app_state()),
+            Query(InternalCronScheduleQuery {
+                hook: Some("plus_token_hook".to_string()),
+                timestamp: Some(2_000_000_100),
+                schedule: Some("hourly".to_string()),
+                args: Some("one".to_string()),
+                query_string: Some("doing_wp_cron=173847+123456".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(
+            json["doing_wp_cron"],
+            Value::String("173847 123456".to_string())
+        );
+    }
+
+    #[tokio::test]
     async fn cron_clear_without_args_removes_all_hook_events() {
         let state = build_app_state();
 
@@ -24656,6 +24677,88 @@ mod tests {
             remaining_next_json.get("next_event_timestamp"),
             Some(&Value::from(400))
         );
+    }
+
+    #[tokio::test]
+    async fn cron_live_dispatch_runs_due_events_and_reports_next_timestamp() {
+        let state = build_app_state();
+        let now = unix_now();
+        let due_timestamp = now.saturating_sub(120);
+        let future_timestamp = now + 3600;
+
+        {
+            let mut scheduler = state
+                .cron_scheduler
+                .lock()
+                .expect("cron scheduler mutex poisoned");
+            scheduler.clear_hook("wp_version_check", None);
+            scheduler.schedule_event(CronEvent {
+                hook: "due_hook".to_string(),
+                timestamp: due_timestamp,
+                schedule: Some("hourly".to_string()),
+                args: vec!["one".to_string()],
+            });
+            scheduler.schedule_event(CronEvent {
+                hook: "future_hook".to_string(),
+                timestamp: future_timestamp,
+                schedule: Some("hourly".to_string()),
+                args: vec!["two".to_string()],
+            });
+        }
+
+        let response = cron_live_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-cron.php?doing_wp_cron=173847%2E123456")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::OK);
+        let json = response_json(response).await;
+        assert_eq!(json["running"], Value::Bool(true));
+        assert_eq!(json["lock_acquired"], Value::Bool(true));
+        assert_eq!(json["due_count"], Value::from(1));
+        assert_eq!(
+            json["doing_wp_cron"],
+            Value::String("173847.123456".to_string())
+        );
+        assert_eq!(
+            json["events"][0]["hook"],
+            Value::String("due_hook".to_string())
+        );
+        assert_eq!(json["next_event_timestamp"], Value::from(future_timestamp));
+    }
+
+    #[tokio::test]
+    async fn cron_live_dispatch_reports_lock_contention() {
+        let state = build_app_state();
+        {
+            let mut scheduler = state
+                .cron_scheduler
+                .lock()
+                .expect("cron scheduler mutex poisoned");
+            assert!(scheduler.acquire_lock(Duration::from_secs(60)));
+        }
+
+        let response = cron_live_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-cron.php?doing_wp_cron=1")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::OK);
+        let json = response_json(response).await;
+        assert_eq!(json["running"], Value::Bool(false));
+        assert_eq!(json["lock_acquired"], Value::Bool(false));
+        assert_eq!(json["due_count"], Value::from(0));
+        assert_eq!(json["doing_wp_cron"], Value::String("1".to_string()));
     }
 
     #[tokio::test]
