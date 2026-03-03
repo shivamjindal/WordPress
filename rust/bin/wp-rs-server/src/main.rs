@@ -7494,7 +7494,7 @@ async fn login_live_dispatch(State(state): State<AppState>, request: Request) ->
 
 async fn admin_dashboard_live(State(state): State<AppState>, request: Request) -> Response {
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
 
     if !authenticated {
         return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2F").into_response();
@@ -7517,7 +7517,7 @@ async fn admin_bootstrap_live_dispatch(
     request: Request,
 ) -> Response {
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !authenticated {
         return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fadmin.php")
             .into_response();
@@ -21834,11 +21834,50 @@ fn auth_context_from_headers(
         .unwrap_or_default();
     let authenticated_from_cookie =
         resolve_current_user(cookie_header, unix_now(), auth_secrets).is_some();
-    let authenticated_from_header = headers
+    let authenticated_from_header = authenticated_from_header_override(headers);
+    let capabilities = capabilities_from_headers(headers);
+
+    (
+        authenticated_from_cookie || authenticated_from_header,
+        capabilities,
+    )
+}
+
+fn auth_context_from_headers_with_active_sessions(
+    headers: &HeaderMap,
+    state: &AppState,
+) -> (bool, BTreeSet<String>) {
+    let cookie_header = headers
+        .get("cookie")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+    let now = unix_now();
+    let authenticated_from_cookie = resolve_current_user(cookie_header, now, &state.auth_secrets)
+        .is_some_and(|user| {
+            state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned")
+                .verify_session(user.user_id, &user.token, now)
+                .is_some()
+        });
+    let authenticated_from_header = authenticated_from_header_override(headers);
+    let capabilities = capabilities_from_headers(headers);
+
+    (
+        authenticated_from_cookie || authenticated_from_header,
+        capabilities,
+    )
+}
+
+fn authenticated_from_header_override(headers: &HeaderMap) -> bool {
+    headers
         .get("x-wp-rust-authenticated")
         .and_then(|value| value.to_str().ok())
-        .is_some_and(|value| value.eq_ignore_ascii_case("true") || value == "1");
+        .is_some_and(|value| value.eq_ignore_ascii_case("true") || value == "1")
+}
 
+fn capabilities_from_headers(headers: &HeaderMap) -> BTreeSet<String> {
     let mut capabilities = BTreeSet::new();
     if let Some(capability_header) = headers
         .get("x-wp-rust-capabilities")
@@ -21852,11 +21891,7 @@ fn auth_context_from_headers(
             capabilities.insert(capability.to_string());
         }
     }
-
-    (
-        authenticated_from_cookie || authenticated_from_header,
-        capabilities,
-    )
+    capabilities
 }
 
 fn merged_params(
@@ -24862,6 +24897,62 @@ mod tests {
             .lock()
             .expect("session token mutex poisoned");
         assert!(sessions.verify_session(7, "rust-session-7", 0).is_none());
+    }
+
+    #[tokio::test]
+    async fn admin_dashboard_rejects_cookie_after_logout_session_invalidation() {
+        let state = build_app_state();
+        let login_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+        let login_response = login_live_dispatch(State(state.clone()), login_request).await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include auth cookie");
+
+        let dashboard_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/")
+            .header("cookie", login_cookie.clone())
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let dashboard_response = admin_dashboard_live(State(state.clone()), dashboard_request).await;
+        assert_eq!(dashboard_response.status(), StatusCode::OK);
+
+        let logout_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-login.php?action=logout")
+            .header("cookie", login_cookie.clone())
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let logout_response = login_live_dispatch(State(state.clone()), logout_request).await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_dashboard_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/")
+            .header("cookie", login_cookie)
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let post_logout_dashboard_response =
+            admin_dashboard_live(State(state), post_logout_dashboard_request).await;
+        assert_eq!(post_logout_dashboard_response.status(), StatusCode::MOVED_PERMANENTLY);
+        assert_eq!(
+            post_logout_dashboard_response
+                .headers()
+                .get("location")
+                .and_then(|value| value.to_str().ok()),
+            Some("/wp-login.php?redirect_to=%2Fwp-admin%2F")
+        );
     }
 
     #[tokio::test]
