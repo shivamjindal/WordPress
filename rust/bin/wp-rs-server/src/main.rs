@@ -24105,6 +24105,23 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
     if !core_endpoint_coverage_complete {
         blocking_conditions.push("core_endpoint_coverage_incomplete".to_string());
     }
+    let recommended_next_actions = blocking_conditions
+        .iter()
+        .map(|condition| match condition.as_str() {
+            "gateway_disabled" => "Set WP_RUST_GATEWAY_ENABLED=1.".to_string(),
+            "fallback_enabled" => {
+                "Disable fallback or use production-rust deployment profile.".to_string()
+            }
+            "plugin_compat_php_runtime" => "Set WP_RUST_PLUGIN_COMPAT_MODE=rust-only.".to_string(),
+            "not_production_profile" => {
+                "Set WP_RUST_DEPLOYMENT_PROFILE=production-rust.".to_string()
+            }
+            "core_endpoint_coverage_incomplete" => {
+                "Expand endpoint/method allowlists to cover remaining core endpoints.".to_string()
+            }
+            _ => "Review gateway readiness configuration.".to_string(),
+        })
+        .collect::<Vec<_>>();
     let ready_for_full_cutover = settings.enabled
         && !settings.fallback_enabled
         && rust_only_plugins
@@ -24149,6 +24166,7 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
                 },
             },
             "blocking_conditions": blocking_conditions,
+            "recommended_next_actions": recommended_next_actions,
             "ready_for_full_cutover": ready_for_full_cutover,
         },
     }))
@@ -26660,6 +26678,9 @@ mod tests {
         let blocking_conditions = json["cutover_readiness"]["blocking_conditions"]
             .as_array()
             .expect("blocking_conditions should be an array");
+        let recommended_next_actions = json["cutover_readiness"]["recommended_next_actions"]
+            .as_array()
+            .expect("recommended_next_actions should be an array");
 
         let gateway_enabled = json["cutover_readiness"]["gateway_enabled"]
             .as_bool()
@@ -26691,6 +26712,7 @@ mod tests {
             .as_bool()
             .expect("ready_for_full_cutover should be a bool");
         assert_eq!(blocking_conditions.is_empty(), ready_for_full_cutover);
+        assert_eq!(recommended_next_actions.len(), blocking_conditions.len());
     }
 
     #[tokio::test]
