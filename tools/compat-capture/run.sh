@@ -2,7 +2,7 @@
 set -euo pipefail
 
 strict_flag=""
-deployment_profile="${WP_RUST_DEPLOYMENT_PROFILE:-legacy-safe}"
+deployment_profile="${WP_RUST_DEPLOYMENT_PROFILE:-production-rust}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

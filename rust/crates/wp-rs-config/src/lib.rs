@@ -57,6 +57,7 @@ impl RustGatewaySettings {
     /// - `WP_RUST_ENDPOINT_ALLOWLIST` (comma-separated list, `*` wildcard allowed)
     pub fn from_env() -> Self {
         let mut settings = Self::default();
+        settings.deployment_profile = "production-rust".to_string();
 
         if let Ok(value) = env::var("WP_RUST_GATEWAY_ENABLED") {
             settings.enabled = parse_gateway_truthy(&value);

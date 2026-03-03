@@ -47,7 +47,7 @@ if ( ! function_exists( 'wp_rust_gateway_get_settings' ) ) {
 		$deployment_profile = defined( 'WP_RUST_DEPLOYMENT_PROFILE' ) ? WP_RUST_DEPLOYMENT_PROFILE : '';
 		if ( ! $deployment_profile ) {
 			$profile_env = getenv( 'WP_RUST_DEPLOYMENT_PROFILE' );
-			$deployment_profile = false !== $profile_env ? $profile_env : 'legacy-safe';
+			$deployment_profile = false !== $profile_env ? $profile_env : 'production-rust';
 		}
 
 		$backend_url = defined( 'WP_RUST_GATEWAY_BACKEND_URL' ) ? WP_RUST_GATEWAY_BACKEND_URL : '';
@@ -167,7 +167,7 @@ if ( ! function_exists( 'wp_rust_gateway_apply_profile_overrides' ) ) {
 	 * @return array
 	 */
 	function wp_rust_gateway_apply_profile_overrides( $settings ) {
-		$profile = isset( $settings['deployment_profile'] ) ? strtolower( trim( (string) $settings['deployment_profile'] ) ) : 'legacy-safe';
+		$profile = isset( $settings['deployment_profile'] ) ? strtolower( trim( (string) $settings['deployment_profile'] ) ) : 'production-rust';
 		if ( 'production-rust' !== $profile ) {
 			return $settings;
 		}

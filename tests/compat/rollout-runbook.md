@@ -18,13 +18,13 @@ Before canary rollout:
 ## 1) Profile semantics
 
 - `legacy-safe`
-  - Conservative default.
+  - Conservative rollback/fallback profile.
   - Rust gateway typically disabled or narrowly allowlisted.
 - `php-runtime`
   - Rust handles migrated core endpoints only.
   - Plugin/theme non-core routes continue in PHP.
 - `production-rust`
-  - Full Rust cutover profile.
+  - Full Rust cutover profile (default profile for new deployments).
   - Fallback disabled by profile override.
 
 ## 2) Canary rollout procedure

@@ -32,6 +32,7 @@ echo "Starting PHP server with php-runtime compatibility mode..."
 (
   cd "${repo_root}" && \
   WP_RUST_GATEWAY_ENABLED=1 \
+  WP_RUST_DEPLOYMENT_PROFILE="legacy-safe" \
   WP_RUST_GATEWAY_BACKEND_URL="${rust_base_url}" \
   WP_RUST_ENDPOINT_ALLOWLIST="*" \
   WP_RUST_METHOD_ALLOWLIST="GET,HEAD,POST" \

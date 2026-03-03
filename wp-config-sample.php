@@ -92,17 +92,17 @@ define( 'WP_DEBUG', false );
 /**
  * Optional: Rust migration gateway settings.
  *
- * These values are no-ops until the PHP entrypoint gateway is enabled.
- * Keep disabled by default for a safe legacy-first bootstrap.
+ * Production cutover defaults route core execution through Rust.
+ * Use `legacy-safe` profile for conservative rollback behavior.
  */
-define( 'WP_RUST_GATEWAY_ENABLED', false );
-define( 'WP_RUST_DEPLOYMENT_PROFILE', 'legacy-safe' );
-define( 'WP_RUST_GATEWAY_FALLBACK_ENABLED', true );
+define( 'WP_RUST_GATEWAY_ENABLED', true );
+define( 'WP_RUST_DEPLOYMENT_PROFILE', 'production-rust' );
+define( 'WP_RUST_GATEWAY_FALLBACK_ENABLED', false );
 define( 'WP_RUST_GATEWAY_BACKEND_URL', 'http://127.0.0.1:8088' );
 define( 'WP_RUST_GATEWAY_TIMEOUT_MS', 1500 );
-define( 'WP_RUST_ENDPOINT_ALLOWLIST', '/__wp_rust/health,/__wp_rust/echo,/__wp_rust/maintenance' );
-define( 'WP_RUST_METHOD_ALLOWLIST', 'GET,HEAD' );
-define( 'WP_RUST_PLUGIN_COMPAT_MODE', 'php-runtime' );
+define( 'WP_RUST_ENDPOINT_ALLOWLIST', '*' );
+define( 'WP_RUST_METHOD_ALLOWLIST', '*' );
+define( 'WP_RUST_PLUGIN_COMPAT_MODE', 'rust-only' );
 
 
 

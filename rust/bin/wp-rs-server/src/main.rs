@@ -26678,6 +26678,10 @@ mod tests {
         .await
         .into_response();
         let json = response_json(response).await;
+        assert_eq!(
+            json["deployment_profile"],
+            Value::String("production-rust".to_string())
+        );
 
         assert_eq!(json["core_surface_flags"]["xmlrpc"], Value::Bool(true));
         assert_eq!(json["core_surface_flags"]["cron"], Value::Bool(true));
