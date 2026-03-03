@@ -62,6 +62,12 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     } else if let Some(slug) = request.path.strip_prefix("/tag/") {
         kind = FrontRouteKind::Archive;
         query_vars.insert("tag".to_string(), slug.trim_end_matches('/').to_string());
+    } else if let Some(slug) = request.path.strip_prefix("/author/") {
+        let author_name = slug.trim_end_matches('/');
+        if !author_name.is_empty() {
+            kind = FrontRouteKind::Archive;
+            query_vars.insert("author_name".to_string(), author_name.to_string());
+        }
     } else {
         let segments = split_path_segments(&request.path);
         if segments.len() == 3
@@ -73,6 +79,12 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
             query_vars.insert("year".to_string(), segments[0].to_string());
             query_vars.insert("monthnum".to_string(), segments[1].to_string());
             query_vars.insert("name".to_string(), segments[2].to_string());
+        } else if segments.len() == 2 && segments[0] == "page" && is_positive_integer(segments[1]) {
+            kind = FrontRouteKind::Home;
+            query_vars.insert("paged".to_string(), segments[1].to_string());
+        } else if segments.len() == 1 && is_year(segments[0]) {
+            kind = FrontRouteKind::Archive;
+            query_vars.insert("year".to_string(), segments[0].to_string());
         } else if segments.len() == 2 && is_year(segments[0]) && is_month(segments[1]) {
             kind = FrontRouteKind::Archive;
             query_vars.insert("year".to_string(), segments[0].to_string());
@@ -153,6 +165,9 @@ fn template_candidates(kind: FrontRouteKind, query_vars: &BTreeMap<String, Strin
                 templates.push(format!("category-{category}.php"));
             } else if let Some(tag) = query_vars.get("tag") {
                 templates.push(format!("tag-{tag}.php"));
+            } else if let Some(author_name) = query_vars.get("author_name") {
+                templates.push(format!("author-{author_name}.php"));
+                templates.push("author.php".to_string());
             }
             templates.push("archive.php".to_string());
             templates.push("index.php".to_string());
@@ -232,6 +247,10 @@ fn is_month(value: &str) -> bool {
     matches!(value.parse::<u8>(), Ok(month) if (1..=12).contains(&month))
 }
 
+fn is_positive_integer(value: &str) -> bool {
+    !value.is_empty() && matches!(value.parse::<u32>(), Ok(number) if number > 0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -278,6 +297,45 @@ mod tests {
         assert!(matched
             .template_candidates
             .contains(&"category-news.php".to_string()));
+    }
+
+    #[test]
+    fn parses_author_archive_route() {
+        let matched = parse_front_route("/author/admin", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(
+            matched.query_vars.get("author_name"),
+            Some(&"admin".to_string())
+        );
+        assert!(matched
+            .template_candidates
+            .contains(&"author-admin.php".to_string()));
+        assert!(matched
+            .template_candidates
+            .contains(&"author.php".to_string()));
+    }
+
+    #[test]
+    fn parses_year_archive_route() {
+        let matched = parse_front_route("/2025", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(matched.query_vars.get("year"), Some(&"2025".to_string()));
+        assert_eq!(matched.canonical_redirect, Some("/2025/".to_string()));
+    }
+
+    #[test]
+    fn parses_home_pagination_route() {
+        let matched = parse_front_route("/page/2", "");
+        assert_eq!(matched.kind, FrontRouteKind::Home);
+        assert_eq!(matched.query_vars.get("paged"), Some(&"2".to_string()));
+        assert_eq!(
+            matched.template_candidates,
+            vec![
+                "front-page.php".to_string(),
+                "home.php".to_string(),
+                "index.php".to_string()
+            ]
+        );
     }
 
     #[test]
