@@ -101,6 +101,34 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
             query_vars.insert("year".to_string(), segments[0].to_string());
             query_vars.insert("monthnum".to_string(), segments[1].to_string());
             query_vars.insert("day".to_string(), segments[2].to_string());
+        } else if segments.len() == 5
+            && is_year(segments[0])
+            && is_month(segments[1])
+            && !segments[2].is_empty()
+            && segments[3] == "attachment"
+            && !segments[4].is_empty()
+        {
+            kind = FrontRouteKind::Single;
+            query_vars.insert("year".to_string(), segments[0].to_string());
+            query_vars.insert("monthnum".to_string(), segments[1].to_string());
+            query_vars.insert("name".to_string(), segments[2].to_string());
+            query_vars.insert("attachment".to_string(), segments[4].to_string());
+        } else if segments.len() == 4
+            && is_year(segments[0])
+            && is_month(segments[1])
+            && !segments[2].is_empty()
+            && parse_comment_page_segment(segments[3]).is_some()
+        {
+            kind = FrontRouteKind::Single;
+            query_vars.insert("year".to_string(), segments[0].to_string());
+            query_vars.insert("monthnum".to_string(), segments[1].to_string());
+            query_vars.insert("name".to_string(), segments[2].to_string());
+            query_vars.insert(
+                "cpage".to_string(),
+                parse_comment_page_segment(segments[3])
+                    .unwrap_or_default()
+                    .to_string(),
+            );
         } else if segments.len() == 3
             && is_year(segments[0])
             && is_month(segments[1])
@@ -325,6 +353,14 @@ fn is_supported_feed(value: &str) -> bool {
     matches!(value, "rss2" | "rss" | "rdf" | "atom")
 }
 
+fn parse_comment_page_segment(segment: &str) -> Option<u32> {
+    let page = segment.strip_prefix("comment-page-")?;
+    if is_positive_integer(page) {
+        return page.parse::<u32>().ok();
+    }
+    None
+}
+
 fn taxonomy_archive_from_segments(segments: &[&str], base: &str) -> Option<(String, Option<u32>)> {
     if segments.len() == 2 && segments[0] == base && !segments[1].is_empty() {
         return Some((segments[1].to_string(), None));
@@ -509,6 +545,27 @@ mod tests {
         assert_eq!(matched.query_vars.get("year"), Some(&"2025".to_string()));
         assert_eq!(matched.query_vars.get("monthnum"), Some(&"02".to_string()));
         assert_eq!(matched.query_vars.get("paged"), Some(&"4".to_string()));
+    }
+
+    #[test]
+    fn parses_single_comment_page_route() {
+        let matched = parse_front_route("/2025/02/hello-world/comment-page-2", "");
+        assert_eq!(matched.kind, FrontRouteKind::Single);
+        assert_eq!(
+            matched.query_vars.get("name"),
+            Some(&"hello-world".to_string())
+        );
+        assert_eq!(matched.query_vars.get("cpage"), Some(&"2".to_string()));
+    }
+
+    #[test]
+    fn parses_attachment_subroute_as_single_context() {
+        let matched = parse_front_route("/2025/02/hello-world/attachment/hero-image", "");
+        assert_eq!(matched.kind, FrontRouteKind::Single);
+        assert_eq!(
+            matched.query_vars.get("attachment"),
+            Some(&"hero-image".to_string())
+        );
     }
 
     #[test]
