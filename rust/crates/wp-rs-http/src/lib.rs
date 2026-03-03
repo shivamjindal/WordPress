@@ -163,10 +163,11 @@ pub fn core_xmlrpc_registry() -> XmlRpcRegistry {
 }
 
 pub fn parse_xmlrpc_method_name(payload: &str) -> Option<String> {
-    let start_tag = "<methodName>";
-    let end_tag = "</methodName>";
-    let start = payload.find(start_tag)? + start_tag.len();
-    let end = payload[start..].find(end_tag)? + start;
+    let lower_payload = payload.to_ascii_lowercase();
+    let start_tag = "<methodname>";
+    let end_tag = "</methodname>";
+    let start = lower_payload.find(start_tag)? + start_tag.len();
+    let end = lower_payload[start..].find(end_tag)? + start;
     let method_name = payload[start..end].trim();
     if method_name.is_empty() {
         None
@@ -211,6 +212,16 @@ mod tests {
         assert_eq!(
             parse_xmlrpc_method_name(payload),
             Some("wp.getUsersBlogs".to_string())
+        );
+    }
+
+    #[test]
+    fn parses_xmlrpc_method_name_with_case_variant_tags() {
+        let payload =
+            "<?xml version=\"1.0\"?><methodCall><METHODNAME>demo.sayHello</METHODNAME></methodCall>";
+        assert_eq!(
+            parse_xmlrpc_method_name(payload),
+            Some("demo.sayHello".to_string())
         );
     }
 

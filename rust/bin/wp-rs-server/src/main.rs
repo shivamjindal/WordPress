@@ -25841,6 +25841,34 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn internal_xmlrpc_dispatch_parses_case_variant_method_tags() {
+        let response = internal_xmlrpc_dispatch(
+            State(build_app_state()),
+            Query(InternalXmlRpcDispatchQuery {
+                method: None,
+                payload: Some(
+                    "<methodCall><METHODNAME>demo.sayHello</METHODNAME></methodCall>".to_string(),
+                ),
+                authenticated: Some(false),
+                use_cookie_auth: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["status_code"], Value::from(200));
+        assert_eq!(json["result"]["success"], Value::Bool(true));
+        assert_eq!(
+            json["result"]["method_name"],
+            Value::String("demo.sayHello".to_string())
+        );
+    }
+
+    #[tokio::test]
     async fn internal_xmlrpc_dispatch_cookie_auth_rejects_stale_session_after_logout() {
         let state = build_app_state();
         let login_response = login_live_dispatch(
