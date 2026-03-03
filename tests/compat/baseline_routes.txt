@@ -2211,3 +2211,4 @@ GET /__wp_rust/internal/constants?wp_post_revisions=false&wp_cron_lock_timeout=1
 GET /__wp_rust/internal/constants?wp_cron_lock_timeout=0
 GET /__wp_rust/internal/maintenance-status?upgrading=1
 GET /__wp_rust/internal/plugin-compat-matrix
+GET /__wp_rust/internal/plugin-compat-matrix?enabled=1&fallback_enabled=0&deployment_profile=production-rust&plugin_compat_mode=rust-only&endpoint_allowlist=%2A&method_allowlist=%2A

@@ -2103,6 +2103,7 @@ assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"uncovered_exa
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"uncovered_family_counts\""
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"blocking_conditions\""
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"recommended_next_actions\""
+assert_rust_handled "/__wp_rust/internal/plugin-compat-matrix?enabled=1&fallback_enabled=0&plugin_compat_mode=rust-only&deployment_profile=production-rust&endpoint_allowlist=%2A&method_allowlist=%2A" "yes"
 assert_rust_handled "/wp-content/plugins/hello.php" "yes"
 assert_rust_handled "/wp-content/plugins/hello.php" "yes" "POST" "application/x-www-form-urlencoded" "foo=bar"
 assert_rust_handled "/wp-content/themes/twentytwentyfive/style.css" "no"

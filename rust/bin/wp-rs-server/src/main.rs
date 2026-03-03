@@ -24025,8 +24025,48 @@ async fn internal_maintenance_status(
     }))
 }
 
-async fn internal_plugin_compat_matrix() -> impl IntoResponse {
-    let settings = RustGatewaySettings::from_env();
+#[derive(Debug, Deserialize)]
+struct InternalPluginCompatMatrixQuery {
+    enabled: Option<String>,
+    fallback_enabled: Option<String>,
+    deployment_profile: Option<String>,
+    plugin_compat_mode: Option<String>,
+    endpoint_allowlist: Option<String>,
+    method_allowlist: Option<String>,
+}
+
+async fn internal_plugin_compat_matrix(
+    Query(query): Query<InternalPluginCompatMatrixQuery>,
+) -> impl IntoResponse {
+    let mut settings = RustGatewaySettings::from_env();
+    if let Some(value) = query.enabled.as_deref().and_then(parse_boolish) {
+        settings.enabled = value;
+    }
+    if let Some(value) = query.fallback_enabled.as_deref().and_then(parse_boolish) {
+        settings.fallback_enabled = value;
+    }
+    if let Some(value) = query.deployment_profile {
+        let trimmed = value.trim();
+        if !trimmed.is_empty() {
+            settings.deployment_profile = trimmed.to_string();
+        }
+    }
+    if let Some(value) = query.plugin_compat_mode {
+        let trimmed = value.trim();
+        if !trimmed.is_empty() {
+            settings.plugin_compat_mode = trimmed.to_string();
+        }
+    }
+    if let Some(value) = query.endpoint_allowlist {
+        settings.endpoint_allowlist = parse_csv_values(&value).into_iter().collect();
+    }
+    if let Some(value) = query.method_allowlist {
+        settings.method_allowlist = parse_csv_values(&value)
+            .into_iter()
+            .map(|method| method.to_ascii_uppercase())
+            .collect();
+    }
+
     let core_endpoint_list = php_runtime_core_endpoints();
     let core_endpoints = core_endpoint_list
         .iter()
@@ -26626,7 +26666,16 @@ mod tests {
 
     #[tokio::test]
     async fn plugin_compat_matrix_reports_core_surface_flags_and_family_counts() {
-        let response = internal_plugin_compat_matrix().await.into_response();
+        let response = internal_plugin_compat_matrix(Query(InternalPluginCompatMatrixQuery {
+            enabled: None,
+            fallback_enabled: None,
+            deployment_profile: None,
+            plugin_compat_mode: None,
+            endpoint_allowlist: None,
+            method_allowlist: None,
+        }))
+        .await
+        .into_response();
         let json = response_json(response).await;
 
         assert_eq!(json["core_surface_flags"]["xmlrpc"], Value::Bool(true));
@@ -26713,6 +26762,37 @@ mod tests {
             .expect("ready_for_full_cutover should be a bool");
         assert_eq!(blocking_conditions.is_empty(), ready_for_full_cutover);
         assert_eq!(recommended_next_actions.len(), blocking_conditions.len());
+    }
+
+    #[tokio::test]
+    async fn plugin_compat_matrix_query_overrides_can_report_cutover_ready() {
+        let response = internal_plugin_compat_matrix(Query(InternalPluginCompatMatrixQuery {
+            enabled: Some("1".to_string()),
+            fallback_enabled: Some("0".to_string()),
+            deployment_profile: Some("production-rust".to_string()),
+            plugin_compat_mode: Some("rust-only".to_string()),
+            endpoint_allowlist: Some("*".to_string()),
+            method_allowlist: Some("*".to_string()),
+        }))
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(
+            json["cutover_readiness"]["ready_for_full_cutover"],
+            Value::Bool(true)
+        );
+        assert_eq!(
+            json["cutover_readiness"]["core_endpoint_coverage"]["complete"],
+            Value::Bool(true)
+        );
+        assert_eq!(
+            json["cutover_readiness"]["blocking_conditions"],
+            Value::Array(Vec::new())
+        );
+        assert_eq!(
+            json["cutover_readiness"]["recommended_next_actions"],
+            Value::Array(Vec::new())
+        );
     }
 
     #[tokio::test]
