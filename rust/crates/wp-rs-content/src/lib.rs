@@ -42,6 +42,7 @@ pub struct FrontRouteMatch {
 pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     let request = FrontRequest::from_parts(path, query_string);
     let query_pairs = parse_query_pairs(&request.query_string);
+    let segments = split_path_segments(&request.path);
     let mut query_vars = BTreeMap::new();
     let mut kind = FrontRouteKind::NotFound;
 
@@ -50,27 +51,38 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     } else if request.path == "/feed" || request.path == "/feed/" {
         kind = FrontRouteKind::Feed;
         query_vars.insert("feed".to_string(), "rss2".to_string());
-    } else if let Some(search_term) = query_pairs.get("s") {
+    } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
-    } else if let Some(slug) = request.path.strip_prefix("/category/") {
+    } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "category") {
         kind = FrontRouteKind::Archive;
-        query_vars.insert(
-            "category_name".to_string(),
-            slug.trim_end_matches('/').to_string(),
-        );
-    } else if let Some(slug) = request.path.strip_prefix("/tag/") {
+        query_vars.insert("category_name".to_string(), slug);
+        if let Some(paged) = paged {
+            query_vars.insert("paged".to_string(), paged.to_string());
+        }
+    } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "tag") {
         kind = FrontRouteKind::Archive;
-        query_vars.insert("tag".to_string(), slug.trim_end_matches('/').to_string());
-    } else if let Some(slug) = request.path.strip_prefix("/author/") {
-        let author_name = slug.trim_end_matches('/');
-        if !author_name.is_empty() {
-            kind = FrontRouteKind::Archive;
-            query_vars.insert("author_name".to_string(), author_name.to_string());
+        query_vars.insert("tag".to_string(), slug);
+        if let Some(paged) = paged {
+            query_vars.insert("paged".to_string(), paged.to_string());
+        }
+    } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "author") {
+        kind = FrontRouteKind::Archive;
+        query_vars.insert("author_name".to_string(), slug);
+        if let Some(paged) = paged {
+            query_vars.insert("paged".to_string(), paged.to_string());
         }
     } else {
-        let segments = split_path_segments(&request.path);
         if segments.len() == 3
+            && is_year(segments[0])
+            && is_month(segments[1])
+            && is_day(segments[2])
+        {
+            kind = FrontRouteKind::Archive;
+            query_vars.insert("year".to_string(), segments[0].to_string());
+            query_vars.insert("monthnum".to_string(), segments[1].to_string());
+            query_vars.insert("day".to_string(), segments[2].to_string());
+        } else if segments.len() == 3
             && is_year(segments[0])
             && is_month(segments[1])
             && !segments[2].is_empty()
@@ -168,6 +180,8 @@ fn template_candidates(kind: FrontRouteKind, query_vars: &BTreeMap<String, Strin
             } else if let Some(author_name) = query_vars.get("author_name") {
                 templates.push(format!("author-{author_name}.php"));
                 templates.push("author.php".to_string());
+            } else if query_vars.contains_key("year") {
+                templates.push("date.php".to_string());
             }
             templates.push("archive.php".to_string());
             templates.push("index.php".to_string());
@@ -247,8 +261,30 @@ fn is_month(value: &str) -> bool {
     matches!(value.parse::<u8>(), Ok(month) if (1..=12).contains(&month))
 }
 
+fn is_day(value: &str) -> bool {
+    if value.len() != 2 || !value.chars().all(|character| character.is_ascii_digit()) {
+        return false;
+    }
+    matches!(value.parse::<u8>(), Ok(day) if (1..=31).contains(&day))
+}
+
 fn is_positive_integer(value: &str) -> bool {
     !value.is_empty() && matches!(value.parse::<u32>(), Ok(number) if number > 0)
+}
+
+fn taxonomy_archive_from_segments(segments: &[&str], base: &str) -> Option<(String, Option<u32>)> {
+    if segments.len() == 2 && segments[0] == base && !segments[1].is_empty() {
+        return Some((segments[1].to_string(), None));
+    }
+    if segments.len() == 4
+        && segments[0] == base
+        && !segments[1].is_empty()
+        && segments[2] == "page"
+        && is_positive_integer(segments[3])
+    {
+        return Some((segments[1].to_string(), segments[3].parse::<u32>().ok()));
+    }
+    None
 }
 
 #[cfg(test)]
@@ -336,6 +372,40 @@ mod tests {
                 "index.php".to_string()
             ]
         );
+    }
+
+    #[test]
+    fn parses_day_archive_route() {
+        let matched = parse_front_route("/2025/02/03", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(matched.query_vars.get("year"), Some(&"2025".to_string()));
+        assert_eq!(matched.query_vars.get("monthnum"), Some(&"02".to_string()));
+        assert_eq!(matched.query_vars.get("day"), Some(&"03".to_string()));
+        assert!(matched
+            .template_candidates
+            .contains(&"date.php".to_string()));
+    }
+
+    #[test]
+    fn parses_category_archive_pagination_route() {
+        let matched = parse_front_route("/category/news/page/2", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(
+            matched.query_vars.get("category_name"),
+            Some(&"news".to_string())
+        );
+        assert_eq!(matched.query_vars.get("paged"), Some(&"2".to_string()));
+    }
+
+    #[test]
+    fn parses_author_archive_pagination_route() {
+        let matched = parse_front_route("/author/admin/page/3", "");
+        assert_eq!(matched.kind, FrontRouteKind::Archive);
+        assert_eq!(
+            matched.query_vars.get("author_name"),
+            Some(&"admin".to_string())
+        );
+        assert_eq!(matched.query_vars.get("paged"), Some(&"3".to_string()));
     }
 
     #[test]
