@@ -42,15 +42,16 @@ pub struct FrontRouteMatch {
 pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     let request = FrontRequest::from_parts(path, query_string);
     let query_pairs = parse_query_pairs(&request.query_string);
-    let segments = split_path_segments(&request.path);
+    let routed_path = normalize_index_php_path(&request.path);
+    let segments = split_path_segments(&routed_path);
     let mut query_vars = BTreeMap::new();
     let mut kind = FrontRouteKind::NotFound;
 
-    if request.path == "/comments/feed" || request.path == "/comments/feed/" {
+    if routed_path == "/comments/feed" || routed_path == "/comments/feed/" {
         kind = FrontRouteKind::Feed;
         query_vars.insert("feed".to_string(), "rss2".to_string());
         query_vars.insert("withcomments".to_string(), "1".to_string());
-    } else if request.path == "/feed" || request.path == "/feed/" {
+    } else if routed_path == "/feed" || routed_path == "/feed/" {
         kind = FrontRouteKind::Feed;
         query_vars.insert("feed".to_string(), "rss2".to_string());
     } else if segments.len() == 2 && segments[0] == "feed" && is_supported_feed(segments[1]) {
@@ -110,7 +111,7 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
                 query_vars.insert("day".to_string(), day.to_string());
             }
         }
-    } else if request.path == "/" {
+    } else if routed_path == "/" {
         kind = FrontRouteKind::Home;
     } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "category") {
         kind = FrontRouteKind::Archive;
@@ -343,6 +344,13 @@ fn template_candidates(kind: FrontRouteKind, query_vars: &BTreeMap<String, Strin
 
 fn canonical_redirect_target(path: &str) -> Option<String> {
     let normalized = normalize_path(path);
+    if normalized == "/index.php" {
+        return Some("/".to_string());
+    }
+    if let Some(stripped) = normalized.strip_prefix("/index.php/") {
+        let target = format!("/{stripped}");
+        return Some(normalize_path(&target));
+    }
     if normalized == path {
         return None;
     }
@@ -392,6 +400,16 @@ fn split_path_segments(path: &str) -> Vec<&str> {
         .split('/')
         .filter(|segment| !segment.is_empty())
         .collect()
+}
+
+fn normalize_index_php_path(path: &str) -> String {
+    if path == "/index.php" {
+        return "/".to_string();
+    }
+    if let Some(stripped) = path.strip_prefix("/index.php/") {
+        return format!("/{stripped}");
+    }
+    path.to_string()
 }
 
 fn is_year(value: &str) -> bool {
@@ -521,6 +539,27 @@ mod tests {
     #[test]
     fn parses_single_post_route() {
         let matched = parse_front_route("/2025/02/hello-world", "");
+        assert_eq!(matched.kind, FrontRouteKind::Single);
+        assert_eq!(
+            matched.query_vars.get("name"),
+            Some(&"hello-world".to_string())
+        );
+        assert_eq!(
+            matched.canonical_redirect,
+            Some("/2025/02/hello-world/".to_string())
+        );
+    }
+
+    #[test]
+    fn parses_index_php_root_route_as_home() {
+        let matched = parse_front_route("/index.php", "");
+        assert_eq!(matched.kind, FrontRouteKind::Home);
+        assert_eq!(matched.canonical_redirect, Some("/".to_string()));
+    }
+
+    #[test]
+    fn parses_index_php_prefixed_single_route() {
+        let matched = parse_front_route("/index.php/2025/02/hello-world", "");
         assert_eq!(matched.kind, FrontRouteKind::Single);
         assert_eq!(
             matched.query_vars.get("name"),

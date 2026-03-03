@@ -2087,6 +2087,8 @@ GET /__wp_rust/internal/rest-dispatch?method=HEAD&path=/wp-json/wp/v2/posts
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/posts/
 GET /__wp_rust/internal/rest-dispatch?method=OPTIONS&path=/wp-json/wp/v2/posts
 GET /__wp_rust/internal/content-route?path=/2025/02/hello-world
+GET /__wp_rust/internal/content-route?path=/index.php
+GET /__wp_rust/internal/content-route?path=/index.php/2025/02/hello-world
 GET /__wp_rust/internal/content-route?path=/search&query=s%3Dwordpress
 GET /__wp_rust/internal/content-route?path=/author/admin
 GET /__wp_rust/internal/content-route?path=/2025
