@@ -43,6 +43,7 @@ struct AppState {
     auth_secrets: AuthSecrets,
     nonce_service: NonceService,
     cron_scheduler: Arc<Mutex<CronScheduler>>,
+    cron_lock_timeout: Duration,
     multisite_resolver: MultisiteResolver,
 }
 
@@ -21633,7 +21634,7 @@ async fn cron_live_dispatch(State(state): State<AppState>, request: Request) -> 
         .lock()
         .expect("cron scheduler mutex poisoned");
 
-    let lock_acquired = scheduler.acquire_lock(Duration::from_secs(60));
+    let lock_acquired = scheduler.acquire_lock(state.cron_lock_timeout);
     if !lock_acquired {
         return rust_handled_json(json!({
             "running": false,
@@ -21984,6 +21985,12 @@ async fn read_request_body(body: axum::body::Body) -> Bytes {
 }
 
 fn build_app_state() -> AppState {
+    let constants =
+        WordPressConstants::from_map(&std::env::vars().collect::<HashMap<String, String>>());
+    build_app_state_with_cron_lock_timeout(Duration::from_secs(constants.wp_cron_lock_timeout))
+}
+
+fn build_app_state_with_cron_lock_timeout(cron_lock_timeout: Duration) -> AppState {
     let mut options = OptionStore::default();
     options.set_option("blogname", "WordPress", Some(true));
     options.set_option("blogdescription", "Just another WordPress site", Some(true));
@@ -22020,6 +22027,7 @@ fn build_app_state() -> AppState {
         auth_secrets: AuthSecrets::default(),
         nonce_service: NonceService::default(),
         cron_scheduler: Arc::new(Mutex::new(scheduler)),
+        cron_lock_timeout,
         multisite_resolver,
     }
 }
@@ -24776,6 +24784,33 @@ mod tests {
         assert_eq!(json["lock_acquired"], Value::Bool(false));
         assert_eq!(json["due_count"], Value::from(0));
         assert_eq!(json["doing_wp_cron"], Value::String("1".to_string()));
+    }
+
+    #[tokio::test]
+    async fn cron_live_dispatch_honors_zero_lock_timeout_configuration() {
+        let state = build_app_state_with_cron_lock_timeout(Duration::from_secs(0));
+        {
+            let mut scheduler = state
+                .cron_scheduler
+                .lock()
+                .expect("cron scheduler mutex poisoned");
+            assert!(scheduler.acquire_lock(Duration::from_secs(60)));
+        }
+
+        let response = cron_live_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-cron.php?doing_wp_cron=1")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::OK);
+        let json = response_json(response).await;
+        assert_eq!(json["running"], Value::Bool(true));
+        assert_eq!(json["lock_acquired"], Value::Bool(true));
     }
 
     #[tokio::test]
