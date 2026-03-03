@@ -213,9 +213,30 @@ pub fn core_admin_actions() -> AdminActionRegistry {
         true,
     );
     registry.register(
+        AdminSurface::Ajax,
+        "delete-comment",
+        AdminAuth::Capability("moderate_comments".to_string()),
+        true,
+        false,
+    );
+    registry.register(
+        AdminSurface::Ajax,
+        "save-widget",
+        AdminAuth::Capability("edit_theme_options".to_string()),
+        true,
+        false,
+    );
+    registry.register(
         AdminSurface::AdminPost,
         "save_post",
         AdminAuth::Capability("edit_posts".to_string()),
+        true,
+        false,
+    );
+    registry.register(
+        AdminSurface::AdminPost,
+        "update-user",
+        AdminAuth::Capability("edit_users".to_string()),
         true,
         false,
     );
@@ -285,6 +306,38 @@ mod tests {
         assert_eq!(forbidden.status_code, 403);
 
         request.capabilities.insert("edit_posts".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn enforces_comment_moderation_capability_for_ajax_comment_delete() {
+        let registry = core_admin_actions();
+        let mut request = AdminRequest::new(AdminSurface::Ajax, "delete-comment");
+        request.authenticated = true;
+        request.nonce_present = true;
+        request.nonce_valid = true;
+
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("moderate_comments".to_string());
+        let allowed = registry.dispatch(&request);
+        assert_eq!(allowed.status_code, 200);
+    }
+
+    #[test]
+    fn enforces_edit_users_capability_for_admin_post_update_user() {
+        let registry = core_admin_actions();
+        let mut request = AdminRequest::new(AdminSurface::AdminPost, "update-user");
+        request.authenticated = true;
+        request.nonce_present = true;
+        request.nonce_valid = true;
+
+        let forbidden = registry.dispatch(&request);
+        assert_eq!(forbidden.status_code, 403);
+
+        request.capabilities.insert("edit_users".to_string());
         let allowed = registry.dispatch(&request);
         assert_eq!(allowed.status_code, 200);
     }

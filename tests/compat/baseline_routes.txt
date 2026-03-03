@@ -2071,8 +2071,14 @@ GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticat
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true&nonce_valid=true
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&use_cookie_auth=true&nonce_present=true&nonce_valid=true
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=false
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=delete-comment&authenticated=true&nonce_present=true&nonce_valid=true
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=delete-comment&authenticated=true&nonce_present=true&nonce_valid=true&capabilities=moderate_comments
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=save-widget&authenticated=true&nonce_present=true&nonce_valid=true
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=save-widget&authenticated=true&nonce_present=true&nonce_valid=true&capabilities=edit_theme_options
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true&capabilities=edit_posts
+GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=update-user&authenticated=true&nonce_present=true&nonce_valid=true
+GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=update-user&authenticated=true&nonce_present=true&nonce_valid=true&capabilities=edit_users
 GET /__wp_rust/internal/rest-contract
 GET /__wp_rust/internal/rest-dispatch?method=GET&path=/wp-json/wp/v2/posts
 GET /__wp_rust/internal/rest-dispatch?method=POST&path=/wp-json/wp/v2/posts&authenticated=false
