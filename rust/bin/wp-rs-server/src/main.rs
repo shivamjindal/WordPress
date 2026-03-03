@@ -21446,7 +21446,8 @@ async fn rest_dispatch(
 fn rest_dispatch_inner(state: AppState, request: Request, route_path: String) -> impl IntoResponse {
     let registry = core_seed_routes();
     let headers = request.headers();
-    let (authenticated, capabilities) = auth_context_from_headers(headers, &state.auth_secrets);
+    let (authenticated, capabilities) =
+        auth_context_from_headers_with_active_sessions(headers, &state);
 
     let mut rest_request = RestRequest::new(request.method().to_string(), route_path);
     rest_request.authenticated = authenticated;
@@ -21490,7 +21491,7 @@ async fn admin_dispatch_inner(
         .to_ascii_lowercase();
     let params = merged_params(parts.uri.query(), &body_bytes, &content_type);
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
 
     let action = params
         .get("action")
@@ -21526,7 +21527,7 @@ async fn xmlrpc_live_dispatch(
     let body_bytes = read_request_body(body).await;
     let payload = String::from_utf8_lossy(&body_bytes).to_string();
     let method_name = parse_xmlrpc_method_name(&payload);
-    let (authenticated, _) = auth_context_from_headers(&parts.headers, &state.auth_secrets);
+    let (authenticated, _) = auth_context_from_headers_with_active_sessions(&parts.headers, &state);
 
     let (result, status_code, xml_body) = match method_name {
         Some(method_name) => {
@@ -21822,25 +21823,6 @@ fn resolve_multisite_site(
     }
 
     state.multisite_resolver.resolve(domain, request_path)
-}
-
-fn auth_context_from_headers(
-    headers: &HeaderMap,
-    auth_secrets: &AuthSecrets,
-) -> (bool, BTreeSet<String>) {
-    let cookie_header = headers
-        .get("cookie")
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or_default();
-    let authenticated_from_cookie =
-        resolve_current_user(cookie_header, unix_now(), auth_secrets).is_some();
-    let authenticated_from_header = authenticated_from_header_override(headers);
-    let capabilities = capabilities_from_headers(headers);
-
-    (
-        authenticated_from_cookie || authenticated_from_header,
-        capabilities,
-    )
 }
 
 fn auth_context_from_headers_with_active_sessions(
@@ -25055,6 +25037,68 @@ mod tests {
         let post_logout_settings_response =
             options_writing_live_dispatch(State(state), post_logout_settings_request).await;
         assert_eq!(post_logout_settings_response.status(), StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
+    async fn rest_dispatch_rejects_stale_cookie_after_logout() {
+        let state = build_app_state();
+        let login_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+        let login_response = login_live_dispatch(State(state.clone()), login_request).await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include auth cookie");
+
+        let pre_logout_rest_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-json/wp/v2/posts")
+            .header("cookie", login_cookie.clone())
+            .header("x-wp-rust-capabilities", "edit_posts")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let pre_logout_rest_response = rest_dispatch(
+            State(state.clone()),
+            Path("wp/v2/posts".to_string()),
+            pre_logout_rest_request,
+        )
+        .await
+        .into_response();
+        assert_ne!(pre_logout_rest_response.status(), StatusCode::UNAUTHORIZED);
+
+        let logout_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-login.php?action=logout")
+            .header("cookie", login_cookie.clone())
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let logout_response = login_live_dispatch(State(state.clone()), logout_request).await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_rest_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-json/wp/v2/posts")
+            .header("cookie", login_cookie)
+            .header("x-wp-rust-capabilities", "edit_posts")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let post_logout_rest_response = rest_dispatch(
+            State(state),
+            Path("wp/v2/posts".to_string()),
+            post_logout_rest_request,
+        )
+        .await
+        .into_response();
+        assert_eq!(post_logout_rest_response.status(), StatusCode::UNAUTHORIZED);
     }
 
     #[tokio::test]
