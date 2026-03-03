@@ -68,11 +68,11 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
         {
             query_vars.insert("withcomments".to_string(), "1".to_string());
         }
-    } else if request.path == "/" {
-        kind = FrontRouteKind::Home;
     } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
+    } else if request.path == "/" {
+        kind = FrontRouteKind::Home;
     } else if let Some((slug, paged)) = taxonomy_archive_from_segments(&segments, "category") {
         kind = FrontRouteKind::Archive;
         query_vars.insert("category_name".to_string(), slug);
@@ -244,11 +244,16 @@ fn template_candidates(kind: FrontRouteKind, query_vars: &BTreeMap<String, Strin
             "home.php".to_string(),
             "index.php".to_string(),
         ],
-        FrontRouteKind::Single => vec![
-            "single.php".to_string(),
-            "singular.php".to_string(),
-            "index.php".to_string(),
-        ],
+        FrontRouteKind::Single => {
+            let mut templates = Vec::new();
+            if query_vars.contains_key("attachment") {
+                templates.push("attachment.php".to_string());
+            }
+            templates.push("single.php".to_string());
+            templates.push("singular.php".to_string());
+            templates.push("index.php".to_string());
+            templates
+        }
         FrontRouteKind::Page => {
             let mut templates = Vec::new();
             if let Some(slug) = query_vars.get("pagename") {
@@ -493,6 +498,13 @@ mod tests {
     }
 
     #[test]
+    fn parses_root_search_query_route() {
+        let matched = parse_front_route("/", "s=wordpress");
+        assert_eq!(matched.kind, FrontRouteKind::Search);
+        assert_eq!(matched.query_vars.get("s"), Some(&"wordpress".to_string()));
+    }
+
+    #[test]
     fn parses_archive_route() {
         let matched = parse_front_route("/category/news", "");
         assert_eq!(matched.kind, FrontRouteKind::Archive);
@@ -672,6 +684,9 @@ mod tests {
             matched.query_vars.get("attachment"),
             Some(&"hero-image".to_string())
         );
+        assert!(matched
+            .template_candidates
+            .contains(&"attachment.php".to_string()));
     }
 
     #[test]
