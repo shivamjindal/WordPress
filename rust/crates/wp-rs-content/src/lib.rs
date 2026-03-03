@@ -46,9 +46,7 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     let mut query_vars = BTreeMap::new();
     let mut kind = FrontRouteKind::NotFound;
 
-    if request.path == "/" {
-        kind = FrontRouteKind::Home;
-    } else if request.path == "/comments/feed" || request.path == "/comments/feed/" {
+    if request.path == "/comments/feed" || request.path == "/comments/feed/" {
         kind = FrontRouteKind::Feed;
         query_vars.insert("feed".to_string(), "rss2".to_string());
         query_vars.insert("withcomments".to_string(), "1".to_string());
@@ -70,6 +68,8 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
         {
             query_vars.insert("withcomments".to_string(), "1".to_string());
         }
+    } else if request.path == "/" {
+        kind = FrontRouteKind::Home;
     } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
@@ -173,6 +173,29 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
         {
             kind = FrontRouteKind::Page;
             query_vars.insert("pagename".to_string(), segments[0].to_string());
+        }
+    }
+
+    if !query_vars.contains_key("paged")
+        && matches!(
+            kind,
+            FrontRouteKind::Home | FrontRouteKind::Archive | FrontRouteKind::Search
+        )
+    {
+        if let Some(paged) = query_pairs
+            .get("paged")
+            .and_then(|value| parse_positive_integer(value))
+        {
+            query_vars.insert("paged".to_string(), paged.to_string());
+        }
+    }
+
+    if kind == FrontRouteKind::Single && !query_vars.contains_key("cpage") {
+        if let Some(cpage) = query_pairs
+            .get("cpage")
+            .and_then(|value| parse_positive_integer(value))
+        {
+            query_vars.insert("cpage".to_string(), cpage.to_string());
         }
     }
 
@@ -315,7 +338,7 @@ fn parse_query_pairs(query_string: &str) -> BTreeMap<String, String> {
                 return None;
             }
             let value = parts.next().unwrap_or_default().trim();
-            Some((key.to_string(), value.to_string()))
+            Some((decode_query_component(key), decode_query_component(value)))
         })
         .collect()
 }
@@ -349,8 +372,56 @@ fn is_positive_integer(value: &str) -> bool {
     !value.is_empty() && matches!(value.parse::<u32>(), Ok(number) if number > 0)
 }
 
+fn parse_positive_integer(value: &str) -> Option<u32> {
+    if !is_positive_integer(value) {
+        return None;
+    }
+    value.parse::<u32>().ok()
+}
+
 fn is_supported_feed(value: &str) -> bool {
     matches!(value, "rss2" | "rss" | "rdf" | "atom")
+}
+
+fn decode_query_component(value: &str) -> String {
+    let bytes = value.as_bytes();
+    let mut decoded = Vec::with_capacity(bytes.len());
+    let mut index = 0usize;
+
+    while index < bytes.len() {
+        match bytes[index] {
+            b'+' => {
+                decoded.push(b' ');
+                index += 1;
+            }
+            b'%' if index + 2 < bytes.len() => {
+                let high = bytes[index + 1];
+                let low = bytes[index + 2];
+                if let (Some(high), Some(low)) = (hex_value(high), hex_value(low)) {
+                    decoded.push((high << 4) | low);
+                    index += 3;
+                } else {
+                    decoded.push(bytes[index]);
+                    index += 1;
+                }
+            }
+            byte => {
+                decoded.push(byte);
+                index += 1;
+            }
+        }
+    }
+
+    String::from_utf8_lossy(&decoded).to_string()
+}
+
+fn hex_value(value: u8) -> Option<u8> {
+    match value {
+        b'0'..=b'9' => Some(value - b'0'),
+        b'a'..=b'f' => Some(10 + value - b'a'),
+        b'A'..=b'F' => Some(10 + value - b'A'),
+        _ => None,
+    }
 }
 
 fn parse_comment_page_segment(segment: &str) -> Option<u32> {
@@ -412,6 +483,16 @@ mod tests {
     }
 
     #[test]
+    fn decodes_urlencoded_search_query_terms() {
+        let matched = parse_front_route("/search", "s=rust%2Flang+core");
+        assert_eq!(matched.kind, FrontRouteKind::Search);
+        assert_eq!(
+            matched.query_vars.get("s"),
+            Some(&"rust/lang core".to_string())
+        );
+    }
+
+    #[test]
     fn parses_archive_route() {
         let matched = parse_front_route("/category/news", "");
         assert_eq!(matched.kind, FrontRouteKind::Archive);
@@ -461,6 +542,13 @@ mod tests {
                 "index.php".to_string()
             ]
         );
+    }
+
+    #[test]
+    fn applies_query_paged_to_search_routes() {
+        let matched = parse_front_route("/search", "s=wordpress&paged=3");
+        assert_eq!(matched.kind, FrontRouteKind::Search);
+        assert_eq!(matched.query_vars.get("paged"), Some(&"3".to_string()));
     }
 
     #[test]
@@ -539,6 +627,17 @@ mod tests {
     }
 
     #[test]
+    fn parses_feed_route_from_querystring() {
+        let matched = parse_front_route("/", "feed=rdf&withcomments=1");
+        assert_eq!(matched.kind, FrontRouteKind::Feed);
+        assert_eq!(matched.query_vars.get("feed"), Some(&"rdf".to_string()));
+        assert_eq!(
+            matched.query_vars.get("withcomments"),
+            Some(&"1".to_string())
+        );
+    }
+
+    #[test]
     fn parses_month_archive_pagination_route() {
         let matched = parse_front_route("/2025/02/page/4", "");
         assert_eq!(matched.kind, FrontRouteKind::Archive);
@@ -556,6 +655,13 @@ mod tests {
             Some(&"hello-world".to_string())
         );
         assert_eq!(matched.query_vars.get("cpage"), Some(&"2".to_string()));
+    }
+
+    #[test]
+    fn applies_query_comment_page_to_single_route() {
+        let matched = parse_front_route("/2025/02/hello-world", "cpage=4");
+        assert_eq!(matched.kind, FrontRouteKind::Single);
+        assert_eq!(matched.query_vars.get("cpage"), Some(&"4".to_string()));
     }
 
     #[test]
