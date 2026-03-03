@@ -23041,20 +23041,29 @@ struct InternalRestDispatchQuery {
     method: Option<String>,
     path: Option<String>,
     authenticated: Option<bool>,
+    use_cookie_auth: Option<bool>,
     capabilities: Option<String>,
 }
 
 async fn internal_rest_dispatch(
+    State(state): State<AppState>,
     Query(query): Query<InternalRestDispatchQuery>,
+    request: Request,
 ) -> impl IntoResponse {
     let registry = core_seed_routes();
-    let mut request = RestRequest::new(
+    let mut rest_request = RestRequest::new(
         query.method.unwrap_or_else(|| "GET".to_string()),
         query
             .path
             .unwrap_or_else(|| "/wp-json/wp/v2/posts".to_string()),
     );
-    request.authenticated = query.authenticated.unwrap_or(false);
+    rest_request.authenticated = if let Some(authenticated) = query.authenticated {
+        authenticated
+    } else if query.use_cookie_auth.unwrap_or(false) {
+        auth_context_from_headers_with_active_sessions(request.headers(), &state).0
+    } else {
+        false
+    };
 
     if let Some(capabilities) = query.capabilities {
         for capability in capabilities
@@ -23062,11 +23071,11 @@ async fn internal_rest_dispatch(
             .map(str::trim)
             .filter(|value| !value.is_empty())
         {
-            request.capabilities.insert(capability.to_string());
+            rest_request.capabilities.insert(capability.to_string());
         }
     }
 
-    let result = registry.dispatch(&request);
+    let result = registry.dispatch(&rest_request);
     rust_handled_json(result)
 }
 
@@ -24739,12 +24748,20 @@ mod tests {
 
     #[tokio::test]
     async fn rest_dispatch_requires_login_for_capability_routes() {
-        let response = internal_rest_dispatch(Query(InternalRestDispatchQuery {
-            method: Some("POST".to_string()),
-            path: Some("/wp-json/wp/v2/posts".to_string()),
-            authenticated: Some(false),
-            capabilities: None,
-        }))
+        let response = internal_rest_dispatch(
+            State(build_app_state()),
+            Query(InternalRestDispatchQuery {
+                method: Some("POST".to_string()),
+                path: Some("/wp-json/wp/v2/posts".to_string()),
+                authenticated: Some(false),
+                use_cookie_auth: None,
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/rest-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
         .await
         .into_response();
         let json = response_json(response).await;
@@ -25376,6 +25393,86 @@ mod tests {
         assert_eq!(
             post_logout_json["error_code"],
             Value::String("not_logged_in".to_string())
+        );
+    }
+
+    #[tokio::test]
+    async fn internal_rest_dispatch_cookie_auth_rejects_stale_session_after_logout() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+
+        let pre_logout = internal_rest_dispatch(
+            State(state.clone()),
+            Query(InternalRestDispatchQuery {
+                method: Some("GET".to_string()),
+                path: Some("/wp-json/wp/v2/users/me".to_string()),
+                authenticated: None,
+                use_cookie_auth: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/rest-dispatch")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let pre_logout_json = response_json(pre_logout).await;
+        assert_eq!(pre_logout_json["status_code"], Value::from(200));
+
+        let logout_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout = internal_rest_dispatch(
+            State(state),
+            Query(InternalRestDispatchQuery {
+                method: Some("GET".to_string()),
+                path: Some("/wp-json/wp/v2/users/me".to_string()),
+                authenticated: None,
+                use_cookie_auth: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/rest-dispatch")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let post_logout_json = response_json(post_logout).await;
+        assert_eq!(post_logout_json["status_code"], Value::from(401));
+        assert_eq!(
+            post_logout_json["error_code"],
+            Value::String("rest_not_logged_in".to_string())
         );
     }
 
