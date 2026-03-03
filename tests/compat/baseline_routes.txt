@@ -2166,6 +2166,8 @@ GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blog
 GET /__wp_rust/internal/multisite-resolve?domain=EXAMPLE.COM%3A8080&path=/
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=//blog//hello-world
 GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=/blogger/post
+GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=%2Fblog%2Fhello-world%3Fpreview%3Dtrue
+GET /__wp_rust/internal/multisite-resolve?domain=example.com&path=%2Fblog%2Fhello-world%23section
 GET /__wp_rust/internal/multisite-resolve?domain=invalid.example&path=/
 GET /__wp_rust/internal/cron-schedule?hook=unschedule_hook&timestamp=1999999700&schedule=hourly&args=clear
 DELETE /__wp_rust/internal/cron-unschedule?hook=unschedule_hook&timestamp=1999999700&args=clear

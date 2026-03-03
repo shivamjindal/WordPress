@@ -578,7 +578,9 @@ fn normalize_network_domain(domain: &str) -> String {
 }
 
 fn normalize_network_path(path: &str) -> String {
-    let trimmed = path.trim();
+    let raw = path.trim();
+    let cutoff = raw.find(['?', '#']).unwrap_or(raw.len());
+    let trimmed = raw[..cutoff].trim();
     if trimmed.is_empty() || trimmed == "/" {
         return "/".to_string();
     }
@@ -1124,5 +1126,37 @@ mod tests {
             .resolve("example.com", "/blogger/post")
             .expect("root site should resolve");
         assert_eq!(resolved.blog_id, 1);
+    }
+
+    #[test]
+    fn resolves_multisite_path_when_request_path_includes_query_suffix() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "/blog/".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blog/hello-world?preview=true")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 2);
+    }
+
+    #[test]
+    fn resolves_multisite_path_when_request_path_includes_fragment_suffix() {
+        let mut resolver = MultisiteResolver::default();
+        resolver.register_site(NetworkSite {
+            blog_id: 2,
+            domain: "example.com".to_string(),
+            path: "/blog/".to_string(),
+            is_public: true,
+        });
+
+        let resolved = resolver
+            .resolve("example.com", "/blog/hello-world#section")
+            .expect("site should resolve");
+        assert_eq!(resolved.blog_id, 2);
     }
 }

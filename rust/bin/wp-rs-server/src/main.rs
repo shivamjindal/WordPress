@@ -26364,6 +26364,38 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn multisite_resolve_ignores_query_suffix_in_path() {
+        let state = build_app_state();
+        let response = internal_multisite_resolve(
+            State(state),
+            Query(InternalMultisiteResolveQuery {
+                domain: Some("example.com".to_string()),
+                path: Some("/blog/hello-world?preview=true".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["resolved"]["blog_id"], Value::from(2));
+    }
+
+    #[tokio::test]
+    async fn multisite_resolve_ignores_fragment_suffix_in_path() {
+        let state = build_app_state();
+        let response = internal_multisite_resolve(
+            State(state),
+            Query(InternalMultisiteResolveQuery {
+                domain: Some("example.com".to_string()),
+                path: Some("/blog/hello-world#section".to_string()),
+            }),
+        )
+        .await
+        .into_response();
+        let json = response_json(response).await;
+        assert_eq!(json["resolved"]["blog_id"], Value::from(2));
+    }
+
+    #[tokio::test]
     async fn hooks_all_mode_reports_action_and_filter_invocations() {
         let response = internal_hooks_contract(Query(InternalHooksQuery {
             mode: Some("all_hook".to_string()),
