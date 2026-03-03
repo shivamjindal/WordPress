@@ -71,6 +71,12 @@ pub fn parse_front_route(path: &str, query_string: &str) -> FrontRouteMatch {
     } else if let Some(search_term) = query_pairs.get("s").filter(|value| !value.is_empty()) {
         kind = FrontRouteKind::Search;
         query_vars.insert("s".to_string(), search_term.clone());
+    } else if let Some((search_term, paged)) = search_route_from_segments(&segments) {
+        kind = FrontRouteKind::Search;
+        query_vars.insert("s".to_string(), search_term);
+        if let Some(paged) = paged {
+            query_vars.insert("paged".to_string(), paged.to_string());
+        }
     } else if let Some(category_name) = query_pairs
         .get("category_name")
         .filter(|value| !value.is_empty())
@@ -485,6 +491,23 @@ fn taxonomy_archive_from_segments(segments: &[&str], base: &str) -> Option<(Stri
     None
 }
 
+fn search_route_from_segments(segments: &[&str]) -> Option<(String, Option<u32>)> {
+    if segments.len() == 2 && segments[0] == "search" && !segments[1].is_empty() {
+        return Some((segments[1].to_string(), None));
+    }
+
+    if segments.len() == 4
+        && segments[0] == "search"
+        && !segments[1].is_empty()
+        && segments[2] == "page"
+        && is_positive_integer(segments[3])
+    {
+        return Some((segments[1].to_string(), segments[3].parse::<u32>().ok()));
+    }
+
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -535,6 +558,21 @@ mod tests {
         let matched = parse_front_route("/", "s=wordpress");
         assert_eq!(matched.kind, FrontRouteKind::Search);
         assert_eq!(matched.query_vars.get("s"), Some(&"wordpress".to_string()));
+    }
+
+    #[test]
+    fn parses_search_route_from_path_segments() {
+        let matched = parse_front_route("/search/wordpress", "");
+        assert_eq!(matched.kind, FrontRouteKind::Search);
+        assert_eq!(matched.query_vars.get("s"), Some(&"wordpress".to_string()));
+    }
+
+    #[test]
+    fn parses_search_route_from_path_segments_with_pagination() {
+        let matched = parse_front_route("/search/wordpress/page/3", "");
+        assert_eq!(matched.kind, FrontRouteKind::Search);
+        assert_eq!(matched.query_vars.get("s"), Some(&"wordpress".to_string()));
+        assert_eq!(matched.query_vars.get("paged"), Some(&"3".to_string()));
     }
 
     #[test]
