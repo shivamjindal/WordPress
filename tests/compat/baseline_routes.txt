@@ -2069,6 +2069,7 @@ GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=logged-out
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true&nonce_valid=false
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true&nonce_valid=true
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&use_cookie_auth=true&nonce_present=true&nonce_valid=true
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=false
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true&capabilities=edit_posts
@@ -2098,6 +2099,7 @@ GET /__wp_rust/internal/hooks?mode=remove_priority
 GET /__wp_rust/internal/admin-contract
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=false
 GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&authenticated=true
+GET /__wp_rust/internal/xmlrpc-dispatch?method=wp.getUsersBlogs&use_cookie_auth=true
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3Edemo.sayHello%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-dispatch?payload=%3CmethodCall%3E%3CmethodName%3E%3C%2FmethodName%3E%3C%2FmethodCall%3E
 GET /__wp_rust/internal/xmlrpc-contract

@@ -23080,20 +23080,29 @@ struct InternalAdminDispatchQuery {
     surface: Option<String>,
     action: Option<String>,
     authenticated: Option<bool>,
+    use_cookie_auth: Option<bool>,
     nonce_present: Option<bool>,
     nonce_valid: Option<bool>,
     capabilities: Option<String>,
 }
 
 async fn internal_admin_dispatch(
+    State(state): State<AppState>,
     Query(query): Query<InternalAdminDispatchQuery>,
+    raw_request: Request,
 ) -> impl IntoResponse {
     let registry = core_admin_actions();
     let surface = parse_admin_surface(query.surface.as_deref()).unwrap_or(AdminSurface::Ajax);
-    let mut request = AdminRequest::new(surface, query.action.unwrap_or_default());
-    request.authenticated = query.authenticated.unwrap_or(false);
-    request.nonce_present = query.nonce_present.unwrap_or(false);
-    request.nonce_valid = query.nonce_valid.unwrap_or(request.nonce_present);
+    let mut admin_request = AdminRequest::new(surface, query.action.unwrap_or_default());
+    admin_request.authenticated = if let Some(authenticated) = query.authenticated {
+        authenticated
+    } else if query.use_cookie_auth.unwrap_or(false) {
+        auth_context_from_headers_with_active_sessions(raw_request.headers(), &state).0
+    } else {
+        false
+    };
+    admin_request.nonce_present = query.nonce_present.unwrap_or(false);
+    admin_request.nonce_valid = query.nonce_valid.unwrap_or(admin_request.nonce_present);
 
     if let Some(capabilities) = query.capabilities {
         for capability in capabilities
@@ -23101,11 +23110,11 @@ async fn internal_admin_dispatch(
             .map(str::trim)
             .filter(|value| !value.is_empty())
         {
-            request.capabilities.insert(capability.to_string());
+            admin_request.capabilities.insert(capability.to_string());
         }
     }
 
-    let result = registry.dispatch(&request);
+    let result = registry.dispatch(&admin_request);
     rust_handled_json(result)
 }
 
@@ -23119,13 +23128,22 @@ struct InternalXmlRpcDispatchQuery {
     method: Option<String>,
     payload: Option<String>,
     authenticated: Option<bool>,
+    use_cookie_auth: Option<bool>,
 }
 
 async fn internal_xmlrpc_dispatch(
+    State(state): State<AppState>,
     Query(query): Query<InternalXmlRpcDispatchQuery>,
+    request: Request,
 ) -> impl IntoResponse {
     let registry = core_xmlrpc_registry();
-    let authenticated = query.authenticated.unwrap_or(false);
+    let authenticated = if let Some(value) = query.authenticated {
+        value
+    } else if query.use_cookie_auth.unwrap_or(false) {
+        auth_context_from_headers_with_active_sessions(request.headers(), &state).0
+    } else {
+        false
+    };
     let method_name = query.method.or_else(|| {
         query
             .payload
@@ -25229,14 +25247,22 @@ mod tests {
 
     #[tokio::test]
     async fn internal_admin_dispatch_distinguishes_nonce_presence_and_validity() {
-        let invalid_response = internal_admin_dispatch(Query(InternalAdminDispatchQuery {
-            surface: Some("ajax".to_string()),
-            action: Some("heartbeat".to_string()),
-            authenticated: Some(true),
-            nonce_present: Some(true),
-            nonce_valid: Some(false),
-            capabilities: None,
-        }))
+        let invalid_response = internal_admin_dispatch(
+            State(build_app_state()),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("heartbeat".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                nonce_present: Some(true),
+                nonce_valid: Some(false),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
         .await
         .into_response();
         let invalid_json = response_json(invalid_response).await;
@@ -25246,19 +25272,111 @@ mod tests {
             Value::String("invalid_nonce".to_string())
         );
 
-        let valid_response = internal_admin_dispatch(Query(InternalAdminDispatchQuery {
-            surface: Some("ajax".to_string()),
-            action: Some("heartbeat".to_string()),
-            authenticated: Some(true),
-            nonce_present: Some(true),
-            nonce_valid: Some(true),
-            capabilities: None,
-        }))
+        let valid_response = internal_admin_dispatch(
+            State(build_app_state()),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("heartbeat".to_string()),
+                authenticated: Some(true),
+                use_cookie_auth: None,
+                nonce_present: Some(true),
+                nonce_valid: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
         .await
         .into_response();
         let valid_json = response_json(valid_response).await;
         assert_eq!(valid_json["status_code"], Value::from(200));
         assert_eq!(valid_json["error_code"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn internal_admin_dispatch_cookie_auth_rejects_stale_session_after_logout() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+
+        let pre_logout = internal_admin_dispatch(
+            State(state.clone()),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("heartbeat".to_string()),
+                authenticated: None,
+                use_cookie_auth: Some(true),
+                nonce_present: Some(true),
+                nonce_valid: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let pre_logout_json = response_json(pre_logout).await;
+        assert_eq!(pre_logout_json["status_code"], Value::from(200));
+
+        let logout_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout = internal_admin_dispatch(
+            State(state),
+            Query(InternalAdminDispatchQuery {
+                surface: Some("ajax".to_string()),
+                action: Some("heartbeat".to_string()),
+                authenticated: None,
+                use_cookie_auth: Some(true),
+                nonce_present: Some(true),
+                nonce_valid: Some(true),
+                capabilities: None,
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/admin-dispatch")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let post_logout_json = response_json(post_logout).await;
+        assert_eq!(post_logout_json["status_code"], Value::from(401));
+        assert_eq!(
+            post_logout_json["error_code"],
+            Value::String("not_logged_in".to_string())
+        );
     }
 
     #[tokio::test]
@@ -25324,6 +25442,82 @@ mod tests {
         .await
         .into_response();
         assert_eq!(post_logout_response.status(), StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
+    async fn internal_xmlrpc_dispatch_cookie_auth_rejects_stale_session_after_logout() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+
+        let pre_logout_response = internal_xmlrpc_dispatch(
+            State(state.clone()),
+            Query(InternalXmlRpcDispatchQuery {
+                method: Some("wp.getUsersBlogs".to_string()),
+                payload: None,
+                authenticated: None,
+                use_cookie_auth: Some(true),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let pre_logout_json = response_json(pre_logout_response).await;
+        assert_eq!(pre_logout_json["status_code"], Value::from(200));
+        assert_eq!(pre_logout_json["result"]["success"], Value::Bool(true));
+
+        let logout_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_response = internal_xmlrpc_dispatch(
+            State(state),
+            Query(InternalXmlRpcDispatchQuery {
+                method: Some("wp.getUsersBlogs".to_string()),
+                payload: None,
+                authenticated: None,
+                use_cookie_auth: Some(true),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/xmlrpc-dispatch")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let post_logout_json = response_json(post_logout_response).await;
+        assert_eq!(post_logout_json["status_code"], Value::from(403));
+        assert_eq!(post_logout_json["result"]["success"], Value::Bool(false));
     }
 
     #[tokio::test]
