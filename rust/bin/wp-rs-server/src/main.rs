@@ -25228,6 +25228,105 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn internal_admin_dispatch_distinguishes_nonce_presence_and_validity() {
+        let invalid_response = internal_admin_dispatch(Query(InternalAdminDispatchQuery {
+            surface: Some("ajax".to_string()),
+            action: Some("heartbeat".to_string()),
+            authenticated: Some(true),
+            nonce_present: Some(true),
+            nonce_valid: Some(false),
+            capabilities: None,
+        }))
+        .await
+        .into_response();
+        let invalid_json = response_json(invalid_response).await;
+        assert_eq!(invalid_json["status_code"], Value::from(403));
+        assert_eq!(
+            invalid_json["error_code"],
+            Value::String("invalid_nonce".to_string())
+        );
+
+        let valid_response = internal_admin_dispatch(Query(InternalAdminDispatchQuery {
+            surface: Some("ajax".to_string()),
+            action: Some("heartbeat".to_string()),
+            authenticated: Some(true),
+            nonce_present: Some(true),
+            nonce_valid: Some(true),
+            capabilities: None,
+        }))
+        .await
+        .into_response();
+        let valid_json = response_json(valid_response).await;
+        assert_eq!(valid_json["status_code"], Value::from(200));
+        assert_eq!(valid_json["error_code"], Value::Null);
+    }
+
+    #[tokio::test]
+    async fn xmlrpc_rejects_stale_cookie_after_logout() {
+        let state = build_app_state();
+        let login_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/wp-login.php")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .body(axum::body::Body::from(
+                    "log=editor&pwd=password123&user_id=7".to_string(),
+                ))
+                .expect("request should build"),
+        )
+        .await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include cookie");
+        let payload = "<methodCall><methodName>wp.getUsersBlogs</methodName></methodCall>";
+
+        let pre_logout_response = xmlrpc_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/xmlrpc.php")
+                .header("content-type", "text/xml")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::from(payload.to_string()))
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(pre_logout_response.status(), StatusCode::OK);
+
+        let logout_response = login_live_dispatch(
+            State(state.clone()),
+            Request::builder()
+                .method(axum::http::Method::GET)
+                .uri("/wp-login.php?action=logout")
+                .header("cookie", login_cookie.clone())
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_response = xmlrpc_live_dispatch(
+            State(state),
+            Request::builder()
+                .method(axum::http::Method::POST)
+                .uri("/xmlrpc.php")
+                .header("content-type", "text/xml")
+                .header("cookie", login_cookie)
+                .body(axum::body::Body::from(payload.to_string()))
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(post_logout_response.status(), StatusCode::FORBIDDEN);
+    }
+
+    #[tokio::test]
     async fn admin_dashboard_rejects_cookie_after_logout_session_invalidation() {
         let state = build_app_state();
         let login_request = Request::builder()

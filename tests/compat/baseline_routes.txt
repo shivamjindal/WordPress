@@ -2067,6 +2067,8 @@ GET /__wp_rust/internal/nonce?action=save-post&verify_action=save-post&user_id=7
 GET /__wp_rust/internal/nonce?action=save-post&verify_action=save-post&user_id=7&token=abc123&now=2000000000&verify_now=2000086400
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=logged-out
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true&nonce_valid=false
+GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=true&nonce_valid=true
 GET /__wp_rust/internal/admin-dispatch?surface=ajax&action=heartbeat&authenticated=true&nonce_present=false
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true
 GET /__wp_rust/internal/admin-dispatch?surface=admin-post&action=save_post&authenticated=true&nonce_present=true&capabilities=edit_posts
