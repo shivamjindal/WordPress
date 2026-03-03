@@ -17,7 +17,7 @@ use tracing::{error, info};
 use wp_rs_admin::{core_admin_actions, AdminRequest, AdminSurface};
 use wp_rs_auth::{
     cookie_constants, password_needs_rehash, resolve_current_user, sign_auth_cookie,
-    verify_password, AuthScheme, AuthSecrets, NonceService,
+    verify_password, AuthScheme, AuthSecrets, NonceService, SessionTokenStore,
 };
 use wp_rs_config::{
     php_runtime_core_endpoints, RuntimeProfile, RustGatewaySettings, WordPressConstants,
@@ -39,6 +39,7 @@ use wp_rs_rest::{core_seed_routes, RestRequest};
 struct AppState {
     options: Arc<Mutex<OptionStore>>,
     object_cache: Arc<Mutex<ObjectCache>>,
+    session_tokens: Arc<Mutex<SessionTokenStore>>,
     auth_secrets: AuthSecrets,
     nonce_service: NonceService,
     cron_scheduler: Arc<Mutex<CronScheduler>>,
@@ -21883,6 +21884,7 @@ fn build_app_state() -> AppState {
     AppState {
         options: Arc::new(Mutex::new(options)),
         object_cache: Arc::new(Mutex::new(ObjectCache::default())),
+        session_tokens: Arc::new(Mutex::new(SessionTokenStore::default())),
         auth_secrets: AuthSecrets::default(),
         nonce_service: NonceService::default(),
         cron_scheduler: Arc::new(Mutex::new(scheduler)),
@@ -22607,6 +22609,12 @@ async fn internal_auth_cookie_constants(
 
 #[derive(Debug, Deserialize)]
 struct InternalAuthSessionQuery {
+    action: Option<String>,
+    user_id: Option<u64>,
+    token: Option<String>,
+    expiration: Option<u64>,
+    ip: Option<String>,
+    user_agent: Option<String>,
     now: Option<u64>,
 }
 
@@ -22614,19 +22622,136 @@ async fn internal_auth_session(
     State(state): State<AppState>,
     Query(query): Query<InternalAuthSessionQuery>,
     request: Request,
-) -> impl IntoResponse {
+) -> Response {
     let now = query.now.unwrap_or_else(unix_now);
-    let cookie_header = request
-        .headers()
-        .get("cookie")
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or_default();
-    let resolved = resolve_current_user(cookie_header, now, &state.auth_secrets);
+    let action = query.action.unwrap_or_else(|| "resolve".to_string());
 
-    rust_handled_json(json!({
-        "cookie_header_present": !cookie_header.is_empty(),
-        "resolved": resolved,
-    }))
+    match action.as_str() {
+        "resolve" => {
+            let cookie_header = request
+                .headers()
+                .get("cookie")
+                .and_then(|value| value.to_str().ok())
+                .unwrap_or_default();
+            let resolved = resolve_current_user(cookie_header, now, &state.auth_secrets);
+
+            return rust_handled_json(json!({
+                "action": "resolve",
+                "cookie_header_present": !cookie_header.is_empty(),
+                "resolved": resolved,
+            }))
+            .into_response();
+        }
+        "create" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let token = query.token.unwrap_or_else(|| "session-token".to_string());
+            let expiration = query.expiration.unwrap_or(now.saturating_add(3600));
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let changed = sessions.upsert_session(
+                user_id,
+                &token,
+                expiration,
+                now,
+                query.ip,
+                query.user_agent,
+            );
+            let session = sessions.verify_session(user_id, &token, now);
+            let active_sessions = sessions.count_active_sessions(user_id, now);
+            return rust_handled_json(json!({
+                "action": "create",
+                "user_id": user_id,
+                "token": token,
+                "expiration": expiration,
+                "changed": changed,
+                "active_sessions": active_sessions,
+                "session": session,
+            }))
+            .into_response();
+        }
+        "verify" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let token = query.token.unwrap_or_else(|| "session-token".to_string());
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let session = sessions.verify_session(user_id, &token, now);
+            let active_sessions = sessions.count_active_sessions(user_id, now);
+            return rust_handled_json(json!({
+                "action": "verify",
+                "user_id": user_id,
+                "token": token,
+                "valid": session.is_some(),
+                "active_sessions": active_sessions,
+                "session": session,
+            }))
+            .into_response();
+        }
+        "destroy" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let token = query.token.unwrap_or_else(|| "session-token".to_string());
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let removed = sessions.destroy_session(user_id, &token);
+            let active_sessions = sessions.count_active_sessions(user_id, now);
+            return rust_handled_json(json!({
+                "action": "destroy",
+                "user_id": user_id,
+                "token": token,
+                "removed": removed,
+                "active_sessions": active_sessions,
+            }))
+            .into_response();
+        }
+        "destroy_others" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let token = query.token.unwrap_or_else(|| "session-token".to_string());
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let removed_count = sessions.destroy_other_sessions(user_id, &token, now);
+            let active_sessions = sessions.count_active_sessions(user_id, now);
+            return rust_handled_json(json!({
+                "action": "destroy_others",
+                "user_id": user_id,
+                "token": token,
+                "removed_count": removed_count,
+                "active_sessions": active_sessions,
+            }))
+            .into_response();
+        }
+        "destroy_all" => {
+            let user_id = query.user_id.unwrap_or(1);
+            let mut sessions = state
+                .session_tokens
+                .lock()
+                .expect("session token mutex poisoned");
+            let removed_count = sessions.destroy_all_sessions(user_id);
+            return rust_handled_json(json!({
+                "action": "destroy_all",
+                "user_id": user_id,
+                "removed_count": removed_count,
+                "active_sessions": 0,
+            }))
+            .into_response();
+        }
+        _ => {
+            return rust_handled_json_with_status(
+                StatusCode::BAD_REQUEST,
+                json!({
+                    "error": "invalid_auth_session_action",
+                    "message": "auth-session action must be one of resolve, create, verify, destroy, destroy_others, destroy_all.",
+                }),
+            )
+            .into_response();
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -24479,6 +24604,150 @@ mod tests {
         let json = response_json(response).await;
         assert_eq!(json["encode_cookie"], Value::Bool(true));
         assert_eq!(json["resolved"]["user_id"], Value::from(7));
+    }
+
+    #[tokio::test]
+    async fn auth_session_create_verify_and_destroy_other_tokens() {
+        let state = build_app_state();
+
+        let create_alpha = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("create".to_string()),
+                user_id: Some(7),
+                token: Some("alpha".to_string()),
+                expiration: Some(2_000_003_600),
+                ip: Some("127.0.0.1".to_string()),
+                user_agent: Some("Firefox".to_string()),
+                now: Some(2_000_000_000),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let create_alpha_json = response_json(create_alpha).await;
+        assert_eq!(create_alpha_json["changed"], Value::Bool(true));
+        assert_eq!(create_alpha_json["active_sessions"], Value::from(1));
+        assert_eq!(
+            create_alpha_json["session"]["ip"],
+            Value::String("127.0.0.1".to_string())
+        );
+
+        let create_beta = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("create".to_string()),
+                user_id: Some(7),
+                token: Some("beta".to_string()),
+                expiration: Some(2_000_003_600),
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_000),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let create_beta_json = response_json(create_beta).await;
+        assert_eq!(create_beta_json["active_sessions"], Value::from(2));
+
+        let destroy_others = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("destroy_others".to_string()),
+                user_id: Some(7),
+                token: Some("beta".to_string()),
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_001),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let destroy_others_json = response_json(destroy_others).await;
+        assert_eq!(destroy_others_json["removed_count"], Value::from(1));
+        assert_eq!(destroy_others_json["active_sessions"], Value::from(1));
+
+        let verify_alpha = internal_auth_session(
+            State(state.clone()),
+            Query(InternalAuthSessionQuery {
+                action: Some("verify".to_string()),
+                user_id: Some(7),
+                token: Some("alpha".to_string()),
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_001),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let verify_alpha_json = response_json(verify_alpha).await;
+        assert_eq!(verify_alpha_json["valid"], Value::Bool(false));
+
+        let verify_beta = internal_auth_session(
+            State(state),
+            Query(InternalAuthSessionQuery {
+                action: Some("verify".to_string()),
+                user_id: Some(7),
+                token: Some("beta".to_string()),
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_001),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        let verify_beta_json = response_json(verify_beta).await;
+        assert_eq!(verify_beta_json["valid"], Value::Bool(true));
+    }
+
+    #[tokio::test]
+    async fn auth_session_rejects_invalid_action() {
+        let response = internal_auth_session(
+            State(build_app_state()),
+            Query(InternalAuthSessionQuery {
+                action: Some("unsupported".to_string()),
+                user_id: None,
+                token: None,
+                expiration: None,
+                ip: None,
+                user_agent: None,
+                now: Some(2_000_000_000),
+            }),
+            Request::builder()
+                .uri("/__wp_rust/internal/auth-session")
+                .body(axum::body::Body::empty())
+                .expect("request should build"),
+        )
+        .await
+        .into_response();
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        let json = response_json(response).await;
+        assert_eq!(
+            json["error"],
+            Value::String("invalid_auth_session_action".to_string())
+        );
     }
 
     #[tokio::test]

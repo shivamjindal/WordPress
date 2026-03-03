@@ -6,6 +6,7 @@ use base64::Engine;
 use bcrypt::verify as bcrypt_verify;
 use hmac::{Hmac, Mac};
 use serde::Serialize;
+use sha2::Digest;
 use sha2::{Sha256, Sha384};
 use thiserror::Error;
 
@@ -366,6 +367,120 @@ fn decode_cookie_value(value: &str) -> String {
         .unwrap_or_else(|| value.to_string())
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct SessionTokenEntry {
+    pub expiration: u64,
+    pub login: u64,
+    pub ip: Option<String>,
+    pub user_agent: Option<String>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct SessionTokenStore {
+    sessions: HashMap<u64, HashMap<String, SessionTokenEntry>>,
+}
+
+impl SessionTokenStore {
+    pub fn upsert_session(
+        &mut self,
+        user_id: u64,
+        token: &str,
+        expiration: u64,
+        now_timestamp: u64,
+        ip: Option<String>,
+        user_agent: Option<String>,
+    ) -> bool {
+        self.prune_expired_for_user(user_id, now_timestamp);
+        let verifier = session_token_verifier(token);
+        let entry = SessionTokenEntry {
+            expiration,
+            login: now_timestamp,
+            ip,
+            user_agent,
+        };
+
+        let user_sessions = self.sessions.entry(user_id).or_default();
+        let changed = user_sessions.get(&verifier) != Some(&entry);
+        user_sessions.insert(verifier, entry);
+        changed
+    }
+
+    pub fn verify_session(
+        &mut self,
+        user_id: u64,
+        token: &str,
+        now_timestamp: u64,
+    ) -> Option<SessionTokenEntry> {
+        self.prune_expired_for_user(user_id, now_timestamp);
+        self.sessions
+            .get(&user_id)
+            .and_then(|sessions| sessions.get(&session_token_verifier(token)).cloned())
+    }
+
+    pub fn destroy_session(&mut self, user_id: u64, token: &str) -> bool {
+        let verifier = session_token_verifier(token);
+        let removed = self
+            .sessions
+            .get_mut(&user_id)
+            .and_then(|sessions| sessions.remove(&verifier))
+            .is_some();
+        if self.sessions.get(&user_id).is_some_and(HashMap::is_empty) {
+            self.sessions.remove(&user_id);
+        }
+        removed
+    }
+
+    pub fn destroy_other_sessions(
+        &mut self,
+        user_id: u64,
+        token: &str,
+        now_timestamp: u64,
+    ) -> usize {
+        self.prune_expired_for_user(user_id, now_timestamp);
+        let verifier = session_token_verifier(token);
+        let Some(sessions) = self.sessions.get_mut(&user_id) else {
+            return 0;
+        };
+
+        let before = sessions.len();
+        sessions.retain(|stored_verifier, _| stored_verifier == &verifier);
+        let removed = before.saturating_sub(sessions.len());
+        if sessions.is_empty() {
+            self.sessions.remove(&user_id);
+        }
+        removed
+    }
+
+    pub fn destroy_all_sessions(&mut self, user_id: u64) -> usize {
+        self.sessions
+            .remove(&user_id)
+            .map_or(0, |sessions| sessions.len())
+    }
+
+    pub fn count_active_sessions(&mut self, user_id: u64, now_timestamp: u64) -> usize {
+        self.prune_expired_for_user(user_id, now_timestamp);
+        self.sessions.get(&user_id).map_or(0, HashMap::len)
+    }
+
+    fn prune_expired_for_user(&mut self, user_id: u64, now_timestamp: u64) -> usize {
+        let Some(sessions) = self.sessions.get_mut(&user_id) else {
+            return 0;
+        };
+
+        let before = sessions.len();
+        sessions.retain(|_, session| session.expiration > now_timestamp);
+        let removed = before.saturating_sub(sessions.len());
+        if sessions.is_empty() {
+            self.sessions.remove(&user_id);
+        }
+        removed
+    }
+}
+
+fn session_token_verifier(token: &str) -> String {
+    format!("{:x}", Sha256::digest(token.as_bytes()))
+}
+
 #[derive(Debug, Clone)]
 pub struct NonceService {
     pub nonce_life: Duration,
@@ -671,6 +786,68 @@ mod tests {
             service.verify_nonce_code(&nonce, "save-post", 7, "token", half_life + 1),
             Some(2)
         );
+    }
+
+    #[test]
+    fn session_token_store_round_trips_and_removes_sessions() {
+        let mut sessions = SessionTokenStore::default();
+        assert!(sessions.upsert_session(
+            7,
+            "session-a",
+            2_000_003_600,
+            2_000_000_000,
+            Some("127.0.0.1".to_string()),
+            Some("Firefox".to_string())
+        ));
+
+        let stored = sessions
+            .verify_session(7, "session-a", 2_000_000_001)
+            .expect("session should verify");
+        assert_eq!(stored.expiration, 2_000_003_600);
+        assert_eq!(stored.ip, Some("127.0.0.1".to_string()));
+        assert_eq!(sessions.count_active_sessions(7, 2_000_000_001), 1);
+
+        assert!(sessions.destroy_session(7, "session-a"));
+        assert!(sessions
+            .verify_session(7, "session-a", 2_000_000_001)
+            .is_none());
+    }
+
+    #[test]
+    fn session_token_store_prunes_expired_sessions() {
+        let mut sessions = SessionTokenStore::default();
+        sessions.upsert_session(
+            7,
+            "session-expired",
+            2_000_000_010,
+            2_000_000_000,
+            None,
+            None,
+        );
+        assert!(sessions
+            .verify_session(7, "session-expired", 2_000_000_011)
+            .is_none());
+        assert_eq!(sessions.count_active_sessions(7, 2_000_000_011), 0);
+    }
+
+    #[test]
+    fn session_token_store_can_destroy_other_sessions() {
+        let mut sessions = SessionTokenStore::default();
+        sessions.upsert_session(7, "session-a", 2_000_003_600, 2_000_000_000, None, None);
+        sessions.upsert_session(7, "session-b", 2_000_003_600, 2_000_000_000, None, None);
+        sessions.upsert_session(7, "session-c", 2_000_003_600, 2_000_000_000, None, None);
+
+        let removed = sessions.destroy_other_sessions(7, "session-b", 2_000_000_100);
+        assert_eq!(removed, 2);
+        assert!(sessions
+            .verify_session(7, "session-b", 2_000_000_100)
+            .is_some());
+        assert!(sessions
+            .verify_session(7, "session-a", 2_000_000_100)
+            .is_none());
+        assert!(sessions
+            .verify_session(7, "session-c", 2_000_000_100)
+            .is_none());
     }
 
     #[test]
