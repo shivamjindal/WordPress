@@ -8153,7 +8153,7 @@ async fn user_admin_bootstrap_live_dispatch(
     request: Request,
 ) -> Response {
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !authenticated {
         return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fuser%2Fadmin.php")
             .into_response();
@@ -8170,7 +8170,7 @@ async fn user_admin_bootstrap_live_dispatch(
 
 async fn user_dashboard_live_dispatch(State(state): State<AppState>, request: Request) -> Response {
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
 
     if !authenticated {
         return rust_handled_redirect("/wp-login.php?redirect_to=%2Fwp-admin%2Fuser%2F")
@@ -8202,7 +8202,7 @@ async fn user_profile_live_dispatch(State(state): State<AppState>, request: Requ
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_view_profile = authenticated
         && (capabilities.contains("read")
             || capabilities.contains("edit_user")
@@ -8245,7 +8245,7 @@ async fn user_user_edit_live_dispatch(State(state): State<AppState>, request: Re
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_users = authenticated
         && (capabilities.contains("edit_users")
             || capabilities.contains("edit_user")
@@ -8334,7 +8334,7 @@ async fn user_information_page_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_view = authenticated
         && (capabilities.contains("read")
             || capabilities.contains("manage_options")
@@ -8367,7 +8367,7 @@ async fn profile_live_dispatch(State(state): State<AppState>, request: Request) 
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_view_profile = authenticated
         && (capabilities.contains("read")
             || capabilities.contains("edit_user")
@@ -8410,7 +8410,7 @@ async fn user_edit_live_dispatch(State(state): State<AppState>, request: Request
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_users = authenticated
         && (capabilities.contains("edit_users")
             || capabilities.contains("edit_user")
@@ -8468,7 +8468,7 @@ async fn user_new_live_dispatch(State(state): State<AppState>, request: Request)
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_create_users = authenticated
         && (capabilities.contains("create_users")
             || capabilities.contains("promote_users")
@@ -8535,7 +8535,7 @@ async fn post_new_live_dispatch(State(state): State<AppState>, request: Request)
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_create_posts = authenticated
         && (capabilities.contains("create_posts")
             || capabilities.contains("edit_posts")
@@ -8600,7 +8600,7 @@ async fn post_live_dispatch(State(state): State<AppState>, request: Request) -> 
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_posts = authenticated
         && (capabilities.contains("edit_posts")
             || capabilities.contains("create_posts")
@@ -8797,7 +8797,7 @@ async fn options_live_dispatch(State(state): State<AppState>, request: Request) 
     let (parts, body) = request.into_parts();
     let method = parts.method.clone();
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage = authenticated && capabilities.contains("manage_options");
 
     if !can_manage {
@@ -8877,7 +8877,7 @@ async fn options_general_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !(authenticated && capabilities.contains("manage_options")) {
         return rust_handled_json_with_status(
             StatusCode::FORBIDDEN,
@@ -9337,7 +9337,7 @@ async fn plugin_install_live_dispatch(State(state): State<AppState>, request: Re
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_install_plugins = authenticated
         && (capabilities.contains("install_plugins")
             || capabilities.contains("manage_options")
@@ -9394,7 +9394,7 @@ async fn plugin_editor_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_plugins = authenticated
         && (capabilities.contains("edit_plugins")
             || capabilities.contains("manage_options")
@@ -9458,7 +9458,7 @@ async fn theme_install_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_install_themes = authenticated
         && (capabilities.contains("install_themes")
             || capabilities.contains("manage_options")
@@ -11709,7 +11709,7 @@ async fn network_admin_bootstrap_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     if !authenticated {
         return rust_handled_redirect(
             "/wp-login.php?redirect_to=%2Fwp-admin%2Fnetwork%2Fadmin.php",
@@ -11757,7 +11757,7 @@ async fn network_index_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(request.headers(), &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(request.headers(), &state);
     let can_manage_network = authenticated
         && (capabilities.contains("manage_network") || capabilities.contains("manage_options"));
     if !can_manage_network {
@@ -24953,6 +24953,57 @@ mod tests {
                 .and_then(|value| value.to_str().ok()),
             Some("/wp-login.php?redirect_to=%2Fwp-admin%2F")
         );
+    }
+
+    #[tokio::test]
+    async fn network_index_rejects_stale_cookie_after_logout() {
+        let state = build_app_state();
+        let login_request = Request::builder()
+            .method(axum::http::Method::POST)
+            .uri("/wp-login.php")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .body(axum::body::Body::from(
+                "log=editor&pwd=password123&user_id=7".to_string(),
+            ))
+            .expect("request should build");
+        let login_response = login_live_dispatch(State(state.clone()), login_request).await;
+        let login_cookie = login_response
+            .headers()
+            .get("set-cookie")
+            .and_then(|value| value.to_str().ok())
+            .and_then(|value| value.split(';').next())
+            .map(str::to_string)
+            .expect("login response should include auth cookie");
+
+        let network_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/network/index.php")
+            .header("cookie", login_cookie.clone())
+            .header("x-wp-rust-capabilities", "manage_network")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let network_response = network_index_live_dispatch(State(state.clone()), network_request).await;
+        assert_eq!(network_response.status(), StatusCode::OK);
+
+        let logout_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-login.php?action=logout")
+            .header("cookie", login_cookie.clone())
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let logout_response = login_live_dispatch(State(state.clone()), logout_request).await;
+        assert_eq!(logout_response.status(), StatusCode::FOUND);
+
+        let post_logout_network_request = Request::builder()
+            .method(axum::http::Method::GET)
+            .uri("/wp-admin/network/index.php")
+            .header("cookie", login_cookie)
+            .header("x-wp-rust-capabilities", "manage_network")
+            .body(axum::body::Body::empty())
+            .expect("request should build");
+        let post_logout_network_response =
+            network_index_live_dispatch(State(state), post_logout_network_request).await;
+        assert_eq!(post_logout_network_response.status(), StatusCode::FORBIDDEN);
     }
 
     #[tokio::test]
