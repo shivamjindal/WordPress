@@ -117,6 +117,9 @@ impl RestRouteRegistry {
                     body: json!({
                         "code": "rest_no_route",
                         "message": "No route was found matching the URL and request method.",
+                        "data": {
+                            "status": 405,
+                        },
                         "allow": allowed_methods,
                     }),
                     error_code: Some("rest_no_route".to_string()),
@@ -198,6 +201,9 @@ impl RestDispatchResult {
             body: json!({
                 "code": error_code,
                 "message": message,
+                "data": {
+                    "status": status_code,
+                },
             }),
             error_code: Some(error_code.to_string()),
         }
@@ -421,6 +427,7 @@ mod tests {
         let request = RestRequest::new("POST", "/wp-json/wp/v2/posts");
         let result = registry.dispatch(&request);
         assert_eq!(result.status_code, 401);
+        assert_eq!(result.body["data"]["status"], Value::from(401));
     }
 
     #[test]
@@ -446,6 +453,7 @@ mod tests {
         let request = RestRequest::new("DELETE", "/wp-json/wp/v2/posts");
         let result = registry.dispatch(&request);
         assert_eq!(result.status_code, 405);
+        assert_eq!(result.body["data"]["status"], Value::from(405));
         let allow = result.body["allow"]
             .as_array()
             .expect("allow list should be present");
@@ -461,6 +469,7 @@ mod tests {
         let request = RestRequest::new("GET", "/wp-json/wp/v2/unknown");
         let result = registry.dispatch(&request);
         assert_eq!(result.status_code, 404);
+        assert_eq!(result.body["data"]["status"], Value::from(404));
     }
 
     #[test]
