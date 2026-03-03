@@ -9515,7 +9515,7 @@ async fn theme_editor_live_dispatch(State(state): State<AppState>, request: Requ
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_themes = authenticated
         && (capabilities.contains("edit_themes")
             || capabilities.contains("manage_options")
@@ -9579,7 +9579,7 @@ async fn widgets_live_dispatch(State(state): State<AppState>, request: Request) 
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_widgets = authenticated
         && (capabilities.contains("edit_theme_options")
             || capabilities.contains("manage_options")
@@ -9637,7 +9637,7 @@ async fn widgets_form_live_dispatch(State(state): State<AppState>, request: Requ
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_widgets = authenticated
         && (capabilities.contains("edit_theme_options")
             || capabilities.contains("manage_options")
@@ -9697,7 +9697,7 @@ async fn widgets_form_blocks_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_widgets = authenticated
         && (capabilities.contains("edit_theme_options")
             || capabilities.contains("manage_options")
@@ -9752,7 +9752,7 @@ async fn nav_menus_live_dispatch(State(state): State<AppState>, request: Request
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_menus = authenticated
         && (capabilities.contains("edit_theme_options")
             || capabilities.contains("manage_options")
@@ -9854,7 +9854,7 @@ async fn customize_live_dispatch(State(state): State<AppState>, request: Request
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_customize = authenticated
         && (capabilities.contains("customize")
             || capabilities.contains("edit_theme_options")
@@ -9919,7 +9919,7 @@ async fn authorize_application_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_authorize = authenticated
         && (capabilities.contains("read")
             || capabilities.contains("manage_options")
@@ -10003,7 +10003,7 @@ async fn site_editor_live_dispatch(State(state): State<AppState>, request: Reque
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_theme = authenticated
         && (capabilities.contains("edit_theme_options")
             || capabilities.contains("manage_options")
@@ -10078,7 +10078,7 @@ async fn press_this_live_dispatch(State(state): State<AppState>, request: Reques
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_press_this = authenticated
         && (capabilities.contains("edit_posts")
             || capabilities.contains("create_posts")
@@ -10135,7 +10135,7 @@ async fn term_live_dispatch(State(state): State<AppState>, request: Request) -> 
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_terms = authenticated
         && (capabilities.contains("manage_categories")
             || capabilities.contains("edit_posts")
@@ -11790,7 +11790,7 @@ async fn network_sites_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_sites = authenticated
         && (capabilities.contains("manage_sites")
             || capabilities.contains("manage_network")
@@ -11855,7 +11855,7 @@ async fn network_users_live_dispatch(State(state): State<AppState>, request: Req
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_network_users = authenticated
         && (capabilities.contains("manage_network_users")
             || capabilities.contains("manage_network")
@@ -11935,7 +11935,7 @@ async fn network_themes_live_dispatch(State(state): State<AppState>, request: Re
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_network_themes = authenticated
         && (capabilities.contains("manage_network_themes")
             || capabilities.contains("manage_network")
@@ -12012,7 +12012,7 @@ async fn network_plugins_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_network_plugins = authenticated
         && (capabilities.contains("manage_network_plugins")
             || capabilities.contains("manage_network")
@@ -12071,7 +12071,7 @@ async fn network_settings_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_network_options = authenticated
         && (capabilities.contains("manage_network_options")
             || capabilities.contains("manage_network")
@@ -12172,7 +12172,7 @@ async fn network_site_new_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_create_sites = authenticated
         && (capabilities.contains("create_sites")
             || capabilities.contains("manage_network")
@@ -12276,7 +12276,7 @@ async fn network_site_info_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_sites = authenticated
         && (capabilities.contains("manage_sites")
             || capabilities.contains("manage_network")
@@ -12361,7 +12361,7 @@ async fn network_site_settings_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_sites = authenticated
         && (capabilities.contains("manage_sites")
             || capabilities.contains("manage_network")
@@ -12468,7 +12468,7 @@ async fn network_site_users_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_sites = authenticated
         && (capabilities.contains("manage_sites")
             || capabilities.contains("manage_network")
@@ -12557,7 +12557,7 @@ async fn network_site_themes_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_sites = authenticated
         && (capabilities.contains("manage_sites")
             || capabilities.contains("manage_network")
@@ -12640,7 +12640,7 @@ async fn network_user_new_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_create_users = authenticated
         && (capabilities.contains("create_users")
             || capabilities.contains("manage_network_users")
@@ -12736,7 +12736,7 @@ async fn network_edit_live_dispatch(State(state): State<AppState>, request: Requ
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_network = authenticated
         && (capabilities.contains("manage_network") || capabilities.contains("manage_options"));
     if !can_manage_network {
@@ -12787,7 +12787,7 @@ async fn network_update_live_dispatch(State(state): State<AppState>, request: Re
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_update_network = authenticated
         && (capabilities.contains("update_plugins")
             || capabilities.contains("update_themes")
@@ -12846,7 +12846,7 @@ async fn network_update_core_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_update_core = authenticated
         && (capabilities.contains("update_core")
             || capabilities.contains("update_plugins")
@@ -12907,7 +12907,7 @@ async fn network_plugin_install_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_install_plugins = authenticated
         && (capabilities.contains("install_plugins")
             || capabilities.contains("manage_network_plugins")
@@ -12964,7 +12964,7 @@ async fn network_plugin_editor_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_plugins = authenticated
         && (capabilities.contains("edit_plugins")
             || capabilities.contains("manage_network_plugins")
@@ -13031,7 +13031,7 @@ async fn network_theme_editor_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_edit_themes = authenticated
         && (capabilities.contains("edit_themes")
             || capabilities.contains("manage_network_themes")
@@ -13098,7 +13098,7 @@ async fn network_privacy_live_dispatch(
     }
 
     let (authenticated, capabilities) =
-        auth_context_from_headers(&parts.headers, &state.auth_secrets);
+        auth_context_from_headers_with_active_sessions(&parts.headers, &state);
     let can_manage_privacy = authenticated
         && (capabilities.contains("manage_network_options")
             || capabilities.contains("manage_privacy_options")
