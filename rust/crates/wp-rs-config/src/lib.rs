@@ -158,7 +158,7 @@ impl RustGatewaySettings {
         })
     }
 
-    fn apply_profile_overrides(&mut self) {
+    pub fn apply_profile_overrides(&mut self) {
         if !self
             .deployment_profile
             .eq_ignore_ascii_case("production-rust")

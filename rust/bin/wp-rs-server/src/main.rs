@@ -24066,6 +24066,7 @@ async fn internal_plugin_compat_matrix(
             .map(|method| method.to_ascii_uppercase())
             .collect();
     }
+    settings.apply_profile_overrides();
 
     let core_endpoint_list = php_runtime_core_endpoints();
     let core_endpoints = core_endpoint_list
@@ -26767,16 +26768,34 @@ mod tests {
     #[tokio::test]
     async fn plugin_compat_matrix_query_overrides_can_report_cutover_ready() {
         let response = internal_plugin_compat_matrix(Query(InternalPluginCompatMatrixQuery {
-            enabled: Some("1".to_string()),
-            fallback_enabled: Some("0".to_string()),
+            enabled: None,
+            fallback_enabled: None,
             deployment_profile: Some("production-rust".to_string()),
-            plugin_compat_mode: Some("rust-only".to_string()),
-            endpoint_allowlist: Some("*".to_string()),
-            method_allowlist: Some("*".to_string()),
+            plugin_compat_mode: None,
+            endpoint_allowlist: None,
+            method_allowlist: None,
         }))
         .await
         .into_response();
         let json = response_json(response).await;
+        assert_eq!(
+            json["deployment_profile"],
+            Value::String("production-rust".to_string())
+        );
+        assert_eq!(json["endpoint_allowlist"], json!(["*"]));
+        assert_eq!(json["method_allowlist"], json!(["*"]));
+        assert_eq!(
+            json["plugin_compat_mode"],
+            Value::String("rust-only".to_string())
+        );
+        assert_eq!(
+            json["cutover_readiness"]["fallback_disabled"],
+            Value::Bool(true)
+        );
+        assert_eq!(
+            json["cutover_readiness"]["gateway_enabled"],
+            Value::Bool(true)
+        );
         assert_eq!(
             json["cutover_readiness"]["ready_for_full_cutover"],
             Value::Bool(true)
