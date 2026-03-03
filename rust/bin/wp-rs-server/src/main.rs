@@ -24061,6 +24061,26 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
         .filter(|endpoint| !settings.should_route(endpoint))
         .map(|endpoint| endpoint.to_string())
         .collect::<Vec<_>>();
+    let uncovered_wp_admin_count = uncovered_core_endpoints
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-admin/"))
+        .count();
+    let uncovered_wp_includes_count = uncovered_core_endpoints
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-includes/"))
+        .count();
+    let uncovered_wp_content_count = uncovered_core_endpoints
+        .iter()
+        .filter(|endpoint| endpoint.starts_with("/wp-content/"))
+        .count();
+    let uncovered_root_count = uncovered_core_endpoints
+        .iter()
+        .filter(|endpoint| {
+            !endpoint.starts_with("/wp-admin/")
+                && !endpoint.starts_with("/wp-includes/")
+                && !endpoint.starts_with("/wp-content/")
+        })
+        .count();
     let core_endpoint_total = core_endpoint_list.len();
     let core_endpoint_coverage_complete = core_routable_count == core_endpoint_total;
     let rust_only_plugins = !settings
@@ -24105,6 +24125,12 @@ async fn internal_plugin_compat_matrix() -> impl IntoResponse {
                 "complete": core_endpoint_coverage_complete,
                 "uncovered_count": uncovered_core_endpoints.len(),
                 "uncovered_examples": uncovered_core_endpoints.iter().take(10).cloned().collect::<Vec<_>>(),
+                "uncovered_family_counts": {
+                    "wp_admin": uncovered_wp_admin_count,
+                    "wp_includes": uncovered_wp_includes_count,
+                    "wp_content": uncovered_wp_content_count,
+                    "root": uncovered_root_count,
+                },
             },
             "ready_for_full_cutover": ready_for_full_cutover,
         },
@@ -26601,10 +26627,19 @@ mod tests {
             ["uncovered_examples"]
             .as_array()
             .expect("core endpoint uncovered examples should be an array");
+        let uncovered_family_counts = json["cutover_readiness"]["core_endpoint_coverage"]
+            ["uncovered_family_counts"]
+            .as_object()
+            .expect("core endpoint uncovered family counts should be an object");
         assert!(coverage_total > 0);
         assert!(coverage_routable <= coverage_total);
         assert_eq!(coverage_total, coverage_routable + uncovered_count);
         assert!(uncovered_examples.len() <= 10);
+        let uncovered_family_sum: u64 = uncovered_family_counts
+            .values()
+            .map(|value| value.as_u64().unwrap_or_default())
+            .sum();
+        assert_eq!(uncovered_family_sum, uncovered_count);
 
         let gateway_enabled = json["cutover_readiness"]["gateway_enabled"]
             .as_bool()

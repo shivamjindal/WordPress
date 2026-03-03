@@ -2100,6 +2100,7 @@ assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"cutover_readi
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"ready_for_full_cutover\""
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"uncovered_count\""
 assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"uncovered_examples\""
+assert_body_contains "/__wp_rust/internal/plugin-compat-matrix" "\"uncovered_family_counts\""
 assert_rust_handled "/wp-content/plugins/hello.php" "yes"
 assert_rust_handled "/wp-content/plugins/hello.php" "yes" "POST" "application/x-www-form-urlencoded" "foo=bar"
 assert_rust_handled "/wp-content/themes/twentytwentyfive/style.css" "no"
