@@ -2016,6 +2016,7 @@ if ( ! function_exists( 'wp_rust_gateway_plugin_mode_allows_endpoint' ) ) {
 			'/wp-admin/export-personal-data.php',
 			'/wp-admin/erase-personal-data.php',
 			'/wp-admin/network.php',
+			'/wp-admin/network/',
 			'/wp-admin/network/admin.php',
 			'/wp-admin/network/setup.php',
 			'/wp-admin/ms-delete-site.php',

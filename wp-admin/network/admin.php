@@ -10,7 +10,7 @@
 require_once dirname( dirname( __DIR__ ) ) . '/wp-includes/rust-gateway.php';
 $rust_gateway_request_path = wp_rust_gateway_current_request_path( '/wp-admin/network/admin.php' );
 if ( in_array( $rust_gateway_request_path, array( '/wp-admin/network/', '/wp-admin/network/index.php', '/wp-admin/network/admin.php' ), true )
-	&& wp_rust_gateway_try_proxy( '/wp-admin/network/admin.php' ) ) {
+	&& wp_rust_gateway_try_proxy( $rust_gateway_request_path ) ) {
 	exit;
 }
 
